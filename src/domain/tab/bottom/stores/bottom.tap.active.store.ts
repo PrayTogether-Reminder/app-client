@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { BottomTabActiveStore } from "../stores/bottom.tab.active.store.type";
+import { BottomTabActiveStore } from "./bottom.tab.active.store.type";
 import {
   BottomTabActiveStatus,
   BottomTabActiveType,

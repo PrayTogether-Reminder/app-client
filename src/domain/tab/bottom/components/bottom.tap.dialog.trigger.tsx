@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import { Tabs } from "tamagui";
-import type { BottomTabActiveType } from "../../types/bottom.tab.active.type";
+import type { BottomTabActiveType } from "../types/bottom.tab.active.type";
+import { backgroundColor } from "../../../../common/styles/color";
 
 type TabDialogTriggerProps = {
   activeStatus: BottomTabActiveType;
@@ -20,7 +21,11 @@ const TabDialogTrigger = ({
         flex={1}
         flexDirection="column"
         alignItems="center"
-        pressStyle={{ backgroundColor: "white", scale: 0.9, opacity: 0.7 }}
+        pressStyle={{
+          backgroundColor: backgroundColor.default,
+          scale: 0.9,
+          opacity: 0.7,
+        }}
         onPress={() => setOpen(true)}
       >
         <LucideIcon

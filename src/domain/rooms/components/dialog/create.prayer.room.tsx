@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { BackHandler } from "react-native";
 import { Dialog, Fieldset, Input, Button, Label, Unspaced } from "tamagui";
 import { X } from "@tamagui/lucide-icons";
-import { keyboardHideDelFocus } from "./../../services/keyboard.service";
+import { keyboardHideDelFocus } from "../../../../common/keyboard/services/keyboard.service";
 
 type CreatePrayerRoomDialogProp = {
   open: boolean;

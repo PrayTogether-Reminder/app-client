@@ -1,5 +1,6 @@
 import { Tabs } from "tamagui";
-import type { BottomTabActiveType } from "../../types/bottom.tab.active.type";
+import type { BottomTabActiveType } from "../types/bottom.tab.active.type";
+import { backgroundColor } from "../../../../common/styles/color";
 
 type TabItemProps = {
   activeStatus: BottomTabActiveType;
@@ -13,7 +14,11 @@ const TabItem = ({ activeStatus, icon: LucideIcon }: TabItemProps) => {
       flex={1}
       flexDirection="column"
       alignItems="center"
-      pressStyle={{ backgroundColor: "white", scale: 0.9, opacity: 0.7 }}
+      pressStyle={{
+        backgroundColor: backgroundColor.default,
+        scale: 0.9,
+        opacity: 0.7,
+      }}
     >
       <LucideIcon
         strokeWidth={2}
