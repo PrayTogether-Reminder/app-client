@@ -1,12 +1,25 @@
-import { View, Text } from "react-native";
-import { Link } from "expo-router";
+import { Fragment, useState } from "react";
+import { View } from "tamagui";
+import CreatePrayerRoomDialog from "../../src/components/dialog/create.prayer.room";
+import BottomTab from "../../src/components/tabs/bottom.tabs";
 
-export default function RoomList() {
+export default function RoomsScreen() {
+  const [dialogOpen, setDialogOpen] = useState(false);
   return (
-    <View className="flex-1 bg-white items-center justify-center">
-      <Text className="text-black">방 목록</Text>
-      <Link href="/rooms/create">방 만들기</Link>
-      <Link href="/rooms/123">방 상세보기</Link>
-    </View>
+    <Fragment>
+      <View flex={1} justifyContent="center" alignItems="center">
+        <View flex={1} backgroundColor="blue" height="100%" width="100%"></View>
+        <View
+          flex={10}
+          backgroundColor="green"
+          height="100%"
+          width="100%"
+        ></View>
+        <View flex={1} backgroundColor="tomato" height="100%" width="100%">
+          <BottomTab setDialogOpen={setDialogOpen} />
+        </View>
+      </View>
+      <CreatePrayerRoomDialog open={dialogOpen} setOpen={setDialogOpen} />
+    </Fragment>
   );
 }

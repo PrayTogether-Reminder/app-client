@@ -1,20 +1,13 @@
-// import { Tabs } from "expo-router";
+import { Slot } from "expo-router";
+import { createTamagui, TamaguiProvider } from "tamagui";
+import { defaultConfig } from "@tamagui/config/v4";
 
-// export default function TabLayout() {
-//   return (
-//     <Tabs>
-//       <Tabs.Screen
-//         name="(bottom-tab)/rooms/index" // 전체 경로를 명시
-//         options={{
-//           title: "Rooms",
-//         }}
-//       />
-//       <Tabs.Screen
-//         name="(bottom-tab)/profile" // 전체 경로를 명시
-//         options={{
-//           title: "Profile",
-//         }}
-//       />
-//     </Tabs>
-//   );
-// }
+const config = createTamagui(defaultConfig);
+
+export default function RootLayout() {
+  return (
+    <TamaguiProvider config={config}>
+      <Slot />
+    </TamaguiProvider>
+  );
+}

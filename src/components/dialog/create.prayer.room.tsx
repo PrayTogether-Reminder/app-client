@@ -1,0 +1,137 @@
+import React, { useEffect, useRef, useState } from "react";
+import { BackHandler } from "react-native";
+import { Dialog, Fieldset, Input, Button, Label, Unspaced } from "tamagui";
+import { X } from "@tamagui/lucide-icons";
+import { keyboardHideDelFocus } from "./../../services/keyboard.service";
+
+type CreatePrayerRoomDialogProp = {
+  open: boolean;
+  setOpen: (value: boolean) => void;
+};
+
+export default function CreatePrayerRoomDialog({
+  open,
+  setOpen,
+}: CreatePrayerRoomDialogProp) {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const titleRef = useRef<Input>(null);
+  const descriptionRef = useRef<Input>(null);
+
+  const handleTitleChange = (title: string) => {
+    setTitle(() => title);
+  };
+  const handleDescriptionChange = (description: string) => {
+    setDescription(() => description);
+  };
+
+  useEffect(() => {
+    if (open) {
+      const backAction = () => {
+        setOpen(false);
+        return true;
+      };
+
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+      );
+
+      return () => backHandler.remove();
+    }
+  }, [open]);
+
+  keyboardHideDelFocus([titleRef, descriptionRef]);
+
+  return (
+    <Dialog modal open={open} onOpenChange={setOpen}>
+      <Dialog.Portal>
+        <Dialog.Overlay
+          key="overlay"
+          backgroundColor="#BEBFC5"
+          opacity={0.6} // 투명도 조절
+          animation="medium"
+          enterStyle={{ opacity: 1 }}
+          exitStyle={{ opacity: 0 }}
+        />
+
+        <Dialog.Content
+          position="absolute"
+          width="70%"
+          height="auto"
+          elevate
+          key="content"
+          animateOnly={["transform", "opacity"]}
+          animation={[
+            "medium",
+            {
+              opacity: {
+                overshootClamping: true,
+              },
+            },
+          ]}
+          enterStyle={{ x: 0, y: -40, opacity: 0, scale: 0.5 }}
+          exitStyle={{ x: 0, y: -40, opacity: 0, scale: 0.5 }}
+          gap="$4"
+        >
+          <Dialog.Title>기도방 생성</Dialog.Title>
+
+          <Fieldset height="$8" gap="$1" alignItems="center">
+            <Label width="$5" fontSize="$6" justifyContent="flex-end">
+              방 제목
+            </Label>
+            <Input
+              ref={titleRef}
+              placeholder="방 제목이 무엇인가요?"
+              value={title}
+              onChangeText={handleTitleChange}
+              flex={1}
+              width="100%"
+            />
+          </Fieldset>
+
+          <Fieldset height="$14" flexDirection="column" alignItems="center">
+            <Label width="$5" fontSize="$6" justifyContent="flex-end">
+              방 설명
+            </Label>
+            <Input
+              ref={descriptionRef}
+              placeholder="어떤 기도를 위한 방인가요?"
+              value={description}
+              onChangeText={handleDescriptionChange}
+              flex={1}
+              width="100%"
+              multiline
+            />
+          </Fieldset>
+
+          <Dialog.Close asChild>
+            <Button
+              alignSelf="center"
+              width="50%"
+              marginTop="$2"
+              marginBottom="$4"
+              theme="accent"
+              aria-label="생성"
+            >
+              생성
+            </Button>
+          </Dialog.Close>
+
+          <Unspaced>
+            <Dialog.Close asChild>
+              <Button
+                position="absolute"
+                top="$3"
+                right="$3"
+                size="$2"
+                circular
+                icon={X}
+              />
+            </Dialog.Close>
+          </Unspaced>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog>
+  );
+}

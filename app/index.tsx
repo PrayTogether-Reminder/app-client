@@ -1,12 +1,19 @@
-import { View, Text } from "react-native";
 import { Link } from "expo-router";
-import "../global.css";
+import { View, Paragraph } from "tamagui";
 
-export default function Index() {
+export default function MainScreen() {
   return (
-    <View className="flex-1 justify-center items-center">
+    <View flex={1} justifyContent="center" alignItems="center">
       <Link href="/rooms" asChild>
-        <Text className="text-blue-500">처음 메인 화면</Text>
+        <Paragraph
+          fontSize="$8"
+          lineHeight="$8"
+          $sm={{ fontSize: "$4", lineHeight: "$4" }}
+          $md={{ fontSize: "$12", lineHeight: "$12" }}
+          $lg={{ fontSize: "$16", lineHeight: "$16" }}
+        >
+          처음 메인 화면
+        </Paragraph>
       </Link>
     </View>
   );
