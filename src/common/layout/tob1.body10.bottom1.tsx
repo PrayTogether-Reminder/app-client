@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { View } from "tamagui";
-import { backgroundColor } from "../../common/styles/color";
+import { backgroundColor, flexMarker } from "../../common/styles/color";
 
 interface LayoutProps {
   top: ReactNode;
@@ -12,7 +12,7 @@ export default function Tob1Body10Bottom1({ top, body, bottom }: LayoutProps) {
     <View flex={1} justifyContent="center" alignItems="center">
       <View
         flex={1}
-        backgroundColor={backgroundColor.flexMarker5}
+        backgroundColor={flexMarker.green}
         height="100%"
         width="100%"
       >
