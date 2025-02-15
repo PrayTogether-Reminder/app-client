@@ -1,16 +1,8 @@
 import React, { useState, useCallback } from "react";
 import { FlatList, Platform } from "react-native";
-import {
-  YStack,
-  XStack,
-  Card,
-  Text,
-  Spinner,
-  Theme,
-  styled,
-  Button,
-} from "tamagui";
+import { YStack, XStack, Card, Text, Spinner, styled } from "tamagui";
 import { ChevronRight, Users, Plus } from "@tamagui/lucide-icons";
+import { color } from "../../../common/styles/color";
 
 interface Room {
   id: number;
@@ -23,21 +15,6 @@ const StyledFlatList = styled(FlatList<Room>, {
   padding: "$4",
 });
 
-const FloatingButton = styled(Button, {
-  position: "absolute",
-  bottom: "$4",
-  right: "$4",
-  width: "$6",
-  height: "$6",
-  borderRadius: "$6",
-  backgroundColor: "$blue10",
-  shadowColor: "#000",
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.25,
-  shadowRadius: 3.84,
-  elevation: 5,
-});
-
 const RoomItem = ({ item, onPress }: any) => (
   <Card
     elevate
@@ -47,6 +24,8 @@ const RoomItem = ({ item, onPress }: any) => (
     onPress={() => onPress(item)}
     marginBottom="$4"
     padding="$4"
+    borderLeftColor={color.secondary}
+    borderLeftWidth="$2"
   >
     <YStack gap="$2">
       <XStack justifyContent="space-between" alignItems="center">
@@ -96,7 +75,7 @@ const RoomList = () => {
       setLoading(true);
       try {
         const newRooms = Array.from({ length: 10 }, (_, i) => ({
-          id: (pageNum - 1) * 10 + i + 1,
+          id: Math.floor(Math.random() * 10000),
           name: `${pageNum}월 ${i + 1}일 방`,
           memberCnt: Math.floor(Math.random() * 20),
         }));
@@ -135,10 +114,6 @@ const RoomList = () => {
     console.log("Selected room:", room);
   }, []);
 
-  const handleCreateRoom = useCallback(() => {
-    console.log("Create new room");
-  }, []);
-
   React.useEffect(() => {
     loadRooms(1);
   }, []);
@@ -157,14 +132,10 @@ const RoomList = () => {
         ListEmptyComponent={EmptyList}
         refreshing={refreshing}
         onRefresh={handleRefresh}
-        showsVerticalScrollIndicator={false}
+        showsVerticalScrollIndicator={true}
         contentContainerStyle={{
           paddingBottom: Platform.OS === "ios" ? 40 : 16,
         }}
-      />
-      <FloatingButton
-        icon={<Plus size="$1.5" color="white" />}
-        onPress={handleCreateRoom}
       />
     </YStack>
   );

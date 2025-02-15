@@ -4,15 +4,15 @@ import { Dialog, Fieldset, Input, Button, Label, Unspaced } from "tamagui";
 import { X } from "@tamagui/lucide-icons";
 import { keyboardHideDelFocus } from "../../../../common/keyboard/services/keyboard.service";
 
-type CreatePrayerRoomDialogProp = {
+type RoomCreationDialogProp = {
   open: boolean;
   setOpen: (value: boolean) => void;
 };
 
-export default function CreatePrayerRoomDialog({
+export default function RoomCreationDialog({
   open,
   setOpen,
-}: CreatePrayerRoomDialogProp) {
+}: RoomCreationDialogProp) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const titleRef = useRef<Input>(null);

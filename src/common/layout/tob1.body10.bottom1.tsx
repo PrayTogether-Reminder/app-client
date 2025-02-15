@@ -1,22 +1,21 @@
 import React, { ReactNode } from "react";
 import { View } from "tamagui";
-import { backgroundColor, flexMarker } from "../../common/styles/color";
+import { backgroundColor, flexMarker, color } from "../../common/styles/color";
 
 interface LayoutProps {
-  top: ReactNode;
-  body: ReactNode;
-  bottom: ReactNode;
+  tops: ReactNode[];
+  bodies: ReactNode[];
+  bottoms: ReactNode[];
 }
-export default function Tob1Body10Bottom1({ top, body, bottom }: LayoutProps) {
+export default function Tob1Body10Bottom1({
+  tops,
+  bodies,
+  bottoms,
+}: LayoutProps) {
   return (
     <View flex={1} justifyContent="center" alignItems="center">
-      <View
-        flex={1}
-        backgroundColor={flexMarker.green}
-        height="100%"
-        width="100%"
-      >
-        {top}
+      <View flex={1} backgroundColor={color.third} height="100%" width="100%">
+        {tops}
       </View>
       <View
         flex={10}
@@ -24,7 +23,7 @@ export default function Tob1Body10Bottom1({ top, body, bottom }: LayoutProps) {
         height="100%"
         width="100%"
       >
-        {body}
+        {bodies}
       </View>
       <View
         flex={1}
@@ -32,7 +31,7 @@ export default function Tob1Body10Bottom1({ top, body, bottom }: LayoutProps) {
         height="100%"
         width="100%"
       >
-        {bottom}
+        {bottoms}
       </View>
     </View>
   );
