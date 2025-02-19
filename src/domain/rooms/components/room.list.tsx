@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, Fragment } from "react";
 import { Platform, Alert, ListRenderItem } from "react-native";
 import {
   YStack,
@@ -24,6 +24,8 @@ import RoomFlatList from "./room.flat.list";
 import EmptyRoomList from "../components/room.empty";
 import useCloseOnBack from "../../../common/services/back-handler/close.on.back";
 import { buttonColor } from "../../../common/styles/color";
+import RoomInfoSheet from "./sheets/room.option.sheet";
+import RoomItem from "./room.item";
 
 export interface Room {
   id: number;
@@ -33,126 +35,6 @@ export interface Room {
   createdTime: Date;
   isNotification: boolean;
 }
-
-interface RoomItemProps {
-  item: Room;
-  onPress: (room: Room) => void;
-  onToggleNotification: (room: Room) => void;
-  onLeaveRoom: (room: Room) => void;
-}
-
-const RoomItem = React.memo(
-  ({ item, onPress, onToggleNotification, onLeaveRoom }: RoomItemProps) => {
-    console.log("RoomItem rendering = " + item.id);
-    const [showMenu, setShowMenu] = useState(false);
-
-    const handleLongPress = useCallback(() => {
-      setShowMenu(true);
-    }, []);
-
-    const handleLeaveRoom = useCallback(() => {
-      Alert.alert("방 나가기", "정말로 이 방을 나가시겠습니까?", [
-        { text: "취소", style: "cancel" },
-        {
-          text: "나가기",
-          style: "destructive",
-          onPress: () => onLeaveRoom(item),
-        },
-      ]);
-    }, [item, onLeaveRoom]);
-
-    const handleCardPress = useCallback(() => {
-      onPress(item);
-    }, [item, onPress]);
-
-    const handleNotificationToggle = useCallback(() => {
-      onToggleNotification(item);
-    }, [item, onToggleNotification]);
-
-    useCloseOnBack(showMenu, setShowMenu);
-
-    return (
-      <>
-        <Card
-          elevate
-          bordered
-          animation="bouncy"
-          pressStyle={{ scale: 0.95 }}
-          onPress={handleCardPress}
-          onLongPress={handleLongPress}
-          marginBottom="$4"
-          padding="$4"
-          borderLeftColor={color.secondary}
-          borderLeftWidth="$2"
-        >
-          <YStack gap="$2">
-            <XStack justifyContent="space-between" alignItems="center">
-              <Text fontSize="$6" fontWeight="bold">
-                {item.name}
-              </Text>
-              <ChevronRight size="$1" />
-            </XStack>
-
-            <XStack gap="$4">
-              <XStack gap="$2" alignItems="center">
-                <Users size="$1" />
-                <Text fontSize="$4" color="gray">
-                  현재 {item.memberCnt}명
-                </Text>
-              </XStack>
-            </XStack>
-          </YStack>
-        </Card>
-
-        <Sheet
-          modal
-          open={showMenu}
-          onOpenChange={setShowMenu}
-          snapPoints={[80]}
-          dismissOnSnapToBottom
-          animation="fast"
-        >
-          <Sheet.Frame padding="$4">
-            <Sheet.Handle />
-            <YStack gap="$4">
-              <Text fontSize="$9" fontWeight="bold" alignSelf="center">
-                {item.name}
-              </Text>
-
-              <ScrollView
-                height="65%" // 고정된 높이
-                showsVerticalScrollIndicator={true} // 스크롤바 표시
-              >
-                <Text alignSelf="center" fontSize="$6">
-                  {item.description}
-                </Text>
-              </ScrollView>
-
-              {/* 하단 버튼들 */}
-              <Button
-                icon={item.isNotification ? BellOff : Bell}
-                onPress={handleNotificationToggle}
-              >
-                알림 {item.isNotification ? "끄기" : "켜기"}
-              </Button>
-
-              <Button
-                icon={LogOut}
-                backgroundColor={buttonColor.exit}
-                onPress={() => {
-                  handleLeaveRoom();
-                  setShowMenu(false);
-                }}
-              >
-                방 나가기
-              </Button>
-            </YStack>
-          </Sheet.Frame>
-        </Sheet>
-      </>
-    );
-  }
-);
 
 const LoadingFooter = () => (
   <YStack padding="$4" alignItems="center">
@@ -219,30 +101,30 @@ const RoomList = () => {
   // 방 선택
   const handleRoomPress = useCallback((room: Room) => {
     console.log("Selected room:", room);
-  }, []); // 의존성 없음
+  }, []);
 
-  const handleToggleNotification = useCallback((room: Room) => {
-    setRooms((rooms) =>
-      rooms.map((r) =>
+  const handleNotificationToggle = useCallback((room: Room) => {
+    setRooms((prevRooms) =>
+      prevRooms.map((r) =>
         r.id === room.id ? { ...r, isNotification: !r.isNotification } : r
       )
     );
-  }, []); // setRooms는 안정적인 참조를 가지므로 의존성 배열에 포함할 필요 없음
+  }, []);
 
   const handleLeaveRoom = useCallback((room: Room) => {
-    setRooms((rooms) => rooms.filter((r) => r.id !== room.id));
-  }, []); // 마찬가지로 의존성 필요 없음
+    setRooms((prevRooms) => prevRooms.filter((r) => r.id !== room.id));
+  }, []);
 
-  const renderItem: ListRenderItem<Room> = useCallback(
+  const renderRoom: ListRenderItem<Room> = useCallback(
     ({ item }) => (
       <RoomItem
-        item={item}
-        onPress={handleRoomPress}
-        onToggleNotification={handleToggleNotification}
+        room={item}
+        onRoomPress={handleRoomPress}
+        onNotificationToggle={handleNotificationToggle}
         onLeaveRoom={handleLeaveRoom}
       />
     ),
-    [handleRoomPress, handleToggleNotification, handleLeaveRoom]
+    [handleRoomPress, handleNotificationToggle, handleLeaveRoom]
   );
 
   React.useEffect(() => {
@@ -253,7 +135,7 @@ const RoomList = () => {
     <YStack flex={1} backgroundColor="$background">
       <RoomFlatList
         data={rooms}
-        renderItem={renderItem}
+        renderItem={renderRoom}
         keyExtractor={(item) => String(item.id)}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
