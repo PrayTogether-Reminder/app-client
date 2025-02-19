@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { BackHandler } from "react-native";
 import { Dialog, Fieldset, Input, Button, Label, Unspaced } from "tamagui";
 import { X } from "@tamagui/lucide-icons";
 import { keyboardHideDelFocus } from "../../../../common/keyboard/services/keyboard.service";
+import useCloseOnBack from "../../../../common/services/back-handler/close.on.back";
 
 type RoomCreationDialogProp = {
   open: boolean;
@@ -25,26 +25,12 @@ export default function RoomCreationDialog({
     setDescription(() => description);
   };
 
-  useEffect(() => {
-    if (open) {
-      const backAction = () => {
-        setOpen(false);
-        return true;
-      };
-
-      const backHandler = BackHandler.addEventListener(
-        "hardwareBackPress",
-        backAction
-      );
-
-      return () => backHandler.remove();
-    }
-  }, [open]);
+  useCloseOnBack(open, setOpen);
 
   keyboardHideDelFocus([titleRef, descriptionRef]);
 
   return (
-    <Dialog modal open={open} onOpenChange={setOpen}>
+    <Dialog modal open={open} onOpenChange={setOpen} disableRemoveScroll>
       <Dialog.Portal>
         <Dialog.Overlay
           key="overlay"

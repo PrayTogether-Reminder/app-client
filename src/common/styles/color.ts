@@ -20,6 +20,10 @@ export const color = {
   transparent: "transparent",
 };
 
+export const buttonColor = {
+  exit: "#FDBCB4",
+};
+
 export const alertColor = {
   success: "#28a745",
   danger: "#dc3545",

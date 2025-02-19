@@ -21,7 +21,6 @@ const FloatingButton = styled(Button, {
 
 export default function RoomCreationFloationButton() {
   const handleCreateRoom = useCallback(() => {
-    console.log("Create new room");
     setDialogOpen(true);
   }, []);
   const [dialogOpen, setDialogOpen] = useState(false);
