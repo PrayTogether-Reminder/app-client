@@ -1,7 +1,7 @@
 import {
   BottomTabActive,
   BottomTabActiveType,
-} from "../types/BottomTabActiveType";
+} from "../types/bottomTabActiveType";
 
 export interface BottomTabActiveState {
   bottomTabActive: BottomTabActive;
