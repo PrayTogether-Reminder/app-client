@@ -1,4 +1,4 @@
-import { API_URL, MOCK_API_URL } from "@env";
+import { API_URL } from "@env";
 import Constants from "expo-constants";
 
 const getApiUrl = () => {
@@ -10,7 +10,7 @@ const getApiUrl = () => {
     return apiUrl;
   }
   // Expo GO Dev
-  return MOCK_API_URL;
+  return API_URL;
 };
 
 export default getApiUrl();
