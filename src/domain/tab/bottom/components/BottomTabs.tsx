@@ -4,11 +4,11 @@ import { Separator, Tabs, View } from "tamagui";
 import {
   BottomTabActiveStatus,
   BottomTabActiveType,
-} from "../types/BottomTabActiveType";
+} from "../types/bottomTabActiveType";
 import TabItem from "./BottomTabItem";
 import { backgroundColor } from "../../../../common/styles/color";
 
-import { useBottomTabActive } from "../hooks/BottomTabActiveHooks";
+import { useBottomTabActive } from "../hooks/bottomTabActiveHooks";
 
 export default function BottomTabs() {
   const { bottomTabActive, setTabActive } = useBottomTabActive();

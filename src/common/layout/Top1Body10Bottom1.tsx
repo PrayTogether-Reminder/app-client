@@ -15,7 +15,9 @@ export default function Tob1Body10Bottom1({
   return (
     <View flex={1} justifyContent="center" alignItems="center">
       <View flex={1} backgroundColor={color.third} height="100%" width="100%">
-        {tops}
+        {tops.map((top, index) => (
+          <React.Fragment key={`top-${index}`}>{top}</React.Fragment>
+        ))}
       </View>
       <View
         flex={10}
@@ -23,7 +25,9 @@ export default function Tob1Body10Bottom1({
         height="100%"
         width="100%"
       >
-        {bodies}
+        {bodies.map((body, index) => (
+          <React.Fragment key={`body-${index}`}>{body}</React.Fragment>
+        ))}
       </View>
       <View
         flex={1}
@@ -31,7 +35,9 @@ export default function Tob1Body10Bottom1({
         height="100%"
         width="100%"
       >
-        {bottoms}
+        {bottoms.map((bottom, index) => (
+          <React.Fragment key={`bottom-${index}`}>{bottom}</React.Fragment>
+        ))}
       </View>
     </View>
   );

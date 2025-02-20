@@ -3,6 +3,7 @@ import { ListRenderItem, Platform, FlatList } from "react-native";
 import { Spinner, YStack, styled } from "tamagui";
 import EmptyRoomList from "./RoomEmpty";
 import RoomItem from "./RoomItem";
+import { useRoomStore } from "./../store/roomStore";
 
 export interface Room {
   id: number;
@@ -24,78 +25,55 @@ const LoadingFooter = () => (
   </YStack>
 );
 
+// const RoomList = () => {
+//   console.log("RoomList rendering");
+// const [rooms, setRooms] = useState<Room[]>([]);
+// const [loading, setLoading] = useState(false);
+// const [refreshing, setRefreshing] = useState(false);
+// const [hasMore, setHasMore] = useState(true);
+
 const RoomList = () => {
   console.log("RoomList rendering");
-  const [rooms, setRooms] = useState<Room[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
 
-  // 방 목록 불러오기
-  const loadRooms = useCallback(
-    async (pageNum = 1, shouldRefresh = false) => {
-      if (loading || (!hasMore && !shouldRefresh)) return;
+  const rooms = useRoomStore((state) => state.rooms);
+  const loading = useRoomStore((state) => state.loading);
+  const refreshing = useRoomStore((state) => state.refreshing);
+  const hasMore = useRoomStore((state) => state.hasMore);
+  const loadRooms = useRoomStore((state) => state.loadRooms);
+  const toggleNotification = useRoomStore((state) => state.toggleNotification);
+  const leaveRoom = useRoomStore((state) => state.leaveRoom);
+  const setLoading = useRoomStore((state) => state.setLoading);
+  const setHasMore = useRoomStore((state) => state.setHasMore);
 
-      setLoading(true);
-      try {
-        const newRooms = Array.from({ length: 10 }, (_, i) => ({
-          id: Math.floor(Math.random() * 10000),
-          name: `${pageNum}월 ${i + 1}일 방`,
-          memberCnt: Math.floor(Math.random() * 20),
-          description: "test desc",
-          createdTime: new Date(),
-          isNotification: true,
-        }));
-
-        if (shouldRefresh) {
-          setRooms(newRooms);
-        } else {
-          setRooms((prev) => [...prev, ...newRooms]);
-        }
-
-        setPage(pageNum + 1);
-        setHasMore(pageNum < 5);
-      } catch (error) {
-        console.error("Failed to load rooms:", error);
-      } finally {
-        setLoading(false);
-        setRefreshing(false);
-      }
-    },
-    [loading, hasMore]
-  );
+  // // 방 목록 불러오기
+  // const loadRooms = loadRooms();
 
   // 새로고침
   const handleRefresh = useCallback(() => {
-    setRefreshing(true);
+    // setRefreshing(true);
     setHasMore(true);
-    loadRooms(1, true);
+    loadRooms();
   }, [loadRooms]);
 
   // 추가 로딩
   const handleLoadMore = useCallback(() => {
     if (!loading && hasMore) {
-      loadRooms(page);
+      loadRooms();
     }
-  }, [loading, hasMore, page, loadRooms]);
+  }, [loading, hasMore, loadRooms]);
 
   // 방 선택
   const handleRoomPress = useCallback((room: Room) => {
     console.log("Selected room:", room);
   }, []);
 
-  const handleNotificationToggle = useCallback((room: Room) => {
-    setRooms((prevRooms) =>
-      prevRooms.map((r) =>
-        r.id === room.id ? { ...r, isNotification: !r.isNotification } : r
-      )
-    );
-  }, []);
+  const handleNotificationToggle = (room: Room) => {
+    toggleNotification(room);
+  };
 
-  const handleLeaveRoom = useCallback((room: Room) => {
-    setRooms((prevRooms) => prevRooms.filter((r) => r.id !== room.id));
-  }, []);
+  const handleLeaveRoom = (room: Room) => {
+    leaveRoom(room);
+  };
 
   const renderRoom: ListRenderItem<Room> = useCallback(
     ({ item }) => (
@@ -110,8 +88,8 @@ const RoomList = () => {
   );
 
   React.useEffect(() => {
-    loadRooms(1);
-  }, []);
+    loadRooms();
+  }, [loadRooms]);
 
   return (
     <YStack flex={1} backgroundColor="$background">
