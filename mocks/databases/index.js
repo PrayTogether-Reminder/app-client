@@ -1,4 +1,4 @@
-const roomsData = require("./rooms")();
+const roomsData = require("./domains/rooms")();
 
 module.exports = () => {
   return {

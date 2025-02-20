@@ -1,29 +1,28 @@
-const fs = require("fs");
-const path = require("path");
-const indexData = require("./data/index")();
-
-// Write the data from index.js to db.json
-const dbFilePath = path.join(__dirname, "data/db.json");
-fs.writeFileSync(dbFilePath, JSON.stringify(indexData, null, 2), "utf-8");
-
-// json-server
 const jsonServer = require("json-server");
+const { setupDatabase } = require("./databases/setupDatabase");
+const setupRoutes = require("./routes/Routes");
+const logger = require("./middlewares/logger");
+
+const dbFilePath = setupDatabase();
 const server = jsonServer.create();
 const router = jsonServer.router(dbFilePath);
-const middlewares = jsonServer.defaults();
+const middlewares = jsonServer.defaults({
+  logger: true,
+});
 const db = router.db;
 
-server.get("**/rooms?*", (req, res, next) => {
-  if (req.method === "GET") {
-    const rooms = db.get("rooms").value();
-    res.json({ rooms });
-  } else {
-    next();
-  }
-});
+server.use(middlewares);
+server.use(logger);
 
+setupRoutes(server, db);
 server.use(router);
 
-server.listen(3000, () => {
-  console.log("JSON Server is running on port 3000");
-});
+const PORT = 3000;
+server
+  .listen(PORT, () => {
+    console.log(`JSON Server is running on port ${PORT}`);
+  })
+  .on("error", (err) => {
+    console.error("Failed to start server:", err);
+    process.exit(1);
+  });
