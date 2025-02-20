@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { Tabs } from "tamagui";
-import type { BottomTabActiveType } from "../types/bottom.tab.active.type";
+import type { BottomTabActiveType } from "../types/BottomTabActiveType";
 import { backgroundColor } from "../../../../common/styles/color";
 
 type TabDialogTriggerProps = {

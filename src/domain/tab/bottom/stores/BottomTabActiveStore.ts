@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import { BottomTabActiveStore } from "./bottom.tab.active.store.type";
+import { BottomTabActiveStore } from "./bottomTabActiveStoreType";
 import {
   BottomTabActiveStatus,
   BottomTabActiveType,
-} from "../types/bottom.tab.active.type";
+} from "../types/bottomTabActiveType";
 
 export const useBottomTabActiveStore = create<BottomTabActiveStore>(
   (set, get) => ({

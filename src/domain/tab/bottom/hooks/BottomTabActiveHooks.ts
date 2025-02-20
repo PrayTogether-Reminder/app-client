@@ -1,4 +1,4 @@
-import { useBottomTabActiveStore } from "../stores/bottom.tap.active.store";
+import { useBottomTabActiveStore } from "../stores/bottomTabActiveStore";
 
 export const useBottomTabActive = () => {
   const bottomTabActiveStore = useBottomTabActiveStore();
