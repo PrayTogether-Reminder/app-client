@@ -2,7 +2,7 @@ import { Button, styled } from "tamagui";
 import { color } from "../../../../common/styles/color";
 import { Plus } from "@tamagui/lucide-icons";
 import { Fragment, useCallback, useState } from "react";
-import RoomCreationDialog from "../dialogs/room.creation.dialog";
+import RoomCreationDialog from "../dialogs/RoomCreationDialog";
 
 const FloatingButton = styled(Button, {
   position: "absolute",
@@ -20,7 +20,7 @@ const FloatingButton = styled(Button, {
 });
 
 export default function RoomCreationFloationButton() {
-  const handleCreateRoom = useCallback(() => {
+  const handleDialogOpen = useCallback(() => {
     setDialogOpen(true);
   }, []);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -29,7 +29,7 @@ export default function RoomCreationFloationButton() {
     <Fragment>
       <FloatingButton
         icon={<Plus size="$1.5" color="white" />}
-        onPress={handleCreateRoom}
+        onPress={handleDialogOpen}
       />
       <RoomCreationDialog open={dialogOpen} setOpen={setDialogOpen} />
     </Fragment>

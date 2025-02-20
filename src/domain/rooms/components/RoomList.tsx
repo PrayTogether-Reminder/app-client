@@ -1,31 +1,8 @@
-import React, { useState, useEffect, useCallback, Fragment } from "react";
-import { Platform, Alert, ListRenderItem } from "react-native";
-import {
-  YStack,
-  XStack,
-  Card,
-  Text,
-  Spinner,
-  Sheet,
-  Button,
-  ScrollView,
-} from "tamagui";
-import {
-  ChevronRight,
-  Users,
-  Plus,
-  Bell,
-  BellOff,
-  LogOut,
-  Info,
-} from "@tamagui/lucide-icons";
-import { color } from "../../../common/styles/color";
-import RoomFlatList from "./room.flat.list";
-import EmptyRoomList from "../components/room.empty";
-import useCloseOnBack from "../../../common/services/back-handler/close.on.back";
-import { buttonColor } from "../../../common/styles/color";
-import RoomInfoSheet from "./sheets/room.option.sheet";
-import RoomItem from "./room.item";
+import React, { useCallback, useState } from "react";
+import { ListRenderItem, Platform, FlatList } from "react-native";
+import { Spinner, YStack, styled } from "tamagui";
+import EmptyRoomList from "./RoomEmpty";
+import RoomItem from "./RoomItem";
 
 export interface Room {
   id: number;
@@ -35,6 +12,11 @@ export interface Room {
   createdTime: Date;
   isNotification: boolean;
 }
+
+const RoomFlatList = styled(FlatList<Room>, {
+  flex: 1,
+  padding: "$4",
+});
 
 const LoadingFooter = () => (
   <YStack padding="$4" alignItems="center">

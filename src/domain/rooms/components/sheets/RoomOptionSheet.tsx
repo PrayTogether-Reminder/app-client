@@ -1,7 +1,7 @@
 import { Sheet, Button, ScrollView, YStack, Text } from "tamagui";
 import { BellOff, Bell, LogOut } from "@tamagui/lucide-icons";
 import { buttonColor } from "../../../../common/styles/color";
-import { Room } from "../room.list";
+import { Room } from "../RoomList";
 import { Alert } from "react-native";
 import { useCallback } from "react";
 

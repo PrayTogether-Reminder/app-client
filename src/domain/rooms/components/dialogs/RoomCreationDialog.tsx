@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Dialog, Fieldset, Input, Button, Label, Unspaced } from "tamagui";
 import { X } from "@tamagui/lucide-icons";
-import { keyboardHideDelFocus } from "../../../../common/keyboard/services/keyboard.service";
-import useCloseOnBack from "../../../../common/services/back-handler/close.on.back";
+import { keyboardHideDelFocus } from "../../../../common/keyboard/services/KeyboardService";
+import useCloseOnBack from "../../../../common/services/back-handler/useCloseOnBack";
 
 type RoomCreationDialogProp = {
   open: boolean;

@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { View } from "tamagui";
-import { backgroundColor, flexMarker, color } from "../../common/styles/color";
+import { backgroundColor, flexMarker, color } from "../styles/color";
 
 interface LayoutProps {
   tops: ReactNode[];

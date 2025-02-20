@@ -1,11 +1,11 @@
-import { Room } from "./room.list";
+import { Room } from "./RoomList";
 import React, { useCallback, useState } from "react";
 import { Alert } from "react-native";
-import useCloseOnBack from "../../../common/services/back-handler/close.on.back";
+import useCloseOnBack from "../../../common/services/back-handler/useCloseOnBack";
 import { YStack, XStack, Card, Text } from "tamagui";
 import { color } from "../../../common/styles/color";
 import { Users, ChevronRight } from "@tamagui/lucide-icons";
-import RoomInfoSheet from "./sheets/room.option.sheet";
+import RoomInfoSheet from "./sheets/RoomOptionSheet";
 
 interface RoomItemProps {
   room: Room;
