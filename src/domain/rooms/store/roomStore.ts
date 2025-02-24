@@ -10,7 +10,7 @@ export const useRoomStore = create<RoomStore>((set, get) => ({
   refreshing: false,
   hasMore: true,
 
-  loadRooms: async (orderBy?: OrderBy, after?: number, dir?: Dir) => {
+  loadRooms: async (orderBy?: OrderBy, after?: string, dir?: Dir) => {
     set({ loading: true });
     try {
       const loadedRooms: Room[] = await fetchRooms(orderBy, after, dir);
@@ -19,13 +19,11 @@ export const useRoomStore = create<RoomStore>((set, get) => ({
         loading: false,
         hasMore: loadedRooms.length > 0,
       });
-      return loadedRooms;
     } catch (error) {
       set({ loading: false });
       throw error;
     }
   },
-  // handleRefresh: () => Promise<void>,
   toggleNotification: (room: Room) => {
     const currentState = get();
     const updatedRooms = currentState.rooms.map((r) =>
@@ -39,6 +37,14 @@ export const useRoomStore = create<RoomStore>((set, get) => ({
     set({ rooms: updatedRooms });
   },
   setLoading: (loading: boolean) => set({ loading }),
-  // setRefreshing: (refreshing: boolean) => void,
   setHasMore: (hasMore: boolean) => set({ hasMore }),
+  handleRefresh: async (orderBy?: OrderBy, after?: string, dir?: Dir) => {
+    set({ refreshing: true });
+    try {
+      await get().loadRooms(orderBy, after, dir);
+    } finally {
+      set({ refreshing: false });
+    }
+  },
+  setRefreshing: (refreshing: boolean) => set({ refreshing }),
 }));

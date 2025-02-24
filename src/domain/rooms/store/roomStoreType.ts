@@ -9,12 +9,16 @@ export interface RoomState {
 }
 
 export interface RoomAction {
-  loadRooms: (orderBy?: OrderBy, after?: number, dir?: Dir) => Promise<Room[]>;
-  // handleRefresh: () => Promise<void>;
+  loadRooms: (orderBy?: OrderBy, after?: string, dir?: Dir) => Promise<void>;
+  handleRefresh: (
+    orderBy?: OrderBy,
+    after?: string,
+    dir?: Dir
+  ) => Promise<void>;
+  setRefreshing: (refreshing: boolean) => void;
   toggleNotification: (room: Room) => void;
   leaveRoom: (room: Room) => void;
   setLoading: (loading: boolean) => void;
-  // setRefreshing: (refreshing: boolean) => void;
   setHasMore: (hasMore: boolean) => void;
 }
 

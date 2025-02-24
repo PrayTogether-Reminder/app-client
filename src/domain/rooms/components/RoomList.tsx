@@ -4,6 +4,7 @@ import { Spinner, YStack, styled } from "tamagui";
 import EmptyRoomList from "./RoomEmpty";
 import RoomItem from "./RoomItem";
 import { useRoomStore } from "./../store/roomStore";
+import { OrderBy } from "../../../common/apis/constants/params";
 
 export interface Room {
   id: number;
@@ -25,13 +26,6 @@ const LoadingFooter = () => (
   </YStack>
 );
 
-// const RoomList = () => {
-//   console.log("RoomList rendering");
-// const [rooms, setRooms] = useState<Room[]>([]);
-// const [loading, setLoading] = useState(false);
-// const [refreshing, setRefreshing] = useState(false);
-// const [hasMore, setHasMore] = useState(true);
-
 const RoomList = () => {
   console.log("RoomList rendering");
 
@@ -44,36 +38,53 @@ const RoomList = () => {
   const leaveRoom = useRoomStore((state) => state.leaveRoom);
   const setLoading = useRoomStore((state) => state.setLoading);
   const setHasMore = useRoomStore((state) => state.setHasMore);
+  const setRefreshing = useRoomStore((state) => state.setRefreshing);
 
-  // // 방 목록 불러오기
-  // const loadRooms = loadRooms();
-
-  // 새로고침
   const handleRefresh = useCallback(() => {
-    // setRefreshing(true);
+    if (loading) return; // 이미 로딩 중이면 중단
+
+    setRefreshing(true);
     setHasMore(true);
-    loadRooms();
-  }, [loadRooms]);
+    loadRooms().finally(() => {
+      setRefreshing(false);
+    });
+  }, [loading, loadRooms, setRefreshing, setHasMore]);
 
   // 추가 로딩
   const handleLoadMore = useCallback(() => {
-    if (!loading && hasMore) {
-      loadRooms();
-    }
-  }, [loading, hasMore, loadRooms]);
+    if (loading || !hasMore || rooms.length === 0) return;
 
+    try {
+      const lastRoom = rooms[rooms.length - 1];
+      // 마지막 방의 생성 시간이 있는지 확인
+      if (lastRoom?.createdTime) {
+        setLoading(true); // 로딩 상태 설정
+        console.log("last: " + lastRoom.createdTime.toString());
+        loadRooms(OrderBy.DEFAULT, lastRoom.createdTime.toString());
+      }
+    } catch (error) {
+      console.error("Error in handleLoadMore:", error);
+      setLoading(false);
+    }
+  }, [loading, hasMore, loadRooms, rooms, setLoading]);
   // 방 선택
   const handleRoomPress = useCallback((room: Room) => {
     console.log("Selected room:", room);
   }, []);
 
-  const handleNotificationToggle = (room: Room) => {
-    toggleNotification(room);
-  };
+  const handleNotificationToggle = useCallback(
+    (room: Room) => {
+      toggleNotification(room);
+    },
+    [toggleNotification]
+  );
 
-  const handleLeaveRoom = (room: Room) => {
-    leaveRoom(room);
-  };
+  const handleLeaveRoom = useCallback(
+    (room: Room) => {
+      leaveRoom(room);
+    },
+    [leaveRoom]
+  );
 
   const renderRoom: ListRenderItem<Room> = useCallback(
     ({ item }) => (
@@ -88,9 +99,11 @@ const RoomList = () => {
   );
 
   React.useEffect(() => {
-    loadRooms();
-  }, [loadRooms]);
-
+    setLoading(true);
+    loadRooms().finally(() => {
+      setLoading(false);
+    });
+  }, [loadRooms, setLoading]);
   return (
     <YStack flex={1} backgroundColor="$background">
       <RoomFlatList
@@ -98,9 +111,9 @@ const RoomList = () => {
         renderItem={renderRoom}
         keyExtractor={(item) => String(item.id)}
         onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={loading ? LoadingFooter : null}
-        ListEmptyComponent={EmptyRoomList}
+        onEndReachedThreshold={0.3}
+        ListFooterComponent={loading && hasMore ? LoadingFooter : null}
+        ListEmptyComponent={!loading ? EmptyRoomList : null}
         refreshing={refreshing}
         onRefresh={handleRefresh}
         showsVerticalScrollIndicator={true}

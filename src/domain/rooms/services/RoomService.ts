@@ -5,7 +5,7 @@ import { OrderBy, Dir } from "../../../common/apis/constants/params";
 
 export async function fetchRooms(
   orderBy: OrderBy = OrderBy.DEFAULT,
-  after: number = 0,
+  after: string = "0",
   dir: Dir = Dir.DEFAULT
 ): Promise<Room[]> {
   const response: ApiResponse<{ rooms: Room[] }> = await apiService.get<{
