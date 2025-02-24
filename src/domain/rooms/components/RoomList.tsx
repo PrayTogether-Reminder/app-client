@@ -40,7 +40,7 @@ const RoomList = () => {
   const setHasMore = useRoomStore((state) => state.setHasMore);
   const setRefreshing = useRoomStore((state) => state.setRefreshing);
 
-  const handleRefresh = useCallback(() => {
+  const handleRefresh = () => {
     if (loading) return; // 이미 로딩 중이면 중단
 
     setRefreshing(true);
@@ -48,10 +48,10 @@ const RoomList = () => {
     loadRooms().finally(() => {
       setRefreshing(false);
     });
-  }, [loading, loadRooms, setRefreshing, setHasMore]);
+  };
 
   // 추가 로딩
-  const handleLoadMore = useCallback(() => {
+  const handleLoadMore = () => {
     if (loading || !hasMore || rooms.length === 0) return;
 
     try {
@@ -66,36 +66,28 @@ const RoomList = () => {
       console.error("Error in handleLoadMore:", error);
       setLoading(false);
     }
-  }, [loading, hasMore, loadRooms, rooms, setLoading]);
+  };
+
   // 방 선택
-  const handleRoomPress = useCallback((room: Room) => {
+  const handleRoomPress = (room: Room) => {
     console.log("Selected room:", room);
-  }, []);
+  };
 
-  const handleNotificationToggle = useCallback(
-    (room: Room) => {
-      toggleNotification(room);
-    },
-    [toggleNotification]
-  );
+  const handleNotificationToggle = (room: Room) => {
+    toggleNotification(room);
+  };
 
-  const handleLeaveRoom = useCallback(
-    (room: Room) => {
-      leaveRoom(room);
-    },
-    [leaveRoom]
-  );
+  const handleLeaveRoom = (room: Room) => {
+    leaveRoom(room);
+  };
 
-  const renderRoom: ListRenderItem<Room> = useCallback(
-    ({ item }) => (
-      <RoomItem
-        room={item}
-        onRoomPress={handleRoomPress}
-        onNotificationToggle={handleNotificationToggle}
-        onLeaveRoom={handleLeaveRoom}
-      />
-    ),
-    [handleRoomPress, handleNotificationToggle, handleLeaveRoom]
+  const renderRoom: ListRenderItem<Room> = ({ item }) => (
+    <RoomItem
+      room={item}
+      onRoomPress={handleRoomPress}
+      onNotificationToggle={handleNotificationToggle}
+      onLeaveRoom={handleLeaveRoom}
+    />
   );
 
   React.useEffect(() => {

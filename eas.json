@@ -1,0 +1,14 @@
+{
+  "build": {
+    "preview": {
+      "env": {
+        "API_URL": "API_URL"
+      }
+    },
+    "production": {
+      "env": {
+        "API_URL": "API_URL"
+      }
+    }
+  }
+}
