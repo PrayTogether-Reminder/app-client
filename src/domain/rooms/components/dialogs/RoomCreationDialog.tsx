@@ -13,6 +13,8 @@ export default function RoomCreationDialog({
   open,
   setOpen,
 }: RoomCreationDialogProp) {
+  if (open) console.log("room createion dialog open");
+  else if (!open) console.log("room createion dialog close");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const titleRef = useRef<Input>(null);

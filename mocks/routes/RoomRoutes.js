@@ -8,12 +8,16 @@ const setupRoomRoutes = (server, db) => {
     }
 
     if (req.query["after"] === "2024-04-05T07:34:38Z") {
-      res.json({ rooms: allRooms.slice(11, 16) });
+      res.json({ rooms: allRooms.slice(10, 16) });
     }
 
     if (req.query["after"] === "2024-05-27T05:56:52Z") {
       res.json({ rooms: allRooms.slice(16) });
     }
+  });
+
+  server.post(apiVersion + "/rooms/:roomId/notification", (req, res) => {
+    res.json({});
   });
 };
 

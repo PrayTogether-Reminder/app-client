@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { BackHandler } from "react-native";
 
 export default function useCloseOnBack(

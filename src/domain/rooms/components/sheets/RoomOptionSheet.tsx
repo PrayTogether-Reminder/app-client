@@ -1,9 +1,7 @@
-import { Sheet, Button, ScrollView, YStack, Text } from "tamagui";
-import { BellOff, Bell, LogOut } from "@tamagui/lucide-icons";
+import { Bell, BellOff, LogOut } from "@tamagui/lucide-icons";
+import { Button, ScrollView, Sheet, Text, YStack } from "tamagui";
 import { buttonColor } from "../../../../common/styles/color";
-import { Room } from "../RoomList";
-import { Alert } from "react-native";
-import { useCallback } from "react";
+import { Room } from "../../types/dto/responses/room";
 
 interface RoomInfoSheetProp {
   showMenu: boolean;

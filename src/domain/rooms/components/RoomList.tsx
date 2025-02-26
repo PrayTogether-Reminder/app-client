@@ -1,19 +1,12 @@
-import React, { useCallback, useState } from "react";
-import { ListRenderItem, Platform, FlatList } from "react-native";
+import React from "react";
+import { FlatList, ListRenderItem, Platform } from "react-native";
 import { Spinner, YStack, styled } from "tamagui";
+import { useSelectedRoomStore } from "../store/roomStore";
+import { Room } from "../types/dto/responses/room";
+import { useToggleRoomNotificationMutation } from "./../hooks/mutations/roomMutations";
+import { useInfiniteRoomsQuery } from "./../hooks/queries/roomQueries";
 import EmptyRoomList from "./RoomEmpty";
 import RoomItem from "./RoomItem";
-import { useRoomStore } from "./../store/roomStore";
-import { OrderBy } from "../../../common/apis/constants/params";
-
-export interface Room {
-  id: number;
-  name: string;
-  memberCnt: number;
-  description: string;
-  createdTime: Date;
-  isNotification: boolean;
-}
 
 const RoomFlatList = styled(FlatList<Room>, {
   flex: 1,
@@ -29,73 +22,59 @@ const LoadingFooter = () => (
 const RoomList = () => {
   console.log("RoomList rendering");
 
-  const rooms = useRoomStore((state) => state.rooms);
-  const loading = useRoomStore((state) => state.loading);
-  const refreshing = useRoomStore((state) => state.refreshing);
-  const hasMore = useRoomStore((state) => state.hasMore);
-  const loadRooms = useRoomStore((state) => state.loadRooms);
-  const toggleNotification = useRoomStore((state) => state.toggleNotification);
-  const leaveRoom = useRoomStore((state) => state.leaveRoom);
-  const setLoading = useRoomStore((state) => state.setLoading);
-  const setHasMore = useRoomStore((state) => state.setHasMore);
-  const setRefreshing = useRoomStore((state) => state.setRefreshing);
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isRefetching,
+    refetch,
+  } = useInfiniteRoomsQuery();
+
+  const { mutate: toggleRoomNotificationMutation } =
+    useToggleRoomNotificationMutation();
+
+  const { selectRoom } = useSelectedRoomStore();
+
+  const rooms = React.useMemo(() => {
+    if (!data) return [];
+    // @ts-expect-error
+    return data.pages.flatMap((page: Room[]) => page);
+  }, [data]);
 
   const handleRefresh = () => {
-    if (loading) return; // 이미 로딩 중이면 중단
-
-    setRefreshing(true);
-    setHasMore(true);
-    loadRooms().finally(() => {
-      setRefreshing(false);
-    });
+    if (isLoading || isRefetching) return;
+    refetch();
   };
 
-  // 추가 로딩
   const handleLoadMore = () => {
-    if (loading || !hasMore || rooms.length === 0) return;
-
-    try {
-      const lastRoom = rooms[rooms.length - 1];
-      // 마지막 방의 생성 시간이 있는지 확인
-      if (lastRoom?.createdTime) {
-        setLoading(true); // 로딩 상태 설정
-        console.log("last: " + lastRoom.createdTime.toString());
-        loadRooms(OrderBy.DEFAULT, lastRoom.createdTime.toString());
-      }
-    } catch (error) {
-      console.error("Error in handleLoadMore:", error);
-      setLoading(false);
-    }
+    if (isFetchingNextPage || !hasNextPage || rooms.length === 0) return;
+    fetchNextPage();
   };
 
-  // 방 선택
   const handleRoomPress = (room: Room) => {
+    selectRoom(room);
     console.log("Selected room:", room);
   };
 
-  const handleNotificationToggle = (room: Room) => {
-    toggleNotification(room);
+  const handleToggleRoomNotificationMutation = (roomId: number) => {
+    toggleRoomNotificationMutation(roomId);
   };
 
   const handleLeaveRoom = (room: Room) => {
-    leaveRoom(room);
+    // leaveRoomMutation(room.id);
   };
 
   const renderRoom: ListRenderItem<Room> = ({ item }) => (
     <RoomItem
       room={item}
       onRoomPress={handleRoomPress}
-      onNotificationToggle={handleNotificationToggle}
+      onNotificationToggle={() => handleToggleRoomNotificationMutation(item.id)}
       onLeaveRoom={handleLeaveRoom}
     />
   );
 
-  React.useEffect(() => {
-    setLoading(true);
-    loadRooms().finally(() => {
-      setLoading(false);
-    });
-  }, [loadRooms, setLoading]);
   return (
     <YStack flex={1} backgroundColor="$background">
       <RoomFlatList
@@ -104,9 +83,13 @@ const RoomList = () => {
         keyExtractor={(item) => String(item.id)}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.3}
-        ListFooterComponent={loading && hasMore ? LoadingFooter : null}
-        ListEmptyComponent={!loading ? EmptyRoomList : null}
-        refreshing={refreshing}
+        ListFooterComponent={
+          (isFetchingNextPage || isLoading) && hasNextPage
+            ? LoadingFooter
+            : null
+        }
+        ListEmptyComponent={!isLoading ? EmptyRoomList : null}
+        refreshing={isRefetching}
         onRefresh={handleRefresh}
         showsVerticalScrollIndicator={true}
         contentContainerStyle={{

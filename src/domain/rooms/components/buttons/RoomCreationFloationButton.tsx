@@ -1,7 +1,7 @@
+import { Plus } from "@tamagui/lucide-icons";
+import { Fragment, useState } from "react";
 import { Button, styled } from "tamagui";
 import { color } from "../../../../common/styles/color";
-import { Plus } from "@tamagui/lucide-icons";
-import { Fragment, useCallback, useState } from "react";
 import RoomCreationDialog from "../dialogs/RoomCreationDialog";
 
 const FloatingButton = styled(Button, {
@@ -20,9 +20,9 @@ const FloatingButton = styled(Button, {
 });
 
 export default function RoomCreationFloationButton() {
-  const handleDialogOpen = useCallback(() => {
+  const handleDialogOpen = () => {
     setDialogOpen(true);
-  }, []);
+  };
   const [dialogOpen, setDialogOpen] = useState(false);
 
   return (
