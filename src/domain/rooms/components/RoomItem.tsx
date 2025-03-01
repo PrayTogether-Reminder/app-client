@@ -1,6 +1,7 @@
-import { ChevronRight, Users } from "@tamagui/lucide-icons";
+import Entypo from "@expo/vector-icons/Entypo";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import React, { useState } from "react";
-import { Alert } from "react-native";
+import { useWindowDimensions, Alert } from "react-native";
 import { Card, Text, XStack, YStack } from "tamagui";
 import useCloseOnBack from "../../../common/services/back-handler/useCloseOnBack";
 import { color } from "../../../common/styles/color";
@@ -22,6 +23,7 @@ const RoomItem = ({
 }: RoomItemProps) => {
   console.log("RoomItem rendering = " + room.id);
   const [showMenu, setShowMenu] = useState(false);
+  const { width } = useWindowDimensions();
 
   const handleLongPress = () => {
     setShowMenu(true);
@@ -70,12 +72,14 @@ const RoomItem = ({
             <Text fontSize="$6" fontWeight="bold">
               {room.name}
             </Text>
-            <ChevronRight size="$1" />
+            <Entypo name="chevron-right" size={width * 0.07} color="black" />
+            {/* <ChevronRight size="$1" /> */}
           </XStack>
 
           <XStack gap="$4">
             <XStack gap="$2" alignItems="center">
-              <Users size="$1" />
+              <AntDesign name="user" size={width * 0.08} color="black" />
+              {/* <Users size="$1" /> */}
               <Text fontSize="$4" color="gray">
                 현재 {room.memberCnt}명
               </Text>

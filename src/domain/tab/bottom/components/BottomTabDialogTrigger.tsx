@@ -2,18 +2,27 @@ import { Fragment } from "react";
 import { Tabs } from "tamagui";
 import type { BottomTabActiveType } from "../types/bottomTabActiveType";
 import { backgroundColor } from "../../../../common/styles/color";
+import * as ExpoIcons from "@expo/vector-icons";
 
 type TabDialogTriggerProps = {
   activeStatus: BottomTabActiveType;
-  icon: any;
+  iconFamily: keyof typeof ExpoIcons;
+  iconName: string;
+  size?: number;
+  color?: string;
   setOpen: (value: boolean) => void;
 };
 
 const TabDialogTrigger = ({
   activeStatus,
-  icon: LucideIcon,
+  iconFamily,
+  iconName,
+  size = 24,
+  color = "black",
   setOpen,
 }: TabDialogTriggerProps) => {
+  const IconComponent = ExpoIcons[iconFamily];
+
   return (
     <Fragment>
       <Tabs.Tab
@@ -28,13 +37,7 @@ const TabDialogTrigger = ({
         }}
         onPress={() => setOpen(true)}
       >
-        <LucideIcon
-          strokeWidth={2}
-          size="$3"
-          $sm={{ size: "$3" }}
-          $md={{ size: "$4" }}
-          $lg={{ size: "$5" }}
-        />
+        <IconComponent name={iconName} size={size} color={color} />
       </Tabs.Tab>
     </Fragment>
   );

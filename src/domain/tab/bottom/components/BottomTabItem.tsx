@@ -1,13 +1,25 @@
 import { Tabs } from "tamagui";
 import type { BottomTabActiveType } from "../types/bottomTabActiveType";
 import { backgroundColor } from "../../../../common/styles/color";
+import * as ExpoIcons from "@expo/vector-icons";
 
 type TabItemProps = {
   activeStatus: BottomTabActiveType;
-  icon: any;
+  iconFamily: keyof typeof ExpoIcons;
+  iconName: string;
+  size?: number;
+  color?: string;
 };
 
-const TabItem = ({ activeStatus, icon: LucideIcon }: TabItemProps) => {
+const TabItem = ({
+  activeStatus,
+  iconFamily,
+  iconName,
+  size = 24,
+  color = "black",
+}: TabItemProps) => {
+  const IconComponent = ExpoIcons[iconFamily];
+
   return (
     <Tabs.Tab
       value={activeStatus}
@@ -20,13 +32,7 @@ const TabItem = ({ activeStatus, icon: LucideIcon }: TabItemProps) => {
         opacity: 0.7,
       }}
     >
-      <LucideIcon
-        strokeWidth={2}
-        size="$3"
-        $sm={{ size: "$3" }}
-        $md={{ size: "$4" }}
-        $lg={{ size: "$5" }}
-      />
+      <IconComponent name={iconName} size={size} color={color} />
     </Tabs.Tab>
   );
 };

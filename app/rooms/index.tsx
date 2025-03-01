@@ -1,10 +1,9 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { View } from "tamagui";
-import RoomCreationDialog from "../../src/domain/rooms/components/dialogs/RoomCreationDialog";
-import BottomTabs from "../../src/domain/tab/bottom/components/BottomTabs";
 import Top1Body10Bottom1 from "../../src/common/layout/Top1Body10Bottom1";
 import RoomList from "../../src/domain/rooms/components/RoomList";
-import RoomCreationFloationButton from "../../src/domain/rooms/components/buttons/RoomCreationFloationButton";
+import RoomCreationFloatingButton from "../../src/domain/rooms/components/buttons/RoomCreationFloatingButton";
+import BottomTabs from "../../src/domain/tab/bottom/components/BottomTabs";
 
 export default function RoomsScreen() {
   return (
@@ -12,7 +11,7 @@ export default function RoomsScreen() {
       <Top1Body10Bottom1
         {...{
           tops: [<View />],
-          bodies: [<RoomList />, <RoomCreationFloationButton />],
+          bodies: [<RoomList />, <RoomCreationFloatingButton />],
           bottoms: [<BottomTabs />],
         }}
       ></Top1Body10Bottom1>

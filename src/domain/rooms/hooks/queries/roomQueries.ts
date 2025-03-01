@@ -7,7 +7,7 @@ import {
 import { OrderBy, Dir } from "../../../../common/apis/constants/params";
 import { Room } from "../../types/dto/responses/room";
 import roomService from "./../../services/roomService";
-import QUERY_KEYS from "../../../../common/queries/queryKeys";
+import QUERY_KEYS from "../../../../common/hooks/queries/queryKeys";
 
 type RoomPageParam = {
   orderBy: OrderBy;

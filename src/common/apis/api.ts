@@ -1,22 +1,18 @@
-// services/api.ts
 import axios, { AxiosResponse } from "axios";
 import BASE_API_URL from "../config/apiUrl";
 
-// API 응답의 기본 구조 정의
 interface ApiResponse<T = any> {
   data: T;
   message: string;
   status: number;
 }
 
-// API 에러 응답 구조 정의
 interface ApiError {
   code: string;
   message: string;
   status: number;
 }
 
-// 요청 타임아웃 상수 정의
 const REQUEST_TIMEOUT = 30000; // 30s
 
 const api = axios.create({
@@ -50,7 +46,7 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.log("response error=" + error);
+    console.log("response netword error=" + error);
     // 네트워크 에러 처리
     if (!error.response) {
       return Promise.reject({

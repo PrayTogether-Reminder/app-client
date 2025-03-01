@@ -1,8 +1,9 @@
-import { Plus } from "@tamagui/lucide-icons";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import { Fragment, useState } from "react";
 import { Button, styled } from "tamagui";
-import { color } from "../../../../common/styles/color";
+import { backgroundColor, color } from "../../../../common/styles/color";
 import RoomCreationDialog from "../dialogs/RoomCreationDialog";
+import { useWindowDimensions } from "react-native";
 
 const FloatingButton = styled(Button, {
   position: "absolute",
@@ -11,26 +12,29 @@ const FloatingButton = styled(Button, {
   width: "$6",
   height: "$6",
   borderRadius: "$6",
+  padding: "$2",
   backgroundColor: color.secondary,
   shadowColor: "#000",
   shadowOffset: { width: 0, height: 2 },
   shadowOpacity: 0.25,
   shadowRadius: 3.84,
   elevation: 5,
+  pressStyle: {
+    backgroundColor: color.secondary,
+  },
 });
 
-export default function RoomCreationFloationButton() {
-  const handleDialogOpen = () => {
-    setDialogOpen(true);
-  };
+export default function RoomCreationFloatingButton() {
+  const { width } = useWindowDimensions();
   const [dialogOpen, setDialogOpen] = useState(false);
 
   return (
     <Fragment>
       <FloatingButton
-        icon={<Plus size="$1.5" color="white" />}
-        onPress={handleDialogOpen}
+        icon={<AntDesign name="plus" size={width * 0.09} color="white" />}
+        onPress={() => setDialogOpen(true)}
       />
+
       <RoomCreationDialog open={dialogOpen} setOpen={setDialogOpen} />
     </Fragment>
   );

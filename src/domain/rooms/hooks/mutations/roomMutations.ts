@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import roomService from "../../services/roomService";
-import QUERY_KEYS from "../../../../common/queries/queryKeys";
+import QUERY_KEYS from "../../../../common/hooks/queries/queryKeys";
 import { Room } from "../../types/dto/responses/room";
 
 // 방 알림 설정 토글 mutation

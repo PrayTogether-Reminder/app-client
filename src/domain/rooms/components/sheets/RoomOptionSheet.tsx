@@ -1,4 +1,6 @@
-import { Bell, BellOff, LogOut } from "@tamagui/lucide-icons";
+import Feather from "@expo/vector-icons/Feather";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+
 import { Button, ScrollView, Sheet, Text, YStack } from "tamagui";
 import { buttonColor } from "../../../../common/styles/color";
 import { Room } from "../../types/dto/responses/room";
@@ -53,14 +55,20 @@ export default function RoomInfoSheet({
 
           {/* 하단 버튼들 */}
           <Button
-            icon={room.isNotification ? BellOff : Bell}
+            icon={
+              room.isNotification ? (
+                <Feather name="bell-off" size={24} color="black" />
+              ) : (
+                <Feather name="bell" size={24} color="black" />
+              )
+            }
             onPress={handleNotificationToggle}
           >
             알림 {room.isNotification ? "끄기" : "켜기"}
           </Button>
 
           <Button
-            icon={LogOut}
+            icon={<MaterialIcons name="logout" size={24} color="black" />}
             backgroundColor={buttonColor.exit}
             onPress={handleLeaveRoom}
           >

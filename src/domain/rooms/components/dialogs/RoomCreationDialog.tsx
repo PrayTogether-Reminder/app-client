@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Dialog, Fieldset, Input, Button, Label, Unspaced } from "tamagui";
-import { X } from "@tamagui/lucide-icons";
-import { keyboardHideDelFocus } from "../../../../common/keyboard/services/keyboardService";
+import Feather from "@expo/vector-icons/Feather";
+import { keyboardHideDelFocus } from "../../../../common/services/keyboard/keyboardService";
 import useCloseOnBack from "../../../../common/services/back-handler/useCloseOnBack";
 
 type RoomCreationDialogProp = {
   open: boolean;
-  setOpen: (value: boolean) => void;
+  setOpen: (open: boolean) => void;
 };
 
 export default function RoomCreationDialog({
@@ -37,9 +37,9 @@ export default function RoomCreationDialog({
         <Dialog.Overlay
           key="overlay"
           backgroundColor="#BEBFC5"
-          opacity={0.6} // 투명도 조절
-          animation="medium"
-          enterStyle={{ opacity: 1 }}
+          opacity={0.6}
+          animation="quick"
+          enterStyle={{ opacity: 0.3 }}
           exitStyle={{ opacity: 0 }}
         />
 
@@ -51,7 +51,7 @@ export default function RoomCreationDialog({
           key="content"
           animateOnly={["transform", "opacity"]}
           animation={[
-            "medium",
+            "quick",
             {
               opacity: {
                 overshootClamping: true,
@@ -114,7 +114,7 @@ export default function RoomCreationDialog({
                 right="$3"
                 size="$2"
                 circular
-                icon={X}
+                icon={<Feather name="x" size={24} color="black" />}
               />
             </Dialog.Close>
           </Unspaced>

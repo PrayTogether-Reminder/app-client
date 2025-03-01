@@ -1,4 +1,4 @@
-import { House, UserRoundCog } from "@tamagui/lucide-icons";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import React from "react";
 import { Separator, Tabs, View } from "tamagui";
 import {
@@ -9,9 +9,11 @@ import TabItem from "./BottomTabItem";
 import { backgroundColor } from "../../../../common/styles/color";
 
 import { useBottomTabActive } from "../hooks/bottomTabActiveHooks";
+import { useWindowDimensions } from "react-native";
 
 export default function BottomTabs() {
   const { bottomTabActive, setTabActive } = useBottomTabActive();
+  const { width } = useWindowDimensions();
   return (
     <Tabs
       value={bottomTabActive.status}
@@ -30,13 +32,22 @@ export default function BottomTabs() {
           paddingHorizontal="$4"
           borderRadius={0}
         >
-          <TabItem activeStatus={BottomTabActiveStatus.ROOMS} icon={House} />
+          <TabItem
+            activeStatus={BottomTabActiveStatus.ROOMS}
+            iconFamily="FontAwesome6"
+            iconName="house-chimney"
+            color="black"
+            size={width * 0.07}
+          />
 
           <Separator vertical height="50%" marginHorizontal="$2" />
 
           <TabItem
             activeStatus={BottomTabActiveStatus.PROFILES}
-            icon={UserRoundCog}
+            iconFamily="FontAwesome6"
+            iconName="user-gear"
+            color="black"
+            size={width * 0.07}
           />
         </Tabs.List>
       </View>

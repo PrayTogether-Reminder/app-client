@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList, ListRenderItem, Platform } from "react-native";
+import { FlatList, ListRenderItem, Platform, Alert } from "react-native";
 import { Spinner, YStack, styled } from "tamagui";
 import { useSelectedRoomStore } from "../store/roomStore";
 import { Room } from "../types/dto/responses/room";
@@ -7,6 +7,8 @@ import { useToggleRoomNotificationMutation } from "./../hooks/mutations/roomMuta
 import { useInfiniteRoomsQuery } from "./../hooks/queries/roomQueries";
 import EmptyRoomList from "./RoomEmpty";
 import RoomItem from "./RoomItem";
+import { useRouter } from "expo-router";
+import path from "../../../common/constants/path";
 
 const RoomFlatList = styled(FlatList<Room>, {
   flex: 1,
@@ -20,6 +22,7 @@ const LoadingFooter = () => (
 );
 
 const RoomList = () => {
+  // Alert.alert("RoomList rendering");
   console.log("RoomList rendering");
 
   const {
@@ -36,6 +39,7 @@ const RoomList = () => {
     useToggleRoomNotificationMutation();
 
   const { selectRoom } = useSelectedRoomStore();
+  const router = useRouter();
 
   const rooms = React.useMemo(() => {
     if (!data) return [];
@@ -54,8 +58,9 @@ const RoomList = () => {
   };
 
   const handleRoomPress = (room: Room) => {
-    selectRoom(room);
     console.log("Selected room:", room);
+    selectRoom(room);
+    router.push(path.rooms + `/${room.id}`);
   };
 
   const handleToggleRoomNotificationMutation = (roomId: number) => {
