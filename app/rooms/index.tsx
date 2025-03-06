@@ -1,5 +1,7 @@
 import { Fragment } from "react";
-import { View } from "tamagui";
+import { View, StyleSheet } from "react-native";
+import { Surface } from "react-native-paper";
+import { RFValue } from "react-native-responsive-fontsize";
 import Top1Body10Bottom1 from "../../src/common/layout/Top1Body10Bottom1";
 import RoomList from "../../src/domain/rooms/components/RoomList";
 import RoomCreationFloatingButton from "../../src/domain/rooms/components/buttons/RoomCreationFloatingButton";
@@ -14,7 +16,7 @@ export default function RoomsScreen() {
           bodies: [<RoomList />, <RoomCreationFloatingButton />],
           bottoms: [<BottomTabs />],
         }}
-      ></Top1Body10Bottom1>
+      />
     </Fragment>
   );
 }

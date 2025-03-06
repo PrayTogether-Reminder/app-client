@@ -1,6 +1,14 @@
 import React from "react";
-import { FlatList, ListRenderItem, Platform, Alert } from "react-native";
-import { Spinner, YStack, styled } from "tamagui";
+import {
+  FlatList,
+  ListRenderItem,
+  Platform,
+  Alert,
+  StyleSheet,
+  View,
+} from "react-native";
+import { ActivityIndicator, useTheme } from "react-native-paper";
+import { RFValue } from "react-native-responsive-fontsize";
 import { useSelectedRoomStore } from "../store/roomStore";
 import { Room } from "../types/dto/responses/room";
 import { useToggleRoomNotificationMutation } from "./../hooks/mutations/roomMutations";
@@ -10,20 +18,19 @@ import RoomItem from "./RoomItem";
 import { useRouter } from "expo-router";
 import path from "../../../common/constants/path";
 
-const RoomFlatList = styled(FlatList<Room>, {
-  flex: 1,
-  padding: "$4",
-});
+const LoadingFooter = () => {
+  const theme = useTheme();
 
-const LoadingFooter = () => (
-  <YStack padding="$4" alignItems="center">
-    <Spinner size="large" color="$blue10" />
-  </YStack>
-);
+  return (
+    <View style={styles.loadingFooter}>
+      <ActivityIndicator size="large" color={theme.colors.primary} />
+    </View>
+  );
+};
 
 const RoomList = () => {
-  // Alert.alert("RoomList rendering");
   console.log("RoomList rendering");
+  const theme = useTheme();
 
   const {
     data,
@@ -60,7 +67,7 @@ const RoomList = () => {
   const handleRoomPress = (room: Room) => {
     console.log("Selected room:", room);
     selectRoom(room);
-    router.push(path.rooms + `/${room.id}`);
+    router.push(path.roomId(`${room.id}`));
   };
 
   const handleToggleRoomNotificationMutation = (roomId: number) => {
@@ -81,8 +88,15 @@ const RoomList = () => {
   );
 
   return (
-    <YStack flex={1} backgroundColor="$background">
-      <RoomFlatList
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
+      <FlatList
+        style={styles.flatList}
+        contentContainerStyle={{
+          padding: RFValue(16),
+          paddingBottom: Platform.OS === "ios" ? RFValue(40) : RFValue(16),
+        }}
         data={rooms}
         renderItem={renderRoom}
         keyExtractor={(item) => String(item.id)}
@@ -97,12 +111,22 @@ const RoomList = () => {
         refreshing={isRefetching}
         onRefresh={handleRefresh}
         showsVerticalScrollIndicator={true}
-        contentContainerStyle={{
-          paddingBottom: Platform.OS === "ios" ? 40 : 16,
-        }}
       />
-    </YStack>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  flatList: {
+    flex: 1,
+  },
+  loadingFooter: {
+    padding: RFValue(16),
+    alignItems: "center",
+  },
+});
 
 export default RoomList;
