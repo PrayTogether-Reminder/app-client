@@ -1,8 +1,16 @@
 import Entypo from "@expo/vector-icons/Entypo";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import React, { useState } from "react";
-import { useWindowDimensions, Alert } from "react-native";
-import { Card, Text, XStack, YStack } from "tamagui";
+import React, { useState, useRef, useEffect } from "react";
+import {
+  useWindowDimensions,
+  Alert,
+  StyleSheet,
+  View,
+  Animated,
+  Pressable,
+} from "react-native";
+import { Card, Text, useTheme } from "react-native-paper";
+import { RFValue } from "react-native-responsive-fontsize";
 import useCloseOnBack from "../../../common/services/back-handler/useCloseOnBack";
 import { color } from "../../../common/styles/color";
 import { Room } from "../types/dto/responses/room";
@@ -24,9 +32,34 @@ const RoomItem = ({
   console.log("RoomItem rendering = " + room.id);
   const [showMenu, setShowMenu] = useState(false);
   const { width } = useWindowDimensions();
+  const theme = useTheme();
+
+  // 애니메이션 관련 상태
+  const [isPressed, setIsPressed] = useState(false);
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  // 길게 누를 때 애니메이션 효과
+  useEffect(() => {
+    Animated.spring(scaleAnim, {
+      toValue: isPressed ? 0.95 : 1,
+      friction: 7,
+      tension: 100,
+      useNativeDriver: true,
+    }).start();
+  }, [isPressed, scaleAnim]);
+
+  const handlePressIn = () => {
+    setIsPressed(true);
+  };
+
+  const handlePressOut = () => {
+    setIsPressed(false);
+  };
 
   const handleLongPress = () => {
     setShowMenu(true);
+    // 길게 눌렀을 때 진동 효과를 추가할 수도 있습니다 (react-native-haptic-feedback 필요)
+    // ReactNativeHapticFeedback.trigger('impactMedium');
   };
 
   const handleRoomPress = () => {
@@ -53,40 +86,45 @@ const RoomItem = ({
 
   useCloseOnBack(showMenu, setShowMenu);
 
+  // Animated.View로 감싸서 애니메이션 적용
   return (
     <>
-      <Card
-        elevate
-        bordered
-        animation="bouncy"
-        pressStyle={{ scale: 0.95 }}
-        onPress={handleRoomPress}
+      <Pressable
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
         onLongPress={handleLongPress}
-        marginBottom="$4"
-        padding="$4"
-        borderLeftColor={color.secondary}
-        borderLeftWidth="$2"
+        onPress={handleRoomPress}
+        delayLongPress={200}
       >
-        <YStack gap="$2">
-          <XStack justifyContent="space-between" alignItems="center">
-            <Text fontSize="$6" fontWeight="bold">
-              {room.name}
-            </Text>
-            <Entypo name="chevron-right" size={width * 0.07} color="black" />
-            {/* <ChevronRight size="$1" /> */}
-          </XStack>
+        <Animated.View style={[{ transform: [{ scale: scaleAnim }] }]}>
+          <Card
+            style={[styles.card, { borderLeftColor: color.secondary }]}
+            mode="elevated"
+          >
+            <Card.Content>
+              <View style={styles.contentContainer}>
+                <View style={styles.headerRow}>
+                  <Text style={styles.title}>{room.name}</Text>
+                  <Entypo
+                    name="chevron-right"
+                    size={width * 0.07}
+                    color="black"
+                  />
+                </View>
 
-          <XStack gap="$4">
-            <XStack gap="$2" alignItems="center">
-              <AntDesign name="user" size={width * 0.08} color="black" />
-              {/* <Users size="$1" /> */}
-              <Text fontSize="$4" color="gray">
-                현재 {room.memberCnt}명
-              </Text>
-            </XStack>
-          </XStack>
-        </YStack>
-      </Card>
+                <View style={styles.infoRow}>
+                  <View style={styles.memberRow}>
+                    <AntDesign name="user" size={width * 0.08} color="black" />
+                    <Text style={styles.memberText}>
+                      현재 {room.memberCnt}명
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </Card.Content>
+          </Card>
+        </Animated.View>
+      </Pressable>
 
       <RoomInfoSheet
         showMenu={showMenu}
@@ -98,5 +136,38 @@ const RoomItem = ({
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  card: {
+    marginBottom: RFValue(16),
+    borderLeftWidth: RFValue(8),
+    elevation: 4,
+  },
+  contentContainer: {
+    gap: RFValue(8),
+  },
+  headerRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  title: {
+    fontSize: RFValue(18),
+    fontWeight: "bold",
+  },
+  infoRow: {
+    flexDirection: "row",
+    gap: RFValue(16),
+  },
+  memberRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: RFValue(8),
+  },
+  memberText: {
+    fontSize: RFValue(14),
+    color: "gray",
+  },
+});
 
 export default RoomItem;
