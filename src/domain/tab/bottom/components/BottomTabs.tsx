@@ -52,7 +52,7 @@ export default function BottomTabs() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: backgroundColor.default,
+    backgroundColor: backgroundColor.white,
   },
   tabBar: {
     height: "100%",

@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   },
   bottomSection: {
     flex: 1,
-    backgroundColor: backgroundColor.default,
+    backgroundColor: backgroundColor.white,
     width: "100%",
     height: "100%",
   },

@@ -12,7 +12,7 @@ import {
 import { Card, Text, useTheme } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import useCloseOnBack from "../../../common/services/back-handler/useCloseOnBack";
-import { color } from "../../../common/styles/color";
+import { backgroundColor, color } from "../../../common/styles/color";
 import { Room } from "../types/dto/responses/room";
 import RoomInfoSheet from "./sheets/RoomOptionSheet";
 
@@ -108,13 +108,17 @@ const RoomItem = ({
                   <Entypo
                     name="chevron-right"
                     size={width * 0.07}
-                    color="black"
+                    color={color.black}
                   />
                 </View>
 
                 <View style={styles.infoRow}>
                   <View style={styles.memberRow}>
-                    <AntDesign name="user" size={width * 0.08} color="black" />
+                    <AntDesign
+                      name="user"
+                      size={width * 0.08}
+                      color={color.black}
+                    />
                     <Text style={styles.memberText}>
                       현재 {room.memberCnt}명
                     </Text>
@@ -139,6 +143,7 @@ const RoomItem = ({
 
 const styles = StyleSheet.create({
   card: {
+    backgroundColor: backgroundColor.white,
     marginBottom: RFValue(16),
     borderLeftWidth: RFValue(8),
     elevation: 4,

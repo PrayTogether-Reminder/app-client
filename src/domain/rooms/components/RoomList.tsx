@@ -88,9 +88,7 @@ const RoomList = () => {
   );
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-    >
+    <View style={[styles.container]}>
       <FlatList
         style={styles.flatList}
         contentContainerStyle={{

@@ -32,7 +32,8 @@ export const alertColor = {
 };
 
 export const backgroundColor = {
-  default: "#FFFFFF",
+  default: "#f5f5f5",
+  white: "#FFFFFF",
 };
 
 export const flexMarker = {

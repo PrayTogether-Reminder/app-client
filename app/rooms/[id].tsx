@@ -1,30 +1,92 @@
-import React from "react";
-import { StatusBar, View, Text, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import React, { useRef, useEffect } from "react";
+import {
+  StatusBar,
+  View,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import {
+  Provider as PaperProvider,
+  DefaultTheme,
+  Appbar,
+  Text,
+  Button,
+  Surface,
+  Avatar,
+  Card,
+  useTheme,
+} from "react-native-paper";
+import { RFValue } from "react-native-responsive-fontsize";
 import { useRouter, useLocalSearchParams } from "expo-router";
+import { color } from "../../src/common/styles/color";
 
-// 색상 직접 정의
-const COLORS = {
-  white: "#ffffff",
-  black: "#000000",
-  gray: "#aaaaaa",
-  darkGray: "#555555",
-  blue: "#3B82F6",
+// Theme customization
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: "#3B82F6",
+    secondary: "#f1f5f9",
+    background: "#ffffff",
+    surface: "#ffffff",
+    text: "#000000",
+    disabled: "#aaaaaa",
+    placeholder: "#555555",
+  },
 };
 
+// 기도방 데이터 타입 정의
+interface PrayerRoom {
+  id: string;
+  date: string;
+  title: string;
+  subtitle: string;
+  time: string;
+  category: string;
+}
+
 // 가상의 기도방 데이터
-const prayerRooms = [
-  { id: "1", date: "2025-01-25", title: "25일 1월 4째주 개인을 위한 기도" },
-  { id: "2", date: "2025-01-25", title: "25일 1월 4째주 나라를 위한 기도" },
-  { id: "3", date: "2025-02-01", title: "25일 2월 1째주 개인을 위한 기도" },
-  { id: "4", date: "2025-02-01", title: "25일 2월 1째주 나라를 위한 기도" },
+const prayerRooms: PrayerRoom[] = [
+  {
+    id: "1",
+    date: "2025-01-25",
+    title: "개인을 위한 기도",
+    subtitle: "25일 1월 4째주",
+    time: "09:30 AM",
+    category: "개인",
+  },
+  {
+    id: "2",
+    date: "2025-01-25",
+    title: "나라를 위한 기도",
+    subtitle: "25일 1월 4째주",
+    time: "10:45 AM",
+    category: "나라",
+  },
+  {
+    id: "3",
+    date: "2025-02-01",
+    title: "개인을 위한 기도",
+    subtitle: "1일 2월 1째주",
+    time: "09:00 AM",
+    category: "개인",
+  },
+  {
+    id: "4",
+    date: "2025-02-01",
+    title: "나라를 위한 기도",
+    subtitle: "1일 2월 1째주",
+    time: "11:00 AM",
+    category: "나라",
+  },
 ];
 
 // 기도방 날짜별로 그룹화하는 함수
-function groupByDate(rooms) {
+function groupByDate(rooms: PrayerRoom[]): Record<string, PrayerRoom[]> {
   if (!rooms || !Array.isArray(rooms)) return {};
-  
-  return rooms.reduce((acc, room) => {
+
+  return rooms.reduce((acc: Record<string, PrayerRoom[]>, room: PrayerRoom) => {
     if (!acc[room.date]) {
       acc[room.date] = [];
     }
@@ -33,228 +95,255 @@ function groupByDate(rooms) {
   }, {});
 }
 
-export default function PrayerRoomScreen() {
-  const params = useLocalSearchParams();
+// 카테고리에 따른 아바타 색상
+const getCategoryColor = (category: string): string => {
+  switch (category) {
+    case "개인":
+      return "#3B82F6"; // 파란색
+    case "나라":
+      return "#10B981"; // 초록색
+    default:
+      return "#F59E0B"; // 기본 노란색
+  }
+};
+
+// 카테고리 첫 글자 가져오기
+const getCategoryInitial = (category: string): string => {
+  return category.charAt(0);
+};
+
+function PrayerRoomContent(): JSX.Element {
+  const params = useLocalSearchParams() as any;
   const roomId = params?.id;
   console.log("render room by id =", roomId);
   const router = useRouter();
+  const paperTheme = useTheme();
+  const scrollViewRef = useRef<ScrollView | null>(null);
 
-  const groupedRooms = groupByDate(prayerRooms);
-  const dates = Object.keys(groupedRooms).sort();
+  // 기도방 목록 날짜 기준 정렬
+  const sortedRooms = [...prayerRooms].sort((a, b) => {
+    // 날짜 오름차순 정렬 (과거순, 최신이 맨 아래)
+    return new Date(a.date).getTime() - new Date(b.date).getTime();
+  });
 
-  const handleRoomPress = (room) => {
+  // 컴포넌트가 마운트된 후 스크롤을 맨 아래로 이동
+  useEffect(() => {
+    // 약간의 지연 후 실행하여 레이아웃이 완전히 렌더링된 후 스크롤 되도록 함
+    const timeoutId = setTimeout(() => {
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollToEnd({ animated: false });
+      }
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  const handleRoomPress = (room: PrayerRoom): void => {
     if (!room) return;
     console.log("Selected room:", room);
-    router.push(`/rooms/${room.id}`);
+    router.push(`/rooms/${room.id}` as any);
+  };
+
+  // 새 기도제목 작성 후 돌아왔을 때 맨 아래로 스크롤
+  const scrollToBottom = (): void => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated: true });
+    }
   };
 
   return (
-    <View style={styles.container}>
+    <Surface style={styles.container}>
       <StatusBar
-        backgroundColor={COLORS.white}
+        backgroundColor={paperTheme.colors.background}
         barStyle="dark-content"
       />
 
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.iconButton}
-          onPress={() => router.back()}
-        >
-          <Ionicons
-            name="arrow-back"
-            size={24}
-            color={COLORS.black}
-          />
-        </TouchableOpacity>
+      <Appbar.Header style={styles.header}>
+        <Appbar.BackAction onPress={() => router.back()} />
+        <Appbar.Content
+          title="2025 여기 기도방"
+          titleStyle={styles.headerTitle}
+        />
+        <Appbar.Action icon="menu" color={color.primary} onPress={() => {}} />
+      </Appbar.Header>
 
-        <Text style={styles.headerTitle}>
-          2025 여기 기도방
-        </Text>
-
-        <TouchableOpacity style={styles.iconButton}>
-          <Ionicons name="menu" size={24} color={COLORS.gray} />
-        </TouchableOpacity>
-      </View>
-
-      {/* Content with Timeline */}
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        <View style={styles.timelineContainer}>
-          {/* Timeline Line */}
-          <View style={styles.timelineLine} />
-
-          {/* Prayer Items Grouped by Date */}
-          {dates.length > 0 && dates.map((date, dateIndex) => (
-            <View key={date} style={styles.dateGroup}>
-              {/* Date Header */}
-              <View style={styles.dateHeader}>
-                <Text style={styles.dateText}>
-                  {date}
-                </Text>
-                <View style={styles.dateLine} />
-              </View>
-
-              {/* Prayer Items for this Date */}
-              {groupedRooms[date] && groupedRooms[date].map((room, roomIndex) => (
-                <View key={room.id} style={styles.prayerItemContainer}>
-                  <TouchableOpacity
-                    style={[
-                      styles.prayerButton,
-                      roomIndex === 0 ? styles.primaryButton : null
-                    ]}
-                    onPress={() => handleRoomPress(room)}
-                    activeOpacity={0.7}
-                  >
-                    <Text style={styles.prayerButtonText}>{room.title}</Text>
-                  </TouchableOpacity>
+      {/* Content with Chat-like UI */}
+      <ScrollView
+        ref={scrollViewRef}
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+      >
+        {sortedRooms.map((room) => (
+          <TouchableOpacity
+            key={room.id}
+            onPress={() => handleRoomPress(room)}
+            style={styles.prayerItemContainer}
+          >
+            <Card style={styles.prayerCard}>
+              <Card.Content style={styles.cardContent}>
+                <View style={styles.avatarContainer}>
+                  <Avatar.Text
+                    size={45}
+                    label={getCategoryInitial(room.category)}
+                    style={{ backgroundColor: getCategoryColor(room.category) }}
+                  />
                 </View>
-              ))}
 
-              {/* Add spacer except after the last date */}
-              {dateIndex < dates.length - 1 && <View style={styles.dateSpacer} />}
-            </View>
-          ))}
+                <View style={styles.contentContainer}>
+                  <View style={styles.headerRow}>
+                    <Text style={styles.roomCategory}>{room.category}</Text>
+                    <Text style={styles.roomTime}>{room.time}</Text>
+                  </View>
 
-          {/* Final spacer for bottom padding */}
-          <View style={styles.bottomSpacer} />
-        </View>
+                  <Text style={styles.roomTitle}>{room.title}</Text>
+                  <View style={styles.metaContainer}>
+                    <Text style={styles.roomDate}>{room.date}</Text>
+                    <Text style={styles.roomSubtitle}>{room.subtitle}</Text>
+                  </View>
+                </View>
+              </Card.Content>
+            </Card>
+          </TouchableOpacity>
+        ))}
+        <View style={styles.bottomSpacer} />
       </ScrollView>
 
       {/* Bottom Button */}
-      <View style={styles.bottomButtonContainer}>
-        <TouchableOpacity 
+      <Surface style={styles.bottomButtonContainer}>
+        <Button
+          mode="contained"
+          color={paperTheme.colors.primary}
+          uppercase={false}
           style={styles.bottomButton}
-          activeOpacity={0.7}
+          labelStyle={styles.bottomButtonText}
+          icon="pencil"
+          onPress={() => {
+            // 새 기도제목 작성 화면으로 이동 (이후 구현)
+            console.log("기도제목 작성하기");
+            // 예시: router.push('/create-prayer');
+
+            // 작성 후 돌아왔을 때 스크롤 아래로 이동하도록 효과 추가
+            setTimeout(scrollToBottom, 300);
+          }}
         >
-          <Text style={styles.bottomButtonText}>
-            기도제목 작성하기
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+          기도제목 작성하기
+        </Button>
+      </Surface>
+    </Surface>
+  );
+}
+
+export default function PrayerRoomScreen(): JSX.Element {
+  return (
+    <PaperProvider theme={theme}>
+      <PrayerRoomContent />
+    </PaperProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    height: 56,
-    paddingHorizontal: 16,
+    elevation: 0,
+    backgroundColor: "#ffffff",
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.gray,
+    borderBottomColor: "#f0f0f0",
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  iconButton: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
+    fontSize: RFValue(18),
+    fontWeight: "bold",
   },
   scrollView: {
     flex: 1,
+    backgroundColor: "#f5f5f5",
+    paddingTop: 10,
   },
   scrollContent: {
-    paddingBottom: 100,
-  },
-  timelineContainer: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    position: 'relative',
-  },
-  timelineLine: {
-    position: 'absolute',
-    left: '50%',
-    top: 40,
-    bottom: 0,
-    width: 2,
-    backgroundColor: COLORS.gray,
-    zIndex: 1,
-  },
-  dateGroup: {
-    marginBottom: 8,
-  },
-  dateHeader: {
-    alignItems: 'center',
-    marginVertical: 15,
-    position: 'relative',
-    zIndex: 2,
-  },
-  dateText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    backgroundColor: COLORS.white,
-    paddingHorizontal: 8,
-  },
-  dateLine: {
-    position: 'absolute',
-    width: '100%',
-    height: 1,
-    backgroundColor: COLORS.darkGray,
-    top: 10,
-    zIndex: -1,
+    flexGrow: 1,
+    justifyContent: "flex-start",
   },
   prayerItemContainer: {
-    alignItems: 'center',
+    marginHorizontal: 15,
     marginVertical: 8,
   },
-  prayerButton: {
-    backgroundColor: COLORS.white,
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: COLORS.darkGray,
-    width: '90%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+  prayerCard: {
+    borderRadius: 12,
+    elevation: 2,
   },
-  primaryButton: {
-    borderColor: COLORS.blue,
+  cardContent: {
+    padding: 12,
+    flexDirection: "row",
   },
-  prayerButtonText: {
-    fontSize: 14,
+  avatarContainer: {
+    marginRight: 15,
   },
-  dateSpacer: {
-    height: 10,
+  contentContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  headerRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 5,
+  },
+  roomCategory: {
+    fontSize: RFValue(14),
+    fontWeight: "bold",
+    color: "#333333",
+  },
+  roomTime: {
+    fontSize: RFValue(12),
+    color: "#888888",
+  },
+  roomTitle: {
+    fontSize: RFValue(16),
+    fontWeight: "500",
+    marginBottom: 4,
+  },
+  metaContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  roomDate: {
+    fontSize: RFValue(12),
+    color: "#666666",
+    marginRight: 8,
+    backgroundColor: "#e0e0e0",
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
+  },
+  roomSubtitle: {
+    fontSize: RFValue(12),
+    color: "#666666",
   },
   bottomSpacer: {
-    height: 40,
+    height: 80,
   },
   bottomButtonContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
     padding: 16,
-    backgroundColor: COLORS.white,
+    backgroundColor: "#ffffff",
     borderTopWidth: 1,
-    borderTopColor: COLORS.gray,
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderTopColor: "#f0f0f0",
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 4,
   },
   bottomButton: {
-    backgroundColor: COLORS.white,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
     borderRadius: 30,
-    borderWidth: 1,
-    borderColor: COLORS.blue,
-    width: '70%',
-    alignItems: 'center',
+    width: "80%",
+    paddingVertical: 5,
   },
   bottomButtonText: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: COLORS.blue,
+    fontSize: RFValue(16),
+    fontWeight: "500",
   },
 });

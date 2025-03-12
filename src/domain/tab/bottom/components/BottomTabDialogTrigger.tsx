@@ -31,7 +31,6 @@ const TabDialogTrigger = ({
         style={styles.tab}
         rippleColor="rgba(0, 0, 0, .10)"
         onPress={() => setOpen(true)}
-        underlayColor={backgroundColor.default}
       >
         <View style={styles.tabContent}>
           <IconComponent name={iconName} size={RFValue(size)} color={color} />

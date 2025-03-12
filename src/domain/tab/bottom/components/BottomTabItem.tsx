@@ -32,7 +32,7 @@ const TabItem = ({
       style={styles.tab}
       rippleColor="rgba(0, 0, 0, .10)"
       onPress={onPress}
-      underlayColor={backgroundColor.default}
+      underlayColor={backgroundColor.white}
     >
       <View style={[styles.tabContent, active && styles.activeTab]}>
         <IconComponent name={iconName} size={RFValue(size)} color={color} />
