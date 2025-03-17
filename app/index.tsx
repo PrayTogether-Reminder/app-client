@@ -20,7 +20,7 @@ export default function MainScreen() {
     <View style={styles.container}>
       <TouchableRipple
         onPress={() => {
-          router.push(path.rooms);
+          router.push(path.showRoomList());
         }}
         style={[styles.button, { backgroundColor: theme.colors.primary }]}
         rippleColor="rgba(255, 255, 255, 0.2)"

@@ -9,7 +9,7 @@ import {
 } from "../types/bottomTabActiveType";
 import TabItem from "./BottomTabItem";
 import { backgroundColor } from "../../../../common/styles/color";
-import { useBottomTabActive } from "../hooks/bottomTabActiveHooks";
+import { useBottomTabActive } from "../hooks/useBootomTabActive";
 
 export default function BottomTabs() {
   const { bottomTabActive, setTabActive } = useBottomTabActive();
@@ -52,7 +52,7 @@ export default function BottomTabs() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: backgroundColor.default,
+    backgroundColor: backgroundColor.white,
   },
   tabBar: {
     height: "100%",

@@ -1,6 +1,6 @@
 import Entypo from "@expo/vector-icons/Entypo";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import {
   useWindowDimensions,
   Alert,
@@ -12,7 +12,7 @@ import {
 import { Card, Text, useTheme } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import useCloseOnBack from "../../../common/services/back-handler/useCloseOnBack";
-import { color } from "../../../common/styles/color";
+import { backgroundColor, color } from "../../../common/styles/color";
 import { Room } from "../types/dto/responses/room";
 import RoomInfoSheet from "./sheets/RoomOptionSheet";
 
@@ -34,26 +34,27 @@ const RoomItem = ({
   const { width } = useWindowDimensions();
   const theme = useTheme();
 
-  // 애니메이션 관련 상태
-  const [isPressed, setIsPressed] = useState(false);
+  // 애니메이션을 위한 Animated.Value 생성
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
-  // 길게 누를 때 애니메이션 효과
-  useEffect(() => {
-    Animated.spring(scaleAnim, {
-      toValue: isPressed ? 0.95 : 1,
-      friction: 7,
-      tension: 100,
-      useNativeDriver: true,
-    }).start();
-  }, [isPressed, scaleAnim]);
-
+  // 터치 시작할 때 실행되는 애니메이션 (축소)
   const handlePressIn = () => {
-    setIsPressed(true);
+    Animated.spring(scaleAnim, {
+      toValue: 0.92,
+      useNativeDriver: true,
+      speed: 50,
+      bounciness: 15,
+    }).start();
   };
 
+  // 터치 종료할 때 실행되는 애니메이션 (원래 크기로)
   const handlePressOut = () => {
-    setIsPressed(false);
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      useNativeDriver: true,
+      speed: 50,
+      bounciness: 15,
+    }).start();
   };
 
   const handleLongPress = () => {
@@ -108,13 +109,17 @@ const RoomItem = ({
                   <Entypo
                     name="chevron-right"
                     size={width * 0.07}
-                    color="black"
+                    color={color.black}
                   />
                 </View>
 
                 <View style={styles.infoRow}>
                   <View style={styles.memberRow}>
-                    <AntDesign name="user" size={width * 0.08} color="black" />
+                    <AntDesign
+                      name="user"
+                      size={width * 0.08}
+                      color={color.black}
+                    />
                     <Text style={styles.memberText}>
                       현재 {room.memberCnt}명
                     </Text>
@@ -139,6 +144,7 @@ const RoomItem = ({
 
 const styles = StyleSheet.create({
   card: {
+    backgroundColor: backgroundColor.white,
     marginBottom: RFValue(16),
     borderLeftWidth: RFValue(8),
     elevation: 4,

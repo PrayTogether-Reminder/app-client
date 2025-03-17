@@ -7,6 +7,8 @@ import { useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../src/common/components/ErrorFallback";
+import { backgroundColor } from "../src/common/styles/color";
+import { StatusBar } from "expo-status-bar";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -16,13 +18,13 @@ const theme = {
   // 기존 앱의 테마 색상과 일치하도록 커스터마이징
   colors: {
     ...MD3LightTheme.colors,
-    primary: '#000000', // 기존 앱의 주요 색상으로 변경하세요
-    accent: '#f1c40f',  // 액센트 색상
+    primary: "#000000", // 기존 앱의 주요 색상으로 변경하세요
+    accent: "#f1c40f", // 액센트 색상
   },
   fonts: {
     ...MD3LightTheme.fonts,
     // 폰트 설정을 원한다면 여기에 추가
-  }
+  },
 };
 
 export default function RootLayout() {
@@ -44,6 +46,7 @@ export default function RootLayout() {
     <PaperProvider theme={theme}>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <CustomQueryClientProvider>
+          <StatusBar backgroundColor={backgroundColor.white} />
           <Slot />
         </CustomQueryClientProvider>
       </ErrorBoundary>
