@@ -4,49 +4,25 @@ import { StyleSheet, Dimensions, View, ScrollView } from "react-native";
 import { Drawer, Text, Portal, Modal, Button } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../common/styles/color";
+import { useSelectedRoomStore } from "../types/roomStore";
+import { useRoomMembersQuery } from "../hooks/queries/roomQueries";
 
 const { width, height } = Dimensions.get("window");
 
-const SAMPLE_MEMBERS = [
-  "김예수",
-  "이하나님",
-  "박성령",
-  "최믿음",
-  "정소망",
-  "한사랑",
-  "김예수",
-  "이하나님",
-  "박성령",
-  "최믿음",
-  "정소망",
-  "한사랑",
-  "김예수",
-  "이하나님",
-  "박성령",
-  "최믿음",
-  "정소망",
-  "한사랑",
-  "김예수",
-  "이하나님",
-  "박성령",
-  "최믿음",
-  "정소망",
-  "한사랑",
-];
-
-interface PrayerRoomDrawerProps {
+interface InviteDrawerDrawerProps {
   visible: boolean;
   onClose: () => void;
   drawerWidth?: number;
-  members?: string[]; // 멤버 목록을 props로 받을 수 있도록 추가
 }
 
-const PrayerRoomDrawer: React.FC<PrayerRoomDrawerProps> = ({
+const InviteDrawer: React.FC<InviteDrawerDrawerProps> = ({
   visible,
   onClose,
-  members = SAMPLE_MEMBERS, // 기본값으로 샘플 데이터 사용
 }) => {
   const drawerWidth = width * 0.5;
+  const room = useSelectedRoomStore.getState().selectedRoom;
+  const { data: members = [] } = useRoomMembersQuery(room?.id ?? "");
+
   return (
     <Portal>
       <Modal
@@ -66,7 +42,7 @@ const PrayerRoomDrawer: React.FC<PrayerRoomDrawerProps> = ({
           <ScrollView style={styles.memberListSection}>
             {members.map((member, index) => (
               <View key={index} style={styles.memberItem}>
-                <Text style={styles.memberName}>{member}</Text>
+                <Text style={styles.memberName}>{member.name}</Text>
               </View>
             ))}
           </ScrollView>
@@ -110,7 +86,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 15,
     borderBottomWidth: 1,
-    borderBottomColor: "rgba(255, 255, 255, 0.2)",
+    borderBottomColor: color.white,
   },
   memberCountText: {
     fontSize: RFValue(16),
@@ -124,7 +100,7 @@ const styles = StyleSheet.create({
   memberItem: {
     paddingVertical: 12,
     borderBottomWidth: 0.5,
-    borderBottomColor: "rgba(255, 255, 255, 0.1)",
+    borderBottomColor: color.white,
   },
   memberName: {
     fontSize: RFValue(14),
@@ -133,7 +109,7 @@ const styles = StyleSheet.create({
   footerSection: {
     padding: 20,
     borderTopWidth: 1,
-    borderTopColor: "rgba(255, 255, 255, 0.2)",
+    borderTopColor: color.white,
   },
   inviteButton: {
     backgroundColor: color.third,
@@ -145,4 +121,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PrayerRoomDrawer;
+export default InviteDrawer;

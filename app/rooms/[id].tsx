@@ -3,7 +3,7 @@ import Top1Body10Bottom1 from "../../src/common/layout/Top1Body10Bottom1";
 import PrayerRoomHeader from "../../src/domain/prayerRoom/components/PrayerRoomHeader";
 import PrayerRoomBody from "../../src/domain/prayerRoom/components/PrayerRoomBody";
 import PrayerRoomBottom from "../../src/domain/prayerRoom/components/PrayerRoomBottom";
-import PrayerRoomDrawer from "../../src/domain/inviteRoom/components/InviteDrawer";
+import InviteDrawer from "../../src/domain/prayerRoom/components/InviteDrawer";
 
 export default function PrayerRoomScreen(): JSX.Element {
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -14,7 +14,7 @@ export default function PrayerRoomScreen(): JSX.Element {
 
   return (
     <Fragment>
-      <PrayerRoomDrawer visible={drawerVisible} onClose={toggleDrawer} />
+      <InviteDrawer visible={drawerVisible} onClose={toggleDrawer} />
       <Top1Body10Bottom1
         tops={[<PrayerRoomHeader toggleDrawer={toggleDrawer} />]}
         bodies={[<PrayerRoomBody />]}
