@@ -18,9 +18,6 @@ export const color = {
   teal: "#20c997",
   cyan: "#17a2b8",
   transparent: "transparent",
-};
-
-export const buttonColor = {
   exit: "#FDBCB4",
 };
 

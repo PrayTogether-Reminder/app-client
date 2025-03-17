@@ -1,33 +1,33 @@
-// PrayerRoomDrawer.tsx
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Dimensions, View, ScrollView } from "react-native";
-import { Drawer, Text, Portal, Modal, Button } from "react-native-paper";
+import { Portal, Modal, Button, Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../common/styles/color";
 import { useSelectedRoomStore } from "../types/roomStore";
 import { useRoomMembersQuery } from "../hooks/queries/roomQueries";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
-interface InviteDrawerDrawerProps {
+interface RoomMembersModalProps {
   visible: boolean;
-  onClose: () => void;
-  drawerWidth?: number;
+  closeRightMenu: () => void;
+  openInvite: () => void;
 }
 
-const InviteDrawer: React.FC<InviteDrawerDrawerProps> = ({
+const RoomMembersModal: React.FC<RoomMembersModalProps> = ({
   visible,
-  onClose,
+  closeRightMenu,
+  openInvite,
 }) => {
   const drawerWidth = width * 0.5;
-  const room = useSelectedRoomStore.getState().selectedRoom;
+  const room = useSelectedRoomStore().selectedRoom;
   const { data: members = [] } = useRoomMembersQuery(room?.id ?? "");
 
   return (
     <Portal>
       <Modal
         visible={visible}
-        onDismiss={onClose}
+        onDismiss={closeRightMenu}
         contentContainerStyle={[styles.modal, { width: drawerWidth }]}
       >
         <View style={styles.container}>
@@ -53,10 +53,7 @@ const InviteDrawer: React.FC<InviteDrawerDrawerProps> = ({
               mode="contained"
               style={styles.inviteButton}
               labelStyle={styles.inviteButtonLabel}
-              onPress={() => {
-                // 초대 기능 구현
-                console.log("방 초대 버튼 클릭");
-              }}
+              onPress={openInvite}
             >
               방 초대
             </Button>
@@ -91,20 +88,20 @@ const styles = StyleSheet.create({
   memberCountText: {
     fontSize: RFValue(16),
     fontWeight: "bold",
-    color: color.secondary,
+    color: color.black,
   },
   memberListSection: {
     flex: 1,
     paddingHorizontal: 20,
   },
   memberItem: {
-    paddingVertical: 12,
+    paddingVertical: 10,
     borderBottomWidth: 0.5,
     borderBottomColor: color.white,
   },
   memberName: {
     fontSize: RFValue(14),
-    color: color.secondary,
+    color: color.black,
   },
   footerSection: {
     padding: 20,
@@ -121,4 +118,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InviteDrawer;
+export default RoomMembersModal;

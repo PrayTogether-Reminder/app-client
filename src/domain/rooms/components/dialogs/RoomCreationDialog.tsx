@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -10,13 +10,12 @@ import {
   Portal,
   Modal,
   Button,
-  TextInput,
+  TextInput as PaperTextInput,
   Text,
   IconButton,
 } from "react-native-paper";
 import Feather from "@expo/vector-icons/Feather";
-import { RFValue, RFPercentage } from "react-native-responsive-fontsize";
-import { keyboardHideDelFocus } from "../../../../common/services/keyboard/keyboardService";
+import { RFValue } from "react-native-responsive-fontsize";
 import useCloseOnBack from "../../../../common/services/back-handler/useCloseOnBack";
 
 type RoomCreationDialogProp = {
@@ -28,26 +27,62 @@ export default function RoomCreationDialog({
   open,
   setOpen,
 }: RoomCreationDialogProp) {
-  if (open) console.log("room creation dialog open");
-  else if (!open) console.log("room creation dialog close");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const titleRef = useRef(null);
-  const descriptionRef = useRef(null);
+  const inputValues = useRef({
+    title: "",
+    description: "",
+  });
 
-  const handleTitleChange = (title: string) => {
-    setTitle(title);
-  };
-  const handleDescriptionChange = (description: string) => {
-    setDescription(description);
-  };
+  const titleInputRef = useRef(null);
+  const descriptionInputRef = useRef(null);
 
-  useCloseOnBack(open, setOpen);
-
-  keyboardHideDelFocus([titleRef, descriptionRef]);
+  // 모달이 열릴 때 입력값 초기화
+  useEffect(() => {
+    if (open) {
+      inputValues.current = {
+        title: "",
+        description: "",
+      };
+    }
+  }, [open]);
 
   const closeModal = () => {
     setOpen(false);
+  };
+
+  const handleTitleChange = (text: string) => {
+    inputValues.current.title = text;
+  };
+
+  const handleDescriptionChange = (text: string) => {
+    inputValues.current.description = text;
+  };
+
+  const onCreateRoom = () => {
+    console.log(
+      "방 생성 titld: ",
+      inputValues.current.title,
+      ", description: ",
+      inputValues.current.description
+    );
+  };
+
+  // 기도방 생성 처리
+  const handleCreateRoom = () => {
+    const title = inputValues.current.title;
+    const description = inputValues.current.description;
+
+    if (!title.trim()) {
+      alert("방 제목을 입력해주세요");
+      return;
+    }
+
+    if (!description.trim()) {
+      alert("방 설명을 입력해주세요");
+      return;
+    }
+
+    onCreateRoom();
+    closeModal();
   };
 
   return (
@@ -63,33 +98,39 @@ export default function RoomCreationDialog({
 
             <View style={styles.fieldset}>
               <Text style={styles.label}>방 제목</Text>
-              <TextInput
-                ref={titleRef}
+              <PaperTextInput
+                ref={titleInputRef}
                 placeholder="방 제목이 무엇인가요?"
-                value={title}
                 onChangeText={handleTitleChange}
                 style={styles.input}
                 mode="outlined"
+                // value prop을 제공하지 않음 (비제어 방식)
+                defaultValue=""
+                autoCapitalize="none"
+                autoCorrect={false}
               />
             </View>
 
             <View style={styles.fieldsetMultiline}>
               <Text style={styles.label}>방 설명</Text>
-              <TextInput
-                ref={descriptionRef}
+              <PaperTextInput
+                ref={descriptionInputRef}
                 placeholder="어떤 기도를 위한 방인가요?"
-                value={description}
                 onChangeText={handleDescriptionChange}
                 style={styles.inputMultiline}
                 mode="outlined"
                 multiline
                 numberOfLines={4}
+                // value prop을 제공하지 않음 (비제어 방식)
+                defaultValue=""
+                autoCapitalize="none"
+                autoCorrect={false}
               />
             </View>
 
             <Button
               mode="contained"
-              onPress={closeModal}
+              onPress={handleCreateRoom}
               style={styles.createButton}
               labelStyle={styles.buttonLabel}
             >
@@ -119,7 +160,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     backgroundColor: "white",
-    width: windowWidth < 600 ? "85%" : "70%", // 작은 화면에서 더 넓게
+    width: windowWidth < 600 ? "85%" : "70%",
     alignSelf: "center",
     borderRadius: RFValue(8),
     padding: RFValue(16),
@@ -146,14 +187,16 @@ const styles = StyleSheet.create({
   },
   input: {
     width: "100%",
+    backgroundColor: "white",
   },
   inputMultiline: {
     width: "100%",
     height: RFValue(100),
+    backgroundColor: "white",
   },
   createButton: {
     alignSelf: "center",
-    width: windowWidth < 400 ? "70%" : "50%", // 작은 화면에서 더 넓게
+    width: windowWidth < 400 ? "70%" : "50%",
     marginTop: RFValue(8),
     marginBottom: RFValue(16),
   },

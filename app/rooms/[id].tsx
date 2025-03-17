@@ -1,22 +1,53 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useRef } from "react";
 import Top1Body10Bottom1 from "../../src/common/layout/Top1Body10Bottom1";
 import PrayerRoomHeader from "../../src/domain/prayerRoom/components/PrayerRoomHeader";
 import PrayerRoomBody from "../../src/domain/prayerRoom/components/PrayerRoomBody";
 import PrayerRoomBottom from "../../src/domain/prayerRoom/components/PrayerRoomBottom";
-import InviteDrawer from "../../src/domain/prayerRoom/components/InviteDrawer";
+import RoomMembersModal from "../../src/domain/prayerRoom/components/RoomMembersModal";
+import RoomInviteDialog from "../../src/domain/prayerRoom/components/RoomInviteDialog";
 
 export default function PrayerRoomScreen(): JSX.Element {
-  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [rightMenueVisible, setRightMenueVisible] = useState(false);
+  const [inviteVisible, setInviteVisible] = useState(false);
+  const emailRef = useRef({ email: "" });
 
-  const toggleDrawer = () => {
-    setDrawerVisible(!drawerVisible);
+  // Right menu open/close functions
+  const openRightMenu = () => {
+    console.log("open Right Menu");
+    setRightMenueVisible(true);
+  };
+
+  const closeRightMenu = () => {
+    console.log("close Right Menu");
+    setRightMenueVisible(false);
+  };
+
+  // Invite dialog open/close functions
+  const openInvite = () => {
+    console.log("open Invite");
+    setInviteVisible(true);
+  };
+
+  const closeInvite = () => {
+    console.log("close Invite");
+    emailRef.current.email = "";
+    setInviteVisible(false);
   };
 
   return (
     <Fragment>
-      <InviteDrawer visible={drawerVisible} onClose={toggleDrawer} />
+      <RoomMembersModal
+        visible={rightMenueVisible}
+        closeRightMenu={closeRightMenu}
+        openInvite={openInvite}
+      />
+      <RoomInviteDialog
+        visible={inviteVisible}
+        closeInvite={closeInvite}
+        emailRef={emailRef}
+      />
       <Top1Body10Bottom1
-        tops={[<PrayerRoomHeader toggleDrawer={toggleDrawer} />]}
+        tops={[<PrayerRoomHeader openRightMenu={openRightMenu} />]}
         bodies={[<PrayerRoomBody />]}
         bottoms={[<PrayerRoomBottom />]}
       />

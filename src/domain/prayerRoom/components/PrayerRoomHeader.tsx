@@ -8,11 +8,11 @@ import { color } from "../../../common/styles/color";
 import { useSelectedRoomStore } from "../types/roomStore";
 
 interface PrayerRoomHeaderProps {
-  toggleDrawer: () => void;
+  openRightMenu: () => void;
 }
 
 const PrayerRoomHeader: React.FC<PrayerRoomHeaderProps> = ({
-  toggleDrawer,
+  openRightMenu,
 }) => {
   const router = useRouter();
   const room = useSelectedRoomStore().selectedRoom;
@@ -33,7 +33,7 @@ const PrayerRoomHeader: React.FC<PrayerRoomHeaderProps> = ({
           style={styles.headerAction}
           icon="menu"
           color={color.primary}
-          onPress={toggleDrawer}
+          onPress={openRightMenu}
           size={RFValue(24)}
         />
       </Appbar.Header>
