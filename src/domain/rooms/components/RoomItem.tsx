@@ -1,6 +1,6 @@
 import Entypo from "@expo/vector-icons/Entypo";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import {
   useWindowDimensions,
   Alert,
@@ -34,26 +34,27 @@ const RoomItem = ({
   const { width } = useWindowDimensions();
   const theme = useTheme();
 
-  // 애니메이션 관련 상태
-  const [isPressed, setIsPressed] = useState(false);
+  // 애니메이션을 위한 Animated.Value 생성
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
-  // 길게 누를 때 애니메이션 효과
-  useEffect(() => {
-    Animated.spring(scaleAnim, {
-      toValue: isPressed ? 0.95 : 1,
-      friction: 7,
-      tension: 100,
-      useNativeDriver: true,
-    }).start();
-  }, [isPressed, scaleAnim]);
-
+  // 터치 시작할 때 실행되는 애니메이션 (축소)
   const handlePressIn = () => {
-    setIsPressed(true);
+    Animated.spring(scaleAnim, {
+      toValue: 0.92,
+      useNativeDriver: true,
+      speed: 50,
+      bounciness: 15,
+    }).start();
   };
 
+  // 터치 종료할 때 실행되는 애니메이션 (원래 크기로)
   const handlePressOut = () => {
-    setIsPressed(false);
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      useNativeDriver: true,
+      speed: 50,
+      bounciness: 15,
+    }).start();
   };
 
   const handleLongPress = () => {

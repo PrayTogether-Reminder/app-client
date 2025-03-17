@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-query";
 import { OrderBy, Dir } from "../../../../common/apis/constants/params";
 import { Room } from "../../types/dto/responses/room";
-import roomService from "../../services/roomService";
+import roomService from "../../services/RoomService";
 import QUERY_KEYS from "../../../../common/hooks/queries/queryKeys";
 
 type RoomPageParam = {
@@ -29,11 +29,13 @@ export const useInfiniteRoomsQuery = (
       console.log("infinite query pageParam=", param);
       return roomService.fetchRooms(param.orderBy, param.after, param.dir);
     },
+
     initialPageParam: {
       orderBy,
       after,
       dir,
     } as RoomPageParam,
+
     getNextPageParam: (lastPage) => {
       if (lastPage.length === 0) return undefined;
       const lastRoom = lastPage[lastPage.length - 1];

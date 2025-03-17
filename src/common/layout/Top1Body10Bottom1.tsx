@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   topSection: {
-    flex: 1,
+    flex: 1.3,
     backgroundColor: color.third,
     width: "100%",
     height: "100%",

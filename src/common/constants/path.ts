@@ -1,6 +1,9 @@
+import { Route } from "expo-router";
+
 const path = {
-  rooms: "/rooms" as const,
-  roomId: (id: string) => `/rooms/${id}` as const,
+  showRoomList: () => "/rooms" as Route,
+  showRoomById: (id: string) => `/rooms/${id}` as Route,
+  showPrayerContentById: (id: string) => `/prayers/${id}` as Route,
 };
 
 export default path;

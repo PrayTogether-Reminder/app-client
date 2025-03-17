@@ -7,9 +7,9 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import { ActivityIndicator, useTheme } from "react-native-paper";
+import { ActivityIndicator } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { useSelectedRoomStore } from "../store/roomStore";
+import { useSelectedRoomStore } from "../../prayerRoom/types/roomStore";
 import { Room } from "../types/dto/responses/room";
 import { useToggleRoomNotificationMutation } from "./../hooks/mutations/roomMutations";
 import { useInfiniteRoomsQuery } from "./../hooks/queries/roomQueries";
@@ -17,20 +17,11 @@ import EmptyRoomList from "./RoomEmpty";
 import RoomItem from "./RoomItem";
 import { useRouter } from "expo-router";
 import path from "../../../common/constants/path";
-
-const LoadingFooter = () => {
-  const theme = useTheme();
-
-  return (
-    <View style={styles.loadingFooter}>
-      <ActivityIndicator size="large" color={theme.colors.primary} />
-    </View>
-  );
-};
+import { color } from "../../../common/styles/color";
+import Loading from "../../../common/components/loading/Loading";
 
 const RoomList = () => {
   console.log("RoomList rendering");
-  const theme = useTheme();
 
   const {
     data,
@@ -67,10 +58,10 @@ const RoomList = () => {
   const handleRoomPress = (room: Room) => {
     console.log("Selected room:", room);
     selectRoom(room);
-    router.push(path.roomId(`${room.id}`));
+    router.push(path.showRoomById(`${room.id}`));
   };
 
-  const handleToggleRoomNotificationMutation = (roomId: number) => {
+  const handleToggleRoomNotificationMutation = (roomId: string) => {
     toggleRoomNotificationMutation(roomId);
   };
 
@@ -101,9 +92,7 @@ const RoomList = () => {
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.3}
         ListFooterComponent={
-          (isFetchingNextPage || isLoading) && hasNextPage
-            ? LoadingFooter
-            : null
+          (isFetchingNextPage || isLoading) && hasNextPage ? Loading : null
         }
         ListEmptyComponent={!isLoading ? EmptyRoomList : null}
         refreshing={isRefetching}
@@ -120,10 +109,6 @@ const styles = StyleSheet.create({
   },
   flatList: {
     flex: 1,
-  },
-  loadingFooter: {
-    padding: RFValue(16),
-    alignItems: "center",
   },
 });
 

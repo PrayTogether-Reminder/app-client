@@ -19,8 +19,8 @@ const roomService = {
     });
     return response.data.rooms;
   },
-  toggleNotification: async (roomId: number): Promise<void> => {
-    await apiService.post<number>(`/rooms/${roomId}/notification`);
+  toggleNotification: async (roomId: string): Promise<void> => {
+    await apiService.post<string>(`/rooms/${roomId}/notification`);
   },
 };
 

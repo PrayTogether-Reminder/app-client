@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import roomService from "../../services/roomService";
+import roomService from "../../services/RoomService";
 import QUERY_KEYS from "../../../../common/hooks/queries/queryKeys";
 import { Room } from "../../types/dto/responses/room";
 
@@ -8,7 +8,7 @@ export const useToggleRoomNotificationMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (roomId: number) => roomService.toggleNotification(roomId),
+    mutationFn: (roomId: string) => roomService.toggleNotification(roomId),
     onMutate: async (roomId) => {
       await queryClient.cancelQueries({
         queryKey: [QUERY_KEYS.rooms, QUERY_KEYS.infinite],
