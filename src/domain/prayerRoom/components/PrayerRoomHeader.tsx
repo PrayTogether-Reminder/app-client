@@ -1,36 +1,43 @@
 // PrayerRoomHeader.tsx
-import React from "react";
-import { StatusBar, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet } from "react-native";
 import { Appbar, useTheme } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
-import { backgroundColor, color } from "../../../common/styles/color";
+import { color } from "../../../common/styles/color";
 import { useSelectedRoomStore } from "../types/roomStore";
 
-const PrayerRoomHeader: React.FC = () => {
+interface PrayerRoomHeaderProps {
+  openRightMenu: () => void;
+}
+
+const PrayerRoomHeader: React.FC<PrayerRoomHeaderProps> = ({
+  openRightMenu,
+}) => {
   const router = useRouter();
-  const paperTheme = useTheme();
   const room = useSelectedRoomStore().selectedRoom;
 
   return (
-    <Appbar.Header style={styles.header}>
-      <Appbar.BackAction
-        style={styles.headerBackAction}
-        onPress={() => router.back()}
-        color={color.primary}
-      />
-      <Appbar.Content
-        title={room?.name as string}
-        titleStyle={styles.headerTitle}
-      />
-      <Appbar.Action
-        style={styles.headerAction}
-        icon="menu"
-        color={color.primary}
-        onPress={() => {}}
-        size={RFValue(24)}
-      />
-    </Appbar.Header>
+    <>
+      <Appbar.Header style={styles.header}>
+        <Appbar.BackAction
+          style={styles.headerBackAction}
+          onPress={() => router.back()}
+          color={color.primary}
+        />
+        <Appbar.Content
+          title={room?.name as string}
+          titleStyle={styles.headerTitle}
+        />
+        <Appbar.Action
+          style={styles.headerAction}
+          icon="menu"
+          color={color.primary}
+          onPress={openRightMenu}
+          size={RFValue(24)}
+        />
+      </Appbar.Header>
+    </>
   );
 };
 

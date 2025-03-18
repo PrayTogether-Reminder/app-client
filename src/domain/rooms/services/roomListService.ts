@@ -3,7 +3,7 @@ import { ApiResponse } from "../../../common/apis/api";
 import { Room } from "../types/dto/responses/room";
 import { OrderBy, Dir } from "../../../common/apis/constants/params";
 
-const roomService = {
+const roomListService = {
   // 방 목록 조회
   fetchRooms: async (
     orderBy: OrderBy = OrderBy.DEFAULT,
@@ -24,4 +24,4 @@ const roomService = {
   },
 };
 
-export default roomService;
+export default roomListService;

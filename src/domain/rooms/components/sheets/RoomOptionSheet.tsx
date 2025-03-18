@@ -19,7 +19,7 @@ import {
   useTheme,
 } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { buttonColor } from "../../../../common/styles/color";
+import { color } from "../../../../common/styles/color";
 import { Room } from "../../types/dto/responses/room";
 
 interface RoomInfoSheetProp {
@@ -153,7 +153,7 @@ export default function RoomInfoSheet({
                         <MaterialIcons name="logout" size={24} color={color} />
                       )}
                       style={[styles.button, styles.exitButton]}
-                      buttonColor={buttonColor.exit}
+                      buttonColor={color.exit}
                     >
                       방 나가기
                     </Button>

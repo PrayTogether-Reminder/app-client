@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import roomService from "../../services/RoomService";
+import roomService from "../../services/roomListService";
 import QUERY_KEYS from "../../../../common/hooks/queries/queryKeys";
 import { Room } from "../../types/dto/responses/room";
 

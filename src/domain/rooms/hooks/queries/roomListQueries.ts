@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-query";
 import { OrderBy, Dir } from "../../../../common/apis/constants/params";
 import { Room } from "../../types/dto/responses/room";
-import roomService from "../../services/RoomService";
+import roomService from "../../services/roomListService";
 import QUERY_KEYS from "../../../../common/hooks/queries/queryKeys";
 
 type RoomPageParam = {
