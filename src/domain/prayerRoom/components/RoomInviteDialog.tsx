@@ -4,6 +4,8 @@ import { Portal, Dialog, TextInput, Button } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize"; // Import RFValue
 import { color } from "../../../common/styles/color";
 import { validateEmail } from "../../../common/services/email/emailService";
+import { useInviteRoomMemberMutation } from "./../hooks/mutations/roomMutations";
+import { useSelectedRoomStore } from "../types/roomStore";
 
 interface RoomInviteDialogProps {
   visible: boolean;
@@ -18,6 +20,9 @@ const RoomInviteDialog = ({
   closeInvite,
   emailRef,
 }: RoomInviteDialogProps) => {
+  const { mutate: inviteMember } = useInviteRoomMemberMutation();
+  const room = useSelectedRoomStore().selectedRoom;
+
   const onChangeEmail = (text: string) => {
     emailRef.current.email = text;
   };
@@ -35,10 +40,19 @@ const RoomInviteDialog = ({
       Alert.alert("이메일 형식이 올바르지 않습니다.");
       return;
     }
-    console.log("초대할 이메일:", email);
-    closeInvite();
 
-    Alert.alert("초대가 완료되었습니다.");
+    console.log("초대할 이메일:", email);
+
+    inviteMember(
+      { roomId: room?.id as string, email },
+      {
+        onSettled(data, error, variables, context) {
+          if (data) {
+            closeInvite();
+          }
+        },
+      }
+    );
   };
 
   return (
