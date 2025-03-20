@@ -5,7 +5,7 @@ import { RFValue } from "react-native-responsive-fontsize"; // Import RFValue
 import { color } from "../../../common/styles/color";
 import { validateEmail } from "../../../common/services/email/emailService";
 import { useInviteRoomMemberMutation } from "./../hooks/mutations/roomMutations";
-import { useSelectedRoomStore } from "../types/roomStore";
+import { useSelectedRoomStore } from "../types/selectedRoomStore";
 
 interface RoomInviteDialogProps {
   visible: boolean;

@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     marginLeft: RFValue(8), // 아이콘과 텍스트 사이 간격 조정
   },
   avatarCricle: {
-    backgroundColor: color.third,
+    backgroundColor: color.secondary,
   },
   avatarLabel: {
     fontSize: RFValue(16),

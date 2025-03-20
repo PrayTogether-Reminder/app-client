@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from "react";
 import { StyleSheet, SafeAreaView, BackHandler } from "react-native";
 import { color } from "../../src/common/styles/color";
 import { useRoomMembersQuery } from "../../src/domain/prayerRoom/hooks/queries/roomQueries";
-import { useSelectedRoomStore } from "../../src/domain/prayerRoom/types/roomStore";
+import { useSelectedRoomStore } from "../../src/domain/prayerRoom/types/selectedRoomStore";
 import { RoomMember } from "../../src/domain/prayerRoom/types/dto/response/roomMember";
 import { router } from "expo-router";
 import PrayerMemberSelectionModal from "../../src/domain/PrayerCreation/components/modal/PrayerMemberSelectionModal";
@@ -12,117 +12,39 @@ import Top1Body10Bottom1 from "../../src/common/layout/Top1Body10Bottom1";
 import PrayerCreationTop from "../../src/domain/PrayerCreation/components/PrayerCreationTop";
 import PrayerCreationBody from "../../src/domain/PrayerCreation/components/PrayerCreationBody";
 import PrayerCreationBottom from "../../src/domain/PrayerCreation/components/PrayerCreationBottom";
-
-// 멤버 타입 정의
-interface SelectedMember extends RoomMember {
-  isRoomMember: boolean;
-}
+import { SelectedMember } from "../../src/domain/PrayerCreation/types/SelectedMember";
+import { usePrayerCreationStore } from "./../../src/domain/PrayerCreation/stores/usePrayerCreationStore";
 
 export default function PrayerCreationScreen() {
   const [prayerTitle, setPrayerTitle] = useState("");
-  const [prayerContent, setPrayerContent] = useState("");
-  const [selectedMember, setSelectedMember] = useState<SelectedMember | null>(
-    null
-  );
-  const [customNameDialogVisible, setCustomNameDialogVisible] = useState(false);
-  const customNameRef = useRef({ customName: "" });
-  const [memberSelectionModalVisible, setMemberSelectionModalVisible] =
-    useState(false);
   const room = useSelectedRoomStore().selectedRoom;
-  const { data: roomMembers } = useRoomMembersQuery(room?.id ?? "");
+  const { clear: clearPrayer } = usePrayerCreationStore();
 
-  // 커스텀 멤버 이름 변경
-  const onChangeCustomName = (name: string) => {
-    customNameRef.current.customName = name;
+  // [기도 작성 취소] Dialog 상태
+  const [prayerCancellationDialog, setprayerCancellationDialog] =
+    useState(false);
+
+  // [기도 작성 취소] 버튼 처리
+  const handlePrayeCancellation = () => {
+    setprayerCancellationDialog(true);
   };
 
-  // 이름순으로 정렬된 멤버 목록
-  const sortedRoomMembers = useMemo(() => {
-    //todo: 이미 작성된 이름은 제외.
-    if (!roomMembers) return [];
-    return [...roomMembers].sort((a, b) => a.name.localeCompare(b.name));
-  }, [roomMembers]);
-
-  // 방 구성원 선택 처리
-  const handleSelectMember = (member: RoomMember) => {
-    setSelectedMember({
-      ...member,
-      isRoomMember: true,
-    });
-    setMemberSelectionModalVisible(false);
-  };
-
-  // 멤버 선택 모달 열기
-  const openMemberSelectionModal = () => {
-    setMemberSelectionModalVisible(true);
-  };
-
-  // 멤버 선택 모달 닫기
-  const closeMemberSelectionModal = () => {
-    setMemberSelectionModalVisible(false);
-  };
-
-  // 직접 입력 다이얼로그 표시
-  const showCustomNameDialog = () => {
-    setCustomNameDialogVisible(true);
-    setMemberSelectionModalVisible(false);
-  };
-
-  // 직접 입력 다이얼로그 숨기기
-  const hideCustomNameDialog = () => {
-    setCustomNameDialogVisible(false);
-    onChangeCustomName("");
-  };
-
-  // 직접 입력한 이름 추가
-  const addCustomName = () => {
-    const customName = customNameRef.current.customName;
-    if (customName.trim()) {
-      const newMember: SelectedMember = {
-        id: "customMember",
-        name: customName.trim(),
-        isRoomMember: false,
-      };
-
-      setSelectedMember(newMember);
-      hideCustomNameDialog();
-    }
-  };
-
-  // 기도 내용 저장
-  const savePrayer = () => {
-    if (prayerTitle.trim() && prayerContent.trim() && selectedMember) {
-      // 여기서 실제 저장 로직 구현
-      // API 호출이나 store 업데이트 등을 수행
-
-      // 저장 후 이전 화면으로 돌아가기
-      router.back();
-    }
-  };
-
-  // 확인 다이얼로그 상태
-  const [cancelDialogVisible, setCancelDialogVisible] = useState(false);
-
-  // 취소 버튼 처리 - 확인 다이얼로그 표시
-  const handleCancel = () => {
-    setCancelDialogVisible(true);
-  };
-
-  // 취소 확인 시 처리
-  const confirmCancel = () => {
-    setCancelDialogVisible(false);
+  // [기도 작성 취소] 확인
+  const confirmPrayerCancellation = () => {
+    setprayerCancellationDialog(false);
+    clearPrayer();
     router.back();
   };
 
-  // 취소 취소 시 처리
-  const cancelCancellation = () => {
-    setCancelDialogVisible(false);
+  // [기도 작성 취소]의 취소
+  const cancelPrayerCancellation = () => {
+    setprayerCancellationDialog(false);
   };
 
-  // 안드로이드 뒤로가기 버튼 처리
+  //  안드로이드 뒤로가기 버튼 처리
   useEffect(() => {
     const backAction = () => {
-      handleCancel();
+      handlePrayeCancellation();
       return true; // 기본 동작 방지
     };
 
@@ -138,53 +60,26 @@ export default function PrayerCreationScreen() {
     <SafeAreaView style={styles.container}>
       <Top1Body10Bottom1
         tops={[
-          <PrayerCreationTop roomName={room?.name} onCancel={handleCancel} />,
+          <PrayerCreationTop
+            roomName={room?.name}
+            onCancel={handlePrayeCancellation}
+          />,
         ]}
         bodies={[
           <PrayerCreationBody
             prayerTitle={prayerTitle}
             setPrayerTitle={setPrayerTitle}
-            prayerContent={prayerContent}
-            setPrayerContent={setPrayerContent}
-            selectedMember={selectedMember}
-            openMemberSelectionModal={openMemberSelectionModal}
           />,
         ]}
-        bottoms={[
-          <PrayerCreationBottom
-            onSave={savePrayer}
-            disabled={
-              !prayerTitle.trim() || !prayerContent.trim() || !selectedMember
-            }
-          />,
-        ]}
+        bottoms={[<PrayerCreationBottom disabled={!prayerTitle.trim()} />]}
       />
 
-      {/* 멤버 선택 모달 */}
-      <PrayerMemberSelectionModal
-        visible={memberSelectionModalVisible}
-        onDismiss={closeMemberSelectionModal}
-        members={sortedRoomMembers}
-        onSelectMember={handleSelectMember}
-        onCustomNamePress={showCustomNameDialog}
-      />
-
-      {/* 멤버 직접 입력 다이얼로그 */}
-      <PrayerCustomNameDialog
-        visible={customNameDialogVisible}
-        onDismiss={hideCustomNameDialog}
-        customNameRef={customNameRef}
-        onChangeText={onChangeCustomName}
-        onCancel={hideCustomNameDialog}
-        onAdd={addCustomName}
-      />
-
-      {/* 취소 확인 다이얼로그 */}
+      {/* 기도 제목 작성 취소 Dialog */}
       <PrayerCreationCancelDialog
-        visible={cancelDialogVisible}
-        onDismiss={cancelCancellation}
-        onConfirm={confirmCancel}
-        onCancel={cancelCancellation}
+        visible={prayerCancellationDialog}
+        onDismiss={cancelPrayerCancellation}
+        onCancel={cancelPrayerCancellation}
+        onConfirm={confirmPrayerCancellation}
       />
     </SafeAreaView>
   );

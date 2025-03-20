@@ -3,7 +3,7 @@ import { StyleSheet, Dimensions, View, ScrollView } from "react-native";
 import { Portal, Modal, Button, Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../common/styles/color";
-import { useSelectedRoomStore } from "../types/roomStore";
+import { useSelectedRoomStore } from "../types/selectedRoomStore";
 import { useRoomMembersQuery } from "../hooks/queries/roomQueries";
 
 const { width } = Dimensions.get("window");
