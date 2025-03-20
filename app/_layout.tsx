@@ -1,4 +1,4 @@
-import { Slot } from "expo-router";
+import { Stack } from "expo-router";
 import { PaperProvider, MD3LightTheme } from "react-native-paper";
 import CustomQueryClientProvider from "../src/common/hooks/queries/customQueryClientProvider";
 import { useFonts } from "expo-font";
@@ -47,7 +47,19 @@ export default function RootLayout() {
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <CustomQueryClientProvider>
           <StatusBar backgroundColor={backgroundColor.white} />
-          <Slot />
+          <Stack screenOptions={{ headerShown: false }}>
+            {/* 기본 화면들은 일반적인 전환 효과 사용 */}
+            <Stack.Screen name="index" />
+
+            {/* prayer/creation 경로에 대한 특별한 전환 효과 설정 */}
+            <Stack.Screen
+              name="prayer/creation"
+              options={{
+                animation: "slide_from_bottom",
+                presentation: "modal",
+              }}
+            />
+          </Stack>
         </CustomQueryClientProvider>
       </ErrorBoundary>
     </PaperProvider>

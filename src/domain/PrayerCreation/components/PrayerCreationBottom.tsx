@@ -6,46 +6,57 @@ import { color } from "../../../common/styles/color";
 import { useRouter } from "expo-router";
 import path from "../../../common/constants/path";
 
-interface PrayerRoomBottomButtonProps {}
+interface PrayerCreationBottomProps {
+  onSave: () => void;
+  disabled: boolean;
+}
 
-const PrayerRoomBottomButton: React.FC<PrayerRoomBottomButtonProps> = ({}) => {
+const PrayerCreationBottom: React.FC<PrayerCreationBottomProps> = ({
+  onSave,
+  disabled,
+}) => {
   const router = useRouter();
   const handlePress = () => {
     router.push(path.showPrayerCreate());
   };
 
   return (
-    <Surface style={styles.bottomButtonContainer}>
+    <Surface style={styles.container}>
       <Button
         mode="contained"
         uppercase={false}
-        style={styles.bottomButton}
-        labelStyle={styles.bottomButtonText}
-        icon="pencil"
-        onPress={handlePress}
+        style={[styles.button, disabled && styles.buttonDisabled]}
+        labelStyle={styles.buttonText}
+        icon="content-save-all"
+        onPress={onSave}
+        disabled={disabled}
       >
-        기도제목 작성하기
+        모두 저장하기
       </Button>
     </Surface>
   );
 };
 
 const styles = StyleSheet.create({
-  bottomButtonContainer: {
+  container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-  bottomButton: {
+  button: {
     borderRadius: 30,
     width: "70%",
     paddingVertical: 5,
     backgroundColor: color.secondary,
   },
-  bottomButtonText: {
+  buttonDisabled: {
+    backgroundColor: color.gray,
+  },
+  buttonText: {
     fontSize: RFValue(16),
     fontWeight: "500",
+    color: color.white,
   },
 });
 
-export default PrayerRoomBottomButton;
+export default PrayerCreationBottom;

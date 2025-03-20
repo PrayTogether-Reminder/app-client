@@ -44,16 +44,26 @@ const PrayerRoomHeader: React.FC<PrayerRoomHeaderProps> = ({
 const styles = StyleSheet.create({
   header: {
     backgroundColor: color.third,
+    height: RFValue(56), // 고정된 높이 설정
+    alignItems: "center", // 수직 중앙 정렬
+    flexDirection: "row", // 명시적으로 가로 방향 설정
+    justifyContent: "space-between", // 요소들 사이 간격 균등하게
   },
   headerTitle: {
-    backgroundColor: color.third,
     color: color.primary,
     fontSize: RFValue(20),
     fontWeight: "bold",
     textAlign: "center",
+    alignSelf: "center", // 제목 자체도 중앙 정렬
   },
-  headerAction: {},
-  headerBackAction: {},
+  headerAction: {
+    alignSelf: "center", // 메뉴 버튼 중앙 정렬
+    marginRight: 0, // 기본 마진 제거
+  },
+  headerBackAction: {
+    alignSelf: "center", // 뒤로가기 버튼 중앙 정렬
+    marginLeft: 0, // 기본 마진 제거
+  },
 });
 
 export default PrayerRoomHeader;
