@@ -7,12 +7,12 @@ import QUERY_KEYS from "../../../../common/hooks/queries/queryKeys";
 import { PrayerTitle } from "../../types/dto/response/prayerTitle";
 
 type PrayerTitlePageParam = {
-  roomId: string;
+  roomId: number | null;
   after: string;
 };
 
 export const useInfinitePrayerTitlesQuery = (
-  roomId: string = "",
+  roomId: number | null,
   after: string = "0",
   options?: UseInfiniteQueryOptions<PrayerTitle[], Error>
 ) => {
@@ -31,8 +31,8 @@ export const useInfinitePrayerTitlesQuery = (
     },
 
     initialPageParam: {
-      roomId,
-      after,
+      roomId: null,
+      after: "0",
     } as PrayerTitlePageParam,
 
     getNextPageParam: (lastPage) => {

@@ -3,23 +3,15 @@ import { StyleSheet } from "react-native";
 import { Surface, Button, useTheme } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../common/styles/color";
+import { useRouter } from "expo-router";
+import path from "../../../common/constants/path";
 
-interface PrayerRoomBottomButtonProps {
-  onPress?: () => void;
-}
+interface PrayerRoomBottomButtonProps {}
 
-const PrayerRoomBottomButton: React.FC<PrayerRoomBottomButtonProps> = ({
-  onPress,
-}) => {
-  const paperTheme = useTheme();
-
+const PrayerRoomBottomButton: React.FC<PrayerRoomBottomButtonProps> = ({}) => {
+  const router = useRouter();
   const handlePress = () => {
-    console.log("기도제목 작성하기");
-    // 예시: router.push('/create-prayer');
-
-    if (onPress) {
-      onPress();
-    }
+    router.push(path.showPrayerCreate());
   };
 
   return (

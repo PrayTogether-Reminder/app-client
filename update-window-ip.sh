@@ -29,6 +29,9 @@ if [ ! -f "$ENV_FILE" ]; then
   exit 1
 fi
 
+# 이전 IP 주소 추출
+PREVIOUS_IP=$(grep "^EXPO_PUBLIC_API_URL=" "$ENV_FILE" | grep -o "[0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+")
+
 # 기존 .env 파일 백업
 cp "$ENV_FILE" "${ENV_FILE}.bak"
 
@@ -49,3 +52,9 @@ mv "${ENV_FILE}.new" "$ENV_FILE"
 
 echo ".env 파일의 EXPO_PUBLIC_API_URL이 업데이트되었습니다."
 echo "이전 파일은 ${ENV_FILE}.bak으로 백업되었습니다."
+
+# 이전 IP와 변경된 IP 출력
+echo "-----------------------------------------"
+echo "이전 IP 주소: $PREVIOUS_IP"
+echo "변경 IP 주소: $IP_ADDRESS"
+echo "-----------------------------------------"

@@ -3,7 +3,7 @@ import api, { ApiResponse } from "../../../common/apis/api";
 import { PrayerTitle } from "../types/dto/response/prayerTitle";
 
 const prayerTitleService = {
-  fetchPrayerTitles: async (roomId: string, after: string = "0") => {
+  fetchPrayerTitles: async (roomId: number | null, after: string = "0") => {
     const response = await apiService.get<{ prayerTitles: PrayerTitle[] }>(
       "/prayers",
       {
