@@ -8,7 +8,7 @@ export const useToggleRoomNotificationMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (roomId: string) => roomService.toggleNotification(roomId),
+    mutationFn: (roomId: number) => roomService.toggleNotification(roomId),
     onMutate: async (roomId) => {
       await queryClient.cancelQueries({
         queryKey: [QUERY_KEYS.rooms, QUERY_KEYS.infinite],
