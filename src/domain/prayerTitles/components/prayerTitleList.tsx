@@ -14,7 +14,7 @@ import { color } from "../../../common/styles/color";
 import path from "../../../common/constants/path";
 import { PrayerTitle } from "../types/dto/response/prayerTitle";
 import { useInfinitePrayerTitlesQuery } from "../hooks/queries/prayerTitleQueries";
-import { useSelectedRoomStore } from "../../prayerRoom/types/selectedRoomStore";
+import { useSelectedRoomStore } from "../../prayerRoom/stores/useSelectedRoomStore";
 import PrayerTitleItem from "./prayerTitleItem";
 import Loading from "../../../common/components/loading/Loading";
 

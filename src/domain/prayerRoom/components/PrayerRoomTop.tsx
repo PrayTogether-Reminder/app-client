@@ -5,7 +5,7 @@ import { Appbar, useTheme } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../common/styles/color";
-import { useSelectedRoomStore } from "../types/selectedRoomStore";
+import { useSelectedRoomStore } from "../stores/useSelectedRoomStore";
 
 interface PrayerRoomTopProps {
   openRightMenu: () => void;
