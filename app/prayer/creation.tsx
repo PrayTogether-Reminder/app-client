@@ -71,7 +71,12 @@ export default function PrayerCreationScreen() {
             setPrayerTitle={setPrayerTitle}
           />,
         ]}
-        bottoms={[<PrayerCreationBottom disabled={!prayerTitle.trim()} />]}
+        bottoms={[
+          <PrayerCreationBottom
+            disabled={!prayerTitle.trim()}
+            title={prayerTitle}
+          />,
+        ]}
       />
 
       {/* 기도 제목 작성 취소 Dialog */}

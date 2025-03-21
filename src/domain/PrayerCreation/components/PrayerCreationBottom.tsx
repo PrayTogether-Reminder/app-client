@@ -5,26 +5,43 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../common/styles/color";
 import { useRouter } from "expo-router";
 import path from "../../../common/constants/path";
+import { usePrayerCreationMutation } from "./../hooks/mutations/usePrayerCreationMutations";
+import { usePrayerCreationStore } from "../stores/usePrayerCreationStore";
+import { useSelectedRoomStore } from "./../../prayerRoom/stores/useSelectedRoomStore";
+import { useQueryClient } from "@tanstack/react-query";
+import QUERY_KEYS from "../../../common/hooks/queries/queryKeys";
 
 interface PrayerCreationBottomProps {
+  title: string;
   disabled: boolean;
 }
 
 const PrayerCreationBottom: React.FC<PrayerCreationBottomProps> = ({
+  title,
   disabled,
 }) => {
   const router = useRouter();
-  const handlePress = () => {
-    router.push(path.showPrayerCreate());
-  };
+  const queryClient = useQueryClient();
+  const { mutate: createPrayerMutation } = usePrayerCreationMutation();
+  const { prayerList, clear: clearPrayers } = usePrayerCreationStore();
+  const room = useSelectedRoomStore().selectedRoom;
 
   // 기도 내용 전체 저장(API 요청)
   const createPrayer = () => {
-    // 여기서 실제 저장 로직 구현
-    // API 호출이나 store 업데이트 등을 수행
-
-    // 저장 후 이전 화면으로 돌아가기
-    router.back();
+    createPrayerMutation(
+      { title, prayerList },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            // 기도 제목 무한 스크롤 캐시 초기화
+            queryKey: [QUERY_KEYS.prayerTitles, QUERY_KEYS.infinite, room?.id],
+          });
+          console.log("prayer title cache clear");
+          clearPrayers();
+          router.back();
+        },
+      }
+    );
   };
 
   return (

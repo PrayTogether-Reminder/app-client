@@ -64,7 +64,7 @@ api.interceptors.response.use(
       status: error.response.status,
     } as ApiError;
 
-    console.log(apiError);
+    console.log("apiError=", apiError);
     return Promise.reject(apiError);
   }
 );

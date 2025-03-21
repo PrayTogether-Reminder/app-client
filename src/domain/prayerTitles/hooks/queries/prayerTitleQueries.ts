@@ -31,8 +31,8 @@ export const useInfinitePrayerTitlesQuery = (
     },
 
     initialPageParam: {
-      roomId,
-      after,
+      roomId: "",
+      after: "0",
     } as PrayerTitlePageParam,
 
     getNextPageParam: (lastPage) => {
