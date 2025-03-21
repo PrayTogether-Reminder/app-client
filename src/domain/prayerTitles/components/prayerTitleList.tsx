@@ -39,7 +39,7 @@ export default function PrayerTitleList(): JSX.Element {
     isLoading,
     isRefetching,
     refetch,
-  } = useInfinitePrayerTitlesQuery(roomId as string);
+  } = useInfinitePrayerTitlesQuery(roomId as number);
 
   const prayerTitles = React.useMemo(() => {
     if (!data) return [];
