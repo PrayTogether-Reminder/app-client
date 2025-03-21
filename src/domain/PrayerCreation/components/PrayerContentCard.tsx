@@ -2,7 +2,8 @@ import React from "react";
 import { View, StyleSheet, Dimensions, ScrollView } from "react-native";
 import { Card, Text, IconButton } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { color } from "../../../common/styles/color";
+import { color, flexMarker } from "../../../common/styles/color";
+import { loadEnvFile } from "process";
 
 const { width } = Dimensions.get("window");
 
@@ -10,26 +11,35 @@ interface PrayerCardProps {
   memberName: string;
   content: string;
   onDelete: () => void;
+  onEdit: () => void;
 }
 
 const PrayerContentCard = ({
   memberName,
   content,
   onDelete,
+  onEdit,
 }: PrayerCardProps) => {
   return (
     <Card style={[styles.prayerCard]}>
       <Card.Content style={styles.cardContentContainer}>
         <View style={styles.cardHeader}>
           <Text style={styles.memberNameText}>{memberName}</Text>
-          <IconButton
-            icon="close"
-            onPress={onDelete}
-            size={RFValue(18)}
-            style={styles.deleteButton}
-          />
+          <View style={styles.buttonPosition}>
+            <IconButton
+              icon="playlist-edit"
+              onPress={onEdit}
+              size={RFValue(28)}
+              style={styles.editButton}
+            />
+            <IconButton
+              icon="close"
+              onPress={onDelete}
+              size={RFValue(28)}
+              style={styles.deleteButton}
+            />
+          </View>
         </View>
-        {/* ScrollView를 사용하되 제스처 처리 개선 */}
         <ScrollView
           style={styles.contentContainer}
           nestedScrollEnabled={true}
@@ -54,7 +64,6 @@ const styles = StyleSheet.create({
     borderLeftColor: color.secondary,
   },
   cardContentContainer: {
-    padding: RFValue(12),
     height: RFValue(200),
   },
   cardHeader: {
@@ -62,16 +71,27 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: RFValue(8),
+    marginTop: -RFValue(16),
   },
   memberNameText: {
-    fontSize: RFValue(16),
+    fontSize: RFValue(20),
     fontWeight: "bold",
     color: color.secondary,
+  },
+  buttonPosition: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  editButton: {
+    margin: 0,
+    padding: 0,
   },
   deleteButton: {
     margin: 0,
     padding: 0,
   },
+
   contentContainer: {
     flex: 1,
   },

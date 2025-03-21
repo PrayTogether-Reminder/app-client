@@ -20,6 +20,7 @@ import PrayerCarousel from "./PrayerCarousel";
 import PrayerDeleteDialog from "./dialog/PrayerDeleteDialog";
 import PrayerCustomNameDialog from "./dialog/PrayerCustomNameDialog";
 import PrayerMemberSelectionModal from "./modal/PrayerMemberSelectionModal";
+import PrayerEditDialog from "./dialog/PrayerEditDialog";
 
 const { width } = Dimensions.get("window");
 const CARD_SPACING = RFValue(20); // 카드 사이 간격
@@ -51,9 +52,11 @@ export default function PrayerCreationBody({
   const [prayerDelete, setPrayerDelete] = useState<PrayerCreationItem | null>(
     null
   );
+  const [prayerEdit, setPrayerEdit] = useState<PrayerCreationItem | null>(null);
   const [prayerDeleteDialog, setPrayerDeleteDialog] = useState(false);
   const [customNameDialog, setCustomNameDialog] = useState(false);
   const [memberSelectionModal, setMemberSelectionModal] = useState(false);
+  const [prayerEditDialog, setPrayerEditDialog] = useState(false);
 
   // 방 멤버 관련
   const room = useSelectedRoomStore().selectedRoom;
@@ -74,7 +77,7 @@ export default function PrayerCreationBody({
     setMemberSelectionModal(false);
   };
 
-  const hideCustomNameDialog = () => {
+  const closeCustomNameDialog = () => {
     setCustomNameDialog(false);
     onChangeCustomName("");
   };
@@ -113,7 +116,7 @@ export default function PrayerCreationBody({
       };
 
       setSelectedMember(newMember);
-      hideCustomNameDialog();
+      closeCustomNameDialog();
     }
   };
 
@@ -154,6 +157,28 @@ export default function PrayerCreationBody({
     }
   };
 
+  // 기도문 편집 함수
+  const showPrayerEditDialog = (prayer: PrayerCreationItem) => {
+    setPrayerEdit(prayer);
+    setPrayerDelete(prayer);
+    setPrayerEditDialog(true);
+  };
+
+  const cancelPrayerEdit = () => {
+    setPrayerEditDialog(false);
+  };
+
+  const confirmPrayerEdit = () => {
+    setPrayerEditDialog(false);
+
+    setSelectedMember({
+      id: prayerEdit?.memberId,
+      name: prayerEdit?.memberName,
+    } as SelectedMember);
+    setPrayerContent(prayerEdit?.content as string);
+    confirmPrayerDelete();
+  };
+
   return (
     <KeyboardAwareScrollView
       style={styles.container}
@@ -192,6 +217,7 @@ export default function PrayerCreationBody({
         <PrayerCarousel
           prayerList={prayerList}
           onDeletePrayer={showPrayerDeleteDialog}
+          onEditPrayer={showPrayerEditDialog}
           currentIndex={currentIndex}
           setCurrentIndex={setCurrentIndex}
         />
@@ -216,11 +242,17 @@ export default function PrayerCreationBody({
       {/* 멤버 직접 입력 Dialog */}
       <PrayerCustomNameDialog
         visible={customNameDialog}
-        onDismiss={hideCustomNameDialog}
-        customNameRef={customNameRef}
+        onDismiss={closeCustomNameDialog}
         onChangeText={onChangeCustomName}
-        onCancel={hideCustomNameDialog}
+        onCancel={closeCustomNameDialog}
         onAdd={addCustomName}
+      />
+      {/* 기도문 편집 Dialog*/}
+      <PrayerEditDialog
+        visible={prayerEditDialog}
+        onDismiss={cancelPrayerEdit}
+        onConfirm={confirmPrayerEdit}
+        memberName={prayerEdit?.memberName}
       />
     </KeyboardAwareScrollView>
   );

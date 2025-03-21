@@ -11,6 +11,7 @@ const { width } = Dimensions.get("window");
 interface PrayerCarouselProps {
   prayerList: PrayerCreationItem[];
   onDeletePrayer: (prayer: PrayerCreationItem) => void;
+  onEditPrayer: (prayer: PrayerCreationItem) => void;
   currentIndex: number;
   setCurrentIndex: (index: number) => void;
 }
@@ -18,6 +19,7 @@ interface PrayerCarouselProps {
 export default function PrayerCarousel({
   prayerList,
   onDeletePrayer,
+  onEditPrayer,
   currentIndex,
   setCurrentIndex,
 }: PrayerCarouselProps) {
@@ -77,6 +79,7 @@ export default function PrayerCarousel({
               memberName={item.memberName}
               content={item.content}
               onDelete={() => onDeletePrayer(item)}
+              onEdit={() => onEditPrayer(item)}
             />
           </View>
         )}

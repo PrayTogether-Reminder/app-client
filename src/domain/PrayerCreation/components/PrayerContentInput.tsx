@@ -48,5 +48,6 @@ const styles = StyleSheet.create({
     backgroundColor: color.white,
     fontSize: RFValue(14),
     height: RFValue(150),
+    marginTop: RFValue(8),
   },
 });
