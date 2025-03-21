@@ -86,8 +86,14 @@ export default function PrayerCreationBody({
   // 이름순으로 정렬된 멤버 목록
   const sortedRoomMembers = useMemo(() => {
     if (!roomMembers) return [];
-    return [...roomMembers].sort((a, b) => a.name.localeCompare(b.name));
-  }, [roomMembers]);
+    const existingMember = new Set(
+      prayerList.map((prayer) => prayer.memberName)
+    );
+
+    return [...roomMembers]
+      .filter((member) => !existingMember.has(member.name))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [roomMembers, prayerList]);
 
   // 방 구성원 선택 처리
   const handleSelectMember = (member: RoomMember) => {

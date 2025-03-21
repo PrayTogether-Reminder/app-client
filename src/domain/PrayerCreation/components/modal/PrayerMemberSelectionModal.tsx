@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   memberGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
   },
   memberGridItem: {
     width: "33%",
