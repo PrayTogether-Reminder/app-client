@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, ScrollView, Dimensions } from "react-native";
+import { View, StyleSheet, Dimensions, ScrollView } from "react-native";
 import { Card, Text, IconButton } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../common/styles/color";
@@ -18,7 +18,7 @@ const PrayerContentCard = ({
   onDelete,
 }: PrayerCardProps) => {
   return (
-    <Card style={[styles.prayerCard, { width: width - RFValue(60) }]}>
+    <Card style={[styles.prayerCard]}>
       <Card.Content style={styles.cardContentContainer}>
         <View style={styles.cardHeader}>
           <Text style={styles.memberNameText}>{memberName}</Text>
@@ -29,11 +29,13 @@ const PrayerContentCard = ({
             style={styles.deleteButton}
           />
         </View>
-        {/* ScrollView로 내용 감싸기 */}
+        {/* ScrollView를 사용하되 제스처 처리 개선 */}
         <ScrollView
-          style={styles.contentScrollView}
+          style={styles.contentContainer}
           nestedScrollEnabled={true}
           showsVerticalScrollIndicator={true}
+          scrollEventThrottle={16}
+          contentContainerStyle={styles.contentContainerStyle}
         >
           <Text style={styles.prayerContentText}>{content}</Text>
         </ScrollView>
@@ -44,12 +46,12 @@ const PrayerContentCard = ({
 
 const styles = StyleSheet.create({
   prayerCard: {
+    width: "85%",
     borderRadius: RFValue(12),
     elevation: 2,
     backgroundColor: color.white,
     borderLeftWidth: RFValue(4),
     borderLeftColor: color.secondary,
-    marginRight: RFValue(20),
   },
   cardContentContainer: {
     padding: RFValue(12),
@@ -70,8 +72,11 @@ const styles = StyleSheet.create({
     margin: 0,
     padding: 0,
   },
-  contentScrollView: {
+  contentContainer: {
     flex: 1,
+  },
+  contentContainerStyle: {
+    paddingBottom: RFValue(4),
   },
   prayerContentText: {
     fontSize: RFValue(14),
