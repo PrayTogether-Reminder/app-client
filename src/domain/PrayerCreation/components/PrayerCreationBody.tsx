@@ -60,7 +60,7 @@ export default function PrayerCreationBody({
 
   // 방 멤버 관련
   const room = useSelectedRoomStore().selectedRoom;
-  const { data: roomMembers } = useRoomMembersQuery(room?.id ?? "");
+  const { data: roomMembers } = useRoomMembersQuery(room?.id ?? null);
 
   // 멤버 선택 모달 관련 함수
   const openMemberSelectionModal = () => {
@@ -111,7 +111,7 @@ export default function PrayerCreationBody({
     const customName = customNameRef.current.customName;
     if (customName.trim()) {
       const newMember: SelectedMember = {
-        id: "customMember",
+        id: null,
         name: customName.trim(),
       };
 

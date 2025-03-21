@@ -1,5 +1,5 @@
 export interface PrayerCreationItem {
-  memberId: string;
+  memberId: number | null;
   memberName: string;
   content: string;
 }

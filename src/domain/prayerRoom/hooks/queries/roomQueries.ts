@@ -4,7 +4,7 @@ import roomService from "./../../services/roomService";
 import { RoomMember } from "./../../types/dto/response/roomMember";
 
 export const useRoomMembersQuery = (
-  roomId: string,
+  roomId: number | null,
   options?: UseQueryOptions<RoomMember[], Error>
 ) => {
   return useQuery({

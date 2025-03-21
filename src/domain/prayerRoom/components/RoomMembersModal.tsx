@@ -21,7 +21,7 @@ const RoomMembersModal: React.FC<RoomMembersModalProps> = ({
 }) => {
   const drawerWidth = width * 0.5;
   const room = useSelectedRoomStore().selectedRoom;
-  const { data: members = [] } = useRoomMembersQuery(room?.id ?? "");
+  const { data: members = [] } = useRoomMembersQuery(room?.id ?? null);
 
   return (
     <Portal>

@@ -19,7 +19,7 @@ const roomListService = {
     });
     return response.data.rooms;
   },
-  toggleNotification: async (roomId: string): Promise<void> => {
+  toggleNotification: async (roomId: number): Promise<void> => {
     await apiService.post<string>(`/rooms/${roomId}/notification`);
   },
 };

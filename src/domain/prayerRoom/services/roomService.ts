@@ -7,7 +7,7 @@ import { Easing } from "react-native";
 
 const roomService = {
   // 멤버 목록 조회
-  fetchRoomMembers: async (roomId: string): Promise<RoomMember[]> => {
+  fetchRoomMembers: async (roomId: number | null): Promise<RoomMember[]> => {
     const response: ApiResponse<{ members: RoomMember[] }> =
       await apiService.get<{
         members: RoomMember[];
@@ -15,7 +15,7 @@ const roomService = {
     return response.data.members;
   },
   inviteRoomMember: async (
-    roomId: string,
+    roomId: number | null,
     email: string
   ): Promise<inviteRoomMemberResponse> => {
     const response = await apiService.post<InviteRoomMemberRequest>(
