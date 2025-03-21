@@ -7,13 +7,11 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../common/styles/color";
 import { useSelectedRoomStore } from "../types/selectedRoomStore";
 
-interface PrayerRoomHeaderProps {
+interface PrayerRoomTopProps {
   openRightMenu: () => void;
 }
 
-const PrayerRoomHeader: React.FC<PrayerRoomHeaderProps> = ({
-  openRightMenu,
-}) => {
+const PrayerRoomTop: React.FC<PrayerRoomTopProps> = ({ openRightMenu }) => {
   const router = useRouter();
   const room = useSelectedRoomStore().selectedRoom;
 
@@ -66,4 +64,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PrayerRoomHeader;
+export default PrayerRoomTop;

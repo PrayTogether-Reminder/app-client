@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Room } from "../../rooms/types/dto/responses/room";
+import { Room } from "../../roomList/types/dto/responses/room";
 
 export interface SelectedRoom {
   selectedRoom: Room | null;
