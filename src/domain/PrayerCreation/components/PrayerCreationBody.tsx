@@ -17,9 +17,10 @@ import PrayerMemberSelector from "./PrayerMemberSelector";
 import PrayerContentInput from "./PrayerContentInput";
 import PrayerAddButton from "./PrayerAddButton";
 import PrayerCarousel from "./PrayerCarousel";
-import DialogManager from "./DialogManager";
+import PrayerDeleteDialog from "./dialog/PrayerDeleteDialog";
+import PrayerCustomNameDialog from "./dialog/PrayerCustomNameDialog";
+import PrayerMemberSelectionModal from "./modal/PrayerMemberSelectionModal";
 
-// 화면 너비 가져오기
 const { width } = Dimensions.get("window");
 const CARD_SPACING = RFValue(20); // 카드 사이 간격
 
@@ -43,6 +44,7 @@ export default function PrayerCreationBody({
   const [selectedMember, setSelectedMember] = useState<SelectedMember | null>(
     null
   );
+  const customNameRef = useRef({ customName: "" });
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // 다이얼로그 관련 상태
@@ -50,7 +52,6 @@ export default function PrayerCreationBody({
     null
   );
   const [prayerDeleteDialog, setPrayerDeleteDialog] = useState(false);
-  const customNameRef = useRef({ customName: "" });
   const [customNameDialog, setCustomNameDialog] = useState(false);
   const [memberSelectionModal, setMemberSelectionModal] = useState(false);
 
@@ -161,31 +162,24 @@ export default function PrayerCreationBody({
         prayerTitle={prayerTitle}
         setPrayerTitle={setPrayerTitle}
       />
-
       <Divider style={styles.divider} />
-
-      {/* 사람 선택 버튼 */}
+      {/* 기도 대상자 선택 버튼 */}
       <PrayerMemberSelector
         selectedMember={selectedMember}
         openMemberSelectionModal={openMemberSelectionModal}
       />
-
       {/* 기도 내용 입력 */}
       <PrayerContentInput
         selectedMember={selectedMember}
         prayerContent={prayerContent}
         setPrayerContent={setPrayerContent}
       />
-
       {/* 기도문 추가 버튼 */}
       <PrayerAddButton
         prayerContent={prayerContent}
         selectedMember={selectedMember}
         onAddPrayer={handleAddPrayer}
       />
-
-      <Divider style={styles.divider} />
-
       {/* 작성된 기도문 목록 섹션 */}
       <View style={styles.prayersListContainer}>
         <Text style={styles.prayersListTitle}>작성된 기도문</Text>
@@ -196,26 +190,31 @@ export default function PrayerCreationBody({
           setCurrentIndex={setCurrentIndex}
         />
       </View>
+      {/* 기도문 삭제 확인 Dialog */}
+      <PrayerDeleteDialog
+        visible={prayerDeleteDialog}
+        onDismiss={cancelPrayerDelete}
+        onConfirm={confirmPrayerDelete}
+        memberName={prayerDelete?.memberName}
+      />
 
-      {/* 다이얼로그 관리자 */}
-      <DialogManager
-        // Delete Dialog Props
-        prayerDeleteDialog={prayerDeleteDialog}
-        prayerDelete={prayerDelete}
-        cancelPrayerDelete={cancelPrayerDelete}
-        confirmPrayerDelete={confirmPrayerDelete}
-        // Member Selection Modal Props
-        memberSelectionModal={memberSelectionModal}
-        closeMemberSelectionModal={closeMemberSelectionModal}
-        sortedRoomMembers={sortedRoomMembers}
-        handleSelectMember={handleSelectMember}
-        showCustomNameDialog={showCustomNameDialog}
-        // Custom Name Dialog Props
-        customNameDialog={customNameDialog}
-        hideCustomNameDialog={hideCustomNameDialog}
+      {/* 멤버 선택 Modal */}
+      <PrayerMemberSelectionModal
+        visible={memberSelectionModal}
+        onDismiss={closeMemberSelectionModal}
+        members={sortedRoomMembers}
+        onSelectMember={handleSelectMember}
+        onCustomNamePress={showCustomNameDialog}
+      />
+
+      {/* 멤버 직접 입력 Dialog */}
+      <PrayerCustomNameDialog
+        visible={customNameDialog}
+        onDismiss={hideCustomNameDialog}
         customNameRef={customNameRef}
-        onChangeCustomName={onChangeCustomName}
-        addCustomName={addCustomName}
+        onChangeText={onChangeCustomName}
+        onCancel={hideCustomNameDialog}
+        onAdd={addCustomName}
       />
     </KeyboardAwareScrollView>
   );
@@ -230,14 +229,14 @@ const styles = StyleSheet.create({
     paddingBottom: CARD_SPACING + RFValue(4),
   },
   divider: {
-    marginVertical: RFValue(16),
+    marginVertical: RFValue(10),
     height: RFValue(1),
   },
   prayersListContainer: {},
   prayersListTitle: {
     fontSize: RFValue(18),
     fontWeight: "bold",
-    marginBottom: RFValue(16),
+    marginVertical: RFValue(8),
     color: color.secondary,
   },
 });

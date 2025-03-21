@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
   cardContentContainer: {
     padding: RFValue(12),
-    height: RFValue(160),
+    height: RFValue(200),
   },
   cardHeader: {
     flexDirection: "row",

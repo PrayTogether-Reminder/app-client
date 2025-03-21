@@ -34,7 +34,7 @@ export default function PrayerAddButton({
 
 const styles = StyleSheet.create({
   addButton: {
-    marginTop: RFValue(16),
+    marginTop: RFValue(4),
     backgroundColor: color.secondary,
     borderRadius: RFValue(8),
   },
