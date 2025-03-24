@@ -5,6 +5,7 @@ const QUERY_KEYS = {
   infinite: "infinite",
   room: "room",
   members: "members",
+  prayerContents: "prayerContents",
 };
 
 export default QUERY_KEYS;

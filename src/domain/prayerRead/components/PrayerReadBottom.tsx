@@ -6,12 +6,12 @@ import { color } from "../../../common/styles/color";
 import { useRouter } from "expo-router";
 import path from "../../../common/constants/path";
 
-interface PrayerRoomBottomButtonProps {}
+interface PrayerReadBottomProps {}
 
-const PrayerRoomBottomButton: React.FC<PrayerRoomBottomButtonProps> = ({}) => {
+const PrayerReadBottom: React.FC<PrayerReadBottomProps> = ({}) => {
   const router = useRouter();
   const handlePress = () => {
-    router.push(path.showPrayersCreate());
+    // router.push(path.showPrayerCreate());
   };
 
   return (
@@ -21,10 +21,10 @@ const PrayerRoomBottomButton: React.FC<PrayerRoomBottomButtonProps> = ({}) => {
         uppercase={false}
         style={styles.bottomButton}
         labelStyle={styles.bottomButtonText}
-        icon="pencil"
+        icon="bell"
         onPress={handlePress}
       >
-        기도제목 작성하기
+        기도 알림
       </Button>
     </Surface>
   );
@@ -48,4 +48,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PrayerRoomBottomButton;
+export default PrayerReadBottom;

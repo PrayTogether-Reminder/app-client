@@ -17,6 +17,7 @@ import { useInfinitePrayerTitlesQuery } from "../hooks/queries/prayerTitleQuerie
 import { useSelectedRoomStore } from "../../prayerRoom/stores/useSelectedRoomStore";
 import PrayerTitleItem from "./prayerTitleItem";
 import Loading from "../../../common/components/loading/Loading";
+import { useSelectedPrayerTitleStore } from "./../stores/useSelectedPrayerTitleStore";
 
 const EmptyPrayerTitleList = () => {
   return (
@@ -30,6 +31,7 @@ export default function PrayerTitleList(): JSX.Element {
   const roomId = useSelectedRoomStore().selectedRoom?.id;
   console.log("render room by id =", roomId);
   const router = useRouter();
+  const { select: selectTitle } = useSelectedPrayerTitleStore();
 
   const {
     data,
@@ -49,8 +51,9 @@ export default function PrayerTitleList(): JSX.Element {
 
   const handlePrayerTitlePress = (title: PrayerTitle): void => {
     if (!title) return;
-    console.log("Selected prayerTitle:", title);
-    router.push(path.showPrayerContentById(`${title.id}`));
+    selectTitle(title);
+    console.log("Selected prayerTitle:", title.title);
+    router.push(path.showPrayersContentById(`${title.id}`));
   };
 
   const handleLoadMore = () => {

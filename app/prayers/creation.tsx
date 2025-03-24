@@ -13,7 +13,7 @@ import PrayerCreationTop from "../../src/domain/PrayerCreation/components/Prayer
 import PrayerCreationBody from "../../src/domain/PrayerCreation/components/PrayerCreationBody";
 import PrayerCreationBottom from "../../src/domain/PrayerCreation/components/PrayerCreationBottom";
 import { SelectedMember } from "../../src/domain/PrayerCreation/types/SelectedMember";
-import { usePrayerCreationStore } from "./../../src/domain/PrayerCreation/stores/usePrayerCreationStore";
+import { usePrayerCreationStore } from "../../src/domain/PrayerCreation/stores/usePrayerCreationStore";
 
 export default function PrayerCreationScreen() {
   const [prayerTitle, setPrayerTitle] = useState("");
