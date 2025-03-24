@@ -53,7 +53,7 @@ export default function PrayerTitleList(): JSX.Element {
     if (!title) return;
     selectTitle(title);
     console.log("Selected prayerTitle:", title.title);
-    router.push(path.showPrayersContentById(`${title.id}`));
+    router.push(path.showPrayersContentById(title.id));
   };
 
   const handleLoadMore = () => {
