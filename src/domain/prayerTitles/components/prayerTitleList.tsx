@@ -15,9 +15,10 @@ import path from "../../../common/constants/path";
 import { PrayerTitle } from "../types/dto/response/prayerTitle";
 import { useInfinitePrayerTitlesQuery } from "../hooks/queries/prayerTitleQueries";
 import { useSelectedRoomStore } from "../../prayerRoom/stores/useSelectedRoomStore";
+import { useSelectedPrayerTitleStore } from "./../stores/useSelectedPrayerTitleStore";
+import { useRoomMembersQuery } from "./../../prayerRoom/hooks/queries/roomQueries";
 import PrayerTitleItem from "./prayerTitleItem";
 import Loading from "../../../common/components/loading/Loading";
-import { useSelectedPrayerTitleStore } from "./../stores/useSelectedPrayerTitleStore";
 
 const EmptyPrayerTitleList = () => {
   return (
@@ -28,7 +29,7 @@ const EmptyPrayerTitleList = () => {
 };
 
 export default function PrayerTitleList(): JSX.Element {
-  const roomId = useSelectedRoomStore().selectedRoom?.id;
+  const roomId = useSelectedRoomStore().selectedRoom?.id ?? null;
   console.log("render room by id =", roomId);
   const router = useRouter();
   const { select: selectTitle } = useSelectedPrayerTitleStore();
@@ -40,8 +41,10 @@ export default function PrayerTitleList(): JSX.Element {
     isFetchingNextPage,
     isLoading,
     isRefetching,
-    refetch,
+    refetch: titleRefetch,
   } = useInfinitePrayerTitlesQuery(roomId as number);
+
+  const { refetch: membersRefetch } = useRoomMembersQuery(roomId);
 
   const prayerTitles = React.useMemo(() => {
     if (!data) return [];
@@ -64,6 +67,10 @@ export default function PrayerTitleList(): JSX.Element {
   const renderTitleItem = ({ item }: { item: PrayerTitle }) => {
     return <PrayerTitleItem item={item} onPress={handlePrayerTitlePress} />;
   };
+  const onRefresh = () => {
+    titleRefetch();
+    membersRefetch();
+  };
 
   return (
     <FlatList
@@ -73,7 +80,7 @@ export default function PrayerTitleList(): JSX.Element {
       renderItem={renderTitleItem}
       keyExtractor={(item) => String(item.id)}
       refreshing={isRefetching}
-      onRefresh={refetch}
+      onRefresh={onRefresh}
       ListHeaderComponent={
         (isFetchingNextPage || isLoading) && hasNextPage ? Loading : null
       }
