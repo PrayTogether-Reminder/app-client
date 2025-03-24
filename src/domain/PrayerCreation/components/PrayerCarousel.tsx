@@ -4,7 +4,7 @@ import { View, StyleSheet, Dimensions, FlatList, Text } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../common/styles/color";
 import { PrayerCreationItem } from "../types/PrayerCreationItem";
-import PrayerCard from "./PrayerContentCard";
+import PrayerCreationCard from "./PrayerCreationCard";
 
 const { width } = Dimensions.get("window");
 
@@ -75,7 +75,7 @@ export default function PrayerCarousel({
         keyExtractor={(item, index) => `${item.memberName}-${index}`}
         renderItem={({ item }) => (
           <View style={styles.cardContainer}>
-            <PrayerCard
+            <PrayerCreationCard
               memberName={item.memberName}
               content={item.content}
               onDelete={() => onDeletePrayer(item)}
