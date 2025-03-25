@@ -1,25 +1,19 @@
-import React, { useRef, useEffect, useState } from "react";
-import {
-  View,
-  FlatList,
-  StyleSheet,
-  Platform,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-} from "react-native";
-import { Text, ActivityIndicator } from "react-native-paper";
-import { RFValue } from "react-native-responsive-fontsize";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { color } from "../../../common/styles/color";
-import path from "../../../common/constants/path";
-import { PrayerTitle } from "../types/dto/response/prayerTitle";
-import { useInfinitePrayerTitlesQuery } from "../hooks/queries/prayerTitleQueries";
+import React from "react";
+import { FlatList, StyleSheet, View } from "react-native";
+import { Text } from "react-native-paper";
+import { RFValue } from "react-native-responsive-fontsize";
 import { useSelectedRoomStore } from "../../prayerRoom/stores/useSelectedRoomStore";
-import { useSelectedPrayerTitleStore } from "./../stores/useSelectedPrayerTitleStore";
+import { useInfinitePrayerTitlesQuery } from "../hooks/queries/prayerTitleQueries";
+import { PrayerTitle } from "../types/dto/response/prayerTitle";
 import { useRoomMembersQuery } from "./../../prayerRoom/hooks/queries/roomQueries";
-import PrayerTitleItem from "./prayerTitleItem";
+import { useSelectedPrayerTitleStore } from "./../stores/useSelectedPrayerTitleStore";
+
 import Loading from "../../../common/components/loading/Loading";
-import { usePrayerClear } from "./../../prayerRoom/hooks/usePrayerClear";
+import path from "../../../common/constants/path";
+import QUERY_KEYS from "./../../../common/hooks/queries/queryKeys";
+import PrayerTitleItem from "./prayerTitleItem";
 
 const EmptyPrayerTitleList = () => {
   return (
@@ -34,6 +28,7 @@ export default function PrayerTitleList(): JSX.Element {
   console.log("render room by id =", roomId);
   const router = useRouter();
   const { select: selectTitle } = useSelectedPrayerTitleStore();
+  const queryClient = useQueryClient();
 
   const {
     data,
@@ -42,7 +37,6 @@ export default function PrayerTitleList(): JSX.Element {
     isFetchingNextPage,
     isLoading,
     isRefetching,
-    refetch: titleRefetch,
   } = useInfinitePrayerTitlesQuery(roomId as number);
 
   const { refetch: membersRefetch } = useRoomMembersQuery(roomId);
@@ -69,7 +63,9 @@ export default function PrayerTitleList(): JSX.Element {
     return <PrayerTitleItem item={item} onPress={handlePrayerTitlePress} />;
   };
   const onRefresh = () => {
-    usePrayerClear(roomId);
+    queryClient.invalidateQueries({
+      queryKey: [QUERY_KEYS.rooms, roomId, QUERY_KEYS.prayerTitles],
+    });
     membersRefetch();
   };
 
