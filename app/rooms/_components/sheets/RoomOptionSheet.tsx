@@ -19,8 +19,8 @@ import {
   useTheme,
 } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { color } from "../../../../common/styles/color";
-import { Room } from "../../types/dto/responses/room";
+import { color } from "../../../../src/common/styles/color";
+import { Room } from "../../../../src/domain/rooms/types/room";
 
 interface RoomInfoSheetProp {
   showMenu: boolean;

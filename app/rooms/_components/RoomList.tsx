@@ -9,16 +9,16 @@ import {
 } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { useSelectedRoomStore } from "../../prayerRoom/stores/useSelectedRoomStore";
-import { Room } from "../types/dto/responses/room";
-import { useToggleRoomNotificationMutation } from "../hooks/mutations/roomListMutations";
-import { useInfiniteRoomsQuery } from "../hooks/queries/roomListQueries";
+import { useSelectedRoomStore } from "../../../src/domain/prayerRoom/stores/useSelectedRoomStore";
+import { Room } from "../../../src/domain/rooms/types/room";
+import { useToggleRoomNotificationMutation } from "../../../src/domain/rooms/hooks/mutations/roomMutations";
+import { useInfiniteRoomsQuery } from "../../../src/domain/rooms/hooks/queries/roomQueries";
 import EmptyRoomList from "./RoomEmpty";
 import RoomItem from "./RoomItem";
 import { useRouter } from "expo-router";
-import path from "../../../common/constants/path";
-import { color } from "../../../common/styles/color";
-import Loading from "../../../common/components/loading/Loading";
+import path from "../../../src/common/constants/path";
+import { color } from "../../../src/common/styles/color";
+import Loading from "../../../src/common/components/loading/Loading";
 
 const RoomList = () => {
   console.log("RoomList rendering");
@@ -58,10 +58,10 @@ const RoomList = () => {
   const handleRoomPress = (room: Room) => {
     console.log("Selected room:", room);
     selectRoom(room);
-    router.push(path.showRoomById(`${room.id}`));
+    router.push(path.showRoomById(room.id as number));
   };
 
-  const handleToggleRoomNotificationMutation = (roomId: string) => {
+  const handleToggleRoomNotificationMutation = (roomId: number) => {
     toggleRoomNotificationMutation(roomId);
   };
 
@@ -73,7 +73,9 @@ const RoomList = () => {
     <RoomItem
       room={item}
       onRoomPress={handleRoomPress}
-      onNotificationToggle={() => handleToggleRoomNotificationMutation(item.id)}
+      onNotificationToggle={() =>
+        handleToggleRoomNotificationMutation(item?.id as number)
+      }
       onLeaveRoom={handleLeaveRoom}
     />
   );

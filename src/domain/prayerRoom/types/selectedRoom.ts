@@ -1,4 +1,4 @@
-import { Room } from "../../roomList/types/dto/responses/room";
+import { Room } from "../../rooms/types/room";
 
 export interface SelectedRoom {
   selectedRoom: Room | null;

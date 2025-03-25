@@ -3,8 +3,8 @@ import { View, StyleSheet } from "react-native";
 import { Surface } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import Top1Body10Bottom1 from "../../src/common/layout/Top1Body10Bottom1";
-import RoomList from "../../src/domain/roomList/components/RoomList";
-import RoomCreationFloatingButton from "../../src/domain/roomList/components/buttons/RoomCreationFloatingButton";
+import RoomList from "./_components/RoomList";
+import RoomCreationFloatingButton from "./_components/buttons/RoomCreationFloatingButton";
 import BottomTabs from "../../src/domain/tab/bottom/components/BottomTabs";
 
 export default function RoomsScreen() {

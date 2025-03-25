@@ -5,8 +5,8 @@ import {
   UseInfiniteQueryOptions,
 } from "@tanstack/react-query";
 import { OrderBy, Dir } from "../../../../common/apis/constants/params";
-import { Room } from "../../types/dto/responses/room";
-import roomService from "../../services/roomListService";
+import { Room } from "../../types/room";
+import roomService from "../../services/roomService";
 import QUERY_KEYS from "../../../../common/hooks/queries/queryKeys";
 
 type RoomPageParam = {

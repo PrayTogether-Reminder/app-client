@@ -1,6 +1,6 @@
 import apiService from "../../../common/apis/apiService";
 import { ApiResponse } from "../../../common/apis/api";
-import { Room } from "../types/dto/responses/room";
+import { Room } from "../types/room";
 import { OrderBy, Dir } from "../../../common/apis/constants/params";
 
 const roomListService = {

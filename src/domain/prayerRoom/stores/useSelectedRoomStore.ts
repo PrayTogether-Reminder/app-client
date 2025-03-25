@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { SelectedRoomStore, SelectedRoom } from "../types/selectedRoom";
-import { Room } from "../../roomList/types/dto/responses/room";
+import { Room } from "../../rooms/types/room";
 
 const initialState: SelectedRoom = {
   selectedRoom: null,
