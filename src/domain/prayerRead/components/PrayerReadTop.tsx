@@ -6,7 +6,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../common/styles/color";
 import path from "../../../../src/common/constants/path";
 import { useSelectedRoomStore } from "../../rooms/stores/useSelectedRoomStore";
-import { useSelectedPrayerTitleStore } from "../../prayerTitles/stores/useSelectedPrayerTitleStore";
+import { useSelectedPrayerTitleStore } from "../../prayers/stores/useSelectedPrayerTitleStore";
 
 interface PrayerReadTopProps {}
 

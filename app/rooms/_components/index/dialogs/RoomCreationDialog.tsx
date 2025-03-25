@@ -16,7 +16,6 @@ import {
 } from "react-native-paper";
 import Feather from "@expo/vector-icons/Feather";
 import { RFValue } from "react-native-responsive-fontsize";
-import { useCloseOnBack } from "../../../../src/common/services/back-handler/useCloseOnBack";
 
 type RoomCreationDialogProp = {
   open: boolean;

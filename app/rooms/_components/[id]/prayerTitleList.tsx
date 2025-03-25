@@ -4,15 +4,15 @@ import React from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { useSelectedRoomStore } from "../../rooms/stores/useSelectedRoomStore";
-import { useInfinitePrayerTitlesQuery } from "../hooks/queries/prayerTitleQueries";
-import { PrayerTitle } from "../types/dto/response/prayerTitle";
-import { useRoomMembersQuery } from "../../rooms/hooks/queries/roomQueries";
-import { useSelectedPrayerTitleStore } from "./../stores/useSelectedPrayerTitleStore";
+import { useSelectedRoomStore } from "../../../../src/domain/rooms/stores/useSelectedRoomStore";
+import { useInfinitePrayerTitlesQuery } from "@/domain/prayers/hooks/queries/usePrayerQueries";
+import { PrayerTitle } from "../../../../src/domain/prayers/types/prayerTitle";
+import { useRoomMembersQuery } from "../../../../src/domain/rooms/hooks/queries/roomQueries";
+import { useSelectedPrayerTitleStore } from "../../../../src/domain/prayers/stores/useSelectedPrayerTitleStore";
 
-import Loading from "../../../common/components/loading/Loading";
-import path from "../../../common/constants/path";
-import QUERY_KEYS from "../../../common/constants/queryKeys";
+import Loading from "../../../../src/common/components/loading/Loading";
+import path from "../../../../src/common/constants/path";
+import QUERY_KEYS from "../../../../src/common/constants/queryKeys";
 import PrayerTitleItem from "./prayerTitleItem";
 
 const EmptyPrayerTitleList = () => {

@@ -2,12 +2,12 @@ import React, { useRef } from "react";
 import { View, Pressable, StyleSheet, Animated } from "react-native";
 import { Text, Avatar, Card } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { PrayerTitle } from "../types/dto/response/prayerTitle";
-import { color } from "../../../common/styles/color";
+import { PrayerTitle } from "../../../../src/domain/prayers/types/prayerTitle";
+import { color } from "../../../../src/common/styles/color";
 import {
   convertLocalToUTC,
   formatDate,
-} from "../../../common/services/time/timeService";
+} from "../../../../src/common/services/time/timeService";
 
 interface PrayerTitleItemProps {
   item: PrayerTitle;

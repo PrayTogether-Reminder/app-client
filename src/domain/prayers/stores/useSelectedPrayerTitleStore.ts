@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { SelectedPrayerTitleStore } from "../types/selectedPrayerTitle";
 import { SelectedPrayerTitle } from "../types/selectedPrayerTitle";
-import { PrayerTitle } from "../types/dto/response/prayerTitle";
+import { PrayerTitle } from "../types/prayerTitle";
 
 const initialState: SelectedPrayerTitle = {
   selectedPrayerTitle: null,

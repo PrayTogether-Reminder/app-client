@@ -9,16 +9,16 @@ import {
 } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { useSelectedRoomStore } from "../../../src/domain/rooms/stores/useSelectedRoomStore";
-import { Room } from "../../../src/domain/rooms/types/room";
-import { useToggleRoomNotificationMutation } from "../../../src/domain/rooms/hooks/mutations/roomMutations";
-import { useInfiniteRoomsQuery } from "../../../src/domain/rooms/hooks/queries/roomQueries";
+import { useSelectedRoomStore } from "@/domain/rooms/stores/useSelectedRoomStore";
+import { Room } from "@/domain/rooms/types/room";
+import { useToggleRoomNotificationMutation } from "@/domain/rooms/hooks/mutations/roomMutations";
+import { useInfiniteRoomsQuery } from "@/domain/rooms/hooks/queries/roomQueries";
 import EmptyRoomList from "./RoomEmpty";
 import RoomItem from "./RoomItem";
 import { useRouter } from "expo-router";
-import path from "../../../src/common/constants/path";
-import { color } from "../../../src/common/styles/color";
-import Loading from "../../../src/common/components/loading/Loading";
+import path from "@/common/constants/path";
+import { color } from "@/common/styles/color";
+import Loading from "@/common/components/loading/Loading";
 
 const RoomList = () => {
   console.log("RoomList rendering");

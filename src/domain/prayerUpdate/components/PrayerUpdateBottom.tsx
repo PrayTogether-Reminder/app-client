@@ -10,7 +10,7 @@ import { usePrayerUpdateStore } from "../stores/usePrayerUpdateStore";
 import { useSelectedRoomStore } from "../../rooms/stores/useSelectedRoomStore";
 import { useQueryClient } from "@tanstack/react-query";
 import QUERY_KEYS from "../../../common/constants/queryKeys";
-import { useSelectedPrayerTitleStore } from "./../../prayerTitles/stores/useSelectedPrayerTitleStore";
+import { useSelectedPrayerTitleStore } from "../../prayers/stores/useSelectedPrayerTitleStore";
 
 interface PrayerUpdateBottomProps {
   title: string;

@@ -1,4 +1,4 @@
-import { PrayerTitle } from "../types/dto/response/prayerTitle";
+import { PrayerTitle } from "./prayerTitle";
 
 export interface SelectedPrayerTitle {
   selectedPrayerTitle: PrayerTitle | null;

@@ -10,7 +10,7 @@ import { useRoomMembersQuery } from "../../rooms/hooks/queries/roomQueries";
 import { RoomMember } from "../../rooms/types/roomMember";
 import { PrayerUpdateItem } from "../types/prayerUpdateItem";
 import { usePrayerUpdateStore } from "../stores/usePrayerUpdateStore";
-import { useSelectedPrayerTitleStore } from "./../../prayerTitles/stores/useSelectedPrayerTitleStore";
+import { useSelectedPrayerTitleStore } from "../../prayers/stores/useSelectedPrayerTitleStore";
 import { usePrayerContentsQuery } from "../../prayerRead/hooks/queries/usePrayerReadQuery";
 
 import PrayerTitleInput from "../../../../app/prayers/_components/PrayerTitleInput";

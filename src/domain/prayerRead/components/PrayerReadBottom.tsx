@@ -5,7 +5,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../common/styles/color";
 import { useRouter } from "expo-router";
 import { usePrayerNotificationMutation } from "../hooks/mutations/usePrayerNotificationMutations";
-import { useSelectedPrayerTitleStore } from "../../prayerTitles/stores/useSelectedPrayerTitleStore";
+import { useSelectedPrayerTitleStore } from "../../prayers/stores/useSelectedPrayerTitleStore";
 import { useSelectedRoomStore } from "../../rooms/stores/useSelectedRoomStore";
 import { NOTIFICATION_TYPE } from "../constants/notificationType";
 

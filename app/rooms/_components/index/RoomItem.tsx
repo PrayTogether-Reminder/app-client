@@ -11,9 +11,9 @@ import {
 } from "react-native";
 import { Card, Text, useTheme } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { backgroundColor, color } from "../../../src/common/styles/color";
-import { Room } from "../../../src/domain/rooms/types/room";
-import RoomInfoSheet from "./sheets/RoomOptionSheet";
+import { backgroundColor, color } from "@/common/styles/color";
+import { Room } from "@/domain/rooms/types/room";
+import RoomInfoSheet from "..//index/sheets/RoomOptionSheet";
 
 interface RoomItemProps {
   room: Room;

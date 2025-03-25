@@ -2,14 +2,10 @@ import {
   useInfiniteQuery,
   UseInfiniteQueryOptions,
 } from "@tanstack/react-query";
-import PrayerTitlesService from "../../services/prayerTitleService";
+import { prayerService } from "../../services/prayerServices";
 import QUERY_KEYS from "../../../../common/constants/queryKeys";
-import { PrayerTitle } from "../../types/dto/response/prayerTitle";
-
-type PrayerTitlePageParam = {
-  roomId: number | null;
-  after: string;
-};
+import { FetchPrayerTitlesParams } from "../../types/params/fetchPrayerTitlesParams";
+import { PrayerTitle } from "../../types/prayerTitle";
 
 export const useInfinitePrayerTitlesQuery = (
   roomId: number | null,
@@ -25,20 +21,20 @@ export const useInfinitePrayerTitlesQuery = (
     ],
 
     queryFn: async ({ pageParam }) => {
-      const param = pageParam as PrayerTitlePageParam;
+      const param = pageParam as FetchPrayerTitlesParams;
       console.log(
-        "fetch 기도 제목 = roomId:",
+        "fetch 기도 제목 목록 (roomId:",
         param.roomId,
         " after:",
         param.after
       );
-      return PrayerTitlesService.fetchPrayerTitles(param.roomId, param.after);
+      return prayerService.fetchTitles(param.roomId, param.after);
     },
 
     initialPageParam: {
       roomId: null,
       after: "0",
-    } as PrayerTitlePageParam,
+    } as FetchPrayerTitlesParams,
 
     getNextPageParam: (lastPage) => {
       if (lastPage.length === 0) return undefined;
