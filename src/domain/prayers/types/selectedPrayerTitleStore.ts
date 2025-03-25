@@ -1,6 +1,6 @@
 import { PrayerTitle } from "./prayerTitle";
 
-export interface SelectedPrayerTitle {
+export interface SelectedPrayerTitleState {
   selectedPrayerTitle: PrayerTitle | null;
 }
 
@@ -9,5 +9,5 @@ export interface SelectedPrayerTitleAction {
   reset: () => void;
 }
 
-export type SelectedPrayerTitleStore = SelectedPrayerTitle &
+export type SelectedPrayerTitleStore = SelectedPrayerTitleState &
   SelectedPrayerTitleAction;

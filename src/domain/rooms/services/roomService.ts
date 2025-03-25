@@ -2,8 +2,8 @@ import apiService from "@/common/apis/apiService";
 import { Room } from "../types/room";
 import { RoomMember } from "../types/roomMember";
 import { InviteRoomMemberRequest } from "../../invitations/types/request/inviteRoomMemberRequest";
-import { inviteRoomMemberResponse } from "../../invitations/types/response/inviteRoomMemberResponse";
-import { RoomListParams } from "../types/params/roomListParams";
+import { MessageResponse } from "@/common/types/messageResponse";
+import { FetchRoomsParams } from "../types/params/fetchRoomsParams";
 
 export const roomService = {
   // 방 목록 조회
@@ -11,7 +11,7 @@ export const roomService = {
     orderBy,
     after,
     dir,
-  }: RoomListParams): Promise<Room[]> => {
+  }: FetchRoomsParams): Promise<Room[]> => {
     const response = await apiService.get<{ rooms: Room[] }>("/rooms", {
       orderBy,
       after,
@@ -37,7 +37,7 @@ export const roomService = {
   inviteRoomMember: async (
     roomId: number | null,
     email: string
-  ): Promise<inviteRoomMemberResponse> => {
+  ): Promise<MessageResponse> => {
     const response = await apiService.post<InviteRoomMemberRequest>(
       `/invitations`,
       {

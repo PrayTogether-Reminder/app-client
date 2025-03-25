@@ -1,6 +1,6 @@
 import { Room } from "./room";
 
-export interface SelectedRoom {
+export interface SelectedRoomState {
   selectedRoom: Room | null;
 }
 
@@ -9,4 +9,4 @@ export interface SelectedRoomAction {
   resetRoom: () => void;
 }
 
-export type SelectedRoomStore = SelectedRoom & SelectedRoomAction;
+export type SelectedRoomStore = SelectedRoomState & SelectedRoomAction;

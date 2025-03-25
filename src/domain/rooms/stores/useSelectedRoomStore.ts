@@ -1,8 +1,11 @@
 import { create } from "zustand";
-import { SelectedRoomStore, SelectedRoom } from "../types/selectedRoom";
+import {
+  SelectedRoomStore,
+  SelectedRoomState,
+} from "../types/selectedRoomStore";
 import { Room } from "../types/room";
 
-const initialState: SelectedRoom = {
+const initialState: SelectedRoomState = {
   selectedRoom: null,
 };
 
