@@ -2,15 +2,15 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { Surface, Button, useTheme } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { color } from "../../../common/styles/color";
+import { color } from "../../../../../src/common/styles/color";
 import { useRouter } from "expo-router";
-import path from "../../../common/constants/path";
-import { usePrayerUpdateMutation } from "../hooks/mutations/usePrayerUpdateMutations";
-import { usePrayerUpdateStore } from "../stores/usePrayerUpdateStore";
-import { useSelectedRoomStore } from "../../rooms/stores/useSelectedRoomStore";
+import path from "../../../../../src/common/constants/path";
+import { usePrayerUpdateMutation } from "@/domain/prayers/hooks/mutations/usePrayerMuations";
+import { usePrayerUpdateStore } from "../../../../../src/domain/prayers/stores/usePrayerUpdateStore";
+import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
 import { useQueryClient } from "@tanstack/react-query";
-import QUERY_KEYS from "../../../common/constants/queryKeys";
-import { useSelectedPrayerTitleStore } from "../../prayers/stores/useSelectedPrayerTitleStore";
+import QUERY_KEYS from "../../../../../src/common/constants/queryKeys";
+import { useSelectedPrayerTitleStore } from "../../../../../src/domain/prayers/stores/useSelectedPrayerTitleStore";
 
 interface PrayerUpdateBottomProps {
   title: string;

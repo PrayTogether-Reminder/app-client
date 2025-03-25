@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Title, IconButton, Appbar } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { backgroundColor, color } from "../../../common/styles/color";
+import { backgroundColor, color } from "../../../../../src/common/styles/color";
 
 interface PrayerCreationTopProps {
   roomName: string | undefined;

@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet, Dimensions, ScrollView } from "react-native";
 import { Card, Text, IconButton } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { color, flexMarker } from "../../../common/styles/color";
+import { color, flexMarker } from "../../../../../src/common/styles/color";
 import { loadEnvFile } from "process";
 
 const { width } = Dimensions.get("window");

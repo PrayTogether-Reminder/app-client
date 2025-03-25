@@ -6,6 +6,8 @@ import { MessageResponse } from "../../../common/types/messageResponse";
 import { PrayerTitle } from "../types/prayerTitle";
 import { FetchPrayerTitlesResponse } from "../types/response/fetchPrayerTitlesResponse";
 import type { FetchPrayerContentsResponse } from "../types/response/fetchPrayerContentsResponse";
+import { PrayerUpdateItem } from "../types/prayerUpdateItem";
+import { UpdatePrayerRequest } from "../types/request/updatePrayerRequest";
 
 export const prayerService = {
   // 기도 제목 작성
@@ -40,5 +42,23 @@ export const prayerService = {
       `/prayers/${titleId}/contents`
     );
     return response.data.prayerContents ?? [];
+  },
+  // 기도 제목 변경
+  update: async (
+    prayerTitleId: number | null,
+    title: string,
+    prayerList: PrayerUpdateItem[]
+  ): Promise<MessageResponse> => {
+    const response: MessageResponse = await apiService.put<UpdatePrayerRequest>(
+      `/prayers/${prayerTitleId}`,
+      {
+        prayers: {
+          title,
+          contents: prayerList,
+        },
+      } as UpdatePrayerRequest
+    );
+    console.log("API response=", response.message);
+    return response;
   },
 };
