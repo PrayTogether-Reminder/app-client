@@ -5,7 +5,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../common/styles/color";
 import { SelectedMember } from "../types/SelectedMember";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { usePrayerCreationStore } from "./../stores/usePrayerCreationStore";
+import { usePrayerCreationStore } from "../stores/usePrayerCreationStore";
 import { PrayerCreationItem } from "../types/PrayerCreationItem";
 import { useSelectedRoomStore } from "../../prayerRoom/stores/useSelectedRoomStore";
 import { useRoomMembersQuery } from "../../prayerRoom/hooks/queries/roomQueries";
