@@ -1,22 +1,19 @@
-import React, { useRef, useEffect, useState } from "react";
-import {
-  View,
-  FlatList,
-  StyleSheet,
-  Platform,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-} from "react-native";
-import { Text, ActivityIndicator } from "react-native-paper";
-import { RFValue } from "react-native-responsive-fontsize";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { color } from "../../../common/styles/color";
-import path from "../../../common/constants/path";
-import { PrayerTitle } from "../types/dto/response/prayerTitle";
-import { useInfinitePrayerTitlesQuery } from "../hooks/queries/prayerTitleQueries";
+import React from "react";
+import { FlatList, StyleSheet, View } from "react-native";
+import { Text } from "react-native-paper";
+import { RFValue } from "react-native-responsive-fontsize";
 import { useSelectedRoomStore } from "../../prayerRoom/stores/useSelectedRoomStore";
-import PrayerTitleItem from "./prayerTitleItem";
+import { useInfinitePrayerTitlesQuery } from "../hooks/queries/prayerTitleQueries";
+import { PrayerTitle } from "../types/dto/response/prayerTitle";
+import { useRoomMembersQuery } from "./../../prayerRoom/hooks/queries/roomQueries";
+import { useSelectedPrayerTitleStore } from "./../stores/useSelectedPrayerTitleStore";
+
 import Loading from "../../../common/components/loading/Loading";
+import path from "../../../common/constants/path";
+import QUERY_KEYS from "./../../../common/hooks/queries/queryKeys";
+import PrayerTitleItem from "./prayerTitleItem";
 
 const EmptyPrayerTitleList = () => {
   return (
@@ -27,9 +24,11 @@ const EmptyPrayerTitleList = () => {
 };
 
 export default function PrayerTitleList(): JSX.Element {
-  const roomId = useSelectedRoomStore().selectedRoom?.id;
+  const roomId = useSelectedRoomStore().selectedRoom?.id ?? null;
   console.log("render room by id =", roomId);
   const router = useRouter();
+  const { select: selectTitle } = useSelectedPrayerTitleStore();
+  const queryClient = useQueryClient();
 
   const {
     data,
@@ -38,8 +37,9 @@ export default function PrayerTitleList(): JSX.Element {
     isFetchingNextPage,
     isLoading,
     isRefetching,
-    refetch,
   } = useInfinitePrayerTitlesQuery(roomId as number);
+
+  const { refetch: membersRefetch } = useRoomMembersQuery(roomId);
 
   const prayerTitles = React.useMemo(() => {
     if (!data) return [];
@@ -49,8 +49,9 @@ export default function PrayerTitleList(): JSX.Element {
 
   const handlePrayerTitlePress = (title: PrayerTitle): void => {
     if (!title) return;
-    console.log("Selected prayerTitle:", title);
-    router.push(path.showPrayerContentById(`${title.id}`));
+    selectTitle(title);
+    console.log("Selected prayerTitle:", title.title);
+    router.push(path.showPrayersContentById(title.id));
   };
 
   const handleLoadMore = () => {
@@ -61,6 +62,12 @@ export default function PrayerTitleList(): JSX.Element {
   const renderTitleItem = ({ item }: { item: PrayerTitle }) => {
     return <PrayerTitleItem item={item} onPress={handlePrayerTitlePress} />;
   };
+  const onRefresh = () => {
+    queryClient.invalidateQueries({
+      queryKey: [QUERY_KEYS.rooms, roomId, QUERY_KEYS.prayerTitles],
+    });
+    membersRefetch();
+  };
 
   return (
     <FlatList
@@ -70,7 +77,7 @@ export default function PrayerTitleList(): JSX.Element {
       renderItem={renderTitleItem}
       keyExtractor={(item) => String(item.id)}
       refreshing={isRefetching}
-      onRefresh={refetch}
+      onRefresh={onRefresh}
       ListHeaderComponent={
         (isFetchingNextPage || isLoading) && hasNextPage ? Loading : null
       }

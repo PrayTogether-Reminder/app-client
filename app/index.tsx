@@ -2,6 +2,7 @@ import { useRouter } from "expo-router";
 import { View, StyleSheet, useWindowDimensions } from "react-native";
 import { TouchableRipple, Text, useTheme } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
+import { color } from "../src/common/styles/color";
 import path from "../src/common/constants/path";
 
 export default function MainScreen() {
@@ -22,7 +23,7 @@ export default function MainScreen() {
         onPress={() => {
           router.push(path.showRoomList());
         }}
-        style={[styles.button, { backgroundColor: theme.colors.primary }]}
+        style={[styles.button, { backgroundColor: color.black }]}
         rippleColor="rgba(255, 255, 255, 0.2)"
       >
         <Text style={[styles.buttonText, { fontSize: getFontSize() }]}>

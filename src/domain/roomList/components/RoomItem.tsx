@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import { Card, Text, useTheme } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import useCloseOnBack from "../../../common/services/back-handler/useCloseOnBack";
 import { backgroundColor, color } from "../../../common/styles/color";
 import { Room } from "../types/dto/responses/room";
 import RoomInfoSheet from "./sheets/RoomOptionSheet";
@@ -84,8 +83,6 @@ const RoomItem = ({
       },
     ]);
   };
-
-  useCloseOnBack(showMenu, setShowMenu);
 
   // Animated.View로 감싸서 애니메이션 적용
   return (

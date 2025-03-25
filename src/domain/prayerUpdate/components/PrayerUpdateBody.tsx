@@ -1,44 +1,50 @@
-import React, { useState, useRef, useMemo } from "react";
+import React, { useState, useRef, useMemo, useEffect } from "react";
 import { View, StyleSheet, Platform, Dimensions } from "react-native";
 import { Divider, Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../common/styles/color";
-import { SelectedMember } from "../types/SelectedMember";
+import { SelectedMember } from "../../prayerCreation/types/SelectedMember";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { usePrayerCreationStore } from "../stores/usePrayerCreationStore";
-import { PrayerCreationItem } from "../types/PrayerCreationItem";
 import { useSelectedRoomStore } from "../../prayerRoom/stores/useSelectedRoomStore";
 import { useRoomMembersQuery } from "../../prayerRoom/hooks/queries/roomQueries";
 import { RoomMember } from "../../prayerRoom/types/dto/response/roomMember";
+import { PrayerUpdateItem } from "../types/prayerUpdateItem";
+import { usePrayerUpdateStore } from "../stores/usePrayerUpdateStore";
+import { useSelectedPrayerTitleStore } from "./../../prayerTitles/stores/useSelectedPrayerTitleStore";
+import { usePrayerContentsQuery } from "../../prayerRead/hooks/queries/usePrayerReadQuery";
 
-// 컴포넌트 임포트
-import PrayerTitleInput from "./PrayerTitleInput";
-import PrayerMemberSelector from "./PrayerMemberSelector";
-import PrayerContentInput from "./PrayerContentInput";
-import PrayerAddButton from "./PrayerAddButton";
-import PrayerCarousel from "./PrayerCarousel";
-import PrayerDeleteDialog from "./dialog/PrayerDeleteDialog";
-import PrayerCustomNameDialog from "./dialog/PrayerCustomNameDialog";
-import PrayerMemberSelectionModal from "./modal/PrayerMemberSelectionModal";
-import PrayerEditDialog from "./dialog/PrayerEditDialog";
+import PrayerTitleInput from "../../prayerCreation/components/PrayerTitleInput";
+import PrayerMemberSelector from "../../prayerCreation/components/PrayerMemberSelector";
+import PrayerContentInput from "../../prayerCreation/components/PrayerContentInput";
+import PrayerAddButton from "../../prayerCreation/components/PrayerAddButton";
+import PrayerCarousel from "../../prayerCreation/components/PrayerCarousel";
+import PrayerDeleteDialog from "../../prayerCreation/components/dialog/PrayerDeleteDialog";
+import PrayerCustomNameDialog from "../../prayerCreation/components/dialog/PrayerCustomNameDialog";
+import PrayerMemberSelectionModal from "../../prayerCreation/components/modal/PrayerMemberSelectionModal";
+import PrayerEditDialog from "../../prayerCreation/components/dialog/PrayerEditDialog";
 
 const { width } = Dimensions.get("window");
 const CARD_SPACING = RFValue(20); // 카드 사이 간격
 
-interface PrayerCreationBodyProps {
+interface PrayerUpdateBodyProps {
   prayerTitle: string;
   setPrayerTitle: (text: string) => void;
 }
 
-export default function PrayerCreationBody({
+export default function PrayerUpdateBody({
   prayerTitle,
   setPrayerTitle,
-}: PrayerCreationBodyProps) {
+}: PrayerUpdateBodyProps) {
+  const titleId = useSelectedPrayerTitleStore().selectedPrayerTitle?.id ?? null;
+  const roomId = useSelectedRoomStore().selectedRoom?.id ?? null;
+  const { data: fetchData, refetch } = usePrayerContentsQuery(roomId, titleId);
+
   const {
     add: addPrayer,
     delete: deletePrayer,
+    set: setPrayerList,
     prayerList,
-  } = usePrayerCreationStore();
+  } = usePrayerUpdateStore();
 
   // 기도 관련 상태
   const [prayerContent, setPrayerContent] = useState("");
@@ -48,11 +54,10 @@ export default function PrayerCreationBody({
   const customNameRef = useRef({ customName: "" });
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // 다이얼로그 관련 상태
-  const [prayerDelete, setPrayerDelete] = useState<PrayerCreationItem | null>(
+  const [prayerDelete, setPrayerDelete] = useState<PrayerUpdateItem | null>(
     null
   );
-  const [prayerEdit, setPrayerEdit] = useState<PrayerCreationItem | null>(null);
+  const [prayerEdit, setPrayerEdit] = useState<PrayerUpdateItem | null>(null);
   const [prayerDeleteDialog, setPrayerDeleteDialog] = useState(false);
   const [customNameDialog, setCustomNameDialog] = useState(false);
   const [memberSelectionModal, setMemberSelectionModal] = useState(false);
@@ -90,7 +95,7 @@ export default function PrayerCreationBody({
   const sortedRoomMembers = useMemo(() => {
     if (!roomMembers) return [];
     const existingMember = new Set(
-      prayerList.map((prayer) => prayer.memberName)
+      prayerList.map((prayer: PrayerUpdateItem) => prayer.memberName)
     );
 
     return [...roomMembers]
@@ -123,10 +128,10 @@ export default function PrayerCreationBody({
   // 기도문 추가 함수
   const handleAddPrayer = () => {
     if (!prayerContent.trim() || !selectedMember) return;
-    const newPrayer: PrayerCreationItem = {
+    const newPrayer: PrayerUpdateItem = {
       memberId: selectedMember.id,
-      content: prayerContent,
       memberName: selectedMember.name,
+      content: prayerContent,
     };
 
     addPrayer(newPrayer);
@@ -138,7 +143,7 @@ export default function PrayerCreationBody({
   };
 
   // 기도문 삭제 관련 함수
-  const showPrayerDeleteDialog = (prayer: PrayerCreationItem) => {
+  const showPrayerDeleteDialog = (prayer: PrayerUpdateItem) => {
     setPrayerDelete(prayer);
     setPrayerDeleteDialog(true);
   };
@@ -158,7 +163,7 @@ export default function PrayerCreationBody({
   };
 
   // 기도문 편집 함수
-  const showPrayerEditDialog = (prayer: PrayerCreationItem) => {
+  const showPrayerEditDialog = (prayer: PrayerUpdateItem) => {
     setPrayerEdit(prayer);
     setPrayerDelete(prayer);
     setPrayerEditDialog(true);
@@ -179,6 +184,25 @@ export default function PrayerCreationBody({
     confirmPrayerDelete();
   };
 
+  useEffect(() => {
+    const fetchAndUpdateData = async () => {
+      const result = await refetch();
+      if (result.data && result.data.length > 0) {
+        const formattedData = result.data.map(
+          (item) =>
+            ({
+              memberId: item.memberId,
+              content: item.content,
+              memberName: item.memberName,
+            } as PrayerUpdateItem)
+        );
+
+        setPrayerList(formattedData);
+      }
+    };
+
+    fetchAndUpdateData();
+  }, [refetch, setPrayerList]); // 의존성에 refetch 추가
   return (
     <KeyboardAwareScrollView
       style={styles.container}

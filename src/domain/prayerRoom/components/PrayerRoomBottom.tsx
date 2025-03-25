@@ -11,7 +11,7 @@ interface PrayerRoomBottomButtonProps {}
 const PrayerRoomBottomButton: React.FC<PrayerRoomBottomButtonProps> = ({}) => {
   const router = useRouter();
   const handlePress = () => {
-    router.push(path.showPrayerCreate());
+    router.push(path.showPrayersCreate());
   };
 
   return (

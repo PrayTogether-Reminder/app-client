@@ -12,7 +12,7 @@ import {
 import { RFValue } from "react-native-responsive-fontsize";
 import { color, flexMarker } from "../../../../common/styles/color";
 import { RoomMember } from "../../../prayerRoom/types/dto/response/roomMember";
-import { backgroundColor } from "./../../../../common/styles/color";
+import { backgroundColor } from "../../../../common/styles/color";
 
 interface PrayerMemberSelectionModalProps {
   visible: boolean;

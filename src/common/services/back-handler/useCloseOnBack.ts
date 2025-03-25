@@ -1,17 +1,11 @@
 import { useEffect } from "react";
 import { BackHandler } from "react-native";
 
-export default function useCloseOnBack(
-  open: boolean,
-  setOpen: (open: boolean) => void
-) {
+export function useCloseOnBack(callback: () => void) {
   useEffect(() => {
     const backAction = () => {
-      if (open) {
-        setOpen(false);
-        return true;
-      }
-      return false;
+      callback();
+      return true; // 기본 동작 방지
     };
 
     const backHandler = BackHandler.addEventListener(
@@ -19,6 +13,6 @@ export default function useCloseOnBack(
       backAction
     );
 
-    return () => backHandler.remove();
-  }, [open, setOpen]);
+    return () => backHandler.remove(); // 컴포넌트 언마운트 시 이벤트 리스너 제거
+  }, []);
 }
