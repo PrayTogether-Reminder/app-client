@@ -5,6 +5,7 @@ import { CreatePrayerRequest } from "../types/request/createPrayerRequest";
 import { MessageResponse } from "../../../common/types/messageResponse";
 import { PrayerTitle } from "../types/prayerTitle";
 import { FetchPrayerTitlesResponse } from "../types/response/fetchPrayerTitlesResponse";
+import type { FetchPrayerContentsResponse } from "../types/response/fetchPrayerContentsResponse";
 
 export const prayerService = {
   // 기도 제목 작성
@@ -32,5 +33,12 @@ export const prayerService = {
       }
     );
     return response.data.prayerTitles;
+  },
+  // 기도 내용 조회
+  fetchContents: async (titleId: number | null) => {
+    const response = await apiService.get<FetchPrayerContentsResponse>(
+      `/prayers/${titleId}/contents`
+    );
+    return response.data.prayerContents ?? [];
   },
 };

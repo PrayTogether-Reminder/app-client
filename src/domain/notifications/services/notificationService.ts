@@ -1,20 +1,19 @@
 import apiService from "../../../common/apis/apiService";
 import type { MessageResponse } from "../../../common/types/messageResponse";
-import { NotificationRequest } from "../types/request/notificationRequest";
+import { NotifyPrayerCompletionRequest } from "../../notifications/types/request/notifyPrayerCompletionRequest";
 
-const prayerNotificationService = {
+export const notificationService = {
+  // 기도 완료 알림
   notifyPrayerCompletion: async ({
     prayerTitleId,
     roomId,
     type,
-  }: NotificationRequest) => {
+  }: NotifyPrayerCompletionRequest) => {
     const response = await apiService.post<MessageResponse>(`/notifications`, {
       prayerTitleId,
       roomId,
       type,
-    } as NotificationRequest);
+    } as NotifyPrayerCompletionRequest);
     return response.data;
   },
 };
-
-export default prayerNotificationService;

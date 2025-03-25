@@ -3,8 +3,8 @@ import React from "react";
 import { View, StyleSheet, Animated, ScrollView } from "react-native";
 import { Card, Text, IconButton } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { color } from "../../../common/styles/color";
-import { PrayerContent } from "../types/response/prayerContent";
+import { color } from "../../../../../src/common/styles/color";
+import { PrayerContent } from "../../../../../src/domain/prayers/types/prayerContent";
 
 interface PrayerCardProps {
   item: PrayerContent;

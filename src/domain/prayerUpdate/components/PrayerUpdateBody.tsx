@@ -11,7 +11,7 @@ import { RoomMember } from "../../rooms/types/roomMember";
 import { PrayerUpdateItem } from "../types/prayerUpdateItem";
 import { usePrayerUpdateStore } from "../stores/usePrayerUpdateStore";
 import { useSelectedPrayerTitleStore } from "../../prayers/stores/useSelectedPrayerTitleStore";
-import { usePrayerContentsQuery } from "../../prayerRead/hooks/queries/usePrayerReadQuery";
+import { usePrayerContentsQuery } from "../../prayers/hooks/queries/usePrayerQueries";
 
 import PrayerTitleInput from "../../../../app/prayers/_components/PrayerTitleInput";
 import PrayerMemberSelector from "../../../../app/prayers/_components/PrayerMemberSelector";

@@ -3,7 +3,7 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { Card, Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { color } from "../../../common/styles/color";
+import { color } from "../../../../../src/common/styles/color";
 
 interface TitleCardProps {
   title: string;

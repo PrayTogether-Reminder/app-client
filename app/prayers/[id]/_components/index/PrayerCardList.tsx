@@ -8,7 +8,7 @@ import {
   Platform,
 } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
-import { PrayerContent } from "../types/response/prayerContent";
+import { PrayerContent } from "../../../../../src/domain/prayers/types/prayerContent";
 import PrayerCard from "./PrayerCard";
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);

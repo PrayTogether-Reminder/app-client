@@ -1,12 +1,16 @@
 import {
   useInfiniteQuery,
   UseInfiniteQueryOptions,
+  useQuery,
+  UseQueryOptions,
 } from "@tanstack/react-query";
 import { prayerService } from "../../services/prayerServices";
 import QUERY_KEYS from "../../../../common/constants/queryKeys";
 import { FetchPrayerTitlesParams } from "../../types/params/fetchPrayerTitlesParams";
 import { PrayerTitle } from "../../types/prayerTitle";
+import { PrayerContent } from "../../types/prayerContent";
 
+// 기도 제목 무한 스크롤 쿼리
 export const useInfinitePrayerTitlesQuery = (
   roomId: number | null,
   after: string = "0",
@@ -45,6 +49,33 @@ export const useInfinitePrayerTitlesQuery = (
         after: lastItem.createdTime.toString(),
       };
     },
+
+    ...options,
+  });
+};
+
+// 기도 내용 조회 쿼리
+export const usePrayerContentsQuery = (
+  roomId: number | null,
+  titleId: number | null,
+  options?: UseQueryOptions<PrayerContent[], Error>
+) => {
+  return useQuery({
+    queryKey: [
+      QUERY_KEYS.rooms,
+      roomId,
+      QUERY_KEYS.prayerTitles,
+      titleId,
+      QUERY_KEYS.prayerContents,
+    ],
+
+    queryFn: async () => {
+      console.log("fetch 기도 내용: prayer title Id=", titleId);
+      return prayerService.fetchContents(titleId);
+    },
+
+    // titleId가 null이면 쿼리를 실행하지 않음
+    enabled: titleId !== null,
 
     ...options,
   });
