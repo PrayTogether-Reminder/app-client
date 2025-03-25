@@ -7,7 +7,7 @@ import { useRouter } from "expo-router";
 import path from "../../../common/constants/path";
 import { usePrayerUpdateMutation } from "../hooks/mutations/usePrayerUpdateMutations";
 import { usePrayerUpdateStore } from "../stores/usePrayerUpdateStore";
-import { useSelectedRoomStore } from "../../prayerRoom/stores/useSelectedRoomStore";
+import { useSelectedRoomStore } from "../../rooms/stores/useSelectedRoomStore";
 import { useQueryClient } from "@tanstack/react-query";
 import QUERY_KEYS from "../../../common/hooks/queries/queryKeys";
 import { useSelectedPrayerTitleStore } from "./../../prayerTitles/stores/useSelectedPrayerTitleStore";

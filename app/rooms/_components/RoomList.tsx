@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { useSelectedRoomStore } from "../../../src/domain/prayerRoom/stores/useSelectedRoomStore";
+import { useSelectedRoomStore } from "../../../src/domain/rooms/stores/useSelectedRoomStore";
 import { Room } from "../../../src/domain/rooms/types/room";
 import { useToggleRoomNotificationMutation } from "../../../src/domain/rooms/hooks/mutations/roomMutations";
 import { useInfiniteRoomsQuery } from "../../../src/domain/rooms/hooks/queries/roomQueries";

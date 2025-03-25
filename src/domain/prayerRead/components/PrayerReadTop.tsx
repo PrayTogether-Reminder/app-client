@@ -5,7 +5,7 @@ import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../common/styles/color";
 import path from "../../../../src/common/constants/path";
-import { useSelectedRoomStore } from "../../prayerRoom/stores/useSelectedRoomStore";
+import { useSelectedRoomStore } from "../../rooms/stores/useSelectedRoomStore";
 import { useSelectedPrayerTitleStore } from "../../prayerTitles/stores/useSelectedPrayerTitleStore";
 
 interface PrayerReadTopProps {}

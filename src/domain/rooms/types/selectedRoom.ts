@@ -1,4 +1,4 @@
-import { Room } from "../../rooms/types/room";
+import { Room } from "./room";
 
 export interface SelectedRoom {
   selectedRoom: Room | null;

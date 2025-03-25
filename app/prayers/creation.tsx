@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { StyleSheet, SafeAreaView, BackHandler } from "react-native";
 import { color } from "../../src/common/styles/color";
-import { useRoomMembersQuery } from "../../src/domain/prayerRoom/hooks/queries/roomQueries";
-import { useSelectedRoomStore } from "../../src/domain/prayerRoom/stores/useSelectedRoomStore";
-import { RoomMember } from "../../src/domain/prayerRoom/types/dto/response/roomMember";
+import { useRoomMembersQuery } from "../../src/domain/rooms/hooks/queries/roomQueries";
+import { useSelectedRoomStore } from "../../src/domain/rooms/stores/useSelectedRoomStore";
+import { RoomMember } from "../../src/domain/rooms/types/roomMember";
 import { router } from "expo-router";
 import PrayerMemberSelectionModal from "../../src/domain/prayerCreation/components/modal/PrayerMemberSelectionModal";
 import PrayerCustomNameDialog from "../../src/domain/prayerCreation/components/dialog/PrayerCustomNameDialog";

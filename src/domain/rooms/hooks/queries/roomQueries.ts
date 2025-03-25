@@ -6,7 +6,8 @@ import {
 } from "@tanstack/react-query";
 import { OrderBy, Dir } from "../../../../common/apis/constants/params";
 import { Room } from "../../types/room";
-import roomService from "../../services/roomService";
+import { roomService } from "../../services/roomService";
+import { RoomMember } from "../../types/roomMember";
 import QUERY_KEYS from "../../../../common/hooks/queries/queryKeys";
 
 type RoomPageParam = {
@@ -15,7 +16,7 @@ type RoomPageParam = {
   dir: Dir;
 };
 
-// 무한 스크롤용 방 목록 쿼리
+// 기도방 무한 스크롤
 export const useInfiniteRoomsQuery = (
   orderBy: OrderBy = OrderBy.DEFAULT,
   after: string = "0",
@@ -27,7 +28,11 @@ export const useInfiniteRoomsQuery = (
     queryFn: async ({ pageParam }) => {
       const param = pageParam as RoomPageParam;
       console.log("infinite query pageParam=", param);
-      return roomService.fetchRooms(param.orderBy, param.after, param.dir);
+      return roomService.fetchRooms({
+        orderBy: param.orderBy,
+        after: param.after,
+        dir: param.dir,
+      });
     },
 
     initialPageParam: {
@@ -58,3 +63,19 @@ function getNextAfter(orderBy: OrderBy, room: Room) {
   }
   return "0";
 }
+
+// 기도방 멤버 조회
+export const useRoomMembersQuery = (
+  roomId: number | null,
+  options?: UseQueryOptions<RoomMember[], Error>
+) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.rooms, roomId, QUERY_KEYS.members],
+    queryFn: async () => {
+      console.log("fetching room members with ID:", roomId);
+      return roomService.fetchRoomMembers(roomId);
+    },
+    enabled: !!roomId, // roomId가 있을 때만 쿼리 실행
+    ...options,
+  });
+};

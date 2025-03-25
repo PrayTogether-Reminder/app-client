@@ -4,10 +4,10 @@ import React from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { useSelectedRoomStore } from "../../prayerRoom/stores/useSelectedRoomStore";
+import { useSelectedRoomStore } from "../../rooms/stores/useSelectedRoomStore";
 import { useInfinitePrayerTitlesQuery } from "../hooks/queries/prayerTitleQueries";
 import { PrayerTitle } from "../types/dto/response/prayerTitle";
-import { useRoomMembersQuery } from "./../../prayerRoom/hooks/queries/roomQueries";
+import { useRoomMembersQuery } from "../../rooms/hooks/queries/roomQueries";
 import { useSelectedPrayerTitleStore } from "./../stores/useSelectedPrayerTitleStore";
 
 import Loading from "../../../common/components/loading/Loading";

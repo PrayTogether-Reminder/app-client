@@ -6,7 +6,7 @@ import { color } from "../../../common/styles/color";
 import { useRouter } from "expo-router";
 import { usePrayerNotificationMutation } from "../hooks/mutations/usePrayerNotificationMutations";
 import { useSelectedPrayerTitleStore } from "../../prayerTitles/stores/useSelectedPrayerTitleStore";
-import { useSelectedRoomStore } from "../../prayerRoom/stores/useSelectedRoomStore";
+import { useSelectedRoomStore } from "../../rooms/stores/useSelectedRoomStore";
 import { NOTIFICATION_TYPE } from "../constants/notificationType";
 
 const { width } = Dimensions.get("window");

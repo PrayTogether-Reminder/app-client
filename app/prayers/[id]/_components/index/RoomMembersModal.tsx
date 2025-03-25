@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { StyleSheet, Dimensions, View, ScrollView } from "react-native";
 import { Portal, Modal, Button, Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { color } from "../../../common/styles/color";
-import { useSelectedRoomStore } from "../stores/useSelectedRoomStore";
-import { useRoomMembersQuery } from "../hooks/queries/roomQueries";
+import { color } from "../../../../../src/common/styles/color";
+import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
+import { useRoomMembersQuery } from "@/domain/rooms/hooks/queries/roomQueries";
 
 const { width } = Dimensions.get("window");
 

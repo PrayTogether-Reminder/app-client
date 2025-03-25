@@ -6,7 +6,7 @@ import TitleCard from "./TitleCard";
 import PrayerCardList from "./PrayerCardList";
 import EmptyState from "./EmptyState";
 import { useSelectedPrayerTitleStore } from "../../prayerTitles/stores/useSelectedPrayerTitleStore";
-import { useSelectedRoomStore } from "../../prayerRoom/stores/useSelectedRoomStore";
+import { useSelectedRoomStore } from "../../rooms/stores/useSelectedRoomStore";
 import { usePrayerContentsQuery } from "../hooks/queries/usePrayerReadQuery";
 
 interface PrayerReadBodyProps {

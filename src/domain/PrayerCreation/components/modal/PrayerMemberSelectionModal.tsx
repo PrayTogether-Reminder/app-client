@@ -11,7 +11,7 @@ import {
 } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color, flexMarker } from "../../../../common/styles/color";
-import { RoomMember } from "../../../prayerRoom/types/dto/response/roomMember";
+import { RoomMember } from "../../../rooms/types/roomMember";
 import { backgroundColor } from "../../../../common/styles/color";
 
 interface PrayerMemberSelectionModalProps {

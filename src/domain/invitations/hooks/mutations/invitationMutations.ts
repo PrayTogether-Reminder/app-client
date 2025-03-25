@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import roomService from "../../services/roomService";
 import QUERY_KEYS from "../../../../common/hooks/queries/queryKeys";
-import type { InviteRoomMemberRequest } from "../../types/dto/request/inviteRoomMemberRequest";
+import type { InviteRoomMemberRequest } from "../../../invitations/types/request/inviteRoomMemberRequest";
 import { ApiError } from "../../../../common/apis/api";
 import { Alert } from "react-native";
+import { invitationService } from "../../services/invitationServices";
 
 // 방 초대 mutation
 export const useInviteRoomMemberMutation = () => {
@@ -11,7 +11,7 @@ export const useInviteRoomMemberMutation = () => {
 
   return useMutation({
     mutationFn: ({ roomId, email }: InviteRoomMemberRequest) => {
-      return roomService.inviteRoomMember(roomId, email);
+      return invitationService.inviteRoomMember(roomId, email);
     },
     onError: (error: ApiError, variables, context) => {
       Alert.alert(error.message);

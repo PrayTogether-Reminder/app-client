@@ -2,9 +2,9 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { Surface, Button, useTheme } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { color } from "../../../common/styles/color";
+import { color } from "../../../../../src/common/styles/color";
 import { useRouter } from "expo-router";
-import path from "../../../common/constants/path";
+import path from "../../../../../src/common/constants/path";
 
 interface PrayerRoomBottomButtonProps {}
 

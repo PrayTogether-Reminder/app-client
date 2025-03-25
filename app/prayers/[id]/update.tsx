@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { StyleSheet, SafeAreaView, BackHandler } from "react-native";
 import { useSelectedPrayerTitleStore } from "../../../src/domain/prayerTitles/stores/useSelectedPrayerTitleStore";
-import { useSelectedRoomStore } from "../../../src/domain/prayerRoom/stores/useSelectedRoomStore";
+import { useSelectedRoomStore } from "../../../src/domain/rooms/stores/useSelectedRoomStore";
 import { usePrayerCreationStore } from "../../../src/domain/prayerCreation/stores/usePrayerCreationStore";
 import { router } from "expo-router";
 import { color } from "../../../src/common/styles/color";

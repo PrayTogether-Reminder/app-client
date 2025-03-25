@@ -2,10 +2,10 @@ import React, { useRef, useState } from "react";
 import { StyleSheet, Dimensions, Alert, View } from "react-native";
 import { Portal, Dialog, TextInput, Button } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize"; // Import RFValue
-import { color } from "../../../common/styles/color";
-import { validateEmail } from "../../../common/services/email/emailService";
-import { useInviteRoomMemberMutation } from "./../hooks/mutations/roomMutations";
-import { useSelectedRoomStore } from "../stores/useSelectedRoomStore";
+import { color } from "@/common/styles/color";
+import { validateEmail } from "@/common/services/email/emailService";
+import { useInviteRoomMemberMutation } from "@/domain/invitations/hooks/mutations/invitationMutations";
+import { useSelectedRoomStore } from "@/domain/rooms/stores/useSelectedRoomStore";
 
 interface RoomInviteDialogProps {
   visible: boolean;
