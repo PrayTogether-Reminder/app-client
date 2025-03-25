@@ -2,14 +2,14 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { Surface, Button, useTheme } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { color } from "../../../common/styles/color";
+import { color } from "../../../src/common/styles/color";
 import { useRouter } from "expo-router";
-import path from "../../../common/constants/path";
-import { usePrayerCreationMutation } from "../hooks/mutations/usePrayerCreationMutations";
-import { usePrayerCreationStore } from "../stores/usePrayerCreationStore";
-import { useSelectedRoomStore } from "../../rooms/stores/useSelectedRoomStore";
+import path from "../../../src/common/constants/path";
+import { usePrayerCreationMutation } from "@/domain/prayers/hooks/mutations/usePrayerMuations";
+import { usePrayerCreationStore } from "@/domain/prayers/stores/usePrayerCreationStore";
+import { useSelectedRoomStore } from "../../../src/domain/rooms/stores/useSelectedRoomStore";
 import { useQueryClient } from "@tanstack/react-query";
-import QUERY_KEYS from "../../../common/constants/queryKeys";
+import QUERY_KEYS from "../../../src/common/constants/queryKeys";
 
 interface PrayerCreationBottomProps {
   title: string;

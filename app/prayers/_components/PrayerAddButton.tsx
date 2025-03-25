@@ -3,8 +3,8 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { color } from "../../../common/styles/color";
-import { SelectedMember } from "../types/SelectedMember";
+import { color } from "../../../src/common/styles/color";
+import { SelectedMember } from "../../../src/domain/prayers/types/SelectedMember";
 
 interface PrayerAddButtonProps {
   prayerContent: string;

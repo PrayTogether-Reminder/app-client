@@ -2,14 +2,14 @@ import React, { useState, useRef, useMemo } from "react";
 import { View, StyleSheet, Platform, Dimensions } from "react-native";
 import { Divider, Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { color } from "../../../common/styles/color";
-import { SelectedMember } from "../types/SelectedMember";
+import { color } from "../../../src/common/styles/color";
+import { SelectedMember } from "../../../src/domain/prayers/types/SelectedMember";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { usePrayerCreationStore } from "../stores/usePrayerCreationStore";
-import { PrayerCreationItem } from "../types/PrayerCreationItem";
-import { useSelectedRoomStore } from "../../rooms/stores/useSelectedRoomStore";
-import { useRoomMembersQuery } from "../../rooms/hooks/queries/roomQueries";
-import { RoomMember } from "../../rooms/types/roomMember";
+import { usePrayerCreationStore } from "@/domain/prayers/stores/usePrayerCreationStore";
+import { PrayerCreationItem } from "../../../src/domain/prayers/types/PrayerCreationItem";
+import { useSelectedRoomStore } from "../../../src/domain/rooms/stores/useSelectedRoomStore";
+import { useRoomMembersQuery } from "../../../src/domain/rooms/hooks/queries/roomQueries";
+import { RoomMember } from "../../../src/domain/rooms/types/roomMember";
 
 // 컴포넌트 임포트
 import PrayerTitleInput from "./PrayerTitleInput";

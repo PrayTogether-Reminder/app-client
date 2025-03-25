@@ -1,25 +1,23 @@
 import apiService from "../../../common/apis/apiService";
 import { ApiResponse } from "../../../common/apis/api";
 import type { PrayerCreationItem } from "../types/PrayerCreationItem";
-import { PrayerCreationRequest } from "../types/request/prayerCreationRequest";
+import { CreatePrayerRequest } from "../types/request/createPrayerRequest";
 import { MessageResponse } from "../../../common/types/messageResponse";
 
-const prayerCreationService = {
+export const prayerService = {
   // 기도 제목 작성
-  createPrayers: async (
+  create: async (
     title: string,
     prayerList: PrayerCreationItem[]
   ): Promise<MessageResponse> => {
     const response: MessageResponse =
-      await apiService.post<PrayerCreationRequest>(`/prayers`, {
+      await apiService.post<CreatePrayerRequest>(`/prayers`, {
         prayers: {
           title,
           contents: prayerList,
         },
-      } as PrayerCreationRequest);
+      } as CreatePrayerRequest);
     console.log("API response=", response.message);
     return response;
   },
 };
-
-export default prayerCreationService;

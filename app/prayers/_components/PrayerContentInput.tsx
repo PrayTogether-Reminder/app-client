@@ -3,8 +3,8 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import { TextInput } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { color } from "../../../common/styles/color";
-import { SelectedMember } from "../types/SelectedMember";
+import { color } from "../../../src/common/styles/color";
+import { SelectedMember } from "../../../src/domain/prayers/types/SelectedMember";
 
 interface PrayerContentInputProps {
   selectedMember: SelectedMember | null;

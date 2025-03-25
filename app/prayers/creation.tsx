@@ -1,19 +1,14 @@
-import React, { useState, useMemo, useEffect, useRef } from "react";
-import { StyleSheet, SafeAreaView, BackHandler } from "react-native";
-import { color } from "../../src/common/styles/color";
-import { useRoomMembersQuery } from "../../src/domain/rooms/hooks/queries/roomQueries";
-import { useSelectedRoomStore } from "../../src/domain/rooms/stores/useSelectedRoomStore";
-import { RoomMember } from "../../src/domain/rooms/types/roomMember";
+import { usePrayerCreationStore } from "@/domain/prayers/stores/usePrayerCreationStore";
 import { router } from "expo-router";
-import PrayerMemberSelectionModal from "../../src/domain/prayerCreation/components/modal/PrayerMemberSelectionModal";
-import PrayerCustomNameDialog from "../../src/domain/prayerCreation/components/dialog/PrayerCustomNameDialog";
-import PrayerCreationCancelDialog from "../../src/domain/prayerCreation/components/dialog/PrayerCreationCancelDialog";
+import React, { useEffect, useState } from "react";
+import { BackHandler, SafeAreaView, StyleSheet } from "react-native";
 import Top1Body10Bottom1 from "../../src/common/layout/Top1Body10Bottom1";
-import PrayerCreationTop from "../../src/domain/prayerCreation/components/PrayerCreationTop";
-import PrayerCreationBody from "../../src/domain/prayerCreation/components/PrayerCreationBody";
-import PrayerCreationBottom from "../../src/domain/prayerCreation/components/PrayerCreationBottom";
-import { SelectedMember } from "../../src/domain/prayerCreation/types/SelectedMember";
-import { usePrayerCreationStore } from "../../src/domain/prayerCreation/stores/usePrayerCreationStore";
+import { color } from "../../src/common/styles/color";
+import { useSelectedRoomStore } from "../../src/domain/rooms/stores/useSelectedRoomStore";
+import PrayerCreationCancelDialog from "./_components/dialog/PrayerCreationCancelDialog";
+import PrayerCreationBody from "./_components/PrayerCreationBody";
+import PrayerCreationBottom from "./_components/PrayerCreationBottom";
+import PrayerCreationTop from "./_components/PrayerCreationTop";
 
 export default function PrayerCreationScreen() {
   const [prayerTitle, setPrayerTitle] = useState("");

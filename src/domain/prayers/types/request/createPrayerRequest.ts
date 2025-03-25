@@ -1,6 +1,6 @@
 import { PrayerCreationItem } from "../PrayerCreationItem";
 
-export interface PrayerCreationRequest {
+export interface CreatePrayerRequest {
   prayers: {
     title: string;
     contents: PrayerCreationItem[];

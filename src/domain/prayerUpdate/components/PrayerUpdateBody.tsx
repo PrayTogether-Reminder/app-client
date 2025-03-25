@@ -3,7 +3,7 @@ import { View, StyleSheet, Platform, Dimensions } from "react-native";
 import { Divider, Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../common/styles/color";
-import { SelectedMember } from "../../prayerCreation/types/SelectedMember";
+import { SelectedMember } from "../../prayers/types/SelectedMember";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSelectedRoomStore } from "../../rooms/stores/useSelectedRoomStore";
 import { useRoomMembersQuery } from "../../rooms/hooks/queries/roomQueries";
@@ -13,15 +13,15 @@ import { usePrayerUpdateStore } from "../stores/usePrayerUpdateStore";
 import { useSelectedPrayerTitleStore } from "./../../prayerTitles/stores/useSelectedPrayerTitleStore";
 import { usePrayerContentsQuery } from "../../prayerRead/hooks/queries/usePrayerReadQuery";
 
-import PrayerTitleInput from "../../prayerCreation/components/PrayerTitleInput";
-import PrayerMemberSelector from "../../prayerCreation/components/PrayerMemberSelector";
-import PrayerContentInput from "../../prayerCreation/components/PrayerContentInput";
-import PrayerAddButton from "../../prayerCreation/components/PrayerAddButton";
-import PrayerCarousel from "../../prayerCreation/components/PrayerCarousel";
-import PrayerDeleteDialog from "../../prayerCreation/components/dialog/PrayerDeleteDialog";
-import PrayerCustomNameDialog from "../../prayerCreation/components/dialog/PrayerCustomNameDialog";
-import PrayerMemberSelectionModal from "../../prayerCreation/components/modal/PrayerMemberSelectionModal";
-import PrayerEditDialog from "../../prayerCreation/components/dialog/PrayerEditDialog";
+import PrayerTitleInput from "../../../../app/prayers/_components/PrayerTitleInput";
+import PrayerMemberSelector from "../../../../app/prayers/_components/PrayerMemberSelector";
+import PrayerContentInput from "../../../../app/prayers/_components/PrayerContentInput";
+import PrayerAddButton from "../../../../app/prayers/_components/PrayerAddButton";
+import PrayerCarousel from "../../../../app/prayers/_components/PrayerCarousel";
+import PrayerDeleteDialog from "../../../../app/prayers/_components/dialog/PrayerDeleteDialog";
+import PrayerCustomNameDialog from "../../../../app/prayers/_components/dialog/PrayerCustomNameDialog";
+import PrayerMemberSelectionModal from "../../../../app/prayers/_components/modal/PrayerMemberSelectionModal";
+import PrayerEditDialog from "../../../../app/prayers/_components/dialog/PrayerEditDialog";
 
 const { width } = Dimensions.get("window");
 const CARD_SPACING = RFValue(20); // 카드 사이 간격

@@ -1,8 +1,8 @@
 import { create } from "zustand";
-import { PrayerCreationList } from "../types/PrayerCreationList";
+import { PrayerCreationStore } from "../types/PrayerCreationStore";
 import { PrayerCreationItem } from "../types/PrayerCreationItem";
 
-export const usePrayerCreationStore = create<PrayerCreationList>(
+export const usePrayerCreationStore = create<PrayerCreationStore>(
   (set, get) => ({
     // state
     prayerList: [],
