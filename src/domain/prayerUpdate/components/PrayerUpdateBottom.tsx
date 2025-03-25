@@ -5,37 +5,36 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../common/styles/color";
 import { useRouter } from "expo-router";
 import path from "../../../common/constants/path";
-import { usePrayerCreationMutation } from "./../hooks/mutations/usePrayerCreationMutations";
-import { usePrayerCreationStore } from "../stores/usePrayerCreationStore";
-import { useSelectedRoomStore } from "./../../prayerRoom/stores/useSelectedRoomStore";
+import { usePrayerUpdateMutation } from "../hooks/mutations/usePrayerUpdateMutations";
+import { usePrayerUpdateStore } from "../stores/usePrayerUpdateStore";
+import { useSelectedRoomStore } from "../../prayerRoom/stores/useSelectedRoomStore";
 import { useQueryClient } from "@tanstack/react-query";
 import QUERY_KEYS from "../../../common/hooks/queries/queryKeys";
+import { useSelectedPrayerTitleStore } from "./../../prayerTitles/stores/useSelectedPrayerTitleStore";
 
-interface PrayerCreationBottomProps {
+interface PrayerUpdateBottomProps {
   title: string;
   disabled: boolean;
 }
 
-const PrayerCreationBottom: React.FC<PrayerCreationBottomProps> = ({
+const PrayerUpdateBottom: React.FC<PrayerUpdateBottomProps> = ({
   title,
   disabled,
 }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { mutate: createPrayerMutation } = usePrayerCreationMutation();
-  const { prayerList, clear: clearPrayers } = usePrayerCreationStore();
-  const room = useSelectedRoomStore().selectedRoom;
+  const { mutate: UpdatePrayerMutation } = usePrayerUpdateMutation();
+  const { prayerList, clear: clearPrayers } = usePrayerUpdateStore();
+  const roomId = useSelectedRoomStore().selectedRoom?.id ?? null;
+  const prayerTitleId =
+    useSelectedPrayerTitleStore().selectedPrayerTitle?.id ?? null;
 
-  // 기도 내용 전체 저장(API 요청)
-  const createPrayer = () => {
-    createPrayerMutation(
-      { title, prayerList },
+  // 기도 내용 전체 변경(API 요청)
+  const UpdatePrayer = () => {
+    UpdatePrayerMutation(
+      { roomId, prayerTitleId, title, prayerList },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({
-            // 기도 제목 무한 스크롤 캐시 초기화
-            queryKey: [QUERY_KEYS.rooms, room?.id, QUERY_KEYS.infinite],
-          });
           console.log("prayer title cache clear");
           clearPrayers();
           router.back();
@@ -52,7 +51,7 @@ const PrayerCreationBottom: React.FC<PrayerCreationBottomProps> = ({
         style={[styles.button, disabled && styles.button_disabled]}
         labelStyle={styles.buttonText}
         icon="content-save-all"
-        onPress={createPrayer}
+        onPress={UpdatePrayer}
         disabled={disabled}
       >
         모두 저장하기
@@ -83,4 +82,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PrayerCreationBottom;
+export default PrayerUpdateBottom;

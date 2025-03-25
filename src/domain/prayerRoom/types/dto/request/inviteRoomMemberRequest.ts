@@ -1,4 +1,4 @@
 export interface InviteRoomMemberRequest {
-  roomId: string;
+  roomId: number;
   email: string;
 }

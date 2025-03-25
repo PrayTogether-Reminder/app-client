@@ -15,13 +15,13 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 const { height } = Dimensions.get("window");
 
 interface PrayerCardListProps {
-  prayers: PrayerContent[];
+  prayerContents: PrayerContent[];
   onEdit?: (prayer: PrayerContent) => void;
   onDelete?: (prayer: PrayerContent) => void;
 }
 
 export default function PrayerCardList({
-  prayers,
+  prayerContents,
   onEdit,
   onDelete,
 }: PrayerCardListProps) {
@@ -88,7 +88,7 @@ export default function PrayerCardList({
   return (
     <AnimatedFlatList
       ref={flatListRef}
-      data={prayers}
+      data={prayerContents}
       renderItem={renderItem}
       showsVerticalScrollIndicator={true}
       decelerationRate={Platform.OS === "ios" ? "normal" : 0.92}

@@ -17,7 +17,12 @@ export const useInfinitePrayerTitlesQuery = (
   options?: UseInfiniteQueryOptions<PrayerTitle[], Error>
 ) => {
   return useInfiniteQuery({
-    queryKey: [QUERY_KEYS.prayerTitles, QUERY_KEYS.infinite, roomId],
+    queryKey: [
+      QUERY_KEYS.rooms,
+      roomId,
+      QUERY_KEYS.prayerTitles,
+      QUERY_KEYS.infinite,
+    ],
 
     queryFn: async ({ pageParam }) => {
       const param = pageParam as PrayerTitlePageParam;

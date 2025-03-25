@@ -44,7 +44,7 @@ const RoomInviteDialog = ({
     console.log("초대할 이메일:", email);
 
     inviteMember(
-      { roomId: room?.id as string, email },
+      { roomId: room?.id as number, email },
       {
         onSettled(data, error, variables, context) {
           if (data) {

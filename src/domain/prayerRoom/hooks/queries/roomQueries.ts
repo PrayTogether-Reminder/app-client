@@ -8,7 +8,7 @@ export const useRoomMembersQuery = (
   options?: UseQueryOptions<RoomMember[], Error>
 ) => {
   return useQuery({
-    queryKey: [QUERY_KEYS.room, QUERY_KEYS.members, roomId],
+    queryKey: [QUERY_KEYS.rooms, roomId, QUERY_KEYS.members],
     queryFn: async () => {
       console.log("fetching room members with ID:", roomId);
       return roomService.fetchRoomMembers(roomId);

@@ -3,7 +3,6 @@ const QUERY_KEYS = {
   rooms: "rooms",
   prayerTitles: "prayerTitles",
   infinite: "infinite",
-  room: "room",
   members: "members",
   prayerContents: "prayerContents",
 };

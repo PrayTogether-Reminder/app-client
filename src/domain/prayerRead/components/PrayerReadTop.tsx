@@ -1,17 +1,22 @@
-// PrayerRoomHeader.tsx
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Appbar, useTheme } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../common/styles/color";
+import path from "../../../../src/common/constants/path";
 import { useSelectedRoomStore } from "../../prayerRoom/stores/useSelectedRoomStore";
+import { useSelectedPrayerTitleStore } from "../../prayerTitles/stores/useSelectedPrayerTitleStore";
 
 interface PrayerReadTopProps {}
 
 const PrayerReadTop: React.FC<PrayerReadTopProps> = () => {
   const router = useRouter();
   const room = useSelectedRoomStore().selectedRoom;
+  const titleId = useSelectedPrayerTitleStore().selectedPrayerTitle?.id ?? null;
+  const onEdit = () => {
+    router.push(path.showPrayersUpdateById(titleId));
+  };
 
   return (
     <>
@@ -29,7 +34,7 @@ const PrayerReadTop: React.FC<PrayerReadTopProps> = () => {
           style={styles.headerAction}
           icon="playlist-edit"
           color={color.primary}
-          // onPress={openRightMenu}
+          onPress={onEdit}
           size={RFValue(32)}
         />
       </Appbar.Header>

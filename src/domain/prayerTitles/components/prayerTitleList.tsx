@@ -19,6 +19,7 @@ import { useSelectedPrayerTitleStore } from "./../stores/useSelectedPrayerTitleS
 import { useRoomMembersQuery } from "./../../prayerRoom/hooks/queries/roomQueries";
 import PrayerTitleItem from "./prayerTitleItem";
 import Loading from "../../../common/components/loading/Loading";
+import { usePrayerClear } from "./../../prayerRoom/hooks/usePrayerClear";
 
 const EmptyPrayerTitleList = () => {
   return (
@@ -68,7 +69,7 @@ export default function PrayerTitleList(): JSX.Element {
     return <PrayerTitleItem item={item} onPress={handlePrayerTitlePress} />;
   };
   const onRefresh = () => {
-    titleRefetch();
+    usePrayerClear(roomId);
     membersRefetch();
   };
 
