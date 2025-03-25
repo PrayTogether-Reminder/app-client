@@ -1,6 +1,6 @@
 import apiService from "../../../common/apis/apiService";
 import type { MessageResponse } from "../../../common/types/messageResponse";
-import { NotifyPrayerCompletionRequest } from "../../notifications/types/request/notifyPrayerCompletionRequest";
+import { NotifyPrayerRequest } from "../../notifications/types/request/notifyPrayerRequest";
 
 export const notificationService = {
   // 기도 완료 알림
@@ -8,12 +8,12 @@ export const notificationService = {
     prayerTitleId,
     roomId,
     type,
-  }: NotifyPrayerCompletionRequest) => {
+  }: NotifyPrayerRequest) => {
     const response = await apiService.post<MessageResponse>(`/notifications`, {
       prayerTitleId,
       roomId,
       type,
-    } as NotifyPrayerCompletionRequest);
+    } as NotifyPrayerRequest);
     return response.data;
   },
 };
