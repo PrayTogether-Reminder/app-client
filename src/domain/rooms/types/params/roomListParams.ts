@@ -1,4 +1,4 @@
-import { OrderBy, Dir } from "@/common/apis/constants/params";
+import { OrderBy, Dir } from "@/common/constants/params";
 
 export interface RoomListParams {
   orderBy: OrderBy;

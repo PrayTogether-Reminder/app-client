@@ -3,7 +3,7 @@ import {
   UseInfiniteQueryOptions,
 } from "@tanstack/react-query";
 import PrayerTitlesService from "../../services/prayerTitleService";
-import QUERY_KEYS from "../../../../common/hooks/queries/queryKeys";
+import QUERY_KEYS from "../../../../common/constants/queryKeys";
 import { PrayerTitle } from "../../types/dto/response/prayerTitle";
 
 type PrayerTitlePageParam = {

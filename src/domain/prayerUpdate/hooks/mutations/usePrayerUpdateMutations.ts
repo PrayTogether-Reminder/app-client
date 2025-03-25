@@ -3,7 +3,7 @@ import { Alert } from "react-native";
 import prayerUpdateService from "../../services/prayerUpdateService";
 import type { PrayerUpdateItem } from "../../types/prayerUpdateItem";
 import { useQueryClient } from "@tanstack/react-query";
-import QUERY_KEYS from "../../../../common/hooks/queries/queryKeys";
+import QUERY_KEYS from "../../../../common/constants/queryKeys";
 
 interface usePrayerUpdateParams {
   roomId: number | null;

@@ -4,11 +4,11 @@ import {
   UseQueryOptions,
   UseInfiniteQueryOptions,
 } from "@tanstack/react-query";
-import { OrderBy, Dir } from "../../../../common/apis/constants/params";
+import { OrderBy, Dir } from "../../../../common/constants/params";
 import { Room } from "../../types/room";
 import { roomService } from "../../services/roomService";
 import { RoomMember } from "../../types/roomMember";
-import QUERY_KEYS from "../../../../common/hooks/queries/queryKeys";
+import QUERY_KEYS from "../../../../common/constants/queryKeys";
 
 type RoomPageParam = {
   orderBy: OrderBy;

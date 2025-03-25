@@ -9,7 +9,7 @@ import { usePrayerCreationMutation } from "../hooks/mutations/usePrayerCreationM
 import { usePrayerCreationStore } from "../stores/usePrayerCreationStore";
 import { useSelectedRoomStore } from "../../rooms/stores/useSelectedRoomStore";
 import { useQueryClient } from "@tanstack/react-query";
-import QUERY_KEYS from "../../../common/hooks/queries/queryKeys";
+import QUERY_KEYS from "../../../common/constants/queryKeys";
 
 interface PrayerCreationBottomProps {
   title: string;

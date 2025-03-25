@@ -12,7 +12,7 @@ import { useSelectedPrayerTitleStore } from "./../stores/useSelectedPrayerTitleS
 
 import Loading from "../../../common/components/loading/Loading";
 import path from "../../../common/constants/path";
-import QUERY_KEYS from "./../../../common/hooks/queries/queryKeys";
+import QUERY_KEYS from "../../../common/constants/queryKeys";
 import PrayerTitleItem from "./prayerTitleItem";
 
 const EmptyPrayerTitleList = () => {

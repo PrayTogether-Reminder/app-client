@@ -1,6 +1,6 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import PrayerReadService from "../../services/prayerReadService";
-import QUERY_KEYS from "../../../../common/hooks/queries/queryKeys";
+import QUERY_KEYS from "../../../../common/constants/queryKeys";
 import { PrayerContent } from "../../types/response/prayerContent";
 
 export const usePrayerContentsQuery = (
