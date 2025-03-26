@@ -3,11 +3,11 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { color } from "../../../src/common/styles/color";
-import { SelectedMember } from "../../../src/domain/prayers/types/SelectedMember";
+import { color } from "../../../../src/common/styles/color";
+import { RoomMember } from "@/domain/rooms/types/roomMember";
 
 interface PrayerMemberSelectorProps {
-  selectedMember: SelectedMember | null;
+  selectedMember: RoomMember | null;
   openMemberSelectionModal: () => void;
 }
 

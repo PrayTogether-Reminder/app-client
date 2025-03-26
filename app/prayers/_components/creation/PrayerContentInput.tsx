@@ -3,11 +3,11 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import { TextInput } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { color } from "../../../src/common/styles/color";
-import { SelectedMember } from "../../../src/domain/prayers/types/SelectedMember";
+import { color } from "../../../../src/common/styles/color";
+import type { RoomMember } from "@/domain/rooms/types/roomMember";
 
 interface PrayerContentInputProps {
-  selectedMember: SelectedMember | null;
+  selectedMember: RoomMember | null;
   prayerContent: string;
   setPrayerContent: (text: string) => void;
 }

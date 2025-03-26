@@ -2,14 +2,13 @@ import React, { useState, useRef, useMemo } from "react";
 import { View, StyleSheet, Platform, Dimensions } from "react-native";
 import { Divider, Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { color } from "../../../src/common/styles/color";
-import { SelectedMember } from "../../../src/domain/prayers/types/SelectedMember";
+import { color } from "../../../../src/common/styles/color";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { usePrayerCreationStore } from "@/domain/prayers/stores/usePrayerCreationStore";
-import { PrayerCreationItem } from "../../../src/domain/prayers/types/PrayerCreationItem";
-import { useSelectedRoomStore } from "../../../src/domain/rooms/stores/useSelectedRoomStore";
-import { useRoomMembersQuery } from "../../../src/domain/rooms/hooks/queries/roomQueries";
-import { RoomMember } from "../../../src/domain/rooms/types/roomMember";
+import { PrayerCreationItem } from "../../../../src/domain/prayers/types/PrayerCreationItem";
+import { useSelectedRoomStore } from "../../../../src/domain/rooms/stores/useSelectedRoomStore";
+import { useRoomMembersQuery } from "../../../../src/domain/rooms/hooks/queries/roomQueries";
+import { RoomMember } from "../../../../src/domain/rooms/types/roomMember";
 
 // 컴포넌트 임포트
 import PrayerTitleInput from "./PrayerTitleInput";
@@ -42,9 +41,7 @@ export default function PrayerCreationBody({
 
   // 기도 관련 상태
   const [prayerContent, setPrayerContent] = useState("");
-  const [selectedMember, setSelectedMember] = useState<SelectedMember | null>(
-    null
-  );
+  const [selectedMember, setSelectedMember] = useState<RoomMember | null>(null);
   const customNameRef = useRef({ customName: "" });
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -110,7 +107,7 @@ export default function PrayerCreationBody({
   const addCustomName = () => {
     const customName = customNameRef.current.customName;
     if (customName.trim()) {
-      const newMember: SelectedMember = {
+      const newMember: RoomMember = {
         id: null,
         name: customName.trim(),
       };
@@ -174,7 +171,7 @@ export default function PrayerCreationBody({
     setSelectedMember({
       id: prayerEdit?.memberId,
       name: prayerEdit?.memberName,
-    } as SelectedMember);
+    } as RoomMember);
     setPrayerContent(prayerEdit?.content as string);
     confirmPrayerDelete();
   };

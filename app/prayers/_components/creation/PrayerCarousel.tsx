@@ -2,8 +2,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, StyleSheet, Dimensions, FlatList, Text } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
-import { color } from "../../../src/common/styles/color";
-import { PrayerCreationItem } from "../../../src/domain/prayers/types/PrayerCreationItem";
+import { color } from "../../../../src/common/styles/color";
+import { PrayerCreationItem } from "../../../../src/domain/prayers/types/PrayerCreationItem";
 import PrayerCreationCard from "./PrayerCreationCard";
 
 const { width } = Dimensions.get("window");

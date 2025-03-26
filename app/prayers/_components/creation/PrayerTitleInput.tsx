@@ -3,7 +3,7 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { TextInput } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { color } from "../../../src/common/styles/color";
+import { color } from "../../../../src/common/styles/color";
 
 interface PrayerTitleInputProps {
   prayerTitle: string;

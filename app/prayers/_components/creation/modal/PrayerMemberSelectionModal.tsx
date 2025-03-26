@@ -10,9 +10,9 @@ import {
   Modal,
 } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { color, flexMarker } from "../../../../src/common/styles/color";
-import { RoomMember } from "../../../../src/domain/rooms/types/roomMember";
-import { backgroundColor } from "../../../../src/common/styles/color";
+import { color, flexMarker } from "../../../../../src/common/styles/color";
+import { RoomMember } from "../../../../../src/domain/rooms/types/roomMember";
+import { backgroundColor } from "../../../../../src/common/styles/color";
 
 interface PrayerMemberSelectionModalProps {
   visible: boolean;
