@@ -1,9 +1,9 @@
 import apiService from "@/common/apis/apiService";
 import { Room } from "../types/room";
 import { RoomMember } from "../types/roomMember";
-import { InviteRoomMemberRequest } from "../../invitations/types/request/inviteRoomMemberRequest";
 import { MessageResponse } from "@/common/types/messageResponse";
 import { FetchRoomsParams } from "../types/params/fetchRoomsParams";
+import { DeleteRoomParams } from "../types/params/deleteRoomParams";
 
 export const roomService = {
   // 방 목록 조회
@@ -33,20 +33,6 @@ export const roomService = {
     return response.data.members;
   },
 
-  // 멤버 초대
-  inviteRoomMember: async (
-    roomId: number | null,
-    email: string
-  ): Promise<MessageResponse> => {
-    const response = await apiService.post<InviteRoomMemberRequest>(
-      `/invitations`,
-      {
-        roomId,
-        email,
-      }
-    );
-    return response;
-  },
   // 방 생성
   create: async (
     name: string,
@@ -56,6 +42,14 @@ export const roomService = {
       name,
       description,
     } as CreateRoomRequest);
+    return response;
+  },
+
+  // 기도방 나가기(삭제)
+  delete: async (params: DeleteRoomParams): Promise<MessageResponse> => {
+    const response = await apiService.delete<MessageResponse>(
+      `/rooms/${params.roomId}`
+    );
     return response;
   },
 };

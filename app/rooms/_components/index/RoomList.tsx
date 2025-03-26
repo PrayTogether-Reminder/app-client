@@ -11,7 +11,10 @@ import { ActivityIndicator } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { useSelectedRoomStore } from "@/domain/rooms/stores/useSelectedRoomStore";
 import { Room } from "@/domain/rooms/types/room";
-import { useToggleRoomNotificationMutation } from "@/domain/rooms/hooks/mutations/useRoomMutations";
+import {
+  useToggleRoomNotificationMutation,
+  useRoomDeletionMutation,
+} from "@/domain/rooms/hooks/mutations/useRoomMutations";
 import { useInfiniteRoomsQuery } from "@/domain/rooms/hooks/queries/useRoomQueries";
 import EmptyRoomList from "./RoomEmpty";
 import RoomItem from "./RoomItem";
@@ -64,9 +67,10 @@ const RoomList = () => {
   const handleToggleRoomNotificationMutation = (roomId: number) => {
     toggleRoomNotificationMutation(roomId);
   };
-
+  const { mutate: deleteRoom } = useRoomDeletionMutation();
   const handleLeaveRoom = (room: Room) => {
-    // leaveRoomMutation(room.id);
+    deleteRoom({ roomId: room.id });
+    console.log("delete room=", room.id);
   };
 
   const renderRoom: ListRenderItem<Room> = ({ item }) => (
