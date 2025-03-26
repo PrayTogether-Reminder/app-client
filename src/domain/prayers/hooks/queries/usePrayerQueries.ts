@@ -30,13 +30,14 @@ export const useInfinitePrayerTitlesQuery = (
         "fetch 기도 제목 목록 (roomId:",
         param.roomId,
         " after:",
-        param.after
+        param.after,
+        ")"
       );
       return prayerService.fetchTitles(param.roomId, param.after);
     },
 
     initialPageParam: {
-      roomId: null,
+      roomId,
       after: "0",
     } as FetchPrayerTitlesParams,
 

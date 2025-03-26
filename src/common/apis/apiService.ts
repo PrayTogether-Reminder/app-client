@@ -21,7 +21,6 @@ const apiService = {
     params?: any,
     config?: any
   ): Promise<ApiResponse<T>> => {
-    console.log("get params=", params);
     const response = await api.get(url, { params, ...config });
     return convertToApiResponse(response);
   },
