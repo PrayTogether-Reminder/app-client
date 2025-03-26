@@ -4,7 +4,7 @@ import { useSelectedPrayerTitleStore } from "../../../src/domain/prayers/stores/
 import { useSelectedRoomStore } from "../../../src/domain/rooms/stores/useSelectedRoomStore";
 import { router } from "expo-router";
 import { color } from "../../../src/common/styles/color";
-import { useCloseOnBack } from "./../../../src/common/services/back-handler/useCloseOnBack";
+import { useCloseOnBack } from "../../../src/common/services/back-handler/useCloseOnBack";
 import PrayerUpdateTop from "./_components/update/PrayerUpdateTop";
 import PrayerUpdateBody from "./_components/update/PrayerUpdateBody";
 import PrayerUpdateBottom from "./_components/update/PrayerUpdateBottom";

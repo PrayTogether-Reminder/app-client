@@ -13,7 +13,7 @@ import { Card, Text, useTheme } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { backgroundColor, color } from "@/common/styles/color";
 import { Room } from "@/domain/rooms/types/room";
-import RoomInfoSheet from "..//index/sheets/RoomOptionSheet";
+import RoomInfoSheet from "./sheets/RoomOptionSheet";
 
 interface RoomItemProps {
   room: Room;

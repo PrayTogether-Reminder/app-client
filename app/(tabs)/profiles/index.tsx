@@ -4,6 +4,11 @@ export default function Profile() {
   return (
     <View>
       <Text>프로필</Text>
+      <Text>프로필</Text>
+      <Text>프로필</Text>
+      <Text>프로필</Text>
+      <Text>프로필</Text>
+      <Text>프로필</Text>
     </View>
   );
 }

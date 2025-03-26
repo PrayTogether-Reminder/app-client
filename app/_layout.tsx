@@ -7,16 +7,19 @@ import { ErrorBoundary } from "react-error-boundary";
 import { backgroundColor } from "../src/common/styles/color";
 import { StatusBar } from "expo-status-bar";
 import { color } from "@/common/styles/color";
-
 import ErrorFallback from "../src/common/components/ErrorFallback";
 import CustomQueryClientProvider from "../src/common/hooks/queries/customQueryClientProvider";
 import * as SplashScreen from "expo-splash-screen";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function RootLayout() {
   const [fontsLoaded, fontsError] = useFonts({
     CookieRun_Bold: require("../assets/CookieRunFont_TTF/CookieRun_Black.ttf"),
+    ...FontAwesome.font,
+    ...FontAwesome6.font,
   });
 
   const theme = {
