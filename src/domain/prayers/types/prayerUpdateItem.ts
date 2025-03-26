@@ -1,3 +1,3 @@
-import type { PrayerCreationItem } from "./PrayerCreationItem";
+import type { PrayerContent } from "./prayerContent";
 
-export interface PrayerUpdateItem extends PrayerCreationItem {}
+export interface PrayerUpdateItem extends PrayerContent {}

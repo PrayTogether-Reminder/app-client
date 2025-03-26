@@ -16,7 +16,7 @@ export const usePrayerUpdateStore = create<PrayerUpdateStore>((set, get) => ({
     set((state) => ({
       prayerList: state.prayerList.filter(
         (p) =>
-          p.memberId !== prayer.memberId && p.memberName !== prayer.memberName
+          p.memberName !== prayer.memberName && p.memberId !== prayer.memberId
       ),
     })),
   update: (prayer: PrayerUpdateItem) =>

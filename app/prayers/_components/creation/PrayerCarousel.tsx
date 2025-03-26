@@ -3,26 +3,27 @@ import React, { useState, useRef, useEffect } from "react";
 import { View, StyleSheet, Dimensions, FlatList, Text } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../../src/common/styles/color";
-import { PrayerCreationItem } from "../../../../src/domain/prayers/types/PrayerCreationItem";
+import { PrayerContentBase } from "@/domain/prayers/types/prayerContentBase";
 import PrayerCreationCard from "./PrayerCreationCard";
+import type { PrayerUpdateItem } from "@/domain/prayers/types/prayerUpdateItem";
 
 const { width } = Dimensions.get("window");
 
-interface PrayerCarouselProps {
-  prayerList: PrayerCreationItem[];
-  onDeletePrayer: (prayer: PrayerCreationItem) => void;
-  onEditPrayer: (prayer: PrayerCreationItem) => void;
+interface PrayerCarouselProps<T extends PrayerContentBase> {
+  prayerList: T[];
+  onDeletePrayer: (prayer: T) => void;
+  onEditPrayer: (prayer: T) => void;
   currentIndex: number;
   setCurrentIndex: (index: number) => void;
 }
 
-export default function PrayerCarousel({
+export default function PrayerCarousel<T extends PrayerContentBase>({
   prayerList,
   onDeletePrayer,
   onEditPrayer,
   currentIndex,
   setCurrentIndex,
-}: PrayerCarouselProps) {
+}: PrayerCarouselProps<T>) {
   const prayerListRef = useRef<FlatList>(null);
 
   // 스크롤 이벤트 핸들러

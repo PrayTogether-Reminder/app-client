@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo } from "react";
-import { View, StyleSheet, Platform, Dimensions } from "react-native";
+import { View, StyleSheet, Platform, Dimensions, Alert } from "react-native";
 import { Divider, Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../../src/common/styles/color";
@@ -39,20 +39,21 @@ export default function PrayerCreationBody({
     prayerList,
   } = usePrayerCreationStore();
 
-  // 기도 관련 상태
   const [prayerContent, setPrayerContent] = useState("");
-  const [selectedMember, setSelectedMember] = useState<RoomMember | null>(null);
-  const customNameRef = useRef({ customName: "" });
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // 다이얼로그 관련 상태
+  const [selectedMember, setSelectedMember] = useState<RoomMember | null>(null);
+  const [memberSelectionModal, setMemberSelectionModal] = useState(false);
+
+  const customNameRef = useRef({ customName: "" });
+  const [customNameDialog, setCustomNameDialog] = useState(false);
+
   const [prayerDelete, setPrayerDelete] = useState<PrayerCreationItem | null>(
     null
   );
-  const [prayerEdit, setPrayerEdit] = useState<PrayerCreationItem | null>(null);
   const [prayerDeleteDialog, setPrayerDeleteDialog] = useState(false);
-  const [customNameDialog, setCustomNameDialog] = useState(false);
-  const [memberSelectionModal, setMemberSelectionModal] = useState(false);
+
+  const [prayerEdit, setPrayerEdit] = useState<PrayerCreationItem | null>(null);
   const [prayerEditDialog, setPrayerEditDialog] = useState(false);
 
   // 방 멤버 관련
@@ -86,12 +87,10 @@ export default function PrayerCreationBody({
   // 이름순으로 정렬된 멤버 목록
   const sortedRoomMembers = useMemo(() => {
     if (!roomMembers) return [];
-    const existingMember = new Set(
-      prayerList.map((prayer) => prayer.memberName)
-    );
+    const prayedMember = new Set(prayerList.map((prayer) => prayer.memberName));
 
     return [...roomMembers]
-      .filter((member) => !existingMember.has(member.name))
+      .filter((member) => !prayedMember.has(member.name))
       .sort((a, b) => a.name.localeCompare(b.name));
   }, [roomMembers, prayerList]);
 
@@ -105,30 +104,48 @@ export default function PrayerCreationBody({
 
   // 직접 입력한 이름 추가
   const addCustomName = () => {
-    const customName = customNameRef.current.customName;
-    if (customName.trim()) {
-      const newMember: RoomMember = {
-        id: null,
-        name: customName.trim(),
-      };
+    const customName = customNameRef.current.customName.trim();
+    if (customName) {
+      const existingMember = roomMembers?.find(
+        (member) => member.name === customName
+      );
 
-      setSelectedMember(newMember);
+      // 기존 멤버가 있으면 그 멤버를 선택
+      if (existingMember) {
+        setSelectedMember(existingMember);
+      } else {
+        // 없으면 새 멤버 생성
+        const newMember: RoomMember = {
+          id: null,
+          name: customName,
+        };
+        setSelectedMember(newMember);
+      }
+
       closeCustomNameDialog();
     }
   };
-
   // 기도문 추가 함수
   const handleAddPrayer = () => {
     if (!prayerContent.trim() || !selectedMember) return;
+    const isDuplicateMember = prayerList.some(
+      (prayer) => prayer.memberName === selectedMember.name
+    );
+
+    if (isDuplicateMember) {
+      Alert.alert(`${selectedMember.name}님은 이미 기도문을 작성했습니다.`);
+      return;
+    }
+
+    // 새 기도문 생성
     const newPrayer: PrayerCreationItem = {
       memberId: selectedMember.id,
-      content: prayerContent,
       memberName: selectedMember.name,
+      content: prayerContent,
     };
 
+    // 기도문 추가 및 입력값 초기화
     addPrayer(newPrayer);
-
-    // 기도 내용만 초기화
     setPrayerContent("");
     setSelectedMember(null);
     setCurrentIndex(0);
