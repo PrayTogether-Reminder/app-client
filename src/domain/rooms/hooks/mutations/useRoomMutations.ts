@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { roomService } from "../../services/roomService";
-import QUERY_KEYS from "../../../../common/constants/queryKeys";
 import { Room } from "../../types/room";
+import { Alert } from "react-native";
+import QUERY_KEYS from "../../../../common/constants/queryKeys";
 
 // 방 알림 설정 토글 mutation
 export const useToggleRoomNotificationMutation = () => {
@@ -52,6 +53,20 @@ export const useToggleRoomNotificationMutation = () => {
         queryKey: [QUERY_KEYS.rooms, QUERY_KEYS.infinite],
         refetchType: "none",
       });
+    },
+  });
+};
+
+// 기도방 생성
+export const useRoomCreationMutation = () => {
+  return useMutation({
+    mutationFn: ({ name, description }: CreateRoomRequest) =>
+      roomService.create(name, description),
+    onSuccess: (data) => {
+      Alert.alert(data.message);
+    },
+    onError: (error) => {
+      Alert.alert(error.message);
     },
   });
 };

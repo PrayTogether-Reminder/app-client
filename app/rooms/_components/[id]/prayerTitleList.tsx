@@ -7,7 +7,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { useSelectedRoomStore } from "../../../../src/domain/rooms/stores/useSelectedRoomStore";
 import { useInfinitePrayerTitlesQuery } from "@/domain/prayers/hooks/queries/usePrayerQueries";
 import { PrayerTitle } from "../../../../src/domain/prayers/types/prayerTitle";
-import { useRoomMembersQuery } from "../../../../src/domain/rooms/hooks/queries/roomQueries";
+import { useRoomMembersQuery } from "../../../../src/domain/rooms/hooks/queries/useRoomQueries";
 import { useSelectedPrayerTitleStore } from "../../../../src/domain/prayers/stores/useSelectedPrayerTitleStore";
 
 import Loading from "../../../../src/common/components/loading/Loading";

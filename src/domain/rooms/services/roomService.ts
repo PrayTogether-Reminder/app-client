@@ -47,4 +47,15 @@ export const roomService = {
     );
     return response;
   },
+  // 방 생성
+  create: async (
+    name: string,
+    description: string
+  ): Promise<MessageResponse> => {
+    const response = await apiService.post<MessageResponse>(`/rooms`, {
+      name,
+      description,
+    } as CreateRoomRequest);
+    return response;
+  },
 };

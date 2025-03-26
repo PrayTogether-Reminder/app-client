@@ -4,7 +4,7 @@ import { Portal, Modal, Button, Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../../src/common/styles/color";
 import { useSelectedRoomStore } from "../../../../src/domain/rooms/stores/useSelectedRoomStore";
-import { useRoomMembersQuery } from "@/domain/rooms/hooks/queries/roomQueries";
+import { useRoomMembersQuery } from "@/domain/rooms/hooks/queries/useRoomQueries";
 
 const { width } = Dimensions.get("window");
 
