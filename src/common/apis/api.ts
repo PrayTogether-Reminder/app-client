@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import BASE_API_URL from "../config/apiUrl";
+import BASE_API_URL from "./apiUrl";
 
 interface ApiResponse<T = any> {
   data: T;
