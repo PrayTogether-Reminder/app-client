@@ -1,7 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { roomService } from "../../services/roomService";
-import QUERY_KEYS from "../../../../common/constants/queryKeys";
 import { Room } from "../../types/room";
+import { Alert } from "react-native";
+import { DeleteRoomParams } from "../../types/params/deleteRoomParams";
+import QUERY_KEYS from "../../../../common/constants/queryKeys";
 
 // 방 알림 설정 토글 mutation
 export const useToggleRoomNotificationMutation = () => {
@@ -52,6 +54,42 @@ export const useToggleRoomNotificationMutation = () => {
         queryKey: [QUERY_KEYS.rooms, QUERY_KEYS.infinite],
         refetchType: "none",
       });
+    },
+  });
+};
+
+// 기도방 생성
+export const useRoomCreationMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ name, description }: CreateRoomRequest) =>
+      roomService.create(name, description),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.rooms, QUERY_KEYS.infinite],
+      });
+      Alert.alert(data.message);
+    },
+    onError: (error) => {
+      Alert.alert(error.message);
+    },
+  });
+};
+
+// 기도방 나가기(삭제)
+export const useRoomDeletionMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ roomId }: DeleteRoomParams) =>
+      roomService.delete({ roomId }),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.rooms, QUERY_KEYS.infinite],
+      });
+      Alert.alert(data.message);
+    },
+    onError: (error) => {
+      Alert.alert(error.message);
     },
   });
 };

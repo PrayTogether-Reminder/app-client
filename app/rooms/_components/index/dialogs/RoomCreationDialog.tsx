@@ -16,6 +16,7 @@ import {
 } from "react-native-paper";
 import Feather from "@expo/vector-icons/Feather";
 import { RFValue } from "react-native-responsive-fontsize";
+import { useRoomCreationMutation } from "@/domain/rooms/hooks/mutations/useRoomMutations";
 
 type RoomCreationDialogProp = {
   open: boolean;
@@ -33,6 +34,7 @@ export default function RoomCreationDialog({
 
   const titleInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
+  const { mutate: createRoom } = useRoomCreationMutation();
 
   // 모달이 열릴 때 입력값 초기화
   useEffect(() => {
@@ -57,12 +59,11 @@ export default function RoomCreationDialog({
   };
 
   const onCreateRoom = () => {
-    console.log(
-      "방 생성 titld: ",
-      inputValues.current.title,
-      ", description: ",
-      inputValues.current.description
-    );
+    const name = inputValues.current.title;
+    const description = inputValues.current.description;
+
+    createRoom({ name, description });
+    console.log("방 생성 title: ", name, ", description: ", description);
   };
 
   // 기도방 생성 처리

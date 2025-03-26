@@ -7,7 +7,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { usePrayerCreationStore } from "@/domain/prayers/stores/usePrayerCreationStore";
 import { PrayerCreationItem } from "../../../../src/domain/prayers/types/PrayerCreationItem";
 import { useSelectedRoomStore } from "../../../../src/domain/rooms/stores/useSelectedRoomStore";
-import { useRoomMembersQuery } from "../../../../src/domain/rooms/hooks/queries/roomQueries";
+import { useRoomMembersQuery } from "../../../../src/domain/rooms/hooks/queries/useRoomQueries";
 import { RoomMember } from "../../../../src/domain/rooms/types/roomMember";
 
 // 컴포넌트 임포트

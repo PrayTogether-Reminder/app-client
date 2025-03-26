@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import QUERY_KEYS from "../../../../common/constants/queryKeys";
-import type { InviteRoomMemberRequest } from "../../../invitations/types/request/inviteRoomMemberRequest";
+import type { InviteRoomMemberRequest } from "../../types/request/inviteRoomMemberRequest";
 import { ApiError } from "../../../../common/apis/api";
 import { Alert } from "react-native";
 import { invitationService } from "../../services/invitationServices";

@@ -1,14 +1,16 @@
 import { Stack } from "expo-router";
-import { PaperProvider, MD3LightTheme } from "react-native-paper";
-import CustomQueryClientProvider from "../src/common/hooks/queries/customQueryClientProvider";
+import { PaperProvider, DefaultTheme, MD3LightTheme } from "react-native-paper";
 import { useFonts } from "expo-font";
 import { View, ActivityIndicator } from "react-native";
 import { useEffect } from "react";
-import * as SplashScreen from "expo-splash-screen";
 import { ErrorBoundary } from "react-error-boundary";
-import ErrorFallback from "../src/common/components/ErrorFallback";
 import { backgroundColor } from "../src/common/styles/color";
 import { StatusBar } from "expo-status-bar";
+import { color } from "@/common/styles/color";
+
+import ErrorFallback from "../src/common/components/ErrorFallback";
+import CustomQueryClientProvider from "../src/common/hooks/queries/customQueryClientProvider";
+import * as SplashScreen from "expo-splash-screen";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -16,6 +18,14 @@ export default function RootLayout() {
   const [fontsLoaded, fontsError] = useFonts({
     CookieRun_Bold: require("../assets/CookieRunFont_TTF/CookieRun_Black.ttf"),
   });
+
+  const theme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: color.secondary, // TextInput 활성화 색상 등에 영향
+    },
+  };
 
   useEffect(() => {
     if (fontsLoaded || fontsError) {
@@ -28,7 +38,7 @@ export default function RootLayout() {
   }
 
   return (
-    <PaperProvider>
+    <PaperProvider theme={theme}>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <CustomQueryClientProvider>
           <StatusBar backgroundColor={backgroundColor.white} />
