@@ -14,6 +14,7 @@ import Loading from "../../../../src/common/components/loading/Loading";
 import path from "../../../../src/common/constants/path";
 import QUERY_KEYS from "../../../../src/common/constants/queryKeys";
 import PrayerTitleItem from "./prayerTitleItem";
+import { backgroundColor } from "@/common/styles/color";
 
 const EmptyPrayerTitleList = () => {
   return (
@@ -97,7 +98,7 @@ export default function PrayerTitleList(): JSX.Element {
 const styles = StyleSheet.create({
   flatList: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: backgroundColor.default,
   },
   flatListContent: {
     paddingVertical: 8,

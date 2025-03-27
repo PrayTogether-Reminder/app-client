@@ -29,7 +29,7 @@ export const alertColor = {
 };
 
 export const backgroundColor = {
-  default: "#f5f5f5",
+  default: "#fffbff",
   white: "#FFFFFF",
 };
 

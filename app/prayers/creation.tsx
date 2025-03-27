@@ -88,6 +88,5 @@ export default function PrayerCreationScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color.white,
   },
 });
