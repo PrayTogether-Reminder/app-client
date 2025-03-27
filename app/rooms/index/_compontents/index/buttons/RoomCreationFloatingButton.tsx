@@ -4,7 +4,7 @@ import { StyleSheet, View } from "react-native";
 import { FAB, useTheme } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { useWindowDimensions } from "react-native";
-import { color } from "../../../../../src/common/styles/color";
+import { color } from "../../../../../../src/common/styles/color";
 import RoomCreationDialog from "../dialogs/RoomCreationDialog";
 
 export default function RoomCreationFloatingButton() {

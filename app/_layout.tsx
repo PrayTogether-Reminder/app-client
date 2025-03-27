@@ -51,7 +51,7 @@ export default function RootLayout() {
 
             {/* prayer/creation 경로에 대한 특별한 전환 효과 설정 */}
             <Stack.Screen
-              name="prayers/creation"
+              name="prayers/creation/index"
               options={{
                 animation: "slide_from_bottom",
                 presentation: "modal",

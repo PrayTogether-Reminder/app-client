@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
-import { PrayerContent } from "../../../../../src/domain/prayers/types/prayerContent";
+import { PrayerContent } from "../../../../src/domain/prayers/types/prayerContent";
 import TitleCard from "./TitleCard";
 import PrayerCardList from "./PrayerCardList";
 import EmptyState from "./EmptyState";
-import { useSelectedPrayerTitleStore } from "../../../../../src/domain/prayers/stores/useSelectedPrayerTitleStore";
-import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
+import { useSelectedPrayerTitleStore } from "../../../../src/domain/prayers/stores/useSelectedPrayerTitleStore";
+import { useSelectedRoomStore } from "../../../../src/domain/rooms/stores/useSelectedRoomStore";
 import { usePrayerContentsQuery } from "@/domain/prayers/hooks/queries/usePrayerQueries";
 
 interface PrayerReadBodyProps {

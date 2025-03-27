@@ -1,10 +1,10 @@
 import { Fragment, useState, useRef } from "react";
-import Top1Body10Bottom1 from "../../src/common/layout/Top1Body10Bottom1";
-import PrayerRoomTop from "./_components/[id]/PrayerRoomTop";
-import PrayerRoomBody from "./_components/[id]/PrayerRoomBody";
-import PrayerRoomBottom from "./_components/[id]/PrayerRoomBottom";
-import RoomMembersModal from "./_components/[id]/RoomMembersModal";
-import RoomInviteDialog from "./_components/[id]/RoomInviteDialog";
+import Top1Body10Bottom1 from "@/common/layout/Top1Body10Bottom1";
+import PrayerRoomTop from "./_components/PrayerRoomTop";
+import PrayerRoomBody from "./_components/PrayerRoomBody";
+import PrayerRoomBottom from "./_components/PrayerRoomBottom";
+import RoomMembersModal from "./_components/RoomMembersModal";
+import RoomInviteDialog from "./_components/RoomInviteDialog";
 
 export default function PrayerRoomScreen(): JSX.Element {
   const [rightMenueVisible, setRightMenueVisible] = useState(false);

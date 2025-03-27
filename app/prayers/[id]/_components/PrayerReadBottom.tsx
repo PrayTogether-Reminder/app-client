@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { StyleSheet, View, Text, Dimensions } from "react-native";
 import { Surface, Button, Portal, Modal, IconButton } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { color } from "../../../../../src/common/styles/color";
+import { color } from "../../../../src/common/styles/color";
 import { useRouter } from "expo-router";
 import { usePrayerNotificationMutation } from "@/domain/notifications/hooks/mutations/useNotificationMutations";
-import { useSelectedPrayerTitleStore } from "../../../../../src/domain/prayers/stores/useSelectedPrayerTitleStore";
-import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
-import { NOTIFICATION_TYPE } from "../../../../../src/common/constants/notificationType";
+import { useSelectedPrayerTitleStore } from "../../../../src/domain/prayers/stores/useSelectedPrayerTitleStore";
+import { useSelectedRoomStore } from "../../../../src/domain/rooms/stores/useSelectedRoomStore";
+import { NOTIFICATION_TYPE } from "../../../../src/common/constants/notificationType";
 
 const { width } = Dimensions.get("window");
 

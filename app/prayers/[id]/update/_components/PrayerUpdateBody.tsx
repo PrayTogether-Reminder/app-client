@@ -13,15 +13,15 @@ import { usePrayerUpdateStore } from "@/domain/prayers/stores/usePrayerUpdateSto
 import { useSelectedPrayerTitleStore } from "@/domain/prayers/stores/useSelectedPrayerTitleStore";
 import { usePrayerContentsQuery } from "@/domain/prayers/hooks/queries/usePrayerQueries";
 
-import PrayerTitleInput from "../../../_components/creation/PrayerTitleInput";
-import PrayerMemberSelector from "../../../_components/creation/PrayerMemberSelector";
-import PrayerContentInput from "../../../_components/creation/PrayerContentInput";
-import PrayerAddButton from "../../../_components/creation/PrayerAddButton";
-import PrayerCarousel from "../../../_components/creation/PrayerCarousel";
-import PrayerDeleteDialog from "../../../_components/creation/dialog/PrayerDeleteDialog";
-import PrayerCustomNameDialog from "../../../_components/creation/dialog/PrayerCustomNameDialog";
-import PrayerMemberSelectionModal from "../../../_components/creation/modal/PrayerMemberSelectionModal";
-import PrayerEditDialog from "../../../_components/creation/dialog/PrayerEditDialog";
+import PrayerTitleInput from "../../../creation/_components/PrayerTitleInput";
+import PrayerMemberSelector from "../../../creation/_components/PrayerMemberSelector";
+import PrayerContentInput from "../../../creation/_components/PrayerContentInput";
+import PrayerAddButton from "../../../creation/_components/PrayerAddButton";
+import PrayerCarousel from "../../../creation/_components/PrayerCarousel";
+import PrayerDeleteDialog from "../../../creation/_components/dialog/PrayerDeleteDialog";
+import PrayerCustomNameDialog from "../../../creation/_components/dialog/PrayerCustomNameDialog";
+import PrayerMemberSelectionModal from "../../../creation/_components/modal/PrayerMemberSelectionModal";
+import PrayerEditDialog from "../../../creation/_components/dialog/PrayerEditDialog";
 
 const { width } = Dimensions.get("window");
 const CARD_SPACING = RFValue(20); // 카드 사이 간격

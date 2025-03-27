@@ -2,13 +2,13 @@ import { usePrayerCreationStore } from "@/domain/prayers/stores/usePrayerCreatio
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { BackHandler, SafeAreaView, StyleSheet } from "react-native";
-import Top1Body10Bottom1 from "../../src/common/layout/Top1Body10Bottom1";
-import { color } from "../../src/common/styles/color";
-import { useSelectedRoomStore } from "../../src/domain/rooms/stores/useSelectedRoomStore";
-import PrayerCreationCancelDialog from "./_components/creation/dialog/PrayerCreationCancelDialog";
-import PrayerCreationBody from "./_components/creation/PrayerCreationBody";
-import PrayerCreationBottom from "./_components/creation/PrayerCreationBottom";
-import PrayerCreationTop from "./_components/creation/PrayerCreationTop";
+import Top1Body10Bottom1 from "../../../src/common/layout/Top1Body10Bottom1";
+import { color } from "../../../src/common/styles/color";
+import { useSelectedRoomStore } from "../../../src/domain/rooms/stores/useSelectedRoomStore";
+import PrayerCreationCancelDialog from "./_components/dialog/PrayerCreationCancelDialog";
+import PrayerCreationBody from "./_components/PrayerCreationBody";
+import PrayerCreationBottom from "./_components/PrayerCreationBottom";
+import PrayerCreationTop from "./_components/PrayerCreationTop";
 
 export default function PrayerCreationScreen() {
   const [prayerTitle, setPrayerTitle] = useState("");
