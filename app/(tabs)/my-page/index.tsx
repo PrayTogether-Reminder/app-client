@@ -6,22 +6,16 @@ import { backgroundColor } from "@/common/styles/color";
 import Top4Body10 from "@/common/layout/Top4Body10"; // Adjust path as needed
 import ProfileSection from "../../my-page/index/_components/ProfileSection";
 import ListSection from "../../my-page/index/_components/ListSection";
+import path from "@/common/constants/path";
 
 type MyPageScreenProps = {};
 
-export default function MyPageScreen(
-  props: MyPageScreenProps
-): React.ReactElement {
+export default function MyPageScreen(props: MyPageScreenProps) {
   const router = useRouter();
-
-  const user = {
-    name: "홍길동",
-    email: "gildong.hong@example.com",
-  };
 
   function handleGoToInvitations() {
     console.log("초대 목록 화면으로 이동");
-    // router.push("/invitations"); // 초대 목록 화면 경로 (예시)
+    router.push(path.showInvitations()); // 초대 목록 화면 경로 (예시)
   }
 
   function handleLogout() {
@@ -33,7 +27,7 @@ export default function MyPageScreen(
   return (
     <View style={styles.container}>
       <Top4Body10
-        tops={[<ProfileSection user={user} />]}
+        tops={[<ProfileSection />]}
         bodies={[
           <ListSection
             onGoToInvitations={handleGoToInvitations}

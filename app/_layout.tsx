@@ -46,10 +46,8 @@ export default function RootLayout() {
         <CustomQueryClientProvider>
           <StatusBar backgroundColor={backgroundColor.white} />
           <Stack screenOptions={{ headerShown: false }}>
-            {/* 기본 화면들은 일반적인 전환 효과 사용 */}
             <Stack.Screen name="index" />
 
-            {/* prayer/creation 경로에 대한 특별한 전환 효과 설정 */}
             <Stack.Screen
               name="prayers/creation/index"
               options={{

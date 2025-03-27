@@ -7,6 +7,7 @@ const path = {
   showPrayersCreate: () => "/prayers/creation" as Route,
   showPrayersUpdateById: (id: number | null) =>
     `/prayers/${id}/update` as Route,
+  showInvitations: () => "my-page/invitations" as Route,
 };
 
 export default path;

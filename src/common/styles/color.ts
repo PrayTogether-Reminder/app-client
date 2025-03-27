@@ -19,6 +19,7 @@ export const color = {
   cyan: "#17a2b8",
   transparent: "transparent",
   exit: "#FDBCB4",
+  error: "red",
 };
 
 export const alertColor = {

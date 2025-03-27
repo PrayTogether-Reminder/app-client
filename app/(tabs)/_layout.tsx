@@ -21,6 +21,7 @@ export default function TabsLayout() {
         tabBarInactiveTintColor: color.gray,
         tabBarLabelStyle: { display: "none" },
         headerShown: false,
+        animation: "none",
       }}
     >
       <Tabs.Screen
