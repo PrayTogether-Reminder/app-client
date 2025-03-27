@@ -1,5 +1,11 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useRef } from "react";
+import {
+  StyleSheet,
+  View,
+  Animated,
+  Pressable,
+  useWindowDimensions,
+} from "react-native";
 import {
   Card,
   Text,
@@ -9,28 +15,50 @@ import {
   Title,
 } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons"; // For icons
 // import { formatDistanceToNow } from "date-fns"; // 날짜 포맷팅 라이브러리
 // import { ko } from "date-fns/locale"; // 한국어 locale
-
-export type Invitation = {
-  id: string;
-  prayerRoomName: string;
-  inviterName: string;
-  invitedAt: Date;
-};
+import { backgroundColor, color } from "@/common/styles/color"; // Assuming color styles are here
+import { Invitation } from "@/domain/invitations/types/Intivation";
 
 type InvitationItemProps = {
   invitation: Invitation;
-  onAccept: (id: string) => void;
-  onReject: (id: string) => void;
+  onAccept: (id: number) => void;
+  onReject: (id: number) => void;
+  isMutating: boolean; // To disable buttons during mutation
 };
 
+// Reusing the RoomItem visual style approach
 export default function InvitationItem({
   invitation,
   onAccept,
   onReject,
+  isMutating,
 }: InvitationItemProps): React.ReactElement {
   const theme = useTheme();
+  const { width } = useWindowDimensions();
+
+  // Animation setup (like RoomItem)
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  const handlePressIn = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 0.96, // Slightly less aggressive than RoomItem's 0.92
+      useNativeDriver: true,
+      speed: 50,
+      bounciness: 10,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      useNativeDriver: true,
+      speed: 50,
+      bounciness: 10,
+    }).start();
+  };
 
   // 'X시간 전', 'Y일 전' 등으로 표시
   // const timeAgo = formatDistanceToNow(invitation.invitedAt, {
@@ -39,82 +67,143 @@ export default function InvitationItem({
   // });
 
   return (
-    <Card style={styles.card}>
-      <Card.Content style={styles.cardContent}>
-        <Title style={styles.prayerRoomName}>{invitation.prayerRoomName}</Title>
-        <Paragraph style={styles.inviterInfo}>
-          <Text style={styles.inviterName}>{invitation.inviterName}</Text> 님이
-          초대했습니다.
-        </Paragraph>
-        {/* <Paragraph style={styles.invitedTime}>{timeAgo}</Paragraph> */}
-      </Card.Content>
-      <Card.Actions style={styles.actions}>
-        <Button
-          mode="outlined"
-          onPress={() => onReject(invitation.id)}
-          style={[styles.button, styles.rejectButton]}
-          labelStyle={styles.buttonLabel}
-          textColor={theme.colors.error} // 거절 버튼은 에러 색상 사용
-          icon="close-circle-outline"
+    // Pressable wrapper for animation, no onPress/onLongPress needed here
+    <Pressable onPressIn={handlePressIn} onPressOut={handlePressOut}>
+      <Animated.View style={[{ transform: [{ scale: scaleAnim }] }]}>
+        <Card
+          style={[
+            styles.card,
+            // Use a theme color or a specific color for the border accent
+            { borderLeftColor: theme.colors.primary },
+          ]}
+          mode="elevated"
         >
-          거절
-        </Button>
-        <Button
-          mode="contained"
-          onPress={() => onAccept(invitation.id)}
-          style={[styles.button, styles.acceptButton]}
-          labelStyle={styles.buttonLabel}
-          icon="check-circle-outline"
-        >
-          수락
-        </Button>
-      </Card.Actions>
-    </Card>
+          <Card.Content style={styles.contentContainer}>
+            {/* Header Row (Room Name) - Similar to RoomItem */}
+            <View style={styles.headerRow}>
+              <Title style={styles.title}>{invitation.roomName}</Title>
+              {/* Optional: Add an icon if needed, e.g., mail icon */}
+              {/* <MaterialCommunityIcons name="email-outline" size={width * 0.06} color={color.black} /> */}
+            </View>
+
+            {/* Info Row (Inviter Info + Time) - Similar structure */}
+            <View style={styles.infoRow}>
+              <View style={styles.detailRow}>
+                <AntDesign
+                  name="user"
+                  size={width * 0.045} // Slightly smaller icon
+                  color={color.gray} // Use a less prominent color
+                />
+                <Paragraph style={styles.detailText}>
+                  <Text style={styles.inviterName}>
+                    {invitation.inviterName}
+                  </Text>{" "}
+                  님이 초대
+                </Paragraph>
+              </View>
+              <View style={styles.detailRow}>
+                <MaterialCommunityIcons
+                  name="clock-time-three-outline"
+                  size={width * 0.045}
+                  color={color.gray}
+                />
+                {/* <Text style={styles.invitedTime}>{timeAgo}</Text> */}
+              </View>
+            </View>
+          </Card.Content>
+
+          {/* Actions remain similar, but maybe adjust padding */}
+          <Card.Actions style={styles.actions}>
+            <Button
+              mode="outlined"
+              onPress={() => onReject(invitation.invitationId)}
+              style={[styles.button, styles.rejectButton]}
+              labelStyle={styles.buttonLabel}
+              textColor={theme.colors.error}
+              icon="close-circle-outline"
+              disabled={isMutating} // Disable while accept/reject is processing
+            >
+              거절
+            </Button>
+            <Button
+              mode="contained"
+              onPress={() => onAccept(invitation.invitationId)}
+              style={[styles.button, styles.acceptButton]}
+              labelStyle={styles.buttonLabel}
+              icon="check-circle-outline"
+              disabled={isMutating} // Disable while accept/reject is processing
+            >
+              수락
+            </Button>
+          </Card.Actions>
+        </Card>
+      </Animated.View>
+    </Pressable>
   );
 }
 
+// Styles adapted from RoomItem and the original InvitationItem
 const styles = StyleSheet.create({
   card: {
-    marginBottom: RFValue(12),
-    // elevation: 2, // 약간의 그림자 효과
+    backgroundColor: backgroundColor.white,
+    marginBottom: RFValue(16),
+    borderLeftWidth: RFValue(6), // Accent border like RoomItem
+    elevation: 3, // Similar elevation
   },
-  cardContent: {
-    paddingBottom: RFValue(8), // Actions와의 간격 조절
+  contentContainer: {
+    gap: RFValue(10), // Spacing between elements
+    paddingBottom: RFValue(4), // Reduce bottom padding if actions are present
   },
-  prayerRoomName: {
-    fontSize: RFValue(16),
+  headerRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    color: color.secondary,
+  },
+  title: {
+    fontSize: RFValue(17), // Slightly smaller title than RoomItem
     fontWeight: "bold",
-    marginBottom: RFValue(4),
+    flex: 1, // Allow title to take available space
+    marginRight: RFValue(8), // Add space if an icon is used on the right
   },
-  inviterInfo: {
+  infoRow: {
+    flexDirection: "column", // Stack inviter and time vertically
+    gap: RFValue(6),
+  },
+  detailRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: RFValue(6), // Space between icon and text
+  },
+  detailText: {
     fontSize: RFValue(13),
-    color: "#555", // 약간 어두운 회색
+    color: color.black, // Use a defined gray color
   },
   inviterName: {
-    fontWeight: "bold",
+    fontWeight: "600", // Medium weight
+    color: color.secondary, // Or slightly darker gray
   },
   invitedTime: {
-    fontSize: RFValue(11),
-    color: "#888", // 더 연한 회색
-    marginTop: RFValue(6),
+    fontSize: RFValue(12),
+    color: color.secondary, // Lighter gray for time
   },
   actions: {
-    justifyContent: "flex-end", // 버튼들을 오른쪽으로 정렬
-    paddingTop: RFValue(0), // Content와의 간격 제거
-    paddingBottom: RFValue(8),
+    justifyContent: "flex-end",
+    paddingTop: RFValue(4),
+    paddingBottom: RFValue(10),
     paddingHorizontal: RFValue(12),
   },
   button: {
     marginLeft: RFValue(8),
-    minWidth: RFValue(80), // 버튼 최소 너비 지정
+    minWidth: RFValue(80),
   },
   rejectButton: {
-    borderColor: "#EAEAEA", // 테두리 색 약간 연하게
+    borderColor: color.red, // Use theme outline color
   },
   acceptButton: {
-    // 기본 contained 스타일 사용
+    // Default contained
   },
   buttonLabel: {
-    fontSize: RFValue(13), // 버튼 텍스트 크기 조절
+    fontSize: RFValue(13),
   },
 });

@@ -12,7 +12,6 @@ export default function RoomsScreen() {
         {...{
           tops: [<View />],
           bodies: [<RoomList />, <RoomCreationFloatingButton />],
-          //bottom: _layout.tsx Navigation
         }}
       />
     </Fragment>

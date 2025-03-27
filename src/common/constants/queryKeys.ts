@@ -7,6 +7,7 @@ const QUERY_KEYS = {
   prayerContents: "prayerContents",
   profiles: "profiles",
   me: "me",
+  invitations: "invitations",
 };
 
 export default QUERY_KEYS;
