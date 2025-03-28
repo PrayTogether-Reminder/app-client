@@ -7,16 +7,19 @@ import { ErrorBoundary } from "react-error-boundary";
 import { backgroundColor } from "../src/common/styles/color";
 import { StatusBar } from "expo-status-bar";
 import { color } from "@/common/styles/color";
-
-import ErrorFallback from "../src/common/components/ErrorFallback";
+import ErrorFallback from "../src/common/components/error/ErrorFallback";
 import CustomQueryClientProvider from "../src/common/hooks/queries/customQueryClientProvider";
 import * as SplashScreen from "expo-splash-screen";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function RootLayout() {
   const [fontsLoaded, fontsError] = useFonts({
     CookieRun_Bold: require("../assets/CookieRunFont_TTF/CookieRun_Black.ttf"),
+    ...FontAwesome.font,
+    ...FontAwesome6.font,
   });
 
   const theme = {
@@ -39,16 +42,15 @@ export default function RootLayout() {
 
   return (
     <PaperProvider theme={theme}>
+      {/* catch rendering error */}
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <CustomQueryClientProvider>
           <StatusBar backgroundColor={backgroundColor.white} />
           <Stack screenOptions={{ headerShown: false }}>
-            {/* 기본 화면들은 일반적인 전환 효과 사용 */}
             <Stack.Screen name="index" />
 
-            {/* prayer/creation 경로에 대한 특별한 전환 효과 설정 */}
             <Stack.Screen
-              name="prayers/creation"
+              name="prayers/creation/index"
               options={{
                 animation: "slide_from_bottom",
                 presentation: "modal",

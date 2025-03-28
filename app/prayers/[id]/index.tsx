@@ -12,9 +12,10 @@ import {
 } from "react-native-paper";
 
 import Top1Body10Bottom1 from "../../../src/common/layout/Top1Body10Bottom1";
-import PrayerReadTop from "./_components/index/PrayerReadTop";
-import PrayerReadBody from "./_components/index/PrayerReadBody";
-import PrayerReadBottom from "./_components/index/PrayerReadBottom";
+import PrayerReadTop from "./_components/PrayerReadTop";
+import PrayerReadBody from "./_components/PrayerReadBody";
+import PrayerReadBottom from "./_components/PrayerReadBottom";
+import { backgroundColor } from "@/common/styles/color";
 
 export default function PrayerReadScreen() {
   return (
@@ -31,7 +32,7 @@ export default function PrayerReadScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: backgroundColor.default,
   },
   input: {
     marginBottom: 12,
