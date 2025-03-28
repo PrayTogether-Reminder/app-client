@@ -21,7 +21,7 @@ import RoomItem from "./RoomItem";
 import { useRouter } from "expo-router";
 import path from "@/common/constants/path";
 import { color } from "@/common/styles/color";
-import Loading from "@/common/components/loading/Loading";
+import Loading from "@/common/components/loading/OverlayLoading";
 
 const RoomList = () => {
   console.log("RoomList rendering");

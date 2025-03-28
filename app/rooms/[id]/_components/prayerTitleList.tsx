@@ -10,7 +10,7 @@ import { PrayerTitle } from "../../../../src/domain/prayers/types/prayerTitle";
 import { useRoomMembersQuery } from "../../../../src/domain/rooms/hooks/queries/useRoomQueries";
 import { useSelectedPrayerTitleStore } from "../../../../src/domain/prayers/stores/useSelectedPrayerTitleStore";
 
-import Loading from "../../../../src/common/components/loading/Loading";
+import Loading from "../../../../src/common/components/loading/OverlayLoading";
 import path from "../../../../src/common/constants/path";
 import QUERY_KEYS from "../../../../src/common/constants/queryKeys";
 import PrayerTitleItem from "./prayerTitleItem";
