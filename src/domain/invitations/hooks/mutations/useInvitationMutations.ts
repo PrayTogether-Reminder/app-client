@@ -39,7 +39,7 @@ export const useUpdateInvitationStatusMutation = () => {
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.invitations] });
-      Alert.alert("성공", data.message);
+      Alert.alert("초대 응답", data.message);
     },
   });
 };
