@@ -7,7 +7,7 @@ import { useRouter } from "expo-router";
 import { usePrayerNotificationMutation } from "@/domain/notifications/hooks/mutations/useNotificationMutations";
 import { useSelectedPrayerTitleStore } from "../../../../src/domain/prayers/stores/useSelectedPrayerTitleStore";
 import { useSelectedRoomStore } from "../../../../src/domain/rooms/stores/useSelectedRoomStore";
-import { NOTIFICATION_TYPE } from "../../../../src/common/constants/notificationType";
+import { NOTIFICATION_TYPE } from "../../../../src/domain/notifications/constants/notificationType";
 
 const { width } = Dimensions.get("window");
 

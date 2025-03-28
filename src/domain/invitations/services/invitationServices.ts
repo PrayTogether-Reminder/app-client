@@ -2,6 +2,8 @@ import apiService from "@/common/apis/apiService";
 import type { MessageResponse } from "@/common/types/messageResponse";
 import { Invitation } from "../types/Intivation";
 import { FetchInvitationsResponse } from "../types/response/fetchInvitationsResponse";
+import type { INVITATION_STATUS } from "../constants/invitationStatus";
+import { UpdateInvitationStatusRequest } from "../types/request/updateInvitationStatusRequest";
 
 export const invitationService = {
   // 멤버 초대
@@ -21,5 +23,18 @@ export const invitationService = {
       `/invitations`
     );
     return response.data.invitations;
+  },
+  // 초대 목록 조회
+  updateStatus: async (
+    invitationId: number,
+    status: INVITATION_STATUS
+  ): Promise<MessageResponse> => {
+    const response = await apiService.patch<MessageResponse>(
+      `/invitations/${invitationId}`,
+      {
+        status,
+      } as UpdateInvitationStatusRequest
+    );
+    return response;
   },
 };

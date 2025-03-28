@@ -1,4 +1,4 @@
-import { NOTIFICATION_TYPE } from "../../../../common/constants/notificationType";
+import { NOTIFICATION_TYPE } from "../../constants/notificationType";
 
 export interface NotifyPrayerRequest {
   prayerTitleId: number | null;

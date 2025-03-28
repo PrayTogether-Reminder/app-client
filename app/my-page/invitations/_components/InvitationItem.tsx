@@ -17,25 +17,24 @@ import {
 import { RFValue } from "react-native-responsive-fontsize";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons"; // For icons
-// import { formatDistanceToNow } from "date-fns"; // 날짜 포맷팅 라이브러리
-// import { ko } from "date-fns/locale"; // 한국어 locale
+import { formatDistanceToNow } from "date-fns"; // 날짜 포맷팅 라이브러리
+import { ko } from "date-fns/locale"; // 한국어 locale
 import { backgroundColor, color } from "@/common/styles/color"; // Assuming color styles are here
 import { Invitation } from "@/domain/invitations/types/Intivation";
+import { INVITATION_STATUS } from "@/domain/invitations/constants/invitationStatus";
 
 type InvitationItemProps = {
   invitation: Invitation;
-  onAccept: (id: number) => void;
-  onReject: (id: number) => void;
-  isMutating: boolean; // To disable buttons during mutation
+  onClick: (invitationId: number, status: INVITATION_STATUS) => void;
+  ispending: boolean; // To disable buttons during mutation
 };
 
 // Reusing the RoomItem visual style approach
 export default function InvitationItem({
   invitation,
-  onAccept,
-  onReject,
-  isMutating,
-}: InvitationItemProps): React.ReactElement {
+  onClick,
+  ispending,
+}: InvitationItemProps) {
   const theme = useTheme();
   const { width } = useWindowDimensions();
 
@@ -61,10 +60,10 @@ export default function InvitationItem({
   };
 
   // 'X시간 전', 'Y일 전' 등으로 표시
-  // const timeAgo = formatDistanceToNow(invitation.invitedAt, {
-  //   addSuffix: true,
-  //   locale: ko,
-  // });
+  const timeAgo = formatDistanceToNow(invitation.createdTime, {
+    addSuffix: true,
+    locale: ko,
+  });
 
   return (
     // Pressable wrapper for animation, no onPress/onLongPress needed here
@@ -74,14 +73,14 @@ export default function InvitationItem({
           style={[
             styles.card,
             // Use a theme color or a specific color for the border accent
-            { borderLeftColor: theme.colors.primary },
+            { borderLeftColor: color.secondary },
           ]}
           mode="elevated"
         >
           <Card.Content style={styles.contentContainer}>
             {/* Header Row (Room Name) - Similar to RoomItem */}
             <View style={styles.headerRow}>
-              <Title style={styles.title}>{invitation.roomName}</Title>
+              <Title style={styles.roomName}>{invitation.roomName}</Title>
               {/* Optional: Add an icon if needed, e.g., mail icon */}
               {/* <MaterialCommunityIcons name="email-outline" size={width * 0.06} color={color.black} /> */}
             </View>
@@ -94,11 +93,11 @@ export default function InvitationItem({
                   size={width * 0.045} // Slightly smaller icon
                   color={color.gray} // Use a less prominent color
                 />
-                <Paragraph style={styles.detailText}>
+                <Paragraph style={styles.detailInviter}>
                   <Text style={styles.inviterName}>
                     {invitation.inviterName}
                   </Text>{" "}
-                  님이 초대
+                  님의 초대
                 </Paragraph>
               </View>
               <View style={styles.detailRow}>
@@ -107,7 +106,12 @@ export default function InvitationItem({
                   size={width * 0.045}
                   color={color.gray}
                 />
-                {/* <Text style={styles.invitedTime}>{timeAgo}</Text> */}
+                <Text style={styles.invitedTime}>{timeAgo}</Text>
+              </View>
+              <View style={styles.detailRowDescription}>
+                <Text style={styles.detailDescription}>
+                  {invitation.roomDescription}
+                </Text>
               </View>
             </View>
           </Card.Content>
@@ -116,22 +120,26 @@ export default function InvitationItem({
           <Card.Actions style={styles.actions}>
             <Button
               mode="outlined"
-              onPress={() => onReject(invitation.invitationId)}
+              onPress={() =>
+                onClick(invitation.invitationId, INVITATION_STATUS.REJECT)
+              }
               style={[styles.button, styles.rejectButton]}
               labelStyle={styles.buttonLabel}
               textColor={theme.colors.error}
               icon="close-circle-outline"
-              disabled={isMutating} // Disable while accept/reject is processing
+              disabled={ispending} // Disable while accept/reject is processing
             >
               거절
             </Button>
             <Button
               mode="contained"
-              onPress={() => onAccept(invitation.invitationId)}
+              onPress={() =>
+                onClick(invitation.invitationId, INVITATION_STATUS.ACCEPT)
+              }
               style={[styles.button, styles.acceptButton]}
               labelStyle={styles.buttonLabel}
               icon="check-circle-outline"
-              disabled={isMutating} // Disable while accept/reject is processing
+              disabled={ispending} // Disable while accept/reject is processing
             >
               수락
             </Button>
@@ -160,7 +168,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     color: color.secondary,
   },
-  title: {
+  roomName: {
     fontSize: RFValue(17), // Slightly smaller title than RoomItem
     fontWeight: "bold",
     flex: 1, // Allow title to take available space
@@ -175,7 +183,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: RFValue(6), // Space between icon and text
   },
-  detailText: {
+  detailInviter: {
     fontSize: RFValue(13),
     color: color.black, // Use a defined gray color
   },
@@ -186,6 +194,15 @@ const styles = StyleSheet.create({
   invitedTime: {
     fontSize: RFValue(12),
     color: color.secondary, // Lighter gray for time
+  },
+  detailRowDescription: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: RFValue(8),
+  },
+  detailDescription: {
+    fontSize: RFValue(13),
+    color: color.black,
   },
   actions: {
     justifyContent: "flex-end",
