@@ -4,7 +4,7 @@ import { StyleSheet, View, FlatList, Platform } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 import { Invitation } from "@/domain/invitations/types/Intivation";
 import EmptyState from "@/common/components/empty/EmptyState";
-import Loading from "@/common/components/loading/Loading";
+import Loading from "@/common/components/loading/OverlayLoading";
 import InvitationItem from "./InvitationItem";
 import type { INVITATION_STATUS } from "@/domain/invitations/constants/invitationStatus";
 

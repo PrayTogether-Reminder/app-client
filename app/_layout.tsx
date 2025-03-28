@@ -7,7 +7,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { backgroundColor } from "../src/common/styles/color";
 import { StatusBar } from "expo-status-bar";
 import { color } from "@/common/styles/color";
-import ErrorFallback from "../src/common/components/ErrorFallback";
+import ErrorFallback from "../src/common/components/error/ErrorFallback";
 import CustomQueryClientProvider from "../src/common/hooks/queries/customQueryClientProvider";
 import * as SplashScreen from "expo-splash-screen";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -42,6 +42,7 @@ export default function RootLayout() {
 
   return (
     <PaperProvider theme={theme}>
+      {/* catch rendering error */}
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <CustomQueryClientProvider>
           <StatusBar backgroundColor={backgroundColor.white} />
