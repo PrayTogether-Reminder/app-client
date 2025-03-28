@@ -13,7 +13,7 @@ interface ApiError {
   status: number;
 }
 
-const REQUEST_TIMEOUT = 30000; // 30s
+const REQUEST_TIMEOUT = 5000; // 5s
 
 const api = axios.create({
   baseURL: BASE_API_URL,
