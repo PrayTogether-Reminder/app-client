@@ -4,7 +4,7 @@ import { StyleSheet, useWindowDimensions, View } from "react-native";
 import { Avatar, Title, Caption, Surface, Button } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize"; // RFValue 라이브러리 import 추가
 import { color } from "@/common/styles/color";
-import { useProfileQuery } from "@/domain/profiles/hooks/queries/profileQueries";
+import { useProfileQuery } from "@/domain/profiles/hooks/queries/memberQueries";
 
 export default function ProfileSection() {
   const { width } = useWindowDimensions();
