@@ -12,11 +12,13 @@ import { UpdatePrayerRequest } from "../types/request/updatePrayerRequest";
 export const prayerService = {
   // 기도 제목 작성
   create: async (
+    roomId: number,
     title: string,
     prayerList: PrayerCreationItem[]
   ): Promise<MessageResponse> => {
     const response: MessageResponse =
       await apiService.post<CreatePrayerRequest>(`/prayers`, {
+        roomId,
         title,
         contents: prayerList,
       } as CreatePrayerRequest);
