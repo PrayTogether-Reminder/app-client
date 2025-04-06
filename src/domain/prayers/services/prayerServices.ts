@@ -17,10 +17,8 @@ export const prayerService = {
   ): Promise<MessageResponse> => {
     const response: MessageResponse =
       await apiService.post<CreatePrayerRequest>(`/prayers`, {
-        prayers: {
-          title,
-          contents: prayerList,
-        },
+        title,
+        contents: prayerList,
       } as CreatePrayerRequest);
     console.log("API response=", response.message);
     return response;
@@ -52,10 +50,8 @@ export const prayerService = {
     const response: MessageResponse = await apiService.put<UpdatePrayerRequest>(
       `/prayers/${prayerTitleId}`,
       {
-        prayers: {
-          title,
-          contents: prayerList,
-        },
+        title,
+        contents: prayerList,
       } as UpdatePrayerRequest
     );
     console.log("API response=", response.message);
