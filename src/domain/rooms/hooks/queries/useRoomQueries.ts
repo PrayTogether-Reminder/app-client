@@ -59,7 +59,7 @@ function getNextAfter(orderBy: OrderBy, room: Room) {
   switch (orderBy) {
     case OrderBy.DEFAULT:
     case OrderBy.TIME:
-      return room.createdTime.toString();
+      return room.joinedTime.toString();
   }
   return "0";
 }
