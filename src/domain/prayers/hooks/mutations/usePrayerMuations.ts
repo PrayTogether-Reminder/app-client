@@ -4,6 +4,8 @@ import { Alert } from "react-native";
 import { CreatePrayerParams } from "./../../types/params/createPrayerParams";
 import { UpdatePrayerParams } from "../../types/params/updatePrayerParams";
 import QUERY_KEYS from "@/common/constants/queryKeys";
+import { ApiError } from "@/common/apis/api";
+import { CreatePrayerCompletionRequest } from "../../types/request/createPrayerCompletionRequest";
 
 // 기도(제목+내용) 작성
 export const usePrayerCreationMutation = () => {
@@ -45,6 +47,25 @@ export const usePrayerUpdateMutation = () => {
     },
     onError: (error) => {
       Alert.alert(error.message);
+    },
+  });
+};
+
+// 기도 완료 알림
+export const usePrayerCompletionMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ roomId }: CreatePrayerCompletionRequest) => {
+      return prayerService.completePrayer({
+        roomId,
+      });
+    },
+    onError: (error: ApiError, variables, context) => {
+      Alert.alert(error.message);
+    },
+    onSuccess: (data, variables) => {
+      Alert.alert(data.message);
     },
   });
 };

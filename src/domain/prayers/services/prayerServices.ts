@@ -8,6 +8,7 @@ import { FetchPrayerTitlesResponse } from "../types/response/fetchPrayerTitlesRe
 import type { FetchPrayerContentsResponse } from "../types/response/fetchPrayerContentsResponse";
 import { PrayerUpdateItem } from "../types/prayerUpdateItem";
 import { UpdatePrayerRequest } from "../types/request/updatePrayerRequest";
+import { CreatePrayerCompletionRequest } from "../types/request/createPrayerCompletionRequest";
 
 export const prayerService = {
   // 기도 제목 작성
@@ -58,5 +59,16 @@ export const prayerService = {
     );
     console.log("API response=", response.message);
     return response;
+  },
+
+  // 기도 완료 알림
+  completePrayer: async ({ roomId }: CreatePrayerCompletionRequest) => {
+    const response = await apiService.post<MessageResponse>(
+      `/prayers/${roomId}/completion`,
+      {
+        roomId,
+      } as CreatePrayerCompletionRequest
+    );
+    return response.data;
   },
 };
