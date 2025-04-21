@@ -4,12 +4,14 @@ import { Alert } from "react-native";
 import { CreatePrayerParams } from "./../../types/params/createPrayerParams";
 import { UpdatePrayerParams } from "../../types/params/updatePrayerParams";
 import QUERY_KEYS from "@/common/constants/queryKeys";
+import { ApiError } from "@/common/apis/api";
+import { CreatePrayerCompletionRequest } from "../../types/request/createPrayerCompletionRequest";
 
 // 기도(제목+내용) 작성
 export const usePrayerCreationMutation = () => {
   return useMutation({
-    mutationFn: ({ title, prayerList }: CreatePrayerParams) =>
-      prayerService.create(title, prayerList),
+    mutationFn: ({ roomId, title, prayerList }: CreatePrayerParams) =>
+      prayerService.create(roomId, title, prayerList),
     onSuccess: (data) => {
       Alert.alert(data.message);
       // 여기에 성공 시 추가 작업 (예: 캐시 무효화, 알림 표시 등)을 추가할 수 있습니다.
@@ -45,6 +47,25 @@ export const usePrayerUpdateMutation = () => {
     },
     onError: (error) => {
       Alert.alert(error.message);
+    },
+  });
+};
+
+// 기도 완료 알림
+export const usePrayerCompletionMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ roomId }: CreatePrayerCompletionRequest) => {
+      return prayerService.completePrayer({
+        roomId,
+      });
+    },
+    onError: (error: ApiError, variables, context) => {
+      Alert.alert(error.message);
+    },
+    onSuccess: (data, variables) => {
+      Alert.alert(data.message);
     },
   });
 };

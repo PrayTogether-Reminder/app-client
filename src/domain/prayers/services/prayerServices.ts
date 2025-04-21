@@ -8,19 +8,20 @@ import { FetchPrayerTitlesResponse } from "../types/response/fetchPrayerTitlesRe
 import type { FetchPrayerContentsResponse } from "../types/response/fetchPrayerContentsResponse";
 import { PrayerUpdateItem } from "../types/prayerUpdateItem";
 import { UpdatePrayerRequest } from "../types/request/updatePrayerRequest";
+import { CreatePrayerCompletionRequest } from "../types/request/createPrayerCompletionRequest";
 
 export const prayerService = {
   // 기도 제목 작성
   create: async (
+    roomId: number,
     title: string,
     prayerList: PrayerCreationItem[]
   ): Promise<MessageResponse> => {
     const response: MessageResponse =
       await apiService.post<CreatePrayerRequest>(`/prayers`, {
-        prayers: {
-          title,
-          contents: prayerList,
-        },
+        roomId,
+        title,
+        contents: prayerList,
       } as CreatePrayerRequest);
     console.log("API response=", response.message);
     return response;
@@ -52,13 +53,22 @@ export const prayerService = {
     const response: MessageResponse = await apiService.put<UpdatePrayerRequest>(
       `/prayers/${prayerTitleId}`,
       {
-        prayers: {
-          title,
-          contents: prayerList,
-        },
+        title,
+        contents: prayerList,
       } as UpdatePrayerRequest
     );
     console.log("API response=", response.message);
     return response;
+  },
+
+  // 기도 완료 알림
+  completePrayer: async ({ roomId }: CreatePrayerCompletionRequest) => {
+    const response = await apiService.post<MessageResponse>(
+      `/prayers/${roomId}/completion`,
+      {
+        roomId,
+      } as CreatePrayerCompletionRequest
+    );
+    return response.data;
   },
 };

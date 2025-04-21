@@ -28,7 +28,7 @@ export const useInfiniteRoomsQuery = (
     queryFn: async ({ pageParam }) => {
       const param = pageParam as RoomPageParam;
       console.log("infinite query pageParam=", param);
-      return roomService.fetchRooms({
+      return await roomService.fetchRooms({
         orderBy: param.orderBy,
         after: param.after,
         dir: param.dir,
@@ -59,7 +59,7 @@ function getNextAfter(orderBy: OrderBy, room: Room) {
   switch (orderBy) {
     case OrderBy.DEFAULT:
     case OrderBy.TIME:
-      return room.createdTime.toString();
+      return room.joinedTime.toString();
   }
   return "0";
 }

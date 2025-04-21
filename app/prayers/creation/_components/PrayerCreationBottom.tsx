@@ -12,11 +12,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import QUERY_KEYS from "../../../../src/common/constants/queryKeys";
 
 interface PrayerCreationBottomProps {
+  roomId: number;
   title: string;
   disabled: boolean;
 }
 
 const PrayerCreationBottom: React.FC<PrayerCreationBottomProps> = ({
+  roomId,
   title,
   disabled,
 }) => {
@@ -29,7 +31,7 @@ const PrayerCreationBottom: React.FC<PrayerCreationBottomProps> = ({
   // 기도 내용 전체 저장(API 요청)
   const createPrayer = () => {
     createPrayerMutation(
-      { title, prayerList },
+      { roomId, title, prayerList },
       {
         onSuccess: () => {
           queryClient.invalidateQueries({

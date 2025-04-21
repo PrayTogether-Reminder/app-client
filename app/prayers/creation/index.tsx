@@ -70,6 +70,7 @@ export default function PrayerCreationScreen() {
           <PrayerCreationBottom
             disabled={!prayerTitle.trim()}
             title={prayerTitle}
+            roomId={room?.id as number}
           />,
         ]}
       />

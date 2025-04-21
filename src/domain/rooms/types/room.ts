@@ -3,6 +3,6 @@ export interface Room {
   name: string;
   memberCnt: number;
   description: string;
-  createdTime: Date;
+  joinedTime: Date;
   isNotification: boolean;
 }

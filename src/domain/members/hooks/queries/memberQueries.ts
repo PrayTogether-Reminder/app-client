@@ -1,5 +1,5 @@
-import QUERY_KEYS from "./../../../../common/constants/queryKeys";
-import { profileService } from "../../services/profileService";
+import QUERY_KEYS from "../../../../common/constants/queryKeys";
+import { memberService } from "../../services/memberService";
 import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 
 // 사용자 프로필 조회 쿼리
@@ -11,7 +11,7 @@ export const useProfileQuery = (
 
     queryFn: async () => {
       console.log("fetch 사용자 프로필 조회");
-      return profileService.fetch();
+      return memberService.fetchProfile();
     },
 
     ...options,

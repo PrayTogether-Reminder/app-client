@@ -4,24 +4,22 @@ import { Surface, Button, Portal, Modal, IconButton } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../../src/common/styles/color";
 import { useRouter } from "expo-router";
-import { usePrayerNotificationMutation } from "@/domain/notifications/hooks/mutations/useNotificationMutations";
 import { useSelectedPrayerTitleStore } from "../../../../src/domain/prayers/stores/useSelectedPrayerTitleStore";
 import { useSelectedRoomStore } from "../../../../src/domain/rooms/stores/useSelectedRoomStore";
-import { NOTIFICATION_TYPE } from "../../../../src/domain/notifications/constants/notificationType";
+import { usePrayerCompletionMutation } from "../../../../src/domain/prayers/hooks/mutations/usePrayerMuations";
 
 const { width } = Dimensions.get("window");
 
 function PrayerReadBottom() {
   const router = useRouter();
-  const prayerTitleId =
-    useSelectedPrayerTitleStore().selectedPrayerTitle?.id ?? null;
-  const roomId = useSelectedRoomStore().selectedRoom?.id ?? null;
+  useSelectedPrayerTitleStore().selectedPrayerTitle?.id ?? null;
+  const roomId = useSelectedRoomStore().selectedRoom?.id ?? 0;
   const [visible, setVisible] = useState(false);
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
-  const { mutate: nofityPrayerCompletion } = usePrayerNotificationMutation();
+  const { mutate: nofityPrayerCompletion } = usePrayerCompletionMutation();
 
   const handlePress = () => {
     showModal();
@@ -29,9 +27,7 @@ function PrayerReadBottom() {
 
   const handleConfirm = () => {
     nofityPrayerCompletion({
-      prayerTitleId,
       roomId,
-      type: NOTIFICATION_TYPE.PRAYER_COMPLETION,
     });
     hideModal();
   };
