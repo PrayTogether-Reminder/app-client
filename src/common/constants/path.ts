@@ -8,6 +8,8 @@ const path = {
   showPrayersUpdateById: (id: number | null) =>
     `/prayers/${id}/update` as Route,
   showInvitations: () => "my-page/invitations" as Route,
+  showLogin: () => "/(auth)/login" as Route,
+  showSignup: () => "/(auth)/signup" as Route,
 };
 
 export default path;
