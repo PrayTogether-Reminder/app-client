@@ -36,6 +36,7 @@
     "react-error-boundary": "^4.0.10",
     "react-native": "0.76.7",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-pager-view": "^6.7.0",
     "react-native-paper": "^5.13.1",
     "react-native-reanimated": "3.16.2",
     "react-native-responsive-fontsize": "^0.5.1",
