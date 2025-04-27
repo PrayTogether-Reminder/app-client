@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   logoContainer: {
-    flex: 5, // 남은 공간 차지
+    flex: 9, // 남은 공간 차지
     justifyContent: "center", // 수직 중앙 정렬
     alignItems: "center", // 수평 중앙 정렬
     paddingHorizontal: RFValue(30),
@@ -88,7 +88,6 @@ const styles = StyleSheet.create({
   },
   slogonContainer: {
     flex: 3,
-    paddingTop: RFValue(40),
   },
   slogan: {
     textAlign: "center",
