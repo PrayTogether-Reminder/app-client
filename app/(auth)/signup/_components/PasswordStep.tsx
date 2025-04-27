@@ -140,7 +140,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     height: RFValue(50),
     justifyContent: "center",
-    marginTop: RFValue(16),
   },
   button: {
     height: "100%",
