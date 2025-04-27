@@ -8,6 +8,8 @@ import {
   ActivityIndicator,
 } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
+import path from "@/common/constants/path";
+import { useRouter } from "expo-router";
 
 export interface PasswordStepProps {
   password: string;
@@ -20,7 +22,7 @@ export interface PasswordStepProps {
   setPasswordVisible: (visible: boolean) => void;
   confirmPasswordVisible: boolean;
   setConfirmPasswordVisible: (visible: boolean) => void;
-  onSubmit: () => void;
+  onSubmit: () => Promise<Boolean>;
   isSubmitting: boolean;
 }
 
@@ -38,6 +40,15 @@ const PasswordStep: React.FC<PasswordStepProps> = ({
   onSubmit,
   isSubmitting,
 }) => {
+  const router = useRouter();
+  const handleSignupComplete = async () => {
+    // 회원가입 로직 실행
+    const isSuccess = await onSubmit();
+
+    if (isSuccess) {
+      router.replace(path.showLogin());
+    }
+  };
   return (
     <View style={styles.page}>
       <Text variant="titleLarge" style={styles.stepTitle}>
@@ -101,7 +112,7 @@ const PasswordStep: React.FC<PasswordStepProps> = ({
       <View style={styles.buttonContainer}>
         <Button
           mode="contained"
-          onPress={onSubmit}
+          onPress={handleSignupComplete}
           style={styles.button}
           labelStyle={styles.buttonLabel}
           disabled={

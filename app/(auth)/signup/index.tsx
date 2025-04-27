@@ -144,19 +144,13 @@ const SignupScreen: React.FC = () => {
       setPasswordError("");
     }
 
-    if (hasError) return;
+    if (hasError) return false;
 
     setIsSubmitting(true);
-    try {
-      console.log("Submitting signup:", { name, email, password });
-      Alert.alert("회원가입 성공!", "환영합니다!");
-      router.push(path.showLogin());
-    } catch (error) {
-      console.error("Signup failed:", error);
-      Alert.alert("오류", "회원가입 중 문제가 발생했습니다.");
-    } finally {
-      setIsSubmitting(false);
-    }
+    console.log("Submitting signup:", { name, email, password });
+    Alert.alert("회원가입 성공!", "환영합니다!");
+    setIsSubmitting(false);
+    return true;
   };
 
   return (
