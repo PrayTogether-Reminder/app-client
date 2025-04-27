@@ -7,6 +7,7 @@ import {
   Text,
   ActivityIndicator,
 } from "react-native-paper";
+import { RFValue } from "react-native-responsive-fontsize";
 
 // API 호출 모의 함수
 const fakeApiCall = (delay = 1000) =>
@@ -53,7 +54,6 @@ const EmailStep: React.FC<EmailStepProps> = ({
   isVerifyingOtp,
   setIsVerifyingOtp,
   onNext,
-  onBack,
   isSubmitting,
 }) => {
   const handleSendOtp = async () => {
@@ -118,6 +118,11 @@ const EmailStep: React.FC<EmailStepProps> = ({
           style={[styles.input, styles.emailInput]}
           error={!!emailError}
           disabled={isOtpSent || isSendingOtp || isVerifyingOtp || isSubmitting}
+          theme={{
+            fonts: {
+              bodyLarge: { fontSize: RFValue(16) },
+            },
+          }}
         />
         <Button
           mode="contained"
@@ -135,7 +140,7 @@ const EmailStep: React.FC<EmailStepProps> = ({
           {isOtpSent ? "재전송" : "인증 요청"}
         </Button>
       </View>
-      <HelperText type="error" visible={!!emailError}>
+      <HelperText type="error" visible={!!emailError} style={styles.helperText}>
         {emailError}
       </HelperText>
 
@@ -154,24 +159,25 @@ const EmailStep: React.FC<EmailStepProps> = ({
             style={styles.input}
             error={!!otpError}
             disabled={isVerifyingOtp || isSubmitting}
+            theme={{
+              fonts: {
+                bodyLarge: { fontSize: RFValue(16) },
+              },
+            }}
           />
-          <HelperText type="error" visible={!!otpError}>
+          <HelperText
+            type="error"
+            visible={!!otpError}
+            style={styles.helperText}
+          >
             {otpError}
           </HelperText>
           <View style={styles.buttonContainer}>
             <Button
-              mode="outlined"
-              onPress={onBack}
-              style={[styles.button, styles.backButton]}
-              disabled={isVerifyingOtp || isSubmitting}
-              icon="arrow-left"
-            >
-              이전
-            </Button>
-            <Button
               mode="contained"
               onPress={handleVerifyOtpAndGoToPassword}
               style={styles.button}
+              labelStyle={styles.buttonLabel}
               disabled={
                 !otp || otp.length !== 6 || isVerifyingOtp || isSubmitting
               }
@@ -182,20 +188,6 @@ const EmailStep: React.FC<EmailStepProps> = ({
           </View>
         </>
       )}
-      {!isOtpSent && (
-        <View style={styles.buttonContainer}>
-          <Button
-            mode="outlined"
-            onPress={onBack}
-            style={[styles.button, styles.backButton]}
-            disabled={isSendingOtp || isSubmitting}
-            icon="arrow-left"
-          >
-            이전
-          </Button>
-          <View style={styles.button} />
-        </View>
-      )}
     </View>
   );
 };
@@ -203,27 +195,30 @@ const EmailStep: React.FC<EmailStepProps> = ({
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    padding: 20,
+    padding: RFValue(20),
   },
   stepTitle: {
-    marginBottom: 24,
+    marginBottom: RFValue(16),
     textAlign: "center",
     fontWeight: "bold",
+    fontSize: RFValue(22),
   },
   input: {
-    marginBottom: 8,
+    fontSize: RFValue(16),
+  },
+  helperText: {
+    fontSize: RFValue(14),
   },
   buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 16,
+    height: RFValue(50),
+    justifyContent: "center",
   },
   button: {
-    paddingVertical: 8,
-    minWidth: "48%",
+    height: "100%",
   },
-  backButton: {
-    // 이전 버튼에 대한 추가 스타일
+  buttonLabel: {
+    fontSize: RFValue(18),
+    lineHeight: RFValue(30),
   },
   emailContainer: {
     flexDirection: "row",
@@ -231,12 +226,11 @@ const styles = StyleSheet.create({
   },
   emailInput: {
     flex: 1,
-    marginRight: 8,
+    marginRight: RFValue(8),
     marginBottom: 0,
   },
   sendOtpButton: {
-    marginTop: 8,
-    height: 50,
+    height: RFValue(50),
     justifyContent: "center",
   },
 });
