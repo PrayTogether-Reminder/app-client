@@ -7,6 +7,7 @@ import {
   Text,
   ActivityIndicator,
 } from "react-native-paper";
+import { RFValue } from "react-native-responsive-fontsize";
 
 export interface PasswordStepProps {
   password: string;
@@ -19,7 +20,6 @@ export interface PasswordStepProps {
   setPasswordVisible: (visible: boolean) => void;
   confirmPasswordVisible: boolean;
   setConfirmPasswordVisible: (visible: boolean) => void;
-  onBack: () => void;
   onSubmit: () => void;
   isSubmitting: boolean;
 }
@@ -35,7 +35,6 @@ const PasswordStep: React.FC<PasswordStepProps> = ({
   setPasswordVisible,
   confirmPasswordVisible,
   setConfirmPasswordVisible,
-  onBack,
   onSubmit,
   isSubmitting,
 }) => {
@@ -45,7 +44,7 @@ const PasswordStep: React.FC<PasswordStepProps> = ({
         비밀번호 설정
       </Text>
       <TextInput
-        label="비밀번호 (8자 이상)"
+        label="비밀번호 (8자 이상, 15자 이하)"
         value={password}
         onChangeText={(text) => {
           setPassword(text);
@@ -56,6 +55,11 @@ const PasswordStep: React.FC<PasswordStepProps> = ({
         style={styles.input}
         error={!!passwordError}
         disabled={isSubmitting}
+        theme={{
+          fonts: {
+            bodyLarge: { fontSize: RFValue(16) },
+          },
+        }}
         right={
           <TextInput.Icon
             icon={passwordVisible ? "eye-off" : "eye"}
@@ -75,6 +79,11 @@ const PasswordStep: React.FC<PasswordStepProps> = ({
         style={styles.input}
         error={!!passwordError}
         disabled={isSubmitting}
+        theme={{
+          fonts: {
+            bodyLarge: { fontSize: RFValue(16) },
+          },
+        }}
         right={
           <TextInput.Icon
             icon={confirmPasswordVisible ? "eye-off" : "eye"}
@@ -82,23 +91,19 @@ const PasswordStep: React.FC<PasswordStepProps> = ({
           />
         }
       />
-      <HelperText type="error" visible={!!passwordError}>
+      <HelperText
+        type="error"
+        visible={!!passwordError}
+        style={styles.helperText}
+      >
         {passwordError}
       </HelperText>
       <View style={styles.buttonContainer}>
         <Button
-          mode="outlined"
-          onPress={onBack}
-          style={[styles.button, styles.backButton]}
-          disabled={isSubmitting}
-          icon="arrow-left"
-        >
-          이전
-        </Button>
-        <Button
           mode="contained"
           onPress={onSubmit}
           style={styles.button}
+          labelStyle={styles.buttonLabel}
           disabled={
             !password || !confirmPassword || !!passwordError || isSubmitting
           }
@@ -117,30 +122,35 @@ const PasswordStep: React.FC<PasswordStepProps> = ({
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    padding: 20,
+    padding: RFValue(20),
   },
   stepTitle: {
-    marginBottom: 24,
+    marginBottom: RFValue(16),
     textAlign: "center",
     fontWeight: "bold",
+    fontSize: RFValue(22),
   },
   input: {
-    marginBottom: 8,
+    marginBottom: RFValue(8),
+    fontSize: RFValue(16),
+  },
+  helperText: {
+    fontSize: RFValue(14),
   },
   buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 16,
+    height: RFValue(50),
+    justifyContent: "center",
+    marginTop: RFValue(16),
   },
   button: {
-    paddingVertical: 8,
-    minWidth: "48%",
+    height: "100%",
   },
-  backButton: {
-    // 이전 버튼에 대한 추가 스타일
+  buttonLabel: {
+    fontSize: RFValue(18),
+    lineHeight: RFValue(30),
   },
   loadingIndicator: {
-    marginTop: 20,
+    marginTop: RFValue(20),
   },
 });
 

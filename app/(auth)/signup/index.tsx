@@ -164,7 +164,7 @@ const SignupScreen: React.FC = () => {
       <View style={styles.top}>
         <IconButton
           icon="arrow-left"
-          size={RFValue(30)} // 아이콘 크기 증가
+          size={RFValue(30)}
           onPress={goToPrevPage}
           style={styles.backButton}
           disabled={isSubmitting}
@@ -226,7 +226,6 @@ const SignupScreen: React.FC = () => {
             setPasswordVisible={setPasswordVisible}
             confirmPasswordVisible={confirmPasswordVisible}
             setConfirmPasswordVisible={setConfirmPasswordVisible}
-            onBack={goToPrevPage}
             onSubmit={handleSignup}
             isSubmitting={isSubmitting}
           />
