@@ -1,6 +1,8 @@
 import React from "react";
 import { View, Keyboard, StyleSheet } from "react-native";
 import { TextInput, Button, HelperText, Text } from "react-native-paper";
+import { RFValue } from "react-native-responsive-fontsize";
+import { backgroundColor, color } from "@/common/styles/color";
 
 export interface NameStepProps {
   name: string;
@@ -45,16 +47,21 @@ const NameStep: React.FC<NameStepProps> = ({
         style={styles.input}
         error={!!nameError}
         disabled={isSubmitting}
+        theme={{
+          fonts: {
+            bodyLarge: { fontSize: RFValue(16) },
+          },
+        }}
       />
-      <HelperText type="error" visible={!!nameError}>
+      <HelperText type="error" visible={!!nameError} style={styles.helperText}>
         {nameError}
       </HelperText>
       <View style={styles.buttonContainer}>
-        <View style={styles.button} />
         <Button
           mode="contained"
           onPress={handleGoToEmail}
           style={styles.button}
+          labelStyle={styles.buttonLabel}
           disabled={isSubmitting}
         >
           다음
@@ -67,24 +74,30 @@ const NameStep: React.FC<NameStepProps> = ({
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    padding: 20,
+    padding: RFValue(20),
   },
   stepTitle: {
-    marginBottom: 24,
+    marginBottom: RFValue(16),
     textAlign: "center",
     fontWeight: "bold",
+    fontSize: RFValue(22),
   },
   input: {
-    marginBottom: 8,
+    fontSize: RFValue(16),
+  },
+  helperText: {
+    fontSize: RFValue(14),
   },
   buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 16,
+    height: RFValue(50),
+    justifyContent: "center",
   },
   button: {
-    paddingVertical: 8,
-    minWidth: "48%",
+    height: "100%",
+  },
+  buttonLabel: {
+    fontSize: RFValue(22),
+    lineHeight: RFValue(30),
   },
 });
 
