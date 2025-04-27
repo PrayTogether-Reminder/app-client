@@ -30,6 +30,10 @@ export default function LoginScreen() {
   const [error, setError] = useState<string | null>(null);
 
   const handleLogin = async () => {
+    if (email.trim() === "" || password.trim() === "") {
+      setError("이메일 혹은 비밀번호를 입력해주세요.");
+      return;
+    }
     setError(null);
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -50,7 +54,7 @@ export default function LoginScreen() {
       >
         {/* 전체 콘텐츠 영역 */}
         <View style={styles.content}>
-          {/* 상단 헤더 (아이콘 + 제목) */}
+          {/* 상단 헤더 (아이콘 + 제목) <- 지우거나, 다른 컨텐츠로 대체가 필요함. */}
           <View style={styles.headerContainer}>
             <Avatar.Icon
               size={RFValue(60)}
@@ -121,9 +125,8 @@ export default function LoginScreen() {
               onPress={() => router.push("/(auth)/signup")}
               style={styles.switchButton}
               disabled={isLoading}
-              textColor={theme.colors.primary}
+              textColor={color.black}
               labelStyle={styles.switchButtonLabel}
-              uppercase={false}
             >
               계정이 없으신가요?{" "}
               <Text style={styles.switchButtonHighlight}>회원가입</Text>
@@ -152,7 +155,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     alignItems: "center", // 아이콘, 타이틀 중앙 정렬
-    marginBottom: RFValue(30), // 폼과의 간격
+    marginBottom: RFValue(10),
   },
   headerIcon: {
     backgroundColor: "transparent",
@@ -167,7 +170,8 @@ const styles = StyleSheet.create({
   // formContainer가 늘어나서 actionContainer를 아래로 밀어냄
   formContainer: {
     flexGrow: 1, // 사용 가능한 추가 공간 차지
-    justifyContent: "center", // 입력 필드를 세로 중앙에 가깝게 배치 (조정 가능)
+    justifyContent: "flex-start", // 상단 정렬로 변경 (원래 center)
+    paddingTop: RFValue(20), // 상단에 패딩 추가
     paddingBottom: RFValue(20), // 액션 버튼 영역과의 최소 간격 확보
   },
   input: {
@@ -185,25 +189,27 @@ const styles = StyleSheet.create({
     paddingBottom: RFValue(10), // 화면 하단과의 여백
   },
   button: {
-    // marginTop 제거 또는 조정
     borderRadius: RFValue(30),
   },
   buttonLabel: {
     fontSize: RFValue(16),
-    fontWeight: "600",
+    fontWeight: "bold",
   },
   buttonContent: {
     paddingVertical: RFValue(8),
   },
   switchButton: {
     marginTop: RFValue(15), // 로그인 버튼과의 간격
-    alignSelf: "center",
+    // alignSelf: "center", // 중앙 정렬
+    // justifyContent: "center", // 내부 텍스트 중앙 정렬
+    width: "100%", // 전체 너비를 사용하여 텍스트 중앙 정렬
   },
   switchButtonLabel: {
     fontSize: RFValue(14),
+    textAlign: "center", // 텍스트 중앙 정렬
   },
   switchButtonHighlight: {
     fontWeight: "bold",
-    color: color.primary,
+    color: color.secondary,
   },
 });
