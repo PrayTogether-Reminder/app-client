@@ -19,6 +19,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import NameStep from "./_components/NameStep";
 import EmailStep from "./_components/EmailStep";
 import PasswordStep from "./_components/PasswordStep";
+import { useSignupMutation } from "@/domain/auth/hooks/mutations/authMutation";
 
 const SignupScreen: React.FC = () => {
   const theme = useTheme();
@@ -127,6 +128,7 @@ const SignupScreen: React.FC = () => {
   };
 
   // --- 회원가입 제출 핸들러 ---
+  const { mutate: singup } = useSignupMutation();
   const handleSignup = async () => {
     Keyboard.dismiss();
     let hasError = false;
@@ -144,12 +146,22 @@ const SignupScreen: React.FC = () => {
       setPasswordError("");
     }
 
+    setIsSubmitting(true);
     if (hasError) return false;
 
-    setIsSubmitting(true);
-    console.log("Submitting signup:", { name, email, password });
-    Alert.alert("회원가입 성공!", "환영합니다!");
-    setIsSubmitting(false);
+    singup(
+      { name, email, password },
+      {
+        onSuccess: () => {
+          router.replace(path.showLogin());
+          setIsSubmitting(false);
+        },
+        onError: () => {
+          setIsSubmitting(false);
+        },
+      }
+    );
+
     return true;
   };
 

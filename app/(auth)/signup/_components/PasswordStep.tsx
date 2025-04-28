@@ -42,7 +42,6 @@ const PasswordStep: React.FC<PasswordStepProps> = ({
 }) => {
   const router = useRouter();
   const handleSignupComplete = async () => {
-    // 회원가입 로직 실행
     const isSuccess = await onSubmit();
 
     if (isSuccess) {

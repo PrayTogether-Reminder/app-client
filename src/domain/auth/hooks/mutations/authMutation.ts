@@ -3,6 +3,7 @@ import { Alert } from "react-native";
 import QUERY_KEYS from "../../../../common/constants/queryKeys";
 import { authService } from "./../../services/authService";
 import type { VerifyOtpRequest } from "../../types/request/verifyOtpRequest";
+import type { SignupRequest } from "../../types/request/signupRequest";
 
 export const useOtpEmailRequestMutation = () => {
   const queryClient = useQueryClient();
@@ -29,6 +30,21 @@ export const useOtpVerifyMutation = () => {
     },
     onError: (error, requests, context) => {
       Alert.alert("OTP 인증에 실패했습니다.");
+    },
+  });
+};
+
+export const useSignupMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ name, email, password }: SignupRequest) =>
+      authService.signup(name, email, password),
+    onSuccess: () => {
+      Alert.alert("회원가입에 성공했습니다.");
+    },
+    onError: (error, requests, context) => {
+      Alert.alert("회원가입에 실패했습니다.");
     },
   });
 };
