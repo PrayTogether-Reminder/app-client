@@ -7,17 +7,9 @@ import {
   Text,
   ActivityIndicator,
 } from "react-native-paper";
+import { validateEmail } from "@/common/services/email/emailService";
 import { RFValue } from "react-native-responsive-fontsize";
-
-// API 호출 모의 함수
-const fakeApiCall = (delay = 1000) =>
-  new Promise((resolve) => setTimeout(resolve, delay));
-
-// 이메일 유효성 검사 함수
-const isValidEmail = (email: string): boolean => {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-};
-
+import { useOtpEmailRequestMutation } from "@/domain/auth/hooks/mutations/authMutation";
 export interface EmailStepProps {
   email: string;
   setEmail: (email: string) => void;
@@ -56,23 +48,24 @@ const EmailStep: React.FC<EmailStepProps> = ({
   onNext,
   isSubmitting,
 }) => {
+  const { mutate: requestEmailOtp } = useOtpEmailRequestMutation();
   const handleSendOtp = async () => {
     Keyboard.dismiss();
-    if (!isValidEmail(email)) {
+    if (!validateEmail(email)) {
       setEmailError("올바른 이메일 형식이 아닙니다.");
       return;
     }
     setEmailError("");
     setIsSendingOtp(true);
-    try {
-      await fakeApiCall();
-      setIsOtpSent(true);
-    } catch (error) {
-      console.error("OTP 발송 실패:", error);
-      setEmailError("OTP 발송 중 오류가 발생했습니다.");
-    } finally {
-      setIsSendingOtp(false);
-    }
+    requestEmailOtp(email, {
+      onSuccess: () => {
+        setIsOtpSent(true);
+        setIsSendingOtp(false);
+      },
+      onError: () => {
+        setIsSendingOtp(false);
+      },
+    });
   };
 
   const handleVerifyOtpAndGoToPassword = async () => {
@@ -84,7 +77,6 @@ const EmailStep: React.FC<EmailStepProps> = ({
     setOtpError("");
     setIsVerifyingOtp(true);
     try {
-      await fakeApiCall();
       const isOtpValid = true; // 실제로는 API 응답에 따라 결정
       if (isOtpValid) {
         onNext();
