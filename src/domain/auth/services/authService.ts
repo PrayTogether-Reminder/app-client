@@ -1,13 +1,29 @@
 import apiService from "@/common/apis/apiService";
 import { MessageResponse } from "@/common/types/messageResponse";
 import { OtpEmailRequest } from "../types/request/otpEmailRequest";
+import { VerifyOtpRequest } from "../types/request/verifyOtpRequest";
 
 export const authService = {
   // 이메일 OTP 요청 API
   requestOtpByEmail: async (email: string): Promise<MessageResponse> => {
-    const response = await apiService.post<MessageResponse>(`/otp/email`, {
+    const response = await apiService.post<MessageResponse>(`/auth/otp/email`, {
       email,
     } as OtpEmailRequest);
+    return response;
+  },
+
+  // 이메일 OTP 검증 API
+  verifyOtpByEmail: async (
+    email: string,
+    otp: string
+  ): Promise<MessageResponse> => {
+    const response = await apiService.post<MessageResponse>(
+      `/auth/otp/email/verification`,
+      {
+        email,
+        otp,
+      } as VerifyOtpRequest
+    );
     return response;
   },
 };

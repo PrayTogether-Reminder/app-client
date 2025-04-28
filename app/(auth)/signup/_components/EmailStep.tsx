@@ -9,7 +9,10 @@ import {
 } from "react-native-paper";
 import { validateEmail } from "@/common/services/email/emailService";
 import { RFValue } from "react-native-responsive-fontsize";
-import { useOtpEmailRequestMutation } from "@/domain/auth/hooks/mutations/authMutation";
+import {
+  useOtpEmailRequestMutation,
+  useOtpVerifyMutation,
+} from "@/domain/auth/hooks/mutations/authMutation";
 export interface EmailStepProps {
   email: string;
   setEmail: (email: string) => void;
@@ -49,6 +52,7 @@ const EmailStep: React.FC<EmailStepProps> = ({
   isSubmitting,
 }) => {
   const { mutate: requestEmailOtp } = useOtpEmailRequestMutation();
+  const { mutate: verifyOtp } = useOtpVerifyMutation();
   const handleSendOtp = async () => {
     Keyboard.dismiss();
     if (!validateEmail(email)) {
@@ -76,19 +80,18 @@ const EmailStep: React.FC<EmailStepProps> = ({
     }
     setOtpError("");
     setIsVerifyingOtp(true);
-    try {
-      const isOtpValid = true; // 실제로는 API 응답에 따라 결정
-      if (isOtpValid) {
-        onNext();
-      } else {
-        setOtpError("인증번호가 올바르지 않습니다.");
+    verifyOtp(
+      { email, otp },
+      {
+        onSuccess: () => {
+          onNext();
+          setIsVerifyingOtp(false);
+        },
+        onError: () => {
+          setIsVerifyingOtp(false);
+        },
       }
-    } catch (error) {
-      console.error("OTP 검증 실패:", error);
-      setOtpError("OTP 검증 중 오류가 발생했습니다.");
-    } finally {
-      setIsVerifyingOtp(false);
-    }
+    );
   };
 
   return (
