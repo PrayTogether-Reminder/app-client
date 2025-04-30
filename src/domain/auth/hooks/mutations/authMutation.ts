@@ -11,10 +11,10 @@ export const useOtpEmailRequestMutation = () => {
   return useMutation({
     mutationFn: (email: string) => authService.requestOtpByEmail(email),
     onError: (error, email, context) => {
-      Alert.alert("인증 메일 발송에 실패했습니다.");
+      Alert.alert(error.message);
     },
-    onSuccess: () => {
-      Alert.alert("인증 메일이 발송되었습니다.");
+    onSuccess: (data) => {
+      Alert.alert(data.message);
     },
   });
 };
@@ -25,11 +25,11 @@ export const useOtpVerifyMutation = () => {
   return useMutation({
     mutationFn: ({ email, otp }: VerifyOtpRequest) =>
       authService.verifyOtpByEmail(email, otp),
-    onSuccess: () => {
-      Alert.alert("OTP 인증에 성공했습니다.");
+    onSuccess: (data) => {
+      Alert.alert(data.message);
     },
     onError: (error, requests, context) => {
-      Alert.alert("OTP 인증에 실패했습니다.");
+      Alert.alert(error.message);
     },
   });
 };
@@ -40,11 +40,11 @@ export const useSignupMutation = () => {
   return useMutation({
     mutationFn: ({ name, email, password }: SignupRequest) =>
       authService.signup(name, email, password),
-    onSuccess: () => {
-      Alert.alert("회원가입에 성공했습니다.");
+    onSuccess: (data) => {
+      Alert.alert(data.message);
     },
     onError: (error, requests, context) => {
-      Alert.alert("회원가입에 실패했습니다.");
+      Alert.alert(error.message);
     },
   });
 };
