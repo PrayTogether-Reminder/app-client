@@ -14,10 +14,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  checkAuthentication: () => {
-    return get().isAuthenticated;
-  },
-
   login: async (accessToken, refreshToken, user = null) => {
     await tokenUtils.saveTokens(accessToken, refreshToken);
     set({ isAuthenticated: true });
