@@ -19,7 +19,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import NameStep from "./_components/NameStep";
 import EmailStep from "./_components/EmailStep";
 import PasswordStep from "./_components/PasswordStep";
-import { useSignupMutation } from "@/domain/auth/hooks/mutations/authMutation";
+import { useSignupMutation } from "@/domain/auth/hooks/mutations/useAuthMutation";
 
 const SignupScreen: React.FC = () => {
   const theme = useTheme();

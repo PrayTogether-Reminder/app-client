@@ -19,6 +19,10 @@ import {
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
+import { useLoginMutation } from "@/domain/auth/hooks/mutations/useAuthMutation";
+import path from "@/common/constants/path";
+import { useAuthStore } from "@/domain/auth/stores/authStore";
+import { da } from "date-fns/locale";
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -28,22 +32,36 @@ export default function LoginScreen() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { mutate: loginRequest } = useLoginMutation();
+  const { login: setLoginState } = useAuthStore();
 
   const handleLogin = async () => {
     if (email.trim() === "" || password.trim() === "") {
       setError("이메일 혹은 비밀번호를 입력해주세요.");
       return;
     }
+
     setError(null);
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    if (email === "test@test.com" && password === "password") {
-      console.log("Login successful");
-      // router.replace('/(tabs)/');
-    } else {
-      setError("이메일 또는 비밀번호가 잘못되었습니다.");
-    }
-    setIsLoading(false);
+    loginRequest(
+      { email, password },
+      {
+        onSuccess: (data) => {
+          if (data === null || data === undefined) {
+            setError("로그인에 실패했습니다.");
+            return;
+          }
+          setLoginState(data.accessToken, data.refreshToken);
+          router.replace(path.showRoomList()); // 로그인 성공 시 홈 화면으로 이동
+        },
+        onError: (error) => {
+          setError(error?.message || "로그인에 실패했습니다.");
+        },
+        onSettled: () => {
+          setIsLoading(false);
+        },
+      }
+    );
   };
 
   return (

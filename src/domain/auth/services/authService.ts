@@ -4,6 +4,8 @@ import { OtpEmailRequest } from "../types/request/otpEmailRequest";
 import { VerifyOtpRequest } from "../types/request/verifyOtpRequest";
 import type { SignupRequest } from "../types/request/signupRequest";
 import { time } from "console";
+import type { LoginResponse } from "../types/response/loginResponse";
+import type { LoginRequest } from "../types/request/loginRequest";
 
 export const authService = {
   // 이메일 OTP 요청 API
@@ -47,5 +49,14 @@ export const authService = {
       password,
     } as SignupRequest);
     return response;
+  },
+
+  // 로그인
+  login: async (email: string, password: string): Promise<LoginResponse> => {
+    const response = await apiService.post<LoginResponse>(`/auth/login`, {
+      email,
+      password,
+    } as LoginRequest);
+    return response.data;
   },
 };

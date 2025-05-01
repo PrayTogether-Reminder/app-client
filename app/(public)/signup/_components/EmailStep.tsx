@@ -12,7 +12,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import {
   useOtpEmailRequestMutation,
   useOtpVerifyMutation,
-} from "@/domain/auth/hooks/mutations/authMutation";
+} from "@/domain/auth/hooks/mutations/useAuthMutation";
 export interface EmailStepProps {
   email: string;
   setEmail: (email: string) => void;
