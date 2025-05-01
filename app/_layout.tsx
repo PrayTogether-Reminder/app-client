@@ -24,31 +24,44 @@ function AuthStateListener({ children }: { children: ReactNode }) {
   const { initAuth, isAuthenticated, isLoading } = useAuthStore();
   const initialCheckRef = useRef(false);
 
+  // 초기 인증 체크를 위한 useEffect
   useEffect(() => {
-    if (isLoading) return;
+    if (isLoading || initialCheckRef.current) return;
 
-    // 최초 인증 체크 수행
-    if (!initialCheckRef.current) {
-      const checkAuth = async () => {
-        await initAuth();
-        initialCheckRef.current = true;
-      };
-      checkAuth();
-      return;
-    }
+    const checkAuth = async () => {
+      console.log("Starting initial auth check");
+      await initAuth();
+      initialCheckRef.current = true;
+      console.log("Initial auth check completed");
+    };
 
-    // 경로 확인
-    const isPublicRoute = segments[0] === ("(public)" as string);
+    checkAuth();
+  }, [isLoading, initAuth]);
+
+  // (protected) 접근에 대한 리디렉션 처리
+  useEffect(() => {
+    if (isLoading || !initialCheckRef.current) return;
     const isProtectedRoute = segments[0] === ("(protected)" as string);
-
     if (!isAuthenticated && isProtectedRoute) {
-      // 인증 상태 X + 앱 경로에 접근
+      // 인증 X + (protected) 접근 시
       router.replace(path.showWelcome());
-    } else if (isAuthenticated && isPublicRoute) {
-      // 인증 상태 O + 공개 경로에 접근
+    }
+  }, [isAuthenticated, isLoading, segments, router, initialCheckRef.current]);
+
+  // 인증 O + (public) OR root(welcome) 접근에 대한 리디렉션 처리
+  useEffect(() => {
+    // 로딩 중이거나 초기 체크가 아직 완료되지 않았으면 무시
+    if (isLoading || !initialCheckRef.current) return;
+    const isPublicRoute = segments[0] === ("(public)" as string);
+    const isRootRoute =
+      segments.length === (0 as number) ||
+      (segments.length === 1 && segments[0] === ("index" as string));
+
+    // 인증 O + (public OR root 경로)에 있다면 리디렉션
+    if (isAuthenticated && (isPublicRoute || isRootRoute)) {
       router.replace(path.showRoomList());
     }
-  }, [isAuthenticated, isLoading, segments, router]);
+  }, [isAuthenticated, isLoading, segments, router, initialCheckRef.current]);
 
   // 최초 로딩 중일 때만 로딩 화면 표시
   if (isLoading && !initialCheckRef.current) {
@@ -94,7 +107,7 @@ export default function RootLayout() {
               <Stack.Screen name="index" />
 
               <Stack.Screen
-                name="prayers/creation/index"
+                name="(protected)/prayers/creation/index"
                 options={{
                   animation: "slide_from_bottom",
                   presentation: "modal",

@@ -140,7 +140,7 @@ export default function LoginScreen() {
 
             <Button
               mode="text"
-              onPress={() => router.push("/(auth)/signup")}
+              onPress={() => router.push(path.showSignup())}
               style={styles.switchButton}
               disabled={isLoading}
               textColor={color.black}
