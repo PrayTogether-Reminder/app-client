@@ -3,13 +3,20 @@ import { MessageResponse } from "@/common/types/messageResponse";
 import { OtpEmailRequest } from "../types/request/otpEmailRequest";
 import { VerifyOtpRequest } from "../types/request/verifyOtpRequest";
 import type { SignupRequest } from "../types/request/signupRequest";
+import { time } from "console";
 
 export const authService = {
   // 이메일 OTP 요청 API
   requestOtpByEmail: async (email: string): Promise<MessageResponse> => {
-    const response = await apiService.post<MessageResponse>(`/auth/otp/email`, {
-      email,
-    } as OtpEmailRequest);
+    const response = await apiService.post<MessageResponse>(
+      `/auth/otp/email`,
+      {
+        email,
+      } as OtpEmailRequest,
+      {
+        timeout: 10000, // 10초
+      }
+    );
     return response;
   },
 
