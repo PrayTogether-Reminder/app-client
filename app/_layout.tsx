@@ -39,9 +39,9 @@ function AuthStateListener({ children }: { children: ReactNode }) {
 
     // 경로 확인
     const isPublicRoute = segments[0] === ("(public)" as string);
-    const isAuthenticatedRoute = segments[0] === ("(app)" as string);
+    const isProtectedRoute = segments[0] === ("(protected)" as string);
 
-    if (!isAuthenticated && isAuthenticatedRoute) {
+    if (!isAuthenticated && isProtectedRoute) {
       // 인증 상태 X + 앱 경로에 접근
       router.replace(path.showWelcome());
     } else if (isAuthenticated && isPublicRoute) {
