@@ -1,15 +1,16 @@
 import { Route } from "expo-router";
 
 const path = {
-  showRoomList: () => "/rooms" as Route,
-  showRoomById: (id: number) => `/rooms/${id}` as Route,
-  showPrayersContentById: (id: number) => `/prayers/${id}` as Route,
-  showPrayersCreate: () => "/prayers/creation" as Route,
+  showRoomList: () => "/(app)/rooms" as Route,
+  showRoomById: (id: number) => `/(app)/rooms/${id}` as Route,
+  showPrayersContentById: (id: number) => `/(app)/prayers/${id}` as Route,
+  showPrayersCreate: () => "/(app)/prayers/creation" as Route,
   showPrayersUpdateById: (id: number | null) =>
-    `/prayers/${id}/update` as Route,
-  showInvitations: () => "my-page/invitations" as Route,
-  showLogin: () => "/(auth)/login" as Route,
-  showSignup: () => "/(auth)/signup" as Route,
+    `/(app)/prayers/${id}/update` as Route,
+  showInvitations: () => "/(app)/my-page/invitations" as Route,
+  showLogin: () => "/(public)/login" as Route,
+  showSignup: () => "/(public)/signup" as Route,
+  showWelcome: () => "/" as Route,
 };
 
 export default path;
