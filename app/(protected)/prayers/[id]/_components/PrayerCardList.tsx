@@ -10,8 +10,10 @@ import {
 import { RFValue } from "react-native-responsive-fontsize";
 import { PrayerContent } from "../../../../../src/domain/prayers/types/prayerContent";
 import PrayerCard from "./PrayerCard";
+import type { Room } from "@/domain/rooms/types/room";
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+
 const { height } = Dimensions.get("window");
 
 interface PrayerCardListProps {
@@ -89,6 +91,10 @@ export default function PrayerCardList({
     <AnimatedFlatList
       ref={flatListRef}
       data={prayerContents}
+      keyExtractor={(item, index) => {
+        const prayerItem = item as PrayerContent;
+        return String(prayerItem.id || `item-${index}`);
+      }}
       renderItem={renderItem}
       showsVerticalScrollIndicator={true}
       decelerationRate={Platform.OS === "ios" ? "normal" : 0.92}

@@ -76,7 +76,12 @@ export default function PrayerTitleList(): JSX.Element {
       contentContainerStyle={styles.flatListContent}
       data={prayerTitles}
       renderItem={renderTitleItem}
-      keyExtractor={(item) => String(item.id)}
+      keyExtractor={(item, index) => {
+        if (!item || item.id === undefined) {
+          return `prayer-title-${index}`;
+        }
+        return String(item.id);
+      }}
       refreshing={isRefetching}
       onRefresh={onRefresh}
       ListHeaderComponent={
