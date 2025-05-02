@@ -14,6 +14,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useAuthStore } from "@/domain/auth/stores/authStore";
 import path from "@/common/constants/path";
+import AuthEventListener from "./../src/domain/auth/events/authEventListener";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -102,6 +103,7 @@ export default function RootLayout() {
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <CustomQueryClientProvider>
           <StatusBar backgroundColor={backgroundColor.white} />
+          <AuthEventListener />
           <AuthStateListener>
             <Stack screenOptions={{ headerShown: false }}>
               <Stack.Screen name="index" />

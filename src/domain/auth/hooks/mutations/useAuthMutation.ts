@@ -5,6 +5,7 @@ import { authService } from "../../services/authService";
 import type { VerifyOtpRequest } from "../../types/request/verifyOtpRequest";
 import type { SignupRequest } from "../../types/request/signupRequest";
 import type { LoginRequest } from "../../types/request/loginRequest";
+import type { LogoutRequest } from "../../types/request/logoutRequest";
 
 export const useOtpEmailRequestMutation = () => {
   const queryClient = useQueryClient();
@@ -55,6 +56,17 @@ export const useLoginMutation = () => {
     mutationFn: ({ email, password }: LoginRequest) =>
       authService.login(email, password),
     onError: (error, requests, context) => {
+      Alert.alert(error.message);
+    },
+  });
+};
+
+export const useLogoutMutation = () => {
+  return useMutation({
+    mutationFn: ({ refreshToken }: LogoutRequest) =>
+      authService.logout(refreshToken),
+    onError: (error, requests, context) => {
+      console.error("로그아웃 실패:", error);
       Alert.alert(error.message);
     },
   });

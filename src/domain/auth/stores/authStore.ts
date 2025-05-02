@@ -48,4 +48,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({ isLoading: false });
     }
   },
+
+  getRefreshToken: async () => {
+    try {
+      const refreshToken = await tokenUtils.getRefreshToken();
+      return refreshToken || "";
+    } catch (error) {
+      console.error("리프레시 토큰 가져오기 중 오류 발생:", error);
+      throw error;
+    }
+  },
 }));

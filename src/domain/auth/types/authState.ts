@@ -4,4 +4,5 @@ export interface AuthState {
   initAuth: () => Promise<void>;
   login: (accessToken: string, refreshToken: string) => Promise<void>;
   logout: () => Promise<void>;
+  getRefreshToken: () => Promise<string>;
 }

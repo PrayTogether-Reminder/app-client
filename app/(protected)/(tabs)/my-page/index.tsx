@@ -7,21 +7,36 @@ import Top4Body10 from "@/common/layout/Top4Body10"; // Adjust path as needed
 import ProfileSection from "../../my-page/index/_components/ProfileSection";
 import ListSection from "../../my-page/index/_components/ListSection";
 import path from "@/common/constants/path";
+import { useLogoutMutation } from "@/domain/auth/hooks/mutations/useAuthMutation";
+import { useAuthStore } from "@/domain/auth/stores/authStore";
 
 type MyPageScreenProps = {};
 
 export default function MyPageScreen(props: MyPageScreenProps) {
   const router = useRouter();
-
+  const { mutate: logoutRequest } = useLogoutMutation();
+  const { getRefreshToken, logout: setLogoutState } = useAuthStore();
   function handleGoToInvitations() {
     console.log("초대 목록 화면으로 이동");
-    router.push(path.showInvitations()); // 초대 목록 화면 경로 (예시)
+    router.push(path.showInvitations());
   }
 
-  function handleLogout() {
+  async function handleLogout() {
     console.log("로그아웃 처리");
-    // 로그아웃 로직 후 로그인 화면 등으로 이동
-    // router.replace('/login'); // 예시: 스택에서 현재 화면 제거하고 이동
+    try {
+      const refreshToken = await getRefreshToken();
+      logoutRequest(
+        { refreshToken },
+        {
+          onSuccess: () => {
+            setLogoutState();
+            router.replace(path.showWelcome());
+          },
+        }
+      );
+    } catch (error) {
+      console.error("로그아웃 중 오류 발생:", error);
+    }
   }
 
   return (

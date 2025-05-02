@@ -5,6 +5,7 @@ import axios, {
 } from "axios";
 import BASE_API_URL from "./apiUrl";
 import { tokenUtils } from "@/domain/auth/utils/tokenUtils";
+import { authEvents } from "@/domain/auth/events/authEvents";
 
 interface ApiResponse<T = any> {
   data: T;
@@ -44,18 +45,22 @@ const createNetworkError = (): ApiError => ({
 });
 
 // 토큰 갱신 함수
-const refreshAuthToken = async (refreshToken: string) => {
-  return await axios.post(`${BASE_API_URL}/auth/reissue-token`, {
-    refreshToken,
-  });
+const fetchRefreshToken = async (refreshToken: string) => {
+  return await axios.post(
+    `${BASE_API_URL}/auth/reissue-token`,
+    {
+      refreshToken,
+    },
+    { headers: { "Content-Type": "application/json" } }
+  );
 };
 
 // 로그아웃 처리 후 인증 에러 반환 함수
-const handleLogoutAndReject = async (): Promise<never> => {
+const handleLogoutFromInvalidAuthToken = async (): Promise<void> => {
   await tokenUtils.clearTokens();
-  return Promise.reject(createAuthRequiredError());
+  authEvents.emit("AUTH_REQUIRED");
+  return;
 };
-
 // 요청 인터셉터 추가
 api.interceptors.request.use(
   async (config) => {
@@ -73,9 +78,43 @@ api.interceptors.request.use(
       config.url?.includes(path)
     );
 
-    // 인증이 필요한 요청에만 토큰 추가
+    // 인증이 필요한 요청인 경우
     if (isAuthRequired) {
-      const accessToken = await tokenUtils.getAccessToken();
+      let accessToken = await tokenUtils.getAccessToken();
+
+      // access 가 없는 경우 토큰 재발급 시도
+      if (!accessToken) {
+        const refreshToken = await tokenUtils.getRefreshToken();
+
+        if (refreshToken) {
+          // refresh가 있다면
+          try {
+            console.log("토큰 재발급 요청 시작");
+            const response = await fetchRefreshToken(refreshToken);
+
+            if (
+              response.data &&
+              response.data.accessToken &&
+              response.data.refreshToken
+            ) {
+              const newAccessToken = response.data.accessToken;
+              const newRefreshToken =
+                response.data.refreshToken || refreshToken;
+              await tokenUtils.saveTokens(newAccessToken, newRefreshToken);
+              console.log("토큰 재발급 성공");
+            }
+          } catch (error) {
+            console.log("토큰 재발급 실패 error :", error);
+            authEvents.emit("AUTH_REQUIRED");
+          }
+        } else {
+          // refresh가 없다면
+          console.log("리프레시 토큰이 없습니다.");
+          authEvents.emit("AUTH_REQUIRED"); // welcome 화면으로 이동
+        }
+      }
+
+      // 액세스 토큰이 있으면 헤더에 추가
       if (accessToken) {
         config.headers = config.headers || {};
         config.headers.Authorization = `Bearer ${accessToken}`;
@@ -90,6 +129,7 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
 api.interceptors.response.use(
   (response: AxiosResponse) => {
     return response;
@@ -99,7 +139,8 @@ api.interceptors.response.use(
       _retry?: boolean;
     };
 
-    console.log("response network error=" + error);
+    console.log("response error status=", error.response?.status);
+    console.log("response error data=", error.response?.data);
 
     // 네트워크 에러 처리
     if (!error.response) {
@@ -109,35 +150,39 @@ api.interceptors.response.use(
     const errorData = error.response.data as any;
 
     // 401 에러 처리 (토큰 만료)
-    if (
-      error.response.status === 401 &&
-      !originalRequest._retry &&
-      (errorData?.code === "AUTH-005" || errorData?.code === "AUTH-006") // expired or invalid
-    ) {
+    if (error.response.status === 401 && !originalRequest._retry) {
       try {
         const refreshToken = await tokenUtils.getRefreshToken();
+
         if (!refreshToken) {
-          return handleLogoutAndReject();
+          // refresh가 없다면
+          return handleLogoutFromInvalidAuthToken();
         }
 
         // 리프레시 토큰으로 새 액세스 토큰 요청
         originalRequest._retry = true;
-        const response = await refreshAuthToken(refreshToken);
+        const response = await fetchRefreshToken(refreshToken);
+        console.log("Changed Token refresh response:", response.data);
 
-        if (response.data && response.data.accessToken) {
+        if (
+          response.data &&
+          response.data.accessToken &&
+          response.data.refreshToken
+        ) {
           const newAccessToken = response.data.accessToken;
           const newRefreshToken = response.data.refreshToken || refreshToken;
 
           await tokenUtils.saveTokens(newAccessToken, newRefreshToken);
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          console.log("Retrying original request with new token:");
           return axios(originalRequest); // 원래 요청 재시도
         }
 
         // 토큰 응답이 올바르지 않은 경우
-        return handleLogoutAndReject();
+        return handleLogoutFromInvalidAuthToken();
       } catch (refreshError) {
         console.log("refresh token error=", refreshError);
-        return handleLogoutAndReject();
+        return handleLogoutFromInvalidAuthToken();
       }
     }
 

@@ -6,6 +6,7 @@ import type { SignupRequest } from "../types/request/signupRequest";
 import { time } from "console";
 import type { LoginResponse } from "../types/response/loginResponse";
 import type { LoginRequest } from "../types/request/loginRequest";
+import type { LogoutRequest } from "../types/request/logoutRequest";
 
 export const authService = {
   // 이메일 OTP 요청 API
@@ -58,5 +59,12 @@ export const authService = {
       password,
     } as LoginRequest);
     return response.data;
+  },
+
+  // 로그아웃
+  logout: async (refreshToken: string): Promise<void> => {
+    const response = await apiService.post<LoginResponse>(`/auth/logout`, {
+      refreshToken,
+    } as LogoutRequest);
   },
 };
