@@ -146,23 +146,33 @@ const SignupScreen: React.FC = () => {
       setPasswordError("");
     }
 
+    if (hasError) {
+      setIsSubmitting(false);
+      return false;
+    }
+
     setIsSubmitting(true);
-    if (hasError) return false;
 
-    singup(
-      { name, email, password },
-      {
-        onSuccess: () => {
-          router.replace(path.showLogin());
-          setIsSubmitting(false);
-        },
-        onError: () => {
-          setIsSubmitting(false);
-        },
-      }
-    );
-
-    return true;
+    try {
+      singup(
+        { name, email, password },
+        {
+          onSuccess: () => {
+            router.replace(path.showLogin());
+            setIsSubmitting(false);
+          },
+          onError: (error) => {
+            setPasswordError("회원가입 중 오류가 발생했습니다.");
+            setIsSubmitting(false);
+          },
+        }
+      );
+      return true;
+    } catch (error) {
+      setPasswordError("예상치 못한 오류가 발생했습니다.");
+      setIsSubmitting(false);
+      return false;
+    }
   };
 
   return (
