@@ -150,7 +150,7 @@ api.interceptors.response.use(
     const errorData = error.response.data as any;
 
     // 401 에러 처리 (토큰 만료)
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if (errorData.status === 401 && !originalRequest._retry) {
       try {
         const refreshToken = await tokenUtils.getRefreshToken();
 
@@ -190,7 +190,7 @@ api.interceptors.response.use(
     const apiError = {
       code: errorData?.code || "UNKNOWN_ERROR",
       message: errorData?.message || "알 수 없는 에러가 발생했습니다.",
-      status: error.response.status,
+      status: errorData?.status || 400,
     } as ApiError;
 
     console.log("apiError=", apiError);
