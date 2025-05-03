@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { type JSX } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -51,7 +51,7 @@ export default function PrayerTitleList(): JSX.Element {
   const handlePrayerTitlePress = (title: PrayerTitle): void => {
     if (!title) return;
     selectTitle(title);
-    console.log("Selected prayerTitle:", title.title);
+    console.log("Selected prayerTitle:", title);
     router.push(path.showPrayersContentById(title.id));
   };
 

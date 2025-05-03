@@ -1,4 +1,4 @@
 export enum INVITATION_STATUS {
-  ACCEPT = "ACCEPT",
-  REJECT = "REJECT",
+  ACCEPT = "ACCEPTED",
+  REJECT = "REJECTED",
 }

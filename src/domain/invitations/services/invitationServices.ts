@@ -20,13 +20,12 @@ export const invitationService = {
 
   // 초대 목록 조회
   fetch: async (): Promise<Invitation[]> => {
-    const response = await apiService.get<FetchInvitationsResponse>(
-      `/invitations`
-    );
+    const response =
+      await apiService.get<FetchInvitationsResponse>(`/invitations`);
     return response.data.invitations;
   },
 
-  // 초대 응답 상태 없데이트 - AEECPT or REJECT
+  // 초대 응답 상태 없데이트 - AEECPTED or REJECTED
   updateStatus: async (
     invitationId: number,
     status: INVITATION_STATUS
