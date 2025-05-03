@@ -1,10 +1,12 @@
 import { useEffect } from "react";
 import { useRouter } from "expo-router";
-import { authEvents } from "../events/authEvents";
+import { useAuthStore } from "../stores/authStore";
 import path from "@/common/constants/path";
+import { on } from "events";
 
 export default function AuthEventListener() {
   const router = useRouter();
+  const onAuthRequired = useAuthStore((state) => state.onAuthRequired);
 
   useEffect(() => {
     const handleAuthRequired = () => {
@@ -12,14 +14,12 @@ export default function AuthEventListener() {
       router.replace(path.showWelcome());
     };
 
-    // 이벤트 구독
-    authEvents.on("AUTH_REQUIRED", handleAuthRequired);
+    const unsubcribe = onAuthRequired(handleAuthRequired);
 
-    // 클린업 함수
     return () => {
-      authEvents.removeListener("AUTH_REQUIRED", handleAuthRequired);
+      unsubcribe();
     };
-  }, [router]);
+  }, [router, onAuthRequired]);
 
   return null;
 }

@@ -5,6 +5,7 @@ import { AuthState } from "../types/authState";
 export const useAuthStore = create<AuthState>((set, get) => ({
   isAuthenticated: false,
   isLoading: false,
+  authRequiredListeners: [],
 
   initAuth: async () => {
     set({ isLoading: true });
@@ -57,5 +58,29 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       console.error("리프레시 토큰 가져오기 중 오류 발생:", error);
       throw error;
     }
+  },
+
+  emitAuthRequired: () => {
+    const { authRequiredListeners } = get();
+    authRequiredListeners.forEach((listener) => listener());
+  },
+
+  onAuthRequired: (listener) => {
+    set((state) => ({
+      authRequiredListeners: [...state.authRequiredListeners, listener],
+    }));
+
+    // unsubscribe 함수 반환
+    return () => {
+      get().removeAuthRequiredListener(listener);
+    };
+  },
+
+  removeAuthRequiredListener: (listener) => {
+    set((state) => ({
+      authRequiredListeners: state.authRequiredListeners.filter(
+        (l) => l !== listener
+      ),
+    }));
   },
 }));

@@ -5,7 +5,7 @@ import axios, {
 } from "axios";
 import BASE_API_URL from "./apiUrl";
 import { tokenUtils } from "@/domain/auth/utils/tokenUtils";
-import { authEvents } from "@/domain/auth/events/authEvents";
+import { useAuthStore } from "@/domain/auth/stores/authStore";
 
 interface ApiResponse<T = any> {
   data: T;
@@ -56,10 +56,10 @@ const fetchRefreshToken = async (refreshToken: string) => {
 };
 
 // 로그아웃 처리 후 인증 에러 반환 함수
-const handleLogoutFromInvalidAuthToken = async (): Promise<void> => {
+const handleLogoutFromInvalidAuthToken = async (): Promise<never> => {
   await tokenUtils.clearTokens();
-  authEvents.emit("AUTH_REQUIRED");
-  return;
+  useAuthStore.getState().emitAuthRequired();
+  return Promise.reject(createAuthRequiredError());
 };
 // 요청 인터셉터 추가
 api.interceptors.request.use(
@@ -101,16 +101,17 @@ api.interceptors.request.use(
               const newRefreshToken =
                 response.data.refreshToken || refreshToken;
               await tokenUtils.saveTokens(newAccessToken, newRefreshToken);
+              accessToken = newAccessToken;
               console.log("토큰 재발급 성공");
             }
           } catch (error) {
             console.log("토큰 재발급 실패 error :", error);
-            authEvents.emit("AUTH_REQUIRED");
+            useAuthStore.getState().emitAuthRequired();
           }
         } else {
           // refresh가 없다면
           console.log("리프레시 토큰이 없습니다.");
-          authEvents.emit("AUTH_REQUIRED"); // welcome 화면으로 이동
+          useAuthStore.getState().emitAuthRequired();
         }
       }
 
@@ -175,7 +176,7 @@ api.interceptors.response.use(
           await tokenUtils.saveTokens(newAccessToken, newRefreshToken);
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           console.log("Retrying original request with new token:");
-          return axios(originalRequest); // 원래 요청 재시도
+          return api(originalRequest); // 원래 요청 재시도
         }
 
         // 토큰 응답이 올바르지 않은 경우
