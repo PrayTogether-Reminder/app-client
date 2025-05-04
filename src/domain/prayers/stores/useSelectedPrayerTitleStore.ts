@@ -16,6 +16,6 @@ export const useSelectedPrayerTitleStore = create<SelectedPrayerTitleStore>(
     select: (prayerTitle: PrayerTitle) =>
       set({ selectedPrayerTitle: prayerTitle }),
 
-    reset: () => set(initialState),
+    clear: () => set(initialState),
   })
 );

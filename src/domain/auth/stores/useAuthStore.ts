@@ -1,11 +1,20 @@
+// stores/authStore.ts
 import { create } from "zustand";
 import { tokenUtils } from "../utils/tokenUtils";
-import { AuthState } from "../types/authState";
+import { AuthStore, AuthState } from "../types/authStore";
+import { clearAllStore } from "@/common/services/clear/clearAllStore";
 
-export const useAuthStore = create<AuthState>((set, get) => ({
+// 초기 상태 정의
+const initialState: AuthState = {
   isAuthenticated: false,
   isLoading: false,
+  authRequiredListeners: [],
+};
 
+export const useAuthStore = create<AuthStore>((set, get) => ({
+  ...initialState,
+
+  // actions
   initAuth: async () => {
     set({ isLoading: true });
     try {
@@ -40,7 +49,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ isLoading: true });
     try {
       await tokenUtils.clearTokens();
-      set({ isAuthenticated: false });
+      clearAllStore();
     } catch (error) {
       console.error("로그아웃 중 오류 발생:", error);
       throw error;
@@ -57,5 +66,29 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       console.error("리프레시 토큰 가져오기 중 오류 발생:", error);
       throw error;
     }
+  },
+
+  emitAuthRequired: () => {
+    const { authRequiredListeners } = get();
+    authRequiredListeners.forEach((listener) => listener());
+  },
+
+  onAuthRequired: (listener) => {
+    set((state) => ({
+      authRequiredListeners: [...state.authRequiredListeners, listener],
+    }));
+
+    // unsubscribe 함수 반환
+    return () => {
+      set((state) => ({
+        authRequiredListeners: state.authRequiredListeners.filter(
+          (l) => l !== listener
+        ),
+      }));
+    };
+  },
+
+  clear: () => {
+    set(initialState);
   },
 }));

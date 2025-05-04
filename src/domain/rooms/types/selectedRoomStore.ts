@@ -6,7 +6,7 @@ export interface SelectedRoomState {
 
 export interface SelectedRoomAction {
   selectRoom: (room: Room) => void;
-  resetRoom: () => void;
+  clear: () => void;
 }
 
 export type SelectedRoomStore = SelectedRoomState & SelectedRoomAction;

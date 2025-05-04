@@ -6,13 +6,13 @@ import {
   Alert,
   BackHandler,
   Platform,
+  SafeAreaView,
 } from "react-native";
 import { useRouter } from "expo-router";
 import path from "@/common/constants/path";
 import PagerView from "react-native-pager-view";
 import type { PagerViewOnPageSelectedEventData } from "react-native-pager-view";
 import { useTheme, IconButton } from "react-native-paper";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { backgroundColor, color } from "@/common/styles/color";
 import { RFValue } from "react-native-responsive-fontsize";
 
