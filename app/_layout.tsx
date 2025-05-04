@@ -30,40 +30,34 @@ function AuthStateListener({ children }: { children: ReactNode }) {
     if (isLoading || initialCheckRef.current) return;
 
     const checkAuth = async () => {
-      console.log("Starting initial auth check");
       await initAuth();
       initialCheckRef.current = true;
-      console.log("Initial auth check completed");
     };
 
     checkAuth();
   }, [isLoading, initAuth]);
 
-  // (protected) 접근에 대한 리디렉션 처리
+  // 통합된 라우팅 처리
   useEffect(() => {
     if (isLoading || !initialCheckRef.current) return;
-    const isProtectedRoute = segments[0] === ("(protected)" as string);
-    if (!isAuthenticated && isProtectedRoute) {
-      // 인증 X + (protected) 접근 시
-      router.replace(path.showWelcome());
-    }
-  }, [isAuthenticated, isLoading, segments, router, initialCheckRef.current]);
 
-  // 인증 O + (public) OR root(welcome) 접근에 대한 리디렉션 처리
-  useEffect(() => {
-    // 로딩 중이거나 초기 체크가 아직 완료되지 않았으면 무시
-    if (isLoading || !initialCheckRef.current) return;
+    const isProtectedRoute = segments[0] === ("(protected)" as string);
     const isPublicRoute = segments[0] === ("(public)" as string);
     const isRootRoute =
       segments.length === (0 as number) ||
       (segments.length === 1 && segments[0] === ("index" as string));
 
-    // 인증 O + (public OR root 경로)에 있다면 리디렉션
-    if (isAuthenticated && (isPublicRoute || isRootRoute)) {
+    // 인증되지 않은 상태에서 protected 라우트 접근
+    if (!isAuthenticated && isProtectedRoute) {
+      console.log("Redirecting to welcome page - not authenticated");
+      router.replace(path.showWelcome());
+    }
+    // 인증된 상태에서 public 또는 root 라우트 접근
+    else if (isAuthenticated && (isPublicRoute || isRootRoute)) {
+      console.log("Redirecting to room list - authenticated");
       router.replace(path.showRoomList());
     }
-  }, [isAuthenticated, isLoading, segments, router, initialCheckRef.current]);
-
+  }, [isAuthenticated, isLoading, segments, router]);
   // 최초 로딩 중일 때만 로딩 화면 표시
   if (isLoading && !initialCheckRef.current) {
     return <LoadingScreen />;

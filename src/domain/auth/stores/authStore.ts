@@ -72,15 +72,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     // unsubscribe 함수 반환
     return () => {
-      get().removeAuthRequiredListener(listener);
+      set((state) => ({
+        authRequiredListeners: state.authRequiredListeners.filter(
+          (l) => l !== listener
+        ),
+      }));
     };
-  },
-
-  removeAuthRequiredListener: (listener) => {
-    set((state) => ({
-      authRequiredListeners: state.authRequiredListeners.filter(
-        (l) => l !== listener
-      ),
-    }));
   },
 }));

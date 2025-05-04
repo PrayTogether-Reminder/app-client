@@ -8,5 +8,4 @@ export interface AuthState {
   getRefreshToken: () => Promise<string>;
   emitAuthRequired: () => void;
   onAuthRequired: (listener: () => void) => () => void;
-  removeAuthRequiredListener: (listener: () => void) => void;
 }
