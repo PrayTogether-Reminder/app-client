@@ -1,10 +1,17 @@
 import { create } from "zustand";
-import { PrayerUpdateStore } from "../types/prayerUpdateStore";
+import {
+  PrayerUpdateStore,
+  PrayerUpdateState,
+} from "../types/prayerUpdateStore";
 import { PrayerUpdateItem } from "../types/prayerUpdateItem";
+
+const initialState: PrayerUpdateState = {
+  prayerList: [],
+};
 
 export const usePrayerUpdateStore = create<PrayerUpdateStore>((set, get) => ({
   // state
-  prayerList: [],
+  ...initialState,
 
   // actions
   add: (prayer: PrayerUpdateItem) =>
@@ -31,5 +38,5 @@ export const usePrayerUpdateStore = create<PrayerUpdateStore>((set, get) => ({
     set((steat) => ({
       prayerList: prayers,
     })),
-  clear: () => set({ prayerList: [] }),
+  clear: () => set(initialState),
 }));

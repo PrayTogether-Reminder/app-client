@@ -1,12 +1,20 @@
+// stores/authStore.ts
 import { create } from "zustand";
 import { tokenUtils } from "../utils/tokenUtils";
-import { AuthStore } from "../types/authStore";
+import { AuthStore, AuthState } from "../types/authStore";
+import { clearAllStore } from "@/common/services/clear/clearAllStore";
 
-export const useAuthStore = create<AuthStore>((set, get) => ({
+// 초기 상태 정의
+const initialState: AuthState = {
   isAuthenticated: false,
   isLoading: false,
   authRequiredListeners: [],
+};
 
+export const useAuthStore = create<AuthStore>((set, get) => ({
+  ...initialState,
+
+  // actions
   initAuth: async () => {
     set({ isLoading: true });
     try {
@@ -41,7 +49,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     set({ isLoading: true });
     try {
       await tokenUtils.clearTokens();
-      set({ isAuthenticated: false });
+      clearAllStore();
     } catch (error) {
       console.error("로그아웃 중 오류 발생:", error);
       throw error;
@@ -80,11 +88,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     };
   },
 
-  resetStore: () => {
-    set({
-      isAuthenticated: false,
-      isLoading: false,
-      authRequiredListeners: [],
-    });
+  clear: () => {
+    set(initialState);
   },
 }));

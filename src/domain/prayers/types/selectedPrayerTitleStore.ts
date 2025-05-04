@@ -6,7 +6,7 @@ export interface SelectedPrayerTitleState {
 
 export interface SelectedPrayerTitleAction {
   select: (prayerTitle: PrayerTitle) => void;
-  reset: () => void;
+  clear: () => void;
 }
 
 export type SelectedPrayerTitleStore = SelectedPrayerTitleState &

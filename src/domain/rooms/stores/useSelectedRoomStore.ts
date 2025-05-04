@@ -14,5 +14,5 @@ export const useSelectedRoomStore = create<SelectedRoomStore>((set, get) => ({
 
   selectRoom: (room: Room) => set({ selectedRoom: room }),
 
-  resetRoom: () => set(initialState),
+  clear: () => set(initialState),
 }));

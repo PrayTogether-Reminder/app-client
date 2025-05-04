@@ -11,7 +11,7 @@ export interface AuthActions {
   getRefreshToken: () => Promise<string>;
   emitAuthRequired: () => void;
   onAuthRequired: (listener: () => void) => () => void;
-  resetStore: () => void;
+  clear: () => void;
 }
 
 export interface AuthStore extends AuthState, AuthActions {}
