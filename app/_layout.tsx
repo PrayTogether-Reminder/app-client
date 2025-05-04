@@ -12,7 +12,7 @@ import CustomQueryClientProvider from "../src/common/hooks/queries/customQueryCl
 import * as SplashScreen from "expo-splash-screen";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import { useAuthStore } from "@/domain/auth/stores/authStore";
+import { useAuthStore } from "@/domain/auth/stores/useAuthStore";
 import path from "@/common/constants/path";
 import AuthEventListener from "./../src/domain/auth/events/authEventListener";
 

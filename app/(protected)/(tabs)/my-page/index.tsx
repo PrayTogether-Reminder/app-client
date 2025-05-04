@@ -8,7 +8,7 @@ import ProfileSection from "../../my-page/index/_components/ProfileSection";
 import ListSection from "../../my-page/index/_components/ListSection";
 import path from "@/common/constants/path";
 import { useLogoutMutation } from "@/domain/auth/hooks/mutations/useAuthMutation";
-import { useAuthStore } from "@/domain/auth/stores/authStore";
+import { useAuthStore } from "@/domain/auth/stores/useAuthStore";
 
 type MyPageScreenProps = {};
 

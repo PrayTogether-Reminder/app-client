@@ -21,7 +21,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
 import { useLoginMutation } from "@/domain/auth/hooks/mutations/useAuthMutation";
 import path from "@/common/constants/path";
-import { useAuthStore } from "@/domain/auth/stores/authStore";
+import { useAuthStore } from "@/domain/auth/stores/useAuthStore";
 import { da } from "date-fns/locale";
 
 export default function LoginScreen() {

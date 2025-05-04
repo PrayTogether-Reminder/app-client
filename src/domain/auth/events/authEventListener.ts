@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from "react";
 import { useRouter } from "expo-router";
-import { useAuthStore } from "../stores/authStore";
+import { useAuthStore } from "../stores/useAuthStore";
 import path from "@/common/constants/path";
 
 export default function AuthEventListener() {

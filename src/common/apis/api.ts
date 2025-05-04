@@ -5,7 +5,7 @@ import axios, {
 } from "axios";
 import BASE_API_URL from "./apiUrl";
 import { tokenUtils } from "@/domain/auth/utils/tokenUtils";
-import { useAuthStore } from "@/domain/auth/stores/authStore";
+import { useAuthStore } from "@/domain/auth/stores/useAuthStore";
 import { use } from "react";
 
 interface ApiResponse<T = any> {

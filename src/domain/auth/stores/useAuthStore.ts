@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { tokenUtils } from "../utils/tokenUtils";
-import { AuthState } from "../types/authState";
+import { AuthStore } from "../types/authStore";
 
-export const useAuthStore = create<AuthState>((set, get) => ({
+export const useAuthStore = create<AuthStore>((set, get) => ({
   isAuthenticated: false,
   isLoading: false,
   authRequiredListeners: [],
@@ -78,5 +78,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         ),
       }));
     };
+  },
+
+  resetStore: () => {
+    set({
+      isAuthenticated: false,
+      isLoading: false,
+      authRequiredListeners: [],
+    });
   },
 }));
