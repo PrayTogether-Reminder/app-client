@@ -1,134 +1,146 @@
+import * as SecureStore from "expo-secure-store";
 import messaging from "@react-native-firebase/messaging";
 import { Platform } from "react-native";
+import API_BASE_URL from "@/common/apis/apiUrl";
+import {
+  checkNotificationPermission,
+  requestNotificationPermission,
+} from "./notificationUtils";
+
+const FCM_TOKEN_KEY = "fcm_token";
 
 class PushNotificationService {
   private static instance: PushNotificationService;
 
   private constructor() {}
 
-  public static getInstance(): PushNotificationService {
+  static getInstance(): PushNotificationService {
     if (!PushNotificationService.instance) {
       PushNotificationService.instance = new PushNotificationService();
     }
     return PushNotificationService.instance;
   }
 
+  // 유틸리티 함수를 재사용하여 코드 중복 방지
+  async hasPermission(): Promise<boolean> {
+    return await checkNotificationPermission();
+  }
+
   async requestPermission(): Promise<boolean> {
-    const authStatus = await messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
+    const enabled = await requestNotificationPermission();
     if (enabled) {
-      console.log("FCM Authorization status:", authStatus);
+      // 권한 획득 시 토큰 저장
+      await this.saveFCMToken();
     }
-
     return enabled;
   }
 
   async getFCMToken(): Promise<string | null> {
     try {
-      // iOS에서는 APNs 토큰을 먼저 등록해야 함
-      if (Platform.OS === "ios") {
-        const apnsToken = await messaging().getAPNSToken();
-        if (!apnsToken) {
-          console.log("Failed to get APNs token");
-          return null;
-        }
-      }
-
-      const token = await messaging().getToken();
-      console.log("FCM Token:", token);
-      return token;
+      return await messaging().getToken();
     } catch (error) {
       console.error("Error getting FCM token:", error);
       return null;
     }
   }
 
-  setupNotificationListeners() {
-    // Foreground 메시지 수신
-    const unsubscribeOnMessage = messaging().onMessage(
-      async (remoteMessage) => {
-        console.log(
-          "Foreground message received:",
-          JSON.stringify(remoteMessage)
-        );
+  async saveFCMToken(): Promise<boolean> {
+    try {
+      const token = await this.getFCMToken();
+      if (token) {
+        await SecureStore.setItemAsync(FCM_TOKEN_KEY, token);
+        // 서버에 토큰 등록
+        await this.registerTokenWithServer(token);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Error saving FCM token:", error);
+      return false;
+    }
+  }
 
-        alert(
-          `${remoteMessage.notification?.title}\n${remoteMessage.notification?.body}`
-        );
+  async loadFCMToken(): Promise<string | null> {
+    try {
+      return await SecureStore.getItemAsync(FCM_TOKEN_KEY);
+    } catch (error) {
+      console.error("Error loading FCM token:", error);
+      return null;
+    }
+  }
+
+  // FCM 토큰 서버 등록
+  async registerTokenWithServer(token: string): Promise<boolean> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/users/fcm-token`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token }),
+      });
+
+      return response.ok;
+    } catch (error) {
+      console.error("Error registering token with server:", error);
+      return false;
+    }
+  }
+
+  // 추후 사용을 위해 남겨둡니다
+  async subscribeTopic(topic: string): Promise<boolean> {
+    try {
+      await messaging().subscribeToTopic(topic);
+      return true;
+    } catch (error) {
+      console.error(`Error subscribing to topic ${topic}:`, error);
+      return false;
+    }
+  }
+
+  // 추후 사용을 위해 남겨둡니다
+  async unsubscribeFromTopic(topic: string): Promise<boolean> {
+    try {
+      await messaging().unsubscribeFromTopic(topic);
+      return true;
+    } catch (error) {
+      console.error(`Error unsubscribing from topic ${topic}:`, error);
+      return false;
+    }
+  }
+
+  setupNotificationListeners() {
+    // 포그라운드 메시지 핸들러
+    const unsubscribeForeground = messaging().onMessage(
+      async (remoteMessage) => {
+        console.log("Foreground Message received:", remoteMessage);
+        // 여기서 로컬 알림을 표시하거나 앱 내 알림을 처리할 수 있습니다
       }
     );
 
-    // Background에서 앱이 열렸을 때
-    const unsubscribeOnNotificationOpenedApp =
-      messaging().onNotificationOpenedApp((remoteMessage) => {
-        console.log(
-          "Notification caused app to open from background:",
-          JSON.stringify(remoteMessage)
-        );
-        this.handleNotificationOpen(remoteMessage);
-      });
+    // 백그라운드 클릭 핸들러
+    messaging().onNotificationOpenedApp((remoteMessage) => {
+      console.log(
+        "Notification caused app to open from background state:",
+        remoteMessage
+      );
+      // 알림으로 앱이 열렸을 때의 처리 (예: 특정 화면으로 이동)
+    });
 
-    // 앱이 종료된 상태에서 열렸을 때
+    // 종료 상태에서 열림 체크
     messaging()
       .getInitialNotification()
       .then((remoteMessage) => {
         if (remoteMessage) {
           console.log(
             "Notification caused app to open from quit state:",
-            JSON.stringify(remoteMessage)
+            remoteMessage
           );
-          this.handleNotificationOpen(remoteMessage);
+          // 알림으로 앱이 열렸을 때의 처리
         }
       });
 
-    // cleanup 함수 반환
-    return () => {
-      unsubscribeOnMessage();
-      unsubscribeOnNotificationOpenedApp();
-    };
-  }
-
-  private handleNotificationOpen(remoteMessage: any) {
-    // 알림을 탭했을 때의 처리
-    console.log("Notification opened:", remoteMessage);
-
-    // 여기서 navigation 처리 등을 할 수 있습니다
-    if (remoteMessage.data?.screen) {
-      console.log("Navigate to screen:", remoteMessage.data.screen);
-      // navigation.navigate(remoteMessage.data.screen);
-    }
-  }
-
-  async subscribeTopic(topic: string) {
-    try {
-      await messaging().subscribeToTopic(topic);
-      console.log(`Subscribed to topic: ${topic}`);
-    } catch (error) {
-      console.error("Error subscribing to topic:", error);
-    }
-  }
-
-  async unsubscribeFromTopic(topic: string) {
-    try {
-      await messaging().unsubscribeFromTopic(topic);
-      console.log(`Unsubscribed from topic: ${topic}`);
-    } catch (error) {
-      console.error("Error unsubscribing from topic:", error);
-    }
-  }
-
-  // Background 메시지 핸들러 설정 (index.js에서 호출)
-  static setBackgroundMessageHandler() {
-    messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-      console.log(
-        "Background message received:",
-        JSON.stringify(remoteMessage)
-      );
-      // 여기서는 UI 업데이트를 할 수 없으므로 데이터 처리만 가능
-    });
+    return unsubscribeForeground;
   }
 }
 

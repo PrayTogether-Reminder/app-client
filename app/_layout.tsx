@@ -1,22 +1,20 @@
-import { Stack, useRouter, useSegments } from "expo-router";
-import { PaperProvider, DefaultTheme, MD3LightTheme } from "react-native-paper";
-import { useFonts } from "expo-font";
-import { View, ActivityIndicator } from "react-native";
-import { useEffect, useRef, ReactNode } from "react";
-import { ErrorBoundary } from "react-error-boundary";
-import { backgroundColor } from "../src/common/styles/color";
-import { StatusBar } from "expo-status-bar";
-import { color } from "@/common/styles/color";
-import ErrorFallback from "../src/common/components/error/ErrorFallback";
-import CustomQueryClientProvider from "../src/common/hooks/queries/customQueryClientProvider";
-import * as SplashScreen from "expo-splash-screen";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import { useAuthStore } from "@/domain/auth/stores/useAuthStore";
-import path from "@/common/constants/path";
-import AuthEventListener from "./../src/domain/auth/events/authEventListener";
 import AuthStateListener from "@/common/global/authStateListener";
 import LoadingScreen from "@/common/global/LoadingScreen";
+import { color } from "@/common/styles/color";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import { DefaultTheme, PaperProvider } from "react-native-paper";
+import ErrorFallback from "../src/common/components/error/ErrorFallback";
+import CustomQueryClientProvider from "../src/common/hooks/queries/customQueryClientProvider";
+import { backgroundColor } from "../src/common/styles/color";
+import AuthEventListener from "./../src/domain/auth/events/authEventListener";
+import NotificationInitializer from "@/common/services/notification/notificationInitializer";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -50,6 +48,7 @@ export default function RootLayout() {
       {/* catch rendering error */}
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <CustomQueryClientProvider>
+          <NotificationInitializer />
           <StatusBar backgroundColor={backgroundColor.white} />
           <AuthEventListener />
           <AuthStateListener>

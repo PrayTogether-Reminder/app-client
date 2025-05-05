@@ -21,6 +21,11 @@ export default function MyPageScreen(props: MyPageScreenProps) {
     router.push(path.showInvitations());
   }
 
+  function handleGoToNotifications() {
+    console.log("알림 설정 화면으로 이동");
+    router.push(path.showNotificationsSettings());
+  }
+
   async function handleLogout() {
     console.log("로그아웃 처리");
     try {
@@ -46,6 +51,7 @@ export default function MyPageScreen(props: MyPageScreenProps) {
         bodies={[
           <ListSection
             onGoToInvitations={handleGoToInvitations}
+            onGoToNotifications={handleGoToNotifications}
             onLogout={handleLogout}
           />,
         ]}

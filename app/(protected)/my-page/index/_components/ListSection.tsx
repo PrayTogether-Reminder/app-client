@@ -4,11 +4,13 @@ import { List, Button } from "react-native-paper";
 
 type ListSectionProps = {
   onGoToInvitations: () => void;
+  onGoToNotifications: () => void;
   onLogout: () => void;
 };
 
 export default function ListSection({
   onGoToInvitations,
+  onGoToNotifications,
   onLogout,
 }: ListSectionProps): React.ReactElement {
   return (
@@ -23,6 +25,13 @@ export default function ListSection({
           left={(props) => <List.Icon {...props} icon="email-outline" />}
           right={(props) => <List.Icon {...props} icon="chevron-right" />}
           onPress={onGoToInvitations}
+        />
+        <List.Item
+          title="알림 설정"
+          description="알림 수신 여부를 설정하세요."
+          left={(props) => <List.Icon {...props} icon="bell-outline" />}
+          right={(props) => <List.Icon {...props} icon="chevron-right" />}
+          onPress={onGoToNotifications}
         />
       </List.Section>
 

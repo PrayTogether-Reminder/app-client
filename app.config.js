@@ -21,6 +21,13 @@ module.exports = {
   },
   ios: {
     supportsTablet: true,
+    bundleIdentifier: "com.changhyeonkim.appclient",
+    googleServicesFile: "./GoogleService-Info.plist",
+    infoPlist: {
+      UIBackgroundModes: ["remote-notification"],
+      NSUserNotificationUsageDescription:
+        "앱에서 중요한 알림을 보내기 위해 알림 권한이 필요합니다.",
+    },
   },
   android: {
     adaptiveIcon: {
@@ -29,6 +36,8 @@ module.exports = {
     },
     softwareKeyboardLayoutMode: "pan",
     package: "com.changhyeonkim.appclient",
+    googleServicesFile: "./google-services.json",
+    permissions: ["RECEIVE_BOOT_COMPLETED", "VIBRATE"],
   },
   web: {
     favicon: "./assets/favicon.png",
@@ -44,6 +53,8 @@ module.exports = {
         },
       },
     ],
+    "@react-native-firebase/app",
+    "@react-native-firebase/messaging",
   ],
   extra: {
     router: {
@@ -53,8 +64,11 @@ module.exports = {
       projectId: "52261da3-842e-4d52-bba7-54ecd152b8d7",
     },
   },
-  // SDK 52
+  // SDK 53
   runtimeEnvs: {
     EXPO_PUBLIC_API_URL: API_URL ? API_URL : "There is no API URL",
+  },
+  development: {
+    developmentClient: true,
   },
 };
