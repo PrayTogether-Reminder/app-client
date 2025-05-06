@@ -3,6 +3,16 @@
     "version": ">= 7.4.0"
   },
   "build": {
+    "development": {
+      "developmentClient": true,
+      "android": {
+        "buildType": "apk"
+      },
+      "environment": "development",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "${EXPO_PUBLIC_API_URL}"
+      }
+    },
     "preview": {
       "android": {
         "buildType": "apk",
@@ -10,6 +20,7 @@
       },
       "developmentClient": true,
       "distribution": "internal",
+      "environment": "preview",
       "env": {
         "EXPO_PUBLIC_API_URL": "${EXPO_PUBLIC_API_URL}"
       }
@@ -19,6 +30,7 @@
         "buildType": "app-bundle",
         "gradleCommand": ":app:bundleRelease"
       },
+      "environment": "production",
       "env": {
         "EXPO_PUBLIC_API_URL": "${EXPO_PUBLIC_API_URL}"
       }
