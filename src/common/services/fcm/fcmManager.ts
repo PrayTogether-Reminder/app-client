@@ -10,24 +10,20 @@ import {
   subscribeToTopic,
   unsubscribeFromTopic,
 } from "@react-native-firebase/messaging";
-import API_BASE_URL from "@/common/apis/apiUrl";
-import {
-  checkNotificationPermission,
-  requestNotificationPermission,
-} from "./fcmUtils";
+import { checkNotificationPermission } from "./fcmUtils";
 
 const FCM_TOKEN_KEY = "fcm_token";
 
-class PushNotificationService {
-  private static instance: PushNotificationService;
+class FcmManager {
+  private static instance: FcmManager;
 
   private constructor() {}
 
-  static getInstance(): PushNotificationService {
-    if (!PushNotificationService.instance) {
-      PushNotificationService.instance = new PushNotificationService();
+  static getInstance(): FcmManager {
+    if (!FcmManager.instance) {
+      FcmManager.instance = new FcmManager();
     }
-    return PushNotificationService.instance;
+    return FcmManager.instance;
   }
 
   // 유틸리티 함수를 재사용하여 코드 중복 방지
@@ -36,17 +32,7 @@ class PushNotificationService {
     return await checkNotificationPermission();
   }
 
-  async requestPermission(): Promise<boolean> {
-    console.log("알림 권한 요청");
-    const enabled = await requestNotificationPermission();
-    if (enabled) {
-      // 권한 획득 시 토큰 저장
-      await this.saveFCMToken();
-    }
-    return enabled;
-  }
-
-  async getFCMToken(): Promise<string | null> {
+  async getFCMTokenByFB(): Promise<string | null> {
     console.log("FCM 토큰 요청 By Firebase");
     try {
       const app = getApp();
@@ -58,14 +44,11 @@ class PushNotificationService {
     }
   }
 
-  async saveFCMToken(): Promise<boolean> {
+  async saveFCMToken(token: string | null): Promise<boolean> {
     console.log("FCM 토큰 저장");
     try {
-      const token = await this.getFCMToken();
       if (token) {
         await SecureStore.setItemAsync(FCM_TOKEN_KEY, token);
-        // 서버에 토큰 등록
-        await this.registerTokenWithServer(token);
         return true;
       }
       return false;
@@ -75,32 +58,13 @@ class PushNotificationService {
     }
   }
 
-  async loadFCMToken(): Promise<string | null> {
+  async getFCMTokenByStorage(): Promise<string | null> {
     console.log("FCM 토큰 가져오기 By SecureStore");
     try {
       return await SecureStore.getItemAsync(FCM_TOKEN_KEY);
     } catch (error) {
       console.error("Error loading FCM token:", error);
       return null;
-    }
-  }
-
-  // FCM 토큰 서버 등록
-  async registerTokenWithServer(token: string): Promise<boolean> {
-    console.log("FCM 토큰 등록 To API Server");
-    try {
-      const response = await fetch(`${API_BASE_URL}/users/fcm-token`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token }),
-      });
-
-      return response.ok;
-    } catch (error) {
-      console.error("Error registering token with server:", error);
-      return false;
     }
   }
 
@@ -167,4 +131,4 @@ class PushNotificationService {
   }
 }
 
-export default PushNotificationService;
+export default FcmManager;

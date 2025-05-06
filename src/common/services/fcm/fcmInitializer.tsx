@@ -1,14 +1,16 @@
 import React, { useEffect } from "react";
 import { Alert } from "react-native";
 import { isFirstLaunch, setLaunched } from "./fcmUtils";
-import FcmService from "./fcmService";
+import FcmManager from "./fcmManager";
+import { useRegisterFcmTokenMutation } from "@/domain/notifications/hooks/useNotificationMutation";
 
 const FcmInitializer: React.FC = () => {
+  const { mutate: registerFcmTokenRequest } = useRegisterFcmTokenMutation();
   useEffect(() => {
     const initializePushNotifications = async () => {
       try {
         // FCM 서비스 인스턴스 획득
-        const fcmService = FcmService.getInstance();
+        const fcmManager = FcmManager.getInstance();
 
         const firstLaunch = await isFirstLaunch();
         if (firstLaunch) {
@@ -27,9 +29,12 @@ const FcmInitializer: React.FC = () => {
               {
                 text: "네",
                 onPress: async () => {
-                  const granted = await fcmService.requestPermission();
+                  const granted = await fcmManager.hasPermission();
                   if (granted) {
-                    console.log("Notification permission granted");
+                    const token = (await fcmManager.getFCMTokenByFB()) ?? "";
+                    await fcmManager.saveFCMToken(token);
+                    registerFcmTokenRequest({ fcmToken: token });
+                    console.log("Get FCM Token:", token);
                   }
                 },
               },
@@ -39,7 +44,7 @@ const FcmInitializer: React.FC = () => {
         }
 
         // 알림 리스너 설정 (항상 필요)
-        const unsubscribe = fcmService.setupNotificationListeners();
+        const unsubscribe = fcmManager.setupNotificationListeners();
 
         return () => {
           // 컴포넌트 언마운트 시 클린업
