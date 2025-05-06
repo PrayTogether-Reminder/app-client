@@ -1,4 +1,10 @@
-import messaging from "@react-native-firebase/messaging";
+import { getApp } from "@react-native-firebase/app";
+import {
+  getMessaging,
+  hasPermission as checkPermission,
+  requestPermission as requestPerm,
+  AuthorizationStatus,
+} from "@react-native-firebase/messaging";
 import * as SecureStore from "expo-secure-store";
 
 export const FIRST_LAUNCH_KEY = "already_launched";
@@ -6,10 +12,12 @@ export const FIRST_LAUNCH_KEY = "already_launched";
 // 알림 권한 확인
 export const checkNotificationPermission = async (): Promise<boolean> => {
   try {
-    const authStatus = await messaging().hasPermission();
+    const app = getApp();
+    const messaging = getMessaging(app);
+    const authStatus = await checkPermission(messaging);
     return (
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL
+      authStatus === AuthorizationStatus.AUTHORIZED ||
+      authStatus === AuthorizationStatus.PROVISIONAL
     );
   } catch (error) {
     console.error("Error checking notification permission:", error);
@@ -20,10 +28,12 @@ export const checkNotificationPermission = async (): Promise<boolean> => {
 // 알림 권한 요청
 export const requestNotificationPermission = async (): Promise<boolean> => {
   try {
-    const authStatus = await messaging().requestPermission();
+    const app = getApp();
+    const messaging = getMessaging(app);
+    const authStatus = await requestPerm(messaging);
     return (
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL
+      authStatus === AuthorizationStatus.AUTHORIZED ||
+      authStatus === AuthorizationStatus.PROVISIONAL
     );
   } catch (error) {
     console.error("Error requesting notification permission:", error);

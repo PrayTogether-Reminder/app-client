@@ -1,6 +1,15 @@
 import * as SecureStore from "expo-secure-store";
-import messaging from "@react-native-firebase/messaging";
 import { Platform } from "react-native";
+import { getApp } from "@react-native-firebase/app";
+import {
+  getMessaging,
+  getToken,
+  onMessage,
+  onNotificationOpenedApp,
+  getInitialNotification,
+  subscribeToTopic,
+  unsubscribeFromTopic,
+} from "@react-native-firebase/messaging";
 import API_BASE_URL from "@/common/apis/apiUrl";
 import {
   checkNotificationPermission,
@@ -23,10 +32,12 @@ class PushNotificationService {
 
   // 유틸리티 함수를 재사용하여 코드 중복 방지
   async hasPermission(): Promise<boolean> {
+    console.log("알림 권한 확인");
     return await checkNotificationPermission();
   }
 
   async requestPermission(): Promise<boolean> {
+    console.log("알림 권한 요청");
     const enabled = await requestNotificationPermission();
     if (enabled) {
       // 권한 획득 시 토큰 저장
@@ -36,8 +47,11 @@ class PushNotificationService {
   }
 
   async getFCMToken(): Promise<string | null> {
+    console.log("FCM 토큰 요청 By Firebase");
     try {
-      return await messaging().getToken();
+      const app = getApp();
+      const messaging = getMessaging(app);
+      return await getToken(messaging);
     } catch (error) {
       console.error("Error getting FCM token:", error);
       return null;
@@ -45,6 +59,7 @@ class PushNotificationService {
   }
 
   async saveFCMToken(): Promise<boolean> {
+    console.log("FCM 토큰 저장");
     try {
       const token = await this.getFCMToken();
       if (token) {
@@ -61,6 +76,7 @@ class PushNotificationService {
   }
 
   async loadFCMToken(): Promise<string | null> {
+    console.log("FCM 토큰 가져오기 By SecureStore");
     try {
       return await SecureStore.getItemAsync(FCM_TOKEN_KEY);
     } catch (error) {
@@ -71,6 +87,7 @@ class PushNotificationService {
 
   // FCM 토큰 서버 등록
   async registerTokenWithServer(token: string): Promise<boolean> {
+    console.log("FCM 토큰 등록 To API Server");
     try {
       const response = await fetch(`${API_BASE_URL}/users/fcm-token`, {
         method: "POST",
@@ -90,7 +107,9 @@ class PushNotificationService {
   // 추후 사용을 위해 남겨둡니다
   async subscribeTopic(topic: string): Promise<boolean> {
     try {
-      await messaging().subscribeToTopic(topic);
+      const app = getApp();
+      const messaging = getMessaging(app);
+      await subscribeToTopic(messaging, topic);
       return true;
     } catch (error) {
       console.error(`Error subscribing to topic ${topic}:`, error);
@@ -101,7 +120,9 @@ class PushNotificationService {
   // 추후 사용을 위해 남겨둡니다
   async unsubscribeFromTopic(topic: string): Promise<boolean> {
     try {
-      await messaging().unsubscribeFromTopic(topic);
+      const app = getApp();
+      const messaging = getMessaging(app);
+      await unsubscribeFromTopic(messaging, topic);
       return true;
     } catch (error) {
       console.error(`Error unsubscribing from topic ${topic}:`, error);
@@ -110,8 +131,12 @@ class PushNotificationService {
   }
 
   setupNotificationListeners() {
+    const app = getApp();
+    const messagingInstance = getMessaging(app);
+
     // 포그라운드 메시지 핸들러
-    const unsubscribeForeground = messaging().onMessage(
+    const unsubscribeForeground = onMessage(
+      messagingInstance,
       async (remoteMessage) => {
         console.log("Foreground Message received:", remoteMessage);
         // 여기서 로컬 알림을 표시하거나 앱 내 알림을 처리할 수 있습니다
@@ -119,7 +144,7 @@ class PushNotificationService {
     );
 
     // 백그라운드 클릭 핸들러
-    messaging().onNotificationOpenedApp((remoteMessage) => {
+    onNotificationOpenedApp(messagingInstance, (remoteMessage) => {
       console.log(
         "Notification caused app to open from background state:",
         remoteMessage
@@ -128,17 +153,15 @@ class PushNotificationService {
     });
 
     // 종료 상태에서 열림 체크
-    messaging()
-      .getInitialNotification()
-      .then((remoteMessage) => {
-        if (remoteMessage) {
-          console.log(
-            "Notification caused app to open from quit state:",
-            remoteMessage
-          );
-          // 알림으로 앱이 열렸을 때의 처리
-        }
-      });
+    getInitialNotification(messagingInstance).then((remoteMessage) => {
+      if (remoteMessage) {
+        console.log(
+          "Notification caused app to open from quit state:",
+          remoteMessage
+        );
+        // 알림으로 앱이 열렸을 때의 처리
+      }
+    });
 
     return unsubscribeForeground;
   }

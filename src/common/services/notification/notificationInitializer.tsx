@@ -1,5 +1,3 @@
-// src/common/notifications/NotificationInitializer.tsx
-
 import React, { useEffect } from "react";
 import { Alert } from "react-native";
 import { isFirstLaunch, setLaunched } from "./notificationUtils";
