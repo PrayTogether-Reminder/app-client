@@ -11,8 +11,6 @@ const path = {
   showLogin: () => "/(public)/login" as Route,
   showSignup: () => "/(public)/signup" as Route,
   showWelcome: () => "/" as Route,
-  showNotificationsSettings: () =>
-    "/(protected)/my-page/notifications" as Route,
 };
 
 export default path;
