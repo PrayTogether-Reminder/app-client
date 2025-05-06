@@ -5,7 +5,7 @@ export const notificationService = {
   // fcm 토큰 등록
   registerFcmToken: async (fcmToken: string): Promise<void> => {
     const response = await apiService.post<RegisterFcmTokenRequest>(
-      `/notification/fcm-token`,
+      `/notifications/fcm-token`,
       {
         fcmToken,
       } as RegisterFcmTokenRequest
