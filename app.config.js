@@ -21,7 +21,7 @@ module.exports = {
   },
   ios: {
     supportsTablet: true,
-    bundleIdentifier: "com.changhyeonkim.appclient",
+    bundleIdentifier: "site.praytogether",
     googleServicesFile: "./GoogleService-Info.plist",
     infoPlist: {
       UIBackgroundModes: ["remote-notification"],
@@ -35,7 +35,7 @@ module.exports = {
       backgroundColor: "#ffffff",
     },
     softwareKeyboardLayoutMode: "pan",
-    package: "com.changhyeonkim.appclient",
+    package: "site.praytogether",
     googleServicesFile: "./google-services.json",
     permissions: ["RECEIVE_BOOT_COMPLETED", "VIBRATE"],
   },
