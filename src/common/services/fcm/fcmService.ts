@@ -14,7 +14,7 @@ import API_BASE_URL from "@/common/apis/apiUrl";
 import {
   checkNotificationPermission,
   requestNotificationPermission,
-} from "./notificationUtils";
+} from "./fcmUtils";
 
 const FCM_TOKEN_KEY = "fcm_token";
 

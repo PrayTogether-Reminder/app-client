@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 import { Alert } from "react-native";
-import { isFirstLaunch, setLaunched } from "./notificationUtils";
-import PushNotificationService from "./pushNotificationService";
+import { isFirstLaunch, setLaunched } from "./fcmUtils";
+import FcmService from "./fcmService";
 
-const NotificationInitializer: React.FC = () => {
+const FcmInitializer: React.FC = () => {
   useEffect(() => {
     const initializePushNotifications = async () => {
       try {
         // FCM 서비스 인스턴스 획득
-        const pushService = PushNotificationService.getInstance();
+        const fcmService = FcmService.getInstance();
 
         const firstLaunch = await isFirstLaunch();
         if (firstLaunch) {
@@ -27,7 +27,7 @@ const NotificationInitializer: React.FC = () => {
               {
                 text: "네",
                 onPress: async () => {
-                  const granted = await pushService.requestPermission();
+                  const granted = await fcmService.requestPermission();
                   if (granted) {
                     console.log("Notification permission granted");
                   }
@@ -39,7 +39,7 @@ const NotificationInitializer: React.FC = () => {
         }
 
         // 알림 리스너 설정 (항상 필요)
-        const unsubscribe = pushService.setupNotificationListeners();
+        const unsubscribe = fcmService.setupNotificationListeners();
 
         return () => {
           // 컴포넌트 언마운트 시 클린업
@@ -56,4 +56,4 @@ const NotificationInitializer: React.FC = () => {
   return null;
 };
 
-export default NotificationInitializer;
+export default FcmInitializer;

@@ -14,7 +14,7 @@ import ErrorFallback from "../src/common/components/error/ErrorFallback";
 import CustomQueryClientProvider from "../src/common/hooks/queries/customQueryClientProvider";
 import { backgroundColor } from "../src/common/styles/color";
 import AuthEventListener from "./../src/domain/auth/events/authEventListener";
-import NotificationInitializer from "@/common/services/notification/notificationInitializer";
+import FcmInitializer from "@/common/services/fcm/fcmInitializer";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -48,7 +48,7 @@ export default function RootLayout() {
       {/* catch rendering error */}
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <CustomQueryClientProvider>
-          <NotificationInitializer />
+          <FcmInitializer />
           <StatusBar backgroundColor={backgroundColor.white} />
           <AuthEventListener />
           <AuthStateListener>

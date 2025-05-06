@@ -9,8 +9,8 @@ import ListSection from "../../my-page/index/_components/ListSection";
 import path from "@/common/constants/path";
 import { useLogoutMutation } from "@/domain/auth/hooks/mutations/useAuthMutation";
 import { useAuthStore } from "@/domain/auth/stores/useAuthStore";
-import PushNotificationService from "@/common/services/notification/pushNotificationService";
-import { checkNotificationPermission } from "@/common/services/notification/notificationUtils";
+import FcmService from "@/common/services/fcm/fcmService";
+import { checkNotificationPermission } from "@/common/services/fcm/fcmUtils";
 
 type MyPageScreenProps = {};
 
@@ -18,7 +18,7 @@ export default function MyPageScreen(props: MyPageScreenProps) {
   const router = useRouter();
   const { mutate: logoutRequest } = useLogoutMutation();
   const { getRefreshToken, logout: setLogoutState } = useAuthStore();
-  const pushService = PushNotificationService.getInstance();
+  const fcmService = FcmService.getInstance();
   const prevPermissionStatus = useRef<boolean | null>(null);
 
   // 알림 권한 확인 및 변경 처리 함수
@@ -43,7 +43,7 @@ export default function MyPageScreen(props: MyPageScreenProps) {
         // 알림 권한이 활성화된 경우 FCM 토큰 저장 및 등록
         if (currentPermissionStatus) {
           console.log("알림 권한 활성화 - FCM 토큰 처리 시작");
-          await pushService.saveFCMToken();
+          await fcmService.saveFCMToken();
         }
       }
 
