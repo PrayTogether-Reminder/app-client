@@ -6,34 +6,54 @@
     "development": {
       "developmentClient": true,
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "env": {
+          "GOOGLE_SERVICES_JSON": "GOOGLE_SERVICES_JSON",
+          "EXPO_PUBLIC_API_URL": "${EXPO_PUBLIC_API_URL}"
+        }
       },
-      "environment": "development",
-      "env": {
-        "EXPO_PUBLIC_API_URL": "${EXPO_PUBLIC_API_URL}"
-      }
+      "ios": {
+        "env": {
+          "GOOGLE_SERVICES_FILE_IOS": "GOOGLE_SERVICES_FILE_IOS",
+          "EXPO_PUBLIC_API_URL": "${EXPO_PUBLIC_API_URL}"
+        }
+      },
+      "environment": "development"
     },
     "preview": {
       "android": {
         "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease"
+        "gradleCommand": ":app:assembleRelease",
+        "env": {
+          "GOOGLE_SERVICES_JSON": "GOOGLE_SERVICES_JSON",
+          "EXPO_PUBLIC_API_URL": "${EXPO_PUBLIC_API_URL}"
+        }
       },
-      "developmentClient": true,
+      "ios": {
+        "env": {
+          "GOOGLE_SERVICES_FILE_IOS": "GOOGLE_SERVICES_FILE_IOS",
+          "EXPO_PUBLIC_API_URL": "${EXPO_PUBLIC_API_URL}"
+        }
+      },
       "distribution": "internal",
-      "environment": "preview",
-      "env": {
-        "EXPO_PUBLIC_API_URL": "${EXPO_PUBLIC_API_URL}"
-      }
+      "environment": "preview"
     },
     "production": {
       "android": {
         "buildType": "app-bundle",
-        "gradleCommand": ":app:bundleRelease"
+        "gradleCommand": ":app:bundleRelease",
+        "env": {
+          "GOOGLE_SERVICES_JSON": "GOOGLE_SERVICES_JSON",
+          "EXPO_PUBLIC_API_URL": "${EXPO_PUBLIC_API_URL}"
+        }
       },
-      "environment": "production",
-      "env": {
-        "EXPO_PUBLIC_API_URL": "${EXPO_PUBLIC_API_URL}"
-      }
+      "ios": {
+        "env": {
+          "GOOGLE_SERVICES_FILE_IOS": "GOOGLE_SERVICES_FILE_IOS",
+          "EXPO_PUBLIC_API_URL": "${EXPO_PUBLIC_API_URL}"
+        }
+      },
+      "environment": "production"
     }
   }
 }

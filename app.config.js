@@ -36,7 +36,8 @@ module.exports = {
     },
     softwareKeyboardLayoutMode: "pan",
     package: "site.praytogether",
-    googleServicesFile: "./google-services.json",
+    googleServicesFile:
+      process.env.GOOGLE_SERVICES_JSON || "./google-services.json",
     permissions: ["RECEIVE_BOOT_COMPLETED", "VIBRATE"],
   },
   web: {
