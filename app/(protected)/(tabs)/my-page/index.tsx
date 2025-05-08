@@ -11,7 +11,7 @@ import { useLogoutMutation } from "@/domain/auth/hooks/mutations/useAuthMutation
 import { useAuthStore } from "@/domain/auth/stores/useAuthStore";
 import FcmManager from "@/common/services/fcm/fcmManager";
 import { checkNotificationPermission } from "@/common/services/fcm/fcmUtils";
-import { useRegisterFcmTokenMutation } from "@/domain/notifications/hooks/useNotificationMutation";
+import { useRegisterFcmTokenMutation } from "@/domain/fcmToken/hooks/useFcmTokenMutation";
 
 type MyPageScreenProps = {};
 

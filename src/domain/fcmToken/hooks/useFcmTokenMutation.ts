@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { notificationService } from "../services/ntificationService";
+import { fcmTokenService } from "../services/fcmTokenService";
 import type { RegisterFcmTokenRequest } from "../types/registerFcmTokenDto";
 import { Alert } from "react-native";
 
@@ -7,7 +7,7 @@ import { Alert } from "react-native";
 export const useRegisterFcmTokenMutation = () => {
   return useMutation({
     mutationFn: ({ fcmToken }: RegisterFcmTokenRequest) =>
-      notificationService.registerFcmToken(fcmToken),
+      fcmTokenService.registerFcmToken(fcmToken),
     onSuccess: () => {},
     onError: (error) => {
       Alert.alert(error.message);

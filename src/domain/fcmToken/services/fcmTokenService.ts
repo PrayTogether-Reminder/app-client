@@ -1,11 +1,11 @@
 import type { RegisterFcmTokenRequest } from "../types/registerFcmTokenDto";
 import apiService from "@/common/apis/apiService";
 
-export const notificationService = {
+export const fcmTokenService = {
   // fcm 토큰 등록
   registerFcmToken: async (fcmToken: string): Promise<void> => {
     const response = await apiService.post<RegisterFcmTokenRequest>(
-      `/notifications/fcm-token`,
+      `/fcm-token`,
       {
         fcmToken,
       } as RegisterFcmTokenRequest

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Alert } from "react-native";
 import { isFirstLaunch, setLaunched } from "./fcmUtils";
 import FcmManager from "./fcmManager";
-import { useRegisterFcmTokenMutation } from "@/domain/notifications/hooks/useNotificationMutation";
+import { useRegisterFcmTokenMutation } from "@/domain/fcmToken/hooks/useFcmTokenMutation";
 
 const FcmInitializer: React.FC = () => {
   const { mutate: registerFcmTokenRequest } = useRegisterFcmTokenMutation();
