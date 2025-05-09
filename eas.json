@@ -4,18 +4,15 @@
   },
   "build": {
     "development": {
-      "developmentClient": true,
       "android": {
         "buildType": "apk",
         "env": {
-          "GOOGLE_SERVICES_JSON": "GOOGLE_SERVICES_JSON",
-          "EXPO_PUBLIC_API_URL": "${EXPO_PUBLIC_API_URL}"
+          "GOOGLE_SERVICES_JSON": "GOOGLE_SERVICES_JSON"
         }
       },
       "ios": {
         "env": {
-          "GOOGLE_SERVICES_FILE_IOS": "GOOGLE_SERVICES_FILE_IOS",
-          "EXPO_PUBLIC_API_URL": "${EXPO_PUBLIC_API_URL}"
+          "GOOGLE_SERVICES_FILE_IOS": "GOOGLE_SERVICES_FILE_IOS"
         }
       },
       "environment": "development"
@@ -25,14 +22,12 @@
         "buildType": "apk",
         "gradleCommand": ":app:assembleRelease",
         "env": {
-          "GOOGLE_SERVICES_JSON": "GOOGLE_SERVICES_JSON",
-          "EXPO_PUBLIC_API_URL": "${EXPO_PUBLIC_API_URL}"
+          "GOOGLE_SERVICES_JSON": "GOOGLE_SERVICES_JSON"
         }
       },
       "ios": {
         "env": {
-          "GOOGLE_SERVICES_FILE_IOS": "GOOGLE_SERVICES_FILE_IOS",
-          "EXPO_PUBLIC_API_URL": "${EXPO_PUBLIC_API_URL}"
+          "GOOGLE_SERVICES_FILE_IOS": "GOOGLE_SERVICES_FILE_IOS"
         }
       },
       "distribution": "internal",
@@ -43,14 +38,12 @@
         "buildType": "app-bundle",
         "gradleCommand": ":app:bundleRelease",
         "env": {
-          "GOOGLE_SERVICES_JSON": "GOOGLE_SERVICES_JSON",
-          "EXPO_PUBLIC_API_URL": "${EXPO_PUBLIC_API_URL}"
+          "GOOGLE_SERVICES_JSON": "GOOGLE_SERVICES_JSON"
         }
       },
       "ios": {
         "env": {
-          "GOOGLE_SERVICES_FILE_IOS": "GOOGLE_SERVICES_FILE_IOS",
-          "EXPO_PUBLIC_API_URL": "${EXPO_PUBLIC_API_URL}"
+          "GOOGLE_SERVICES_FILE_IOS": "GOOGLE_SERVICES_FILE_IOS"
         }
       },
       "environment": "production"

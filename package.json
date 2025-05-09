@@ -8,8 +8,8 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "mock": "node ../mock-server-api/mocks/server.js",
-    "build-preview": "eas build --platform android --profile preview",
-    "build-dev": "eas build --platform android --profile development"
+    "build-preview": "eas build --platform android --profile preview --clear-cache",
+    "build-dev": "eas build --platform android --profile development --clear-cache"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
