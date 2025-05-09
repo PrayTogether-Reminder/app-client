@@ -22,12 +22,17 @@ module.exports = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: "site.praytogether",
-    googleServicesFile: "./GoogleService-Info.plist",
+    googleServicesFile:
+      process.env.GOOGLE_SERVICES_FILE_IOS || "./GoogleService-Info.plist",
     infoPlist: {
       UIBackgroundModes: ["remote-notification"],
       NSUserNotificationUsageDescription:
         "앱에서 중요한 알림을 보내기 위해 알림 권한이 필요합니다.",
+      NSAppTransportSecurity: {
+        NSAllowsArbitraryLoads: true,
+      },
     },
+    buildNumber: "1",
   },
   android: {
     adaptiveIcon: {
@@ -39,6 +44,7 @@ module.exports = {
     googleServicesFile:
       process.env.GOOGLE_SERVICES_JSON || "./google-services.json",
     permissions: ["RECEIVE_BOOT_COMPLETED", "VIBRATE"],
+    versionCode: 1,
   },
   web: {
     favicon: "./assets/favicon.png",
@@ -51,6 +57,9 @@ module.exports = {
       {
         android: {
           usesCleartextTraffic: true,
+        },
+        ios: {
+          useFrameworks: "static",
         },
       },
     ],

@@ -11,6 +11,7 @@
         }
       },
       "ios": {
+        "buildType": "development",
         "env": {
           "GOOGLE_SERVICES_FILE_IOS": "GOOGLE_SERVICES_FILE_IOS"
         }
@@ -26,6 +27,8 @@
         }
       },
       "ios": {
+        "buildType": "archive",
+        "distribution": "internal",
         "env": {
           "GOOGLE_SERVICES_FILE_IOS": "GOOGLE_SERVICES_FILE_IOS"
         }
@@ -42,6 +45,8 @@
         }
       },
       "ios": {
+        "buildType": "archive",
+        "distribution": "store",
         "env": {
           "GOOGLE_SERVICES_FILE_IOS": "GOOGLE_SERVICES_FILE_IOS"
         }
