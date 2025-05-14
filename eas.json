@@ -5,33 +5,20 @@
   "build": {
     "development": {
       "android": {
-        "buildType": "apk",
-        "env": {
-          "GOOGLE_SERVICES_JSON": "GOOGLE_SERVICES_JSON"
-        }
+        "buildType": "apk"
       },
       "ios": {
-        "buildType": "development",
-        "env": {
-          "GOOGLE_SERVICES_FILE_IOS": "GOOGLE_SERVICES_FILE_IOS"
-        }
+        "simulator": true
       },
       "environment": "development"
     },
     "preview": {
       "android": {
         "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease",
-        "env": {
-          "GOOGLE_SERVICES_JSON": "GOOGLE_SERVICES_JSON"
-        }
+        "gradleCommand": ":app:assembleRelease"
       },
       "ios": {
-        "buildType": "archive",
-        "distribution": "internal",
-        "env": {
-          "GOOGLE_SERVICES_FILE_IOS": "GOOGLE_SERVICES_FILE_IOS"
-        }
+        "distribution": "internal"
       },
       "distribution": "internal",
       "environment": "preview"
@@ -39,17 +26,10 @@
     "production": {
       "android": {
         "buildType": "app-bundle",
-        "gradleCommand": ":app:bundleRelease",
-        "env": {
-          "GOOGLE_SERVICES_JSON": "GOOGLE_SERVICES_JSON"
-        }
+        "gradleCommand": ":app:bundleRelease"
       },
       "ios": {
-        "buildType": "archive",
-        "distribution": "store",
-        "env": {
-          "GOOGLE_SERVICES_FILE_IOS": "GOOGLE_SERVICES_FILE_IOS"
-        }
+        "distribution": "store"
       },
       "environment": "production"
     }
