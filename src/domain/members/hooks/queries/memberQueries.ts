@@ -1,6 +1,7 @@
 import QUERY_KEYS from "../../../../common/constants/queryKeys";
 import { memberService } from "../../services/memberService";
 import { UseQueryOptions, useQuery } from "@tanstack/react-query";
+import { FetchProfileResponse } from "../../types/response/fetchProfileResponse";
 
 // 사용자 프로필 조회 쿼리
 export const useProfileQuery = (
