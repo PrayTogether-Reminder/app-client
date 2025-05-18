@@ -1,5 +1,5 @@
 import * as SecureStore from "expo-secure-store";
-import { Platform } from "react-native";
+import { Alert, Platform } from "react-native";
 import { getApp } from "@react-native-firebase/app";
 import {
   getMessaging,
@@ -11,6 +11,7 @@ import {
   unsubscribeFromTopic,
 } from "@react-native-firebase/messaging";
 import { checkNotificationPermission } from "./fcmUtils";
+import * as Notifications from "expo-notifications";
 
 const FCM_TOKEN_KEY = "fcm_token";
 
@@ -103,7 +104,14 @@ class FcmManager {
       messagingInstance,
       async (remoteMessage) => {
         console.log("Foreground Message received:", remoteMessage);
-        // 여기서 로컬 알림을 표시하거나 앱 내 알림을 처리할 수 있습니다
+        await Notifications.scheduleNotificationAsync({
+          content: {
+            title: remoteMessage.notification?.title || "새 알림",
+            body: remoteMessage.notification?.body || "메시지 오류",
+            data: remoteMessage.data || {},
+          },
+          trigger: null, // null = 즉시 표시
+        });
       }
     );
 

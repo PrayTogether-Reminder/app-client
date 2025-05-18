@@ -3,10 +3,22 @@ import { Alert } from "react-native";
 import { isFirstLaunch, setLaunched } from "./fcmUtils";
 import FcmManager from "./fcmManager";
 import { useRegisterFcmTokenMutation } from "@/domain/fcmToken/hooks/useFcmTokenMutation";
+import * as Notifications from "expo-notifications";
 
 const FcmInitializer: React.FC = () => {
   const { mutate: registerFcmTokenRequest } = useRegisterFcmTokenMutation();
+
   useEffect(() => {
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true, // 포그라운드에서도 알림 표시
+        shouldPlaySound: true, // 소리 재생
+        shouldSetBadge: true, // 앱 아이콘에 배지 표시
+        shouldShowBanner: true, // iOS 16+ 배너 표시 여부
+        shouldShowList: true, // 알림 목록에 표시 여부
+      }),
+    });
+
     const initializePushNotifications = async () => {
       try {
         // FCM 서비스 인스턴스 획득
