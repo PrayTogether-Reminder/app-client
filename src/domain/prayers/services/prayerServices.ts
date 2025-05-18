@@ -29,7 +29,7 @@ export const prayerService = {
   // 기도 제목 무한 스크롤 조회
   fetchTitles: async (roomId: number | null, after: string = "0") => {
     const response = await apiService.get<FetchPrayerTitlesResponse>(
-      "/prayers",
+      "/prayers1",
       {
         roomId,
         after,
