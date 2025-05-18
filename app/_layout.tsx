@@ -1,5 +1,5 @@
 import AuthStateListener from "@/common/global/authStateListener";
-import LoadingScreen from "@/common/global/LoadingScreen";
+import LoadingScreen from "@/common/components/loading/LoadingScreen";
 import { color } from "@/common/styles/color";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";

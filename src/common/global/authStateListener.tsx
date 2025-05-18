@@ -2,7 +2,7 @@ import { useRouter, useSegments } from "expo-router";
 import React, { useEffect, useRef, ReactNode } from "react";
 import { useAuthStore } from "@/domain/auth/stores/useAuthStore";
 import path from "@/common/constants/path";
-import LoadingScreen from "@/common/global/LoadingScreen";
+import LoadingScreen from "@/common/components/loading/LoadingScreen";
 
 interface AuthStateListenerProps {
   children: ReactNode;
