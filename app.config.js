@@ -5,7 +5,7 @@ module.exports = {
   slug: "app-client",
   version: "1.0.0",
   orientation: "portrait",
-  icon: "./assets/icon.png",
+  icon: "./assets/main_logo.png",
   userInterfaceStyle: "light",
   newArchEnabled: true,
   experiments: {
@@ -15,7 +15,7 @@ module.exports = {
   },
   scheme: "pray-together-scheme",
   splash: {
-    image: "./assets/splash-icon.png",
+    image: "./assets/main_logo.png",
     resizeMode: "contain",
     backgroundColor: "#ffffff",
   },
@@ -31,12 +31,13 @@ module.exports = {
       NSAppTransportSecurity: {
         NSAllowsArbitraryLoads: true,
       },
+      ITSAppUsesNonExemptEncryption: false, // 암호화 관련 설정 추가
     },
     buildNumber: "1",
   },
   android: {
     adaptiveIcon: {
-      foregroundImage: "./assets/adaptive-icon.png",
+      foregroundImage: "./assets/main_logo.png",
       backgroundColor: "#ffffff",
     },
     softwareKeyboardLayoutMode: "pan",
@@ -47,7 +48,7 @@ module.exports = {
     versionCode: 1,
   },
   web: {
-    favicon: "./assets/favicon.png",
+    favicon: "./assets/main_logo.png",
   },
   plugins: [
     "expo-router",
@@ -65,13 +66,14 @@ module.exports = {
     ],
     "@react-native-firebase/app",
     "@react-native-firebase/messaging",
+    "expo-notifications",
   ],
   extra: {
     router: {
       origin: false,
     },
     eas: {
-      projectId: "52261da3-842e-4d52-bba7-54ecd152b8d7",
+      projectId: "193687a6-0b20-445e-8ecd-5b35de386246",
     },
   },
   // SDK 53
