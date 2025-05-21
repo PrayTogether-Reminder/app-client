@@ -3,25 +3,35 @@
     "version": ">= 7.4.0"
   },
   "build": {
+    "development": {
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "simulator": true
+      },
+      "environment": "development"
+    },
     "preview": {
       "android": {
         "buildType": "apk",
         "gradleCommand": ":app:assembleRelease"
       },
-      "developmentClient": true,
+      "ios": {
+        "distribution": "internal"
+      },
       "distribution": "internal",
-      "env": {
-        "EXPO_PUBLIC_API_URL": "${EXPO_PUBLIC_API_URL}"
-      }
+      "environment": "preview"
     },
     "production": {
       "android": {
         "buildType": "app-bundle",
         "gradleCommand": ":app:bundleRelease"
       },
-      "env": {
-        "EXPO_PUBLIC_API_URL": "${EXPO_PUBLIC_API_URL}"
-      }
+      "ios": {
+        "distribution": "store"
+      },
+      "environment": "production"
     }
   }
 }

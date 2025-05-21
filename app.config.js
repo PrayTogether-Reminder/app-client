@@ -5,7 +5,7 @@ module.exports = {
   slug: "app-client",
   version: "1.0.0",
   orientation: "portrait",
-  icon: "./assets/icon.png",
+  icon: "./assets/main_logo.png",
   userInterfaceStyle: "light",
   newArchEnabled: true,
   experiments: {
@@ -15,23 +15,40 @@ module.exports = {
   },
   scheme: "pray-together-scheme",
   splash: {
-    image: "./assets/splash-icon.png",
+    image: "./assets/main_logo.png",
     resizeMode: "contain",
     backgroundColor: "#ffffff",
   },
   ios: {
     supportsTablet: true,
+    bundleIdentifier: "site.praytogether",
+    googleServicesFile:
+      process.env.GOOGLE_SERVICES_FILE_IOS || "./GoogleService-Info.plist",
+    infoPlist: {
+      UIBackgroundModes: ["remote-notification"],
+      NSUserNotificationUsageDescription:
+        "앱에서 중요한 알림을 보내기 위해 알림 권한이 필요합니다.",
+      NSAppTransportSecurity: {
+        NSAllowsArbitraryLoads: true,
+      },
+      ITSAppUsesNonExemptEncryption: false, // 암호화 관련 설정 추가
+    },
+    buildNumber: "1",
   },
   android: {
     adaptiveIcon: {
-      foregroundImage: "./assets/adaptive-icon.png",
+      foregroundImage: "./assets/main_logo.png",
       backgroundColor: "#ffffff",
     },
     softwareKeyboardLayoutMode: "pan",
-    package: "com.changhyeonkim.appclient",
+    package: "site.praytogether",
+    googleServicesFile:
+      process.env.GOOGLE_SERVICES_JSON || "./google-services.json",
+    permissions: ["RECEIVE_BOOT_COMPLETED", "VIBRATE"],
+    versionCode: 1,
   },
   web: {
-    favicon: "./assets/favicon.png",
+    favicon: "./assets/main_logo.png",
   },
   plugins: [
     "expo-router",
@@ -42,18 +59,24 @@ module.exports = {
         android: {
           usesCleartextTraffic: true,
         },
+        ios: {
+          useFrameworks: "static",
+        },
       },
     ],
+    "@react-native-firebase/app",
+    "@react-native-firebase/messaging",
+    "expo-notifications",
   ],
   extra: {
     router: {
       origin: false,
     },
     eas: {
-      projectId: "52261da3-842e-4d52-bba7-54ecd152b8d7",
+      projectId: "193687a6-0b20-445e-8ecd-5b35de386246",
     },
   },
-  // SDK 52
+  // SDK 53
   runtimeEnvs: {
     EXPO_PUBLIC_API_URL: API_URL ? API_URL : "There is no API URL",
   },

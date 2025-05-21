@@ -15,6 +15,8 @@ import path from "../../../../../src/common/constants/path";
 import QUERY_KEYS from "../../../../../src/common/constants/queryKeys";
 import PrayerTitleItem from "./prayerTitleItem";
 import { backgroundColor } from "@/common/styles/color";
+import FetchError from "@/common/components/error/FetchError";
+import OverlayLoading from "../../../../../src/common/components/loading/OverlayLoading";
 
 const EmptyPrayerTitleList = () => {
   return (
@@ -38,6 +40,9 @@ export default function PrayerTitleList(): JSX.Element {
     isFetchingNextPage,
     isLoading,
     isRefetching,
+    refetch,
+    isError,
+    error,
   } = useInfinitePrayerTitlesQuery(roomId as number);
 
   const { refetch: membersRefetch } = useRoomMembersQuery(roomId);
@@ -70,37 +75,49 @@ export default function PrayerTitleList(): JSX.Element {
     membersRefetch();
   };
 
+  if (error) {
+    return (
+      <FetchError error={error} onRetry={refetch} isRetrying={isRefetching} />
+    );
+  }
+
   return (
-    <FlatList
-      style={styles.flatList}
-      contentContainerStyle={styles.flatListContent}
-      data={prayerTitles}
-      renderItem={renderTitleItem}
-      keyExtractor={(item, index) => {
-        if (!item || item.id === undefined) {
-          return `prayer-title-${index}`;
+    <View style={styles.container}>
+      <FlatList
+        style={styles.flatList}
+        contentContainerStyle={styles.flatListContent}
+        data={prayerTitles}
+        renderItem={renderTitleItem}
+        keyExtractor={(item, index) => {
+          if (!item || item.id === undefined) {
+            return `prayer-title-${index}`;
+          }
+          return String(item.id);
+        }}
+        refreshing={isRefetching}
+        onRefresh={onRefresh}
+        ListHeaderComponent={
+          (isFetchingNextPage || isLoading) && hasNextPage ? Loading : null
         }
-        return String(item.id);
-      }}
-      refreshing={isRefetching}
-      onRefresh={onRefresh}
-      ListHeaderComponent={
-        (isFetchingNextPage || isLoading) && hasNextPage ? Loading : null
-      }
-      ListEmptyComponent={!isLoading ? EmptyPrayerTitleList : null}
-      showsVerticalScrollIndicator={true}
-      inverted={true}
-      onEndReached={handleLoadMore}
-      onEndReachedThreshold={0.3}
-      maintainVisibleContentPosition={{
-        minIndexForVisible: 0,
-        autoscrollToTopThreshold: 10,
-      }}
-    />
+        ListEmptyComponent={!isLoading ? EmptyPrayerTitleList : null}
+        showsVerticalScrollIndicator={true}
+        inverted={true}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.3}
+        maintainVisibleContentPosition={{
+          minIndexForVisible: 0,
+          autoscrollToTopThreshold: 10,
+        }}
+      />
+      {isLoading && <OverlayLoading />}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   flatList: {
     flex: 1,
     backgroundColor: backgroundColor.default,

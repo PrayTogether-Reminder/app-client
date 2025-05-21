@@ -4,6 +4,7 @@ import { RoomMember } from "../types/roomMember";
 import { MessageResponse } from "@/common/types/messageResponse";
 import { FetchRoomsParams } from "../types/params/fetchRoomsParams";
 import { DeleteRoomParams } from "../types/params/deleteRoomParams";
+import { CreateRoomRequest } from "../types/request/createRoomRequest";
 
 export const roomService = {
   // 방 목록 조회
@@ -28,7 +29,7 @@ export const roomService = {
   // 멤버 목록 조회
   fetchRoomMembers: async (roomId: number | null): Promise<RoomMember[]> => {
     const response = await apiService.get<{ members: RoomMember[] }>(
-      `/rooms/${roomId}/members`
+      `/rooms/${roomId}/members1`
     );
     return response.data.members;
   },

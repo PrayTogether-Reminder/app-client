@@ -6,15 +6,23 @@ import { UpdatePrayerParams } from "../../types/params/updatePrayerParams";
 import QUERY_KEYS from "@/common/constants/queryKeys";
 import { ApiError } from "@/common/apis/api";
 import { CreatePrayerCompletionRequest } from "../../types/request/createPrayerCompletionRequest";
+import { queryClient } from "@/common/hooks/queries/customQueryClientProvider";
 
 // 기도(제목+내용) 작성
 export const usePrayerCreationMutation = () => {
   return useMutation({
     mutationFn: ({ roomId, title, prayerList }: CreatePrayerParams) =>
       prayerService.create(roomId, title, prayerList),
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          QUERY_KEYS.rooms,
+          variables.roomId,
+          QUERY_KEYS.prayerTitles,
+          QUERY_KEYS.infinite,
+        ],
+      });
       Alert.alert(data.message);
-      // 여기에 성공 시 추가 작업 (예: 캐시 무효화, 알림 표시 등)을 추가할 수 있습니다.
     },
     onError: (error) => {
       Alert.alert(error.message);

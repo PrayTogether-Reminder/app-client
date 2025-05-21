@@ -5,6 +5,9 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../../../src/common/styles/color";
 import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
 import { useRoomMembersQuery } from "@/domain/rooms/hooks/queries/useRoomQueries";
+import LoadingScreen from "@/common/components/loading/LoadingScreen";
+import FetchError from "@/common/components/error/FetchError";
+import OverlayLoading from "@/common/components/loading/OverlayLoading";
 
 const { width } = Dimensions.get("window");
 
@@ -21,7 +24,67 @@ const RoomMembersModal: React.FC<RoomMembersModalProps> = ({
 }) => {
   const drawerWidth = width * 0.5;
   const room = useSelectedRoomStore().selectedRoom;
-  const { data: members = [] } = useRoomMembersQuery(room?.id ?? null);
+  const {
+    data: members = [],
+    isError,
+    error,
+    isLoading,
+    refetch,
+  } = useRoomMembersQuery(room?.id ?? null);
+
+  // 모달 내용 렌더링 함수
+  const renderModalContent = () => {
+    if (isLoading && !members.length) {
+      return (
+        <View style={styles.centeredContent}>
+          <LoadingScreen />
+        </View>
+      );
+    }
+
+    if (isError) {
+      return (
+        <View style={styles.centeredContent}>
+          <FetchError error={error} onRetry={refetch} isRetrying={isLoading} />
+        </View>
+      );
+    }
+
+    return (
+      <>
+        {/* 상단: 현재 인원 */}
+        <View style={styles.headerSection}>
+          <Text style={styles.memberCountText}>
+            현재 인원: {members.length}명
+          </Text>
+        </View>
+
+        {/* 중간: 멤버 목록 */}
+        <ScrollView style={styles.memberListSection}>
+          {members.map((member, index) => (
+            <View key={index} style={styles.memberItem}>
+              <Text style={styles.memberName}>{member.name}</Text>
+            </View>
+          ))}
+        </ScrollView>
+
+        {/* 하단: 초대 버튼 */}
+        <View style={styles.footerSection}>
+          <Button
+            mode="contained"
+            style={styles.inviteButton}
+            labelStyle={styles.inviteButtonLabel}
+            onPress={openInvite}
+          >
+            방 초대
+          </Button>
+        </View>
+
+        {/* 추가 로딩 상태일 때 오버레이 표시 */}
+        {isLoading && <OverlayLoading />}
+      </>
+    );
+  };
 
   return (
     <Portal>
@@ -30,35 +93,7 @@ const RoomMembersModal: React.FC<RoomMembersModalProps> = ({
         onDismiss={closeRightMenu}
         contentContainerStyle={[styles.modal, { width: drawerWidth }]}
       >
-        <View style={styles.container}>
-          {/* 상단: 현재 인원 */}
-          <View style={styles.headerSection}>
-            <Text style={styles.memberCountText}>
-              현재 인원: {members.length}명
-            </Text>
-          </View>
-
-          {/* 중간: 멤버 목록 */}
-          <ScrollView style={styles.memberListSection}>
-            {members.map((member, index) => (
-              <View key={index} style={styles.memberItem}>
-                <Text style={styles.memberName}>{member.name}</Text>
-              </View>
-            ))}
-          </ScrollView>
-
-          {/* 하단: 초대 버튼 */}
-          <View style={styles.footerSection}>
-            <Button
-              mode="contained"
-              style={styles.inviteButton}
-              labelStyle={styles.inviteButtonLabel}
-              onPress={openInvite}
-            >
-              방 초대
-            </Button>
-          </View>
-        </View>
+        <View style={styles.container}>{renderModalContent()}</View>
       </Modal>
     </Portal>
   );
@@ -78,6 +113,11 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     paddingTop: 50,
+  },
+  centeredContent: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   headerSection: {
     paddingHorizontal: 20,

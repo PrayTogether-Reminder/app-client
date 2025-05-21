@@ -8,6 +8,9 @@ import EmptyState from "./EmptyState";
 import { useSelectedPrayerTitleStore } from "../../../../../src/domain/prayers/stores/useSelectedPrayerTitleStore";
 import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
 import { usePrayerContentsQuery } from "@/domain/prayers/hooks/queries/usePrayerQueries";
+import FetchError from "@/common/components/error/FetchError";
+import LoadingScreen from "@/common/components/loading/LoadingScreen";
+import OverlayLoading from "@/common/components/loading/OverlayLoading";
 
 interface PrayerReadBodyProps {
   onEdit?: (prayerContent: PrayerContent) => void;
@@ -18,10 +21,26 @@ function PrayerReadBody({ onEdit, onDelete }: PrayerReadBodyProps) {
   const { selectedPrayerTitle } = useSelectedPrayerTitleStore();
   const titleText = selectedPrayerTitle?.title ?? "기도 제목을 알 수 없습니다.";
   const { selectedRoom } = useSelectedRoomStore();
-  const { data: prayerContents, isLoading } = usePrayerContentsQuery(
+  const {
+    data: prayerContents,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = usePrayerContentsQuery(
     selectedRoom?.id ?? null,
     selectedPrayerTitle?.id ?? null
   );
+
+  if (isLoading && !prayerContents) {
+    return <OverlayLoading />;
+  }
+
+  if (isError) {
+    return (
+      <FetchError error={error} onRetry={refetch} isRetrying={isLoading} />
+    );
+  }
 
   // 데이터 로딩이 완료된 후에 비어있는지 확인
   if (!prayerContents || prayerContents.length === 0) {

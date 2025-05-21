@@ -6,7 +6,7 @@ import PrayerRoomBottom from "./_components/PrayerRoomBottom";
 import RoomMembersModal from "./_components/RoomMembersModal";
 import RoomInviteDialog from "./_components/RoomInviteDialog";
 
-export default function PrayerRoomScreen(): JSX.Element {
+export default function PrayerRoomScreen(): React.ReactElement {
   const [rightMenueVisible, setRightMenueVisible] = useState(false);
   const [inviteVisible, setInviteVisible] = useState(false);
   const emailRef = useRef({ email: "" });

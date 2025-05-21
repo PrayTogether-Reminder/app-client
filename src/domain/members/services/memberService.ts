@@ -1,4 +1,5 @@
 import apiService from "../../../common/apis/apiService";
+import { FetchProfileResponse } from "../types/response/fetchProfileResponse";
 
 export const memberService = {
   // 사용자 프로필 단일 정보 조회

@@ -45,3 +45,5 @@ android/**
 
 # json-server
 db.json
+GoogleService-Info.plist
+google-services.json

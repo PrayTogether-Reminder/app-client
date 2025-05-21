@@ -22,6 +22,8 @@ import { useRouter } from "expo-router";
 import path from "@/common/constants/path";
 import { color } from "@/common/styles/color";
 import Loading from "@/common/components/loading/OverlayLoading";
+import FetchError from "@/common/components/error/FetchError";
+import OverlayLoading from "@/common/components/loading/OverlayLoading";
 
 const RoomList = () => {
   console.log("RoomList rendering");
@@ -34,6 +36,8 @@ const RoomList = () => {
     isLoading,
     isRefetching,
     refetch,
+    isError,
+    error,
   } = useInfiniteRoomsQuery();
 
   const { mutate: toggleRoomNotificationMutation } =
@@ -84,6 +88,12 @@ const RoomList = () => {
     />
   );
 
+  if (isError) {
+    return (
+      <FetchError error={error} onRetry={refetch} isRetrying={isRefetching} />
+    );
+  }
+
   return (
     <View style={[styles.container]}>
       <FlatList
@@ -105,6 +115,7 @@ const RoomList = () => {
         onRefresh={handleRefresh}
         showsVerticalScrollIndicator={true}
       />
+      {isLoading && <OverlayLoading />}
     </View>
   );
 };
