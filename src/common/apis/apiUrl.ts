@@ -1,5 +1,6 @@
 import Constants from "expo-constants";
 import { Alert } from "react-native";
+import { showAlert } from "../components/modal/stores/useAlertStore";
 
 const getApiUrl = (): string => {
   const expoConfig = Constants.expoConfig as any;
@@ -11,10 +12,11 @@ const getApiUrl = (): string => {
 
   if (!apiUrl) {
     if (__DEV__) {
-      Alert.alert(
-        "환경 변수 오류",
-        ".env 파일에 EXPO_PUBLIC_API_URL이 설정되어 있는지 확인하세요. ="
-      );
+      showAlert({
+        title: "환경 변수 오류",
+        message:
+          ".env 파일에 EXPO_PUBLIC_API_URL이 설정되어 있는지 확인하세요.",
+      });
       // default
       return "http://localhost:3000/api/v1";
     } else {

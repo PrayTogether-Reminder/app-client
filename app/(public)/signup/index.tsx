@@ -1,25 +1,24 @@
-import React, { useState, useRef, useEffect } from "react";
+import path from "@/common/constants/path";
+import { backgroundColor, color } from "@/common/styles/color";
+import { useRouter } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
 import {
-  View,
-  StyleSheet,
-  Keyboard,
-  Alert,
   BackHandler,
+  Keyboard,
   Platform,
   SafeAreaView,
+  StyleSheet,
+  View,
 } from "react-native";
-import { useRouter } from "expo-router";
-import path from "@/common/constants/path";
-import PagerView from "react-native-pager-view";
 import type { PagerViewOnPageSelectedEventData } from "react-native-pager-view";
-import { useTheme, IconButton } from "react-native-paper";
-import { backgroundColor, color } from "@/common/styles/color";
+import PagerView from "react-native-pager-view";
+import { IconButton, useTheme } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 
-import NameStep from "./_components/NameStep";
-import EmailStep from "./_components/EmailStep";
-import PasswordStep from "./_components/PasswordStep";
 import { useSignupMutation } from "@/domain/auth/hooks/mutations/useAuthMutation";
+import EmailStep from "./_components/EmailStep";
+import NameStep from "./_components/NameStep";
+import PasswordStep from "./_components/PasswordStep";
 
 const SignupScreen: React.FC = () => {
   const theme = useTheme();

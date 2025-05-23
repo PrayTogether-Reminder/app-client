@@ -1,29 +1,28 @@
+import FetchError from "@/common/components/error/FetchError";
+import {
+  default as Loading,
+  default as OverlayLoading,
+} from "@/common/components/loading/OverlayLoading";
+import path from "@/common/constants/path";
+import {
+  useRoomDeletionMutation,
+  useToggleRoomNotificationMutation,
+} from "@/domain/rooms/hooks/mutations/useRoomMutations";
+import { useInfiniteRoomsQuery } from "@/domain/rooms/hooks/queries/useRoomQueries";
+import { useSelectedRoomStore } from "@/domain/rooms/stores/useSelectedRoomStore";
+import { Room } from "@/domain/rooms/types/room";
+import { useRouter } from "expo-router";
 import React from "react";
 import {
   FlatList,
   ListRenderItem,
   Platform,
-  Alert,
   StyleSheet,
   View,
 } from "react-native";
-import { ActivityIndicator } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { useSelectedRoomStore } from "@/domain/rooms/stores/useSelectedRoomStore";
-import { Room } from "@/domain/rooms/types/room";
-import {
-  useToggleRoomNotificationMutation,
-  useRoomDeletionMutation,
-} from "@/domain/rooms/hooks/mutations/useRoomMutations";
-import { useInfiniteRoomsQuery } from "@/domain/rooms/hooks/queries/useRoomQueries";
 import EmptyRoomList from "./RoomEmpty";
 import RoomItem from "./RoomItem";
-import { useRouter } from "expo-router";
-import path from "@/common/constants/path";
-import { color } from "@/common/styles/color";
-import Loading from "@/common/components/loading/OverlayLoading";
-import FetchError from "@/common/components/error/FetchError";
-import OverlayLoading from "@/common/components/loading/OverlayLoading";
 
 const RoomList = () => {
   console.log("RoomList rendering");

@@ -1,18 +1,18 @@
-import Entypo from "@expo/vector-icons/Entypo";
+import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
+import { backgroundColor, color } from "@/common/styles/color";
+import { Room } from "@/domain/rooms/types/room";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import React, { useState, useRef } from "react";
+import Entypo from "@expo/vector-icons/Entypo";
+import React, { useRef, useState } from "react";
 import {
-  useWindowDimensions,
-  Alert,
-  StyleSheet,
-  View,
   Animated,
   Pressable,
+  StyleSheet,
+  useWindowDimensions,
+  View,
 } from "react-native";
 import { Card, Text, useTheme } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { backgroundColor, color } from "@/common/styles/color";
-import { Room } from "@/domain/rooms/types/room";
 import RoomInfoSheet from "./sheets/RoomOptionSheet";
 
 interface RoomItemProps {
@@ -32,6 +32,7 @@ const RoomItem = ({
   const [showMenu, setShowMenu] = useState(false);
   const { width } = useWindowDimensions();
   const theme = useTheme();
+  const [showLeaveModal, setShowLeaveModal] = useState(false);
 
   // 애니메이션을 위한 Animated.Value 생성
   const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -71,17 +72,19 @@ const RoomItem = ({
   };
 
   const handleLeaveRoom = () => {
-    Alert.alert("방 나가기", "정말로 이 방을 나가시겠습니까?", [
-      { text: "취소", style: "cancel" },
-      {
-        text: "나가기",
-        style: "destructive",
-        onPress: () => {
-          onLeaveRoom(room);
-          setShowMenu(false);
-        },
-      },
-    ]);
+    setShowLeaveModal(true); // 모달 표시
+  };
+
+  // 실제 방 나가기 확인 처리
+  const confirmLeaveRoom = () => {
+    onLeaveRoom(room);
+    setShowLeaveModal(false);
+    setShowMenu(false);
+  };
+
+  // 모달 닫기
+  const cancelLeaveRoom = () => {
+    setShowLeaveModal(false);
   };
 
   // Animated.View로 감싸서 애니메이션 적용
@@ -134,6 +137,16 @@ const RoomItem = ({
         room={room}
         onNotificationToggle={handleNotificationToggle}
         onLeaveRoom={handleLeaveRoom}
+      />
+      <ConfirmationModal
+        visible={showLeaveModal}
+        onDismiss={cancelLeaveRoom}
+        onConfirm={confirmLeaveRoom}
+        icon="exit-to-app"
+        title="방 나가기"
+        content="정말로 방을 나가시겠습니까?"
+        confirmText="나가기"
+        cancelText="취소"
       />
     </>
   );

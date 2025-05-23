@@ -1,20 +1,16 @@
 // src/screens/invitations/InvitationsScreen.tsx (경로는 예시입니다)
 import React, { useCallback } from "react";
-import { StyleSheet, View, Alert } from "react-native"; // Platform, Text, Button 등 제거
-import { ActivityIndicator } from "react-native-paper"; // Appbar 등 제거
-import { useRouter } from "expo-router";
+import { StyleSheet, View } from "react-native"; // Platform, Text, Button 등 제거
 
-import { useInviationsQuery } from "@/domain/invitations/hooks/queries/useInvitationQueries";
-import { useUpdateInvitationStatusMutation } from "@/domain/invitations/hooks/mutations/useInvitationMutations";
-import type { UpdateInvitationStatusRequest } from "@/domain/invitations/types/request/updateInvitationStatusRequest";
 import type { INVITATION_STATUS } from "@/domain/invitations/constants/invitationStatus";
+import { useUpdateInvitationStatusMutation } from "@/domain/invitations/hooks/mutations/useInvitationMutations";
+import { useInviationsQuery } from "@/domain/invitations/hooks/queries/useInvitationQueries";
+import type { UpdateInvitationStatusRequest } from "@/domain/invitations/types/request/updateInvitationStatusRequest";
 
-import { backgroundColor, color } from "@/common/styles/color";
-
-import InvitationTop from "./_components/InvitationTop";
-import InvitationBody from "./_components/InvitationBody";
-import Top1Body10 from "@/common/layout/Top1Body10";
 import OverlayLoading from "@/common/components/loading/OverlayLoading";
+import Top1Body10 from "@/common/layout/Top1Body10";
+import InvitationBody from "./_components/InvitationBody";
+import InvitationTop from "./_components/InvitationTop";
 
 export default function InvitationsScreen(): React.ReactElement {
   const {

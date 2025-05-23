@@ -1,22 +1,23 @@
-import React, { useRef, useEffect } from "react";
+import { showAlert } from "@/common/components/modal/stores/useAlertStore";
+import { useRoomCreationMutation } from "@/domain/rooms/hooks/mutations/useRoomMutations";
+import Feather from "@expo/vector-icons/Feather";
+import React, { useEffect, useRef } from "react";
 import {
-  View,
+  Dimensions,
+  Keyboard,
   StyleSheet,
   TouchableWithoutFeedback,
-  Keyboard,
-  Dimensions,
+  View,
 } from "react-native";
 import {
-  Portal,
-  Modal,
   Button,
-  TextInput as PaperTextInput,
-  Text,
   IconButton,
+  Modal,
+  TextInput as PaperTextInput,
+  Portal,
+  Text,
 } from "react-native-paper";
-import Feather from "@expo/vector-icons/Feather";
 import { RFValue } from "react-native-responsive-fontsize";
-import { useRoomCreationMutation } from "@/domain/rooms/hooks/mutations/useRoomMutations";
 
 type RoomCreationDialogProp = {
   open: boolean;
@@ -72,12 +73,18 @@ export default function RoomCreationDialog({
     const description = inputValues.current.description;
 
     if (!title.trim()) {
-      alert("방 제목을 입력해주세요");
+      showAlert({
+        title: "방 생성 안내",
+        message: "방 제목을 입력해주세요.",
+      });
       return;
     }
 
     if (!description.trim()) {
-      alert("방 설명을 입력해주세요");
+      showAlert({
+        title: "방 생성 안내",
+        message: "방 설명을 입력해주세요.",
+      });
       return;
     }
 

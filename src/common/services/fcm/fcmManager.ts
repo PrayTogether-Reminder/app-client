@@ -1,17 +1,16 @@
-import * as SecureStore from "expo-secure-store";
-import { Alert, Platform } from "react-native";
 import { getApp } from "@react-native-firebase/app";
 import {
+  getInitialNotification,
   getMessaging,
   getToken,
   onMessage,
   onNotificationOpenedApp,
-  getInitialNotification,
   subscribeToTopic,
   unsubscribeFromTopic,
 } from "@react-native-firebase/messaging";
-import { checkNotificationPermission } from "./fcmUtils";
 import * as Notifications from "expo-notifications";
+import * as SecureStore from "expo-secure-store";
+import { checkNotificationPermission } from "./fcmUtils";
 
 const FCM_TOKEN_KEY = "fcm_token";
 

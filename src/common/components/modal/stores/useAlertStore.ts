@@ -19,7 +19,6 @@ export const useAlertStore = create<AlertStore>((set, get) => ({
     const { config } = get();
     set({ isVisible: false });
 
-    // 애니메이션 완료 후 콜백 실행 및 config 초기화
     setTimeout(() => {
       if (config?.onConfirm) {
         config.onConfirm();

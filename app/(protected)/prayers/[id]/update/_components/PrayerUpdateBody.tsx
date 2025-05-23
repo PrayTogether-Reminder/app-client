@@ -1,27 +1,28 @@
-import React, { useState, useRef, useMemo, useEffect } from "react";
-import { View, StyleSheet, Platform, Dimensions, Alert } from "react-native";
-import { Divider, Text } from "react-native-paper";
-import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useSelectedRoomStore } from "@/domain/rooms/stores/useSelectedRoomStore";
-import { useRoomMembersQuery } from "@/domain/rooms/hooks/queries/useRoomQueries";
-import { RoomMember } from "@/domain/rooms/types/roomMember";
-import { PrayerUpdateItem } from "@/domain/prayers/types/prayerUpdateItem";
-import { PrayerCreationItem } from "@/domain/prayers/types/PrayerCreationItem";
+import { usePrayerContentsQuery } from "@/domain/prayers/hooks/queries/usePrayerQueries";
 import { usePrayerUpdateStore } from "@/domain/prayers/stores/usePrayerUpdateStore";
 import { useSelectedPrayerTitleStore } from "@/domain/prayers/stores/useSelectedPrayerTitleStore";
-import { usePrayerContentsQuery } from "@/domain/prayers/hooks/queries/usePrayerQueries";
+import { PrayerUpdateItem } from "@/domain/prayers/types/prayerUpdateItem";
+import { useRoomMembersQuery } from "@/domain/rooms/hooks/queries/useRoomQueries";
+import { useSelectedRoomStore } from "@/domain/rooms/stores/useSelectedRoomStore";
+import { RoomMember } from "@/domain/rooms/types/roomMember";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Dimensions, Platform, StyleSheet, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Divider, Text } from "react-native-paper";
+import { RFValue } from "react-native-responsive-fontsize";
 
-import PrayerTitleInput from "../../../creation/_components/PrayerTitleInput";
-import PrayerMemberSelector from "../../../creation/_components/PrayerMemberSelector";
-import PrayerContentInput from "../../../creation/_components/PrayerContentInput";
+import AlertModal from "@/common/components/modal/AlertModal";
 import PrayerAddButton from "../../../creation/_components/PrayerAddButton";
 import PrayerCarousel from "../../../creation/_components/PrayerCarousel";
-import PrayerDeleteDialog from "../../../creation/_components/dialog/PrayerDeleteDialog";
+import PrayerContentInput from "../../../creation/_components/PrayerContentInput";
+import PrayerMemberSelector from "../../../creation/_components/PrayerMemberSelector";
+import PrayerTitleInput from "../../../creation/_components/PrayerTitleInput";
 import PrayerCustomNameDialog from "../../../creation/_components/dialog/PrayerCustomNameDialog";
-import PrayerMemberSelectionModal from "../../../creation/_components/modal/PrayerMemberSelectionModal";
+import PrayerDeleteDialog from "../../../creation/_components/dialog/PrayerDeleteDialog";
 import PrayerEditDialog from "../../../creation/_components/dialog/PrayerEditDialog";
+import PrayerMemberSelectionModal from "../../../creation/_components/modal/PrayerMemberSelectionModal";
+import { showAlert } from "@/common/components/modal/stores/useAlertStore";
 
 const { width } = Dimensions.get("window");
 const CARD_SPACING = RFValue(20); // 카드 사이 간격
@@ -156,8 +157,8 @@ export default function PrayerUpdateBody({
 
     const prayerId = existingPrayer?.id ?? null;
     const newPrayer: PrayerUpdateItem = {
-      id: prayerId,
-      memberId: selectedMember.id,
+      id: prayerId!!,
+      memberId: selectedMember.id!!,
       memberName: selectedMember.name,
       content: prayerContent,
     };
@@ -167,7 +168,10 @@ export default function PrayerUpdateBody({
     );
 
     if (isDuplicateMember) {
-      Alert.alert(`${selectedMember.name}님은 이미 기도문을 작성했습니다.`);
+      showAlert({
+        title: "기도문 중복",
+        message: `${selectedMember?.name}님은 이미 기도문을 작성했습니다.`,
+      });
       return;
     }
 
@@ -231,7 +235,7 @@ export default function PrayerUpdateBody({
               memberId: item.memberId,
               content: item.content,
               memberName: item.memberName,
-            } as PrayerUpdateItem)
+            }) as PrayerUpdateItem
         );
 
         setPrayerList(formattedData);

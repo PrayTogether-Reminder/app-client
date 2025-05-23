@@ -2,9 +2,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import QUERY_KEYS from "../../../../common/constants/queryKeys";
 import type { CreateInvitationRequest } from "../../types/request/createInvitationRequest";
 import { ApiError } from "../../../../common/apis/api";
-import { Alert } from "react-native";
 import { invitationService } from "../../services/invitationServices";
 import type { UpdateInvitationStatusRequest } from "../../types/request/updateInvitationStatusRequest";
+import { showAlert } from "@/common/components/modal/stores/useAlertStore";
 
 // 방 초대 mutation
 export const useInviteRoomMemberMutation = () => {
@@ -15,10 +15,18 @@ export const useInviteRoomMemberMutation = () => {
       return invitationService.inviteRoomMember(roomId, email);
     },
     onError: (error: ApiError, variables, context) => {
-      Alert.alert("오류", error.message);
+      showAlert({
+        title: "초대 실패",
+        message: error.message,
+        icon: "account-alert",
+      });
     },
     onSuccess: (data, variables) => {
-      Alert.alert("성공", data.message);
+      showAlert({
+        title: "초대 성공",
+        message: data.message,
+        icon: "account-plus",
+      });
     },
   });
 };
@@ -35,11 +43,19 @@ export const useUpdateInvitationStatusMutation = () => {
       return await invitationService.updateStatus(invitationId, status);
     },
     onError: (error: ApiError, variables, context) => {
-      Alert.alert("오류", error.message);
+      showAlert({
+        title: "응답 실패",
+        message: error.message,
+        icon: "alert-circle",
+      });
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.invitations] });
-      Alert.alert("초대 응답", data.message);
+      showAlert({
+        title: "응답 완료",
+        message: data.message,
+        icon: "check-circle",
+      });
     },
   });
 };

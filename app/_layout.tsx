@@ -15,6 +15,7 @@ import CustomQueryClientProvider from "../src/common/hooks/queries/customQueryCl
 import { backgroundColor } from "../src/common/styles/color";
 import AuthEventListener from "./../src/domain/auth/events/authEventListener";
 import FcmInitializer from "@/common/services/fcm/fcmInitializer";
+import { GlobalAlertModal } from "@/common/components/modal/GlobalAlertModal";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -52,6 +53,7 @@ export default function RootLayout() {
           <StatusBar backgroundColor={backgroundColor.white} />
           <AuthEventListener />
           <AuthStateListener>
+            <GlobalAlertModal />
             <Stack screenOptions={{ headerShown: false }}>
               <Stack.Screen name="index" />
 
