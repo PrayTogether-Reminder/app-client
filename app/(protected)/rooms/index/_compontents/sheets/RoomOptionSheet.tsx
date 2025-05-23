@@ -131,7 +131,7 @@ export default function RoomInfoSheet({
                   </ScrollView>
 
                   <View style={styles.buttonContainer}>
-                    <Button
+                    {/* <Button
                       mode="outlined"
                       onPress={handleNotificationToggle}
                       icon={({ size, color }) => (
@@ -144,7 +144,7 @@ export default function RoomInfoSheet({
                       style={styles.button}
                     >
                       알림 {room.isNotification ? "끄기" : "켜기"}
-                    </Button>
+                    </Button> */}
 
                     <Button
                       mode="contained"
