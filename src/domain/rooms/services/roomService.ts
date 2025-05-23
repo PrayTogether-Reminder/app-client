@@ -29,7 +29,7 @@ export const roomService = {
   // 멤버 목록 조회
   fetchRoomMembers: async (roomId: number | null): Promise<RoomMember[]> => {
     const response = await apiService.get<{ members: RoomMember[] }>(
-      `/rooms/${roomId}/members1`
+      `/rooms/${roomId}/members`
     );
     return response.data.members;
   },
