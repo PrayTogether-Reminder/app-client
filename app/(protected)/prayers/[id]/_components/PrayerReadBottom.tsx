@@ -1,15 +1,13 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, Dimensions } from "react-native";
-import { Surface, Button, Portal, Modal, IconButton } from "react-native-paper";
+import { StyleSheet, View } from "react-native";
+import { Surface, Button } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../../../src/common/styles/color";
 import { useRouter } from "expo-router";
 import { useSelectedPrayerTitleStore } from "../../../../../src/domain/prayers/stores/useSelectedPrayerTitleStore";
 import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
 import { usePrayerCompletionMutation } from "../../../../../src/domain/prayers/hooks/mutations/usePrayerMuations";
-
-const { width } = Dimensions.get("window");
-
+import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
 function PrayerReadBottom() {
   const router = useRouter();
   useSelectedPrayerTitleStore().selectedPrayerTitle?.id ?? null;
@@ -47,58 +45,17 @@ function PrayerReadBottom() {
         </Button>
       </Surface>
 
-      <Portal>
-        <Modal
-          visible={visible}
-          onDismiss={hideModal}
-          contentContainerStyle={styles.modalContainer}
-        >
-          <View style={styles.modalHeader}>
-            <IconButton
-              icon="close"
-              size={RFValue(20)}
-              onPress={hideModal}
-              style={styles.closeButton}
-            />
-          </View>
-
-          <View style={styles.modalContent}>
-            <View style={styles.titleContainer}>
-              <IconButton
-                icon="bell-ring"
-                size={RFValue(24)}
-                iconColor={color.secondary}
-                style={styles.titleIcon}
-              />
-              <Text style={styles.modalTitle}>기도 완료 알림</Text>
-            </View>
-            <Text style={styles.modalText}>
-              기도 완료 알림을 전송하시겠습니까?
-            </Text>
-          </View>
-
-          <View style={styles.modalActions}>
-            <Button
-              mode="outlined"
-              onPress={hideModal}
-              style={styles.cancelButton}
-              labelStyle={styles.cancelButtonLabel}
-              contentStyle={styles.buttonContent}
-            >
-              취소
-            </Button>
-            <Button
-              mode="contained"
-              onPress={handleConfirm}
-              style={styles.confirmButton}
-              labelStyle={styles.confirmButtonLabel}
-              contentStyle={styles.buttonContent}
-            >
-              확인
-            </Button>
-          </View>
-        </Modal>
-      </Portal>
+      <ConfirmationModal
+        visible={visible}
+        onDismiss={hideModal}
+        onConfirm={handleConfirm}
+        icon="bell-ring"
+        title="기도 완료 알림"
+        content="기도 완료 알림을 전송하시겠습니까?"
+        confirmText="확인"
+        cancelText="취소"
+        iconColor={color.secondary}
+      />
     </>
   );
 }
@@ -121,86 +78,6 @@ const styles = StyleSheet.create({
   bottomButtonText: {
     fontSize: RFValue(16),
     fontWeight: "500",
-  },
-  modalContainer: {
-    backgroundColor: "white",
-    borderRadius: 16,
-    width: width * 0.85,
-    alignSelf: "center",
-    overflow: "hidden",
-    elevation: 5,
-  },
-  modalHeader: {
-    alignItems: "flex-end",
-    paddingTop: 8,
-    paddingRight: 8,
-  },
-  closeButton: {
-    margin: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.03)",
-  },
-  modalContent: {
-    paddingHorizontal: 24,
-    paddingBottom: 24,
-    alignItems: "center",
-  },
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 12,
-  },
-  titleIcon: {
-    margin: 0,
-    backgroundColor: "transparent",
-  },
-  modalTitle: {
-    fontSize: RFValue(20),
-    fontWeight: "bold",
-    color: "#333",
-    textAlign: "center",
-    marginLeft: 4,
-  },
-  modalText: {
-    fontSize: RFValue(16),
-    color: "#555",
-    textAlign: "center",
-    lineHeight: RFValue(22),
-  },
-  modalActions: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingBottom: 20,
-    paddingTop: 8,
-  },
-  buttonContent: {
-    paddingVertical: 8,
-    paddingHorizontal: 4,
-  },
-  cancelButton: {
-    flex: 1,
-    marginRight: 8,
-    borderRadius: 12,
-    borderColor: "#ddd",
-    borderWidth: 1.5,
-  },
-  confirmButton: {
-    flex: 1,
-    marginLeft: 8,
-    borderRadius: 12,
-    backgroundColor: color.secondary,
-    elevation: 2,
-  },
-  cancelButtonLabel: {
-    fontSize: RFValue(15),
-    color: "#666",
-    fontWeight: "600",
-  },
-  confirmButtonLabel: {
-    fontSize: RFValue(15),
-    color: "white",
-    fontWeight: "600",
   },
 });
 
