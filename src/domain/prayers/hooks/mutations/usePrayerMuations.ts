@@ -96,7 +96,7 @@ export const usePrayerCompletionMutation = () => {
       showAlert({
         title: "기도 완료",
         message: data.message,
-        icon: "pray", // 기도 관련 아이콘으로 변경 (또는 "check-circle")
+        icon: "check-circle",
       });
     },
   });

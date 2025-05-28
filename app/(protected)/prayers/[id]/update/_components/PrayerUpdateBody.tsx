@@ -12,7 +12,6 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { Divider, Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 
-import AlertModal from "@/common/components/modal/AlertModal";
 import PrayerAddButton from "../../../creation/_components/PrayerAddButton";
 import PrayerCarousel from "../../../creation/_components/PrayerCarousel";
 import PrayerContentInput from "../../../creation/_components/PrayerContentInput";

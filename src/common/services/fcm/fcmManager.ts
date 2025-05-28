@@ -7,6 +7,8 @@ import {
   onNotificationOpenedApp,
   subscribeToTopic,
   unsubscribeFromTopic,
+  requestPermission,
+  AuthorizationStatus,
 } from "@react-native-firebase/messaging";
 import * as Notifications from "expo-notifications";
 import * as SecureStore from "expo-secure-store";
@@ -24,6 +26,46 @@ class FcmManager {
       FcmManager.instance = new FcmManager();
     }
     return FcmManager.instance;
+  }
+
+  async requestPermission(): Promise<boolean> {
+    console.log("알림 권한 요청");
+    try {
+      // 1. Expo 권한 요청 (시스템 레벨 권한 - 사용자에게 다이얼로그 표시)
+      console.log("Requesting Expo notification permissions...");
+      const { status: expoStatus } =
+        await Notifications.requestPermissionsAsync();
+
+      console.log("Expo permission result:", expoStatus);
+
+      if (expoStatus === "granted") {
+        // 2. Expo 권한 허용된 경우에만 Firebase 권한 처리
+        console.log("Expo permission granted - proceeding with Firebase...");
+
+        const app = getApp();
+        const messaging = getMessaging(app);
+        const authStatus = await requestPermission(messaging);
+
+        const firebaseGranted =
+          authStatus === AuthorizationStatus.AUTHORIZED ||
+          authStatus === AuthorizationStatus.PROVISIONAL;
+
+        console.log(
+          "Firebase permission status:",
+          authStatus,
+          "Granted:",
+          firebaseGranted
+        );
+        return firebaseGranted;
+      } else {
+        // 3. Expo 권한 거부된 경우 Firebase도 처리하지 않음
+        console.log("Expo permission denied - skipping Firebase");
+        return false;
+      }
+    } catch (error) {
+      console.error("Error requesting permission:", error);
+      return false;
+    }
   }
 
   // 유틸리티 함수를 재사용하여 코드 중복 방지
