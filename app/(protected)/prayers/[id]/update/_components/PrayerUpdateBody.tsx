@@ -12,14 +12,14 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { Divider, Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 
+import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
+
 import PrayerAddButton from "../../../creation/_components/PrayerAddButton";
 import PrayerCarousel from "../../../creation/_components/PrayerCarousel";
 import PrayerContentInput from "../../../creation/_components/PrayerContentInput";
 import PrayerMemberSelector from "../../../creation/_components/PrayerMemberSelector";
 import PrayerTitleInput from "../../../creation/_components/PrayerTitleInput";
 import PrayerCustomNameDialog from "../../../creation/_components/dialog/PrayerCustomNameDialog";
-import PrayerDeleteDialog from "../../../creation/_components/dialog/PrayerDeleteDialog";
-import PrayerEditDialog from "../../../creation/_components/dialog/PrayerEditDialog";
 import PrayerMemberSelectionModal from "../../../creation/_components/modal/PrayerMemberSelectionModal";
 import { showAlert } from "@/common/components/modal/stores/useAlertStore";
 
@@ -286,12 +286,29 @@ export default function PrayerUpdateBody({
           setCurrentIndex={setCurrentIndex}
         />
       </View>
-      {/* 기도문 삭제 확인 Dialog */}
-      <PrayerDeleteDialog
+
+      {/* 기도문 삭제 확인 */}
+      <ConfirmationModal
         visible={prayerDeleteDialog}
         onDismiss={cancelPrayerDelete}
         onConfirm={confirmPrayerDelete}
-        memberName={prayerDelete?.memberName}
+        icon="alert-circle"
+        title="기도문 삭제"
+        content={`${prayerDelete?.memberName}님의 기도문을 삭제하시겠습니까?`}
+        confirmText="삭제"
+        cancelText="취소"
+      />
+
+      {/* 기도문 편집 확인 */}
+      <ConfirmationModal
+        visible={prayerEditDialog}
+        onDismiss={cancelPrayerEdit}
+        onConfirm={confirmPrayerEdit}
+        icon="alert-circle"
+        title="기도문 수정"
+        content={`${prayerEdit?.memberName}님의 기도문을 수정하시겠습니까?`}
+        confirmText="수정"
+        cancelText="취소"
       />
 
       {/* 멤버 선택 Modal */}
@@ -310,13 +327,6 @@ export default function PrayerUpdateBody({
         onChangeText={onChangeCustomName}
         onCancel={closeCustomNameDialog}
         onAdd={addCustomName}
-      />
-      {/* 기도문 편집 Dialog*/}
-      <PrayerEditDialog
-        visible={prayerEditDialog}
-        onDismiss={cancelPrayerEdit}
-        onConfirm={confirmPrayerEdit}
-        memberName={prayerEdit?.memberName}
       />
     </KeyboardAwareScrollView>
   );

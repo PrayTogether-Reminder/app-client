@@ -12,14 +12,13 @@ import { RoomMember } from "../../../../../src/domain/rooms/types/roomMember";
 
 // 컴포넌트 임포트
 import { showAlert } from "@/common/components/modal/stores/useAlertStore";
+import ConfirmationModal from "@/common/components/modal/ConfirmationModal"; // ConfirmationModal 추가
 import PrayerAddButton from "./PrayerAddButton";
 import PrayerCarousel from "./PrayerCarousel";
 import PrayerContentInput from "./PrayerContentInput";
 import PrayerMemberSelector from "./PrayerMemberSelector";
 import PrayerTitleInput from "./PrayerTitleInput";
 import PrayerCustomNameDialog from "./dialog/PrayerCustomNameDialog";
-import PrayerDeleteDialog from "./dialog/PrayerDeleteDialog";
-import PrayerEditDialog from "./dialog/PrayerEditDialog";
 import PrayerMemberSelectionModal from "./modal/PrayerMemberSelectionModal";
 
 const { width } = Dimensions.get("window");
@@ -240,12 +239,29 @@ export default function PrayerCreationBody({
           setCurrentIndex={setCurrentIndex}
         />
       </View>
-      {/* 기도문 삭제 확인 Dialog */}
-      <PrayerDeleteDialog
+
+      {/* 기도문 삭제 확인 */}
+      <ConfirmationModal
         visible={prayerDeleteDialog}
         onDismiss={cancelPrayerDelete}
         onConfirm={confirmPrayerDelete}
-        memberName={prayerDelete?.memberName}
+        icon="alert-circle"
+        title="기도문 삭제"
+        content={`${prayerDelete?.memberName}님의 기도문을 삭제하시겠습니까?`}
+        confirmText="삭제"
+        cancelText="취소"
+      />
+
+      {/* 기도문 편집 확인  */}
+      <ConfirmationModal
+        visible={prayerEditDialog}
+        onDismiss={cancelPrayerEdit}
+        onConfirm={confirmPrayerEdit}
+        icon="alert-circle"
+        title="기도문 수정"
+        content={`${prayerEdit?.memberName}님의 기도문을 수정하시겠습니까?`}
+        confirmText="수정"
+        cancelText="취소"
       />
 
       {/* 멤버 선택 Modal */}
@@ -264,13 +280,6 @@ export default function PrayerCreationBody({
         onChangeText={onChangeCustomName}
         onCancel={closeCustomNameDialog}
         onAdd={addCustomName}
-      />
-      {/* 기도문 편집 Dialog*/}
-      <PrayerEditDialog
-        visible={prayerEditDialog}
-        onDismiss={cancelPrayerEdit}
-        onConfirm={confirmPrayerEdit}
-        memberName={prayerEdit?.memberName}
       />
     </KeyboardAwareScrollView>
   );

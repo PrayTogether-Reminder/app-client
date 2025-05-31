@@ -1,21 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
-import { StatusBar } from "expo-status-bar";
+import React from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
-import {
-  Portal,
-  Dialog,
-  TextInput,
-  Button,
-  useTheme,
-} from "react-native-paper";
 
+import { backgroundColor } from "@/common/styles/color";
 import Top1Body10Bottom1 from "../../../../src/common/layout/Top1Body10Bottom1";
-import PrayerReadTop from "./_components/PrayerReadTop";
 import PrayerReadBody from "./_components/PrayerReadBody";
 import PrayerReadBottom from "./_components/PrayerReadBottom";
-import { backgroundColor } from "@/common/styles/color";
+import PrayerReadTop from "./_components/PrayerReadTop";
 
 export default function PrayerReadScreen() {
   return (
