@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { fcmTokenService } from "../services/fcmTokenService";
 import type { RegisterFcmTokenRequest } from "../types/registerFcmTokenDto";
-import { Alert } from "react-native";
+import { showAlert } from "@/common/components/modal/stores/useAlertStore";
 
 // Fcm Token 등록 API 호출
 export const useRegisterFcmTokenMutation = () => {
@@ -10,7 +10,10 @@ export const useRegisterFcmTokenMutation = () => {
       fcmTokenService.registerFcmToken(fcmToken),
     onSuccess: () => {},
     onError: (error) => {
-      Alert.alert(error.message);
+      showAlert({
+        title: "에러",
+        message: error.message,
+      });
     },
   });
 };

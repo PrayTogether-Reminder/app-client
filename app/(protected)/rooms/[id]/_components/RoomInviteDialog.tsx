@@ -1,11 +1,12 @@
-import React, { useRef, useState } from "react";
-import { StyleSheet, Dimensions, Alert, View } from "react-native";
-import { Portal, Dialog, TextInput, Button } from "react-native-paper";
-import { RFValue } from "react-native-responsive-fontsize"; // Import RFValue
-import { color } from "@/common/styles/color";
+import { showAlert } from "@/common/components/modal/stores/useAlertStore";
 import { validateEmail } from "@/common/services/email/emailService";
+import { color } from "@/common/styles/color";
 import { useInviteRoomMemberMutation } from "@/domain/invitations/hooks/mutations/useInvitationMutations";
 import { useSelectedRoomStore } from "@/domain/rooms/stores/useSelectedRoomStore";
+import React from "react";
+import { Dimensions, StyleSheet } from "react-native";
+import { Button, Dialog, Portal, TextInput } from "react-native-paper";
+import { RFValue } from "react-native-responsive-fontsize"; // Import RFValue
 
 interface RoomInviteDialogProps {
   visible: boolean;
@@ -30,14 +31,20 @@ const RoomInviteDialog = ({
   // 초대 처리
   const handleInvite = () => {
     if (!emailRef.current) {
-      Alert.alert("이메일을 입력해주세요.");
+      showAlert({
+        title: "이메일 주소 입력",
+        message: "초대할 이메일 주소를 입력해주세요.",
+      });
       return;
     }
 
     const fullEmail = emailRef.current.email;
     const email = fullEmail.trim();
     if (!validateEmail(email)) {
-      Alert.alert("이메일 형식이 올바르지 않습니다.");
+      showAlert({
+        title: "이메일 주소 형식 오류",
+        message: "올바른 이메일 주소 형식이 아닙니다.",
+      });
       return;
     }
 
@@ -56,38 +63,40 @@ const RoomInviteDialog = ({
   };
 
   return (
-    <Portal>
-      <Dialog style={styles.dialog} visible={visible} onDismiss={closeInvite}>
-        <Dialog.Title style={styles.title}>기도방 초대하기</Dialog.Title>
-        <Dialog.Content style={styles.content}>
-          <TextInput
-            label="이메일 주소"
-            onChangeText={onChangeEmail}
-            mode="outlined"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            style={styles.emailInput}
-          />
-        </Dialog.Content>
-        <Dialog.Actions style={styles.actions}>
-          <Button
-            style={styles.cancelBtn}
-            labelStyle={styles.buttonLabel}
-            onPress={closeInvite}
-          >
-            취소
-          </Button>
-          <Button
-            style={styles.inviteBtn}
-            labelStyle={styles.buttonLabel}
-            onPress={handleInvite}
-            mode="contained"
-          >
-            초대
-          </Button>
-        </Dialog.Actions>
-      </Dialog>
-    </Portal>
+    <>
+      <Portal>
+        <Dialog style={styles.dialog} visible={visible} onDismiss={closeInvite}>
+          <Dialog.Title style={styles.title}>기도방 초대하기</Dialog.Title>
+          <Dialog.Content style={styles.content}>
+            <TextInput
+              label="이메일 주소"
+              onChangeText={onChangeEmail}
+              mode="outlined"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              style={styles.emailInput}
+            />
+          </Dialog.Content>
+          <Dialog.Actions style={styles.actions}>
+            <Button
+              style={styles.cancelBtn}
+              labelStyle={styles.buttonLabel}
+              onPress={closeInvite}
+            >
+              취소
+            </Button>
+            <Button
+              style={styles.inviteBtn}
+              labelStyle={styles.buttonLabel}
+              onPress={handleInvite}
+              mode="contained"
+            >
+              초대
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+    </>
   );
 };
 

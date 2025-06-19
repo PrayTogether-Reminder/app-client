@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { prayerService } from "../../services/prayerServices";
-import { Alert } from "react-native";
 import { CreatePrayerParams } from "./../../types/params/createPrayerParams";
 import { UpdatePrayerParams } from "../../types/params/updatePrayerParams";
 import QUERY_KEYS from "@/common/constants/queryKeys";
 import { ApiError } from "@/common/apis/api";
 import { CreatePrayerCompletionRequest } from "../../types/request/createPrayerCompletionRequest";
 import { queryClient } from "@/common/hooks/queries/customQueryClientProvider";
+import { showAlert } from "@/common/components/modal/stores/useAlertStore";
 
 // 기도(제목+내용) 작성
 export const usePrayerCreationMutation = () => {
@@ -22,10 +22,18 @@ export const usePrayerCreationMutation = () => {
           QUERY_KEYS.infinite,
         ],
       });
-      Alert.alert(data.message);
+      showAlert({
+        title: "기도 작성 완료",
+        message: data.message,
+        icon: "check-circle",
+      });
     },
-    onError: (error) => {
-      Alert.alert(error.message);
+    onError: (error: ApiError) => {
+      showAlert({
+        title: "기도 작성 실패",
+        message: error.message,
+        icon: "alert-circle",
+      });
     },
   });
 };
@@ -42,7 +50,6 @@ export const usePrayerUpdateMutation = () => {
     }: UpdatePrayerParams) =>
       prayerService.update(prayerTitleId, title, prayerList),
     onSuccess: (data, param) => {
-      Alert.alert(data.message);
       queryClient.invalidateQueries({
         queryKey: [
           QUERY_KEYS.rooms,
@@ -52,9 +59,18 @@ export const usePrayerUpdateMutation = () => {
           QUERY_KEYS.prayerContents,
         ],
       });
+      showAlert({
+        title: "기도 수정 완료",
+        message: data.message,
+        icon: "check-circle",
+      });
     },
-    onError: (error) => {
-      Alert.alert(error.message);
+    onError: (error: ApiError) => {
+      showAlert({
+        title: "기도 수정 실패",
+        message: error.message,
+        icon: "alert-circle",
+      });
     },
   });
 };
@@ -70,10 +86,18 @@ export const usePrayerCompletionMutation = () => {
       });
     },
     onError: (error: ApiError, variables, context) => {
-      Alert.alert(error.message);
+      showAlert({
+        title: "기도 완료 실패",
+        message: error.message,
+        icon: "alert-circle",
+      });
     },
     onSuccess: (data, variables) => {
-      Alert.alert(data.message);
+      showAlert({
+        title: "기도 완료",
+        message: data.message,
+        icon: "check-circle",
+      });
     },
   });
 };

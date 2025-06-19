@@ -5,7 +5,7 @@ import { BackHandler, SafeAreaView, StyleSheet } from "react-native";
 import Top1Body10Bottom1 from "../../../../src/common/layout/Top1Body10Bottom1";
 import { color } from "../../../../src/common/styles/color";
 import { useSelectedRoomStore } from "../../../../src/domain/rooms/stores/useSelectedRoomStore";
-import PrayerCreationCancelDialog from "./_components/dialog/PrayerCreationCancelDialog";
+import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
 import PrayerCreationBody from "./_components/PrayerCreationBody";
 import PrayerCreationBottom from "./_components/PrayerCreationBottom";
 import PrayerCreationTop from "./_components/PrayerCreationTop";
@@ -75,12 +75,16 @@ export default function PrayerCreationScreen() {
         ]}
       />
 
-      {/* 기도 제목 작성 취소 Dialog */}
-      <PrayerCreationCancelDialog
+      {/* 기도 제목 작성 취소 모달 */}
+      <ConfirmationModal
         visible={prayerCancellationDialog}
         onDismiss={cancelPrayerCancellation}
-        onCancel={cancelPrayerCancellation}
         onConfirm={confirmPrayerCancellation}
+        icon="alert-circle"
+        title="작성 취소"
+        content="기도 제목 작성을 취소하시겠습니까?"
+        confirmText="확인"
+        cancelText="돌아가기"
       />
     </SafeAreaView>
   );

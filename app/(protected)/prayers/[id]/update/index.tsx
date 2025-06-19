@@ -8,10 +8,10 @@ import { useCloseOnBack } from "../../../../../src/common/services/back-handler/
 import PrayerUpdateTop from "./_components/PrayerUpdateTop";
 import PrayerUpdateBody from "./_components/PrayerUpdateBody";
 import PrayerUpdateBottom from "./_components/PrayerUpdateBottom";
-import PrayerUpdateCancelDialog from "./_components/dialog/PrayerUpdateCancelDialog";
+import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
 import Top1Body10Bottom1 from "../../../../../src/common/layout/Top1Body10Bottom1";
 
-export default function PrayerCreationScreen() {
+export default function PrayerUpdateScreen() {
   const originalTitle = useSelectedPrayerTitleStore().selectedPrayerTitle;
   const [prayerTitle, setPrayerTitle] = useState(originalTitle?.title ?? "");
   const room = useSelectedRoomStore().selectedRoom;
@@ -61,12 +61,16 @@ export default function PrayerCreationScreen() {
         ]}
       />
 
-      {/* 기도 제목 변경 취소 Dialog */}
-      <PrayerUpdateCancelDialog
+      {/* ConfirmationModal을 사용한 기도 제목 변경 취소 모달 */}
+      <ConfirmationModal
         visible={prayerUpdateDialog}
         onDismiss={cancelPrayerCancellation}
-        onCancel={cancelPrayerCancellation}
         onConfirm={confirmPrayerCancellation}
+        icon="alert-circle" // 또는 "pencil-off", "close-circle" 등 수정 취소를 나타내는 아이콘
+        title="변경 취소"
+        content="기도 제목 변경을 취소하시겠습니까?"
+        confirmText="확인"
+        cancelText="돌아가기"
       />
     </SafeAreaView>
   );

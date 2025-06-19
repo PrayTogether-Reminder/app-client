@@ -1,9 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { roomService } from "../../services/roomService";
 import { Room } from "../../types/room";
-import { Alert } from "react-native";
 import { DeleteRoomParams } from "../../types/params/deleteRoomParams";
+import { CreateRoomRequest } from "../../types/request/createRoomRequest";
 import QUERY_KEYS from "../../../../common/constants/queryKeys";
+import { ApiError } from "../../../../common/apis/api";
+import { showAlert } from "@/common/components/modal/stores/useAlertStore";
 
 // 방 알림 설정 토글 mutation
 export const useToggleRoomNotificationMutation = () => {
@@ -41,15 +43,20 @@ export const useToggleRoomNotificationMutation = () => {
 
       return { previousData };
     },
-    onError: (error, roomId, context) => {
+    onError: (error: ApiError, roomId, context) => {
       if (context?.previousData) {
         queryClient.setQueryData(
           [QUERY_KEYS.rooms, QUERY_KEYS.infinite],
           context.previousData
         );
       }
+      showAlert({
+        title: "알림 설정 실패",
+        message: error.message,
+        icon: "bell-off",
+      });
     },
-    onSuccess: () => {
+    onSuccess: (data, roomId) => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.rooms, QUERY_KEYS.infinite],
         refetchType: "none",
@@ -68,10 +75,18 @@ export const useRoomCreationMutation = () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.rooms, QUERY_KEYS.infinite],
       });
-      Alert.alert(data.message);
+      showAlert({
+        title: "기도방 생성 완료",
+        message: data.message,
+        icon: "home-plus",
+      });
     },
-    onError: (error) => {
-      Alert.alert(error.message);
+    onError: (error: ApiError) => {
+      showAlert({
+        title: "기도방 생성 실패",
+        message: error.message,
+        icon: "alert-circle",
+      });
     },
   });
 };
@@ -86,10 +101,18 @@ export const useRoomDeletionMutation = () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.rooms, QUERY_KEYS.infinite],
       });
-      Alert.alert(data.message);
+      showAlert({
+        title: "기도방 나가기 완료",
+        message: data.message,
+        icon: "exit-to-app",
+      });
     },
-    onError: (error) => {
-      Alert.alert(error.message);
+    onError: (error: ApiError) => {
+      showAlert({
+        title: "기도방 나가기 실패",
+        message: error.message,
+        icon: "alert-circle",
+      });
     },
   });
 };

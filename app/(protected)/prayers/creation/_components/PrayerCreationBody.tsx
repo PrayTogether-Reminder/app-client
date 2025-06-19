@@ -1,25 +1,25 @@
-import React, { useState, useRef, useMemo } from "react";
-import { View, StyleSheet, Platform, Dimensions, Alert } from "react-native";
+import { usePrayerCreationStore } from "@/domain/prayers/stores/usePrayerCreationStore";
+import React, { useMemo, useRef, useState } from "react";
+import { Dimensions, Platform, StyleSheet, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Divider, Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../../../src/common/styles/color";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { usePrayerCreationStore } from "@/domain/prayers/stores/usePrayerCreationStore";
 import { PrayerCreationItem } from "../../../../../src/domain/prayers/types/PrayerCreationItem";
-import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
 import { useRoomMembersQuery } from "../../../../../src/domain/rooms/hooks/queries/useRoomQueries";
+import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
 import { RoomMember } from "../../../../../src/domain/rooms/types/roomMember";
 
 // 컴포넌트 임포트
-import PrayerTitleInput from "./PrayerTitleInput";
-import PrayerMemberSelector from "./PrayerMemberSelector";
-import PrayerContentInput from "./PrayerContentInput";
+import { showAlert } from "@/common/components/modal/stores/useAlertStore";
+import ConfirmationModal from "@/common/components/modal/ConfirmationModal"; // ConfirmationModal 추가
 import PrayerAddButton from "./PrayerAddButton";
 import PrayerCarousel from "./PrayerCarousel";
-import PrayerDeleteDialog from "./dialog/PrayerDeleteDialog";
+import PrayerContentInput from "./PrayerContentInput";
+import PrayerMemberSelector from "./PrayerMemberSelector";
+import PrayerTitleInput from "./PrayerTitleInput";
 import PrayerCustomNameDialog from "./dialog/PrayerCustomNameDialog";
 import PrayerMemberSelectionModal from "./modal/PrayerMemberSelectionModal";
-import PrayerEditDialog from "./dialog/PrayerEditDialog";
 
 const { width } = Dimensions.get("window");
 const CARD_SPACING = RFValue(20); // 카드 사이 간격
@@ -133,7 +133,10 @@ export default function PrayerCreationBody({
     );
 
     if (isDuplicateMember) {
-      Alert.alert(`${selectedMember.name}님은 이미 기도문을 작성했습니다.`);
+      showAlert({
+        title: "기도문 중복",
+        message: `${selectedMember?.name}님은 이미 기도문을 작성했습니다.`,
+      });
       return;
     }
 
@@ -236,12 +239,29 @@ export default function PrayerCreationBody({
           setCurrentIndex={setCurrentIndex}
         />
       </View>
-      {/* 기도문 삭제 확인 Dialog */}
-      <PrayerDeleteDialog
+
+      {/* 기도문 삭제 확인 */}
+      <ConfirmationModal
         visible={prayerDeleteDialog}
         onDismiss={cancelPrayerDelete}
         onConfirm={confirmPrayerDelete}
-        memberName={prayerDelete?.memberName}
+        icon="alert-circle"
+        title="기도문 삭제"
+        content={`${prayerDelete?.memberName}님의 기도문을 삭제하시겠습니까?`}
+        confirmText="삭제"
+        cancelText="취소"
+      />
+
+      {/* 기도문 편집 확인  */}
+      <ConfirmationModal
+        visible={prayerEditDialog}
+        onDismiss={cancelPrayerEdit}
+        onConfirm={confirmPrayerEdit}
+        icon="alert-circle"
+        title="기도문 수정"
+        content={`${prayerEdit?.memberName}님의 기도문을 수정하시겠습니까?`}
+        confirmText="수정"
+        cancelText="취소"
       />
 
       {/* 멤버 선택 Modal */}
@@ -260,13 +280,6 @@ export default function PrayerCreationBody({
         onChangeText={onChangeCustomName}
         onCancel={closeCustomNameDialog}
         onAdd={addCustomName}
-      />
-      {/* 기도문 편집 Dialog*/}
-      <PrayerEditDialog
-        visible={prayerEditDialog}
-        onDismiss={cancelPrayerEdit}
-        onConfirm={confirmPrayerEdit}
-        memberName={prayerEdit?.memberName}
       />
     </KeyboardAwareScrollView>
   );
