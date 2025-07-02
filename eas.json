@@ -10,7 +10,11 @@
       "ios": {
         "simulator": true
       },
-      "environment": "development"
+      "environment": "development",
+      "env": {
+        "GOOGLE_SERVICES_JSON": "./google-services.json",
+        "GOOGLE_SERVICES_FILE_IOS": "./GoogleService-Info.plist"
+      }
     },
     "preview": {
       "android": {
@@ -21,7 +25,11 @@
         "distribution": "internal"
       },
       "distribution": "internal",
-      "environment": "preview"
+      "environment": "preview",
+      "env": {
+        "GOOGLE_SERVICES_JSON": "./google-services.json",
+        "GOOGLE_SERVICES_FILE_IOS": "./GoogleService-Info.plist"
+      }
     },
     "production": {
       "android": {
@@ -31,7 +39,11 @@
       "ios": {
         "distribution": "store"
       },
-      "environment": "production"
+      "environment": "production",
+      "env": {
+        "GOOGLE_SERVICES_JSON": "./google-services.json",
+        "GOOGLE_SERVICES_FILE_IOS": "./GoogleService-Info.plist"
+      }
     }
   }
 }
