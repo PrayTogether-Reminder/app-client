@@ -8,6 +8,8 @@ import { useSelectedPrayerTitleStore } from "../../../../../src/domain/prayers/s
 import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
 import { usePrayerCompletionMutation } from "../../../../../src/domain/prayers/hooks/mutations/usePrayerMuations";
 import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
+import OverlayLoading from "@/common/components/loading/OverlayLoading";
+
 function PrayerReadBottom() {
   const router = useRouter();
   useSelectedPrayerTitleStore().selectedPrayerTitle?.id ?? null;
@@ -17,7 +19,8 @@ function PrayerReadBottom() {
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
-  const { mutate: nofityPrayerCompletion } = usePrayerCompletionMutation();
+  const { mutate: nofityPrayerCompletion, isPending } =
+    usePrayerCompletionMutation();
 
   const handlePress = () => {
     showModal();
@@ -40,6 +43,7 @@ function PrayerReadBottom() {
           labelStyle={styles.bottomButtonText}
           icon="bell"
           onPress={handlePress}
+          disabled={isPending}
         >
           기도 알림
         </Button>
@@ -56,6 +60,8 @@ function PrayerReadBottom() {
         cancelText="취소"
         iconColor={color.secondary}
       />
+
+      {isPending && <OverlayLoading />}
     </>
   );
 }

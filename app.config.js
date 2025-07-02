@@ -1,3 +1,9 @@
+console.log(
+  "GOOGLE_SERVICES_JSON env:",
+  process.env.GOOGLE_SERVICES_JSON ? "EXISTS" : "NOT FOUND"
+);
+console.log("Current working directory:", process.cwd());
+
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 module.exports = {
@@ -67,6 +73,7 @@ module.exports = {
     "@react-native-firebase/app",
     "@react-native-firebase/messaging",
     "expo-notifications",
+    // "expo-dev-client",
   ],
   extra: {
     router: {
