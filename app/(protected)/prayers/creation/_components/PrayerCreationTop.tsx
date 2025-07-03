@@ -1,8 +1,9 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Platform } from "react-native";
 import { Title, IconButton, Appbar } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { backgroundColor, color } from "../../../../../src/common/styles/color";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface PrayerCreationTopProps {
   roomName: string | undefined;
@@ -13,8 +14,17 @@ export default function PrayerCreationTop({
   roomName,
   onCancel,
 }: PrayerCreationTopProps) {
+  const insets = useSafeAreaInsets();
+  
   return (
-    <Appbar.Header style={styles.header}>
+    <Appbar.Header 
+      style={[
+        styles.header, 
+        { 
+          paddingTop: Platform.OS === 'ios' ? insets.top : 0,
+          height: RFValue(56) + (Platform.OS === 'ios' ? insets.top : 0),
+        }
+      ]}>
       <Title numberOfLines={1} ellipsizeMode="tail" style={styles.title}>
         {roomName}
       </Title>
@@ -37,6 +47,8 @@ const styles = StyleSheet.create({
     paddingLeft: RFValue(22),
     backgroundColor: color.third,
     height: RFValue(56), // 헤더 높이 고정
+    paddingTop: 0, // 상단 패딩 제거
+    elevation: 0, // 그림자 제거 (Android)
   },
   title: {
     fontSize: RFValue(18),

@@ -1,11 +1,12 @@
 // PrayerRoomHeader.tsx
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 import { Appbar, useTheme } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../../../src/common/styles/color";
 import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface PrayerRoomTopProps {
   openRightMenu: () => void;
@@ -14,10 +15,19 @@ interface PrayerRoomTopProps {
 const PrayerRoomTop: React.FC<PrayerRoomTopProps> = ({ openRightMenu }) => {
   const router = useRouter();
   const room = useSelectedRoomStore().selectedRoom;
+  const insets = useSafeAreaInsets();
 
   return (
     <>
-      <Appbar.Header style={styles.header}>
+      <Appbar.Header 
+        style={[
+          styles.header, 
+          { 
+            paddingTop: Platform.OS === 'ios' ? insets.top : 0,
+            height: RFValue(56) + (Platform.OS === 'ios' ? insets.top : 0),
+          }
+        ]}
+      >
         <Appbar.BackAction
           style={styles.headerBackAction}
           onPress={() => router.back()}
@@ -38,6 +48,7 @@ const PrayerRoomTop: React.FC<PrayerRoomTopProps> = ({ openRightMenu }) => {
     </>
   );
 };
+
 const styles = StyleSheet.create({
   header: {
     backgroundColor: color.third,
@@ -64,4 +75,5 @@ const styles = StyleSheet.create({
     marginLeft: 0, // 기본 마진 제거
   },
 });
+
 export default PrayerRoomTop;

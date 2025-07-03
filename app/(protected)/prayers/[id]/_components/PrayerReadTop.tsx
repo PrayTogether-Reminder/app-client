@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 import { Appbar, useTheme } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -7,6 +7,7 @@ import { color } from "../../../../../src/common/styles/color";
 import path from "../../../../../src/common/constants/path";
 import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
 import { useSelectedPrayerTitleStore } from "../../../../../src/domain/prayers/stores/useSelectedPrayerTitleStore";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface PrayerReadTopProps {}
 
@@ -14,13 +15,21 @@ const PrayerReadTop: React.FC<PrayerReadTopProps> = () => {
   const router = useRouter();
   const room = useSelectedRoomStore().selectedRoom;
   const titleId = useSelectedPrayerTitleStore().selectedPrayerTitle?.id ?? null;
+  const insets = useSafeAreaInsets();
   const onEdit = () => {
     router.push(path.showPrayersUpdateById(titleId));
   };
 
   return (
     <>
-      <Appbar.Header style={styles.header}>
+      <Appbar.Header 
+        style={[
+          styles.header, 
+          { 
+            paddingTop: Platform.OS === 'ios' ? insets.top : 0,
+            height: RFValue(56) + (Platform.OS === 'ios' ? insets.top : 0),
+          }
+        ]}>
         <Appbar.BackAction
           style={styles.headerBackAction}
           onPress={() => router.back()}
@@ -49,6 +58,8 @@ const styles = StyleSheet.create({
     alignItems: "center", // 수직 중앙 정렬
     flexDirection: "row", // 명시적으로 가로 방향 설정
     justifyContent: "space-between", // 요소들 사이 간격 균등하게
+    paddingTop: 0, // 상단 패딩 제거
+    elevation: 0, // 그림자 제거 (Android)
   },
   headerTitle: {
     color: color.primary,
