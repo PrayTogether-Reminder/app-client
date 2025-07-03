@@ -10,9 +10,16 @@ import PrayerReadBottom from "./_components/PrayerReadBottom";
 import PrayerReadTop from "./_components/PrayerReadTop";
 import OverlayLoading from "@/common/components/loading/OverlayLoading";
 import { usePrayerCompletionMutation } from "../../../../src/domain/prayers/hooks/mutations/usePrayerMuations";
+import { useCloseOnBack } from "@/common/services/back-handler/useCloseOnBack";
 
 export default function PrayerReadScreen() {
   const { mutate: notifyPrayerCompletion, isPending } = usePrayerCompletionMutation();
+
+  useCloseOnBack(() => {
+    // 로딩 중일 때는 아무것도 하지 않음 (뒤로가기 막힘)
+    console.log("로딩 중에는 뒤로가기가 막혔습니다.");
+  }, isPending);
+
 
   return (
     <SafeAreaView style={styles.container}>
