@@ -20,14 +20,7 @@ export default function PrayerCreationTop({
   const insets = useSafeAreaInsets();
   
   return (
-    <Appbar.Header 
-      style={[
-        styles.header, 
-        { 
-          paddingTop: Platform.OS === 'ios' ? insets.top : 0,
-          height: RFValue(56) + (Platform.OS === 'ios' ? insets.top : 0),
-        }
-      ]}>
+    <Appbar.Header style={styles.header}>
       <Title numberOfLines={1} ellipsizeMode="tail" style={styles.title}>
         {roomName}
       </Title>

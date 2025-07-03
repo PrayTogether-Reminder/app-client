@@ -22,14 +22,7 @@ const PrayerReadTop: React.FC<PrayerReadTopProps> = () => {
 
   return (
     <>
-      <Appbar.Header 
-        style={[
-          styles.header, 
-          { 
-            paddingTop: Platform.OS === 'ios' ? insets.top : 0,
-            height: RFValue(56) + (Platform.OS === 'ios' ? insets.top : 0),
-          }
-        ]}>
+      <Appbar.Header style={styles.header}>
         <Appbar.BackAction
           style={styles.headerBackAction}
           onPress={() => router.back()}
