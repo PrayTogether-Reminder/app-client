@@ -20,7 +20,6 @@ export default function PrayerReadScreen() {
     console.log("로딩 중에는 뒤로가기가 막혔습니다.");
   }, isPending);
 
-
   return (
     <SafeAreaView style={styles.container}>
       <Top1Body10Bottom1
