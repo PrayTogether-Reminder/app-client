@@ -43,7 +43,14 @@ yarn-error.*
 # android
 android/**
 
+# ios
+ios/**
+
+# app
+*.app/**
+
 # json-server
 db.json
-GoogleService-Info.plist
-google-services.json
+*.apk
+#GoogleService-Info.plist
+#google-services.json
