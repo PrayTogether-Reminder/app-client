@@ -38,7 +38,6 @@ const PrayerRoomTop: React.FC<PrayerRoomTopProps> = ({ openRightMenu }) => {
     </>
   );
 };
-
 const styles = StyleSheet.create({
   header: {
     backgroundColor: color.third,
@@ -46,6 +45,8 @@ const styles = StyleSheet.create({
     alignItems: "center", // 수직 중앙 정렬
     flexDirection: "row", // 명시적으로 가로 방향 설정
     justifyContent: "space-between", // 요소들 사이 간격 균등하게
+    paddingTop: 0, // 상단 패딩 제거
+    elevation: 0, // 그림자 제거 (Android)
   },
   headerTitle: {
     color: color.primary,
@@ -63,5 +64,4 @@ const styles = StyleSheet.create({
     marginLeft: 0, // 기본 마진 제거
   },
 });
-
 export default PrayerRoomTop;

@@ -1,10 +1,12 @@
 import { Fragment, useState, useRef } from "react";
+import { SafeAreaView, StyleSheet } from "react-native";
 import Top1Body10Bottom1 from "@/common/layout/Top1Body10Bottom1";
 import PrayerRoomTop from "./_components/PrayerRoomTop";
 import PrayerRoomBody from "./_components/PrayerRoomBody";
 import PrayerRoomBottom from "./_components/PrayerRoomBottom";
 import RoomMembersModal from "./_components/RoomMembersModal";
 import RoomInviteDialog from "./_components/RoomInviteDialog";
+import { backgroundColor } from "@/common/styles/color";
 
 export default function PrayerRoomScreen(): React.ReactElement {
   const [rightMenueVisible, setRightMenueVisible] = useState(false);
