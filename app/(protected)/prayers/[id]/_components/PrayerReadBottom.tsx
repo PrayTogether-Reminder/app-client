@@ -6,10 +6,14 @@ import { color } from "../../../../../src/common/styles/color";
 import { useRouter } from "expo-router";
 import { useSelectedPrayerTitleStore } from "../../../../../src/domain/prayers/stores/useSelectedPrayerTitleStore";
 import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
-import { usePrayerCompletionMutation } from "../../../../../src/domain/prayers/hooks/mutations/usePrayerMuations";
 import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
 
-function PrayerReadBottom() {
+interface PrayerReadBottomProps {
+  onPrayerComplete: (params: { roomId: number }) => void;
+  isPending: boolean;
+}
+
+function PrayerReadBottom({ onPrayerComplete, isPending }: PrayerReadBottomProps) {
   const router = useRouter();
   useSelectedPrayerTitleStore().selectedPrayerTitle?.id ?? null;
   const roomId = useSelectedRoomStore().selectedRoom?.id ?? 0;
@@ -18,17 +22,12 @@ function PrayerReadBottom() {
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
-  const { mutate: nofityPrayerCompletion, isPending } =
-    usePrayerCompletionMutation();
-
   const handlePress = () => {
     showModal();
   };
 
   const handleConfirm = () => {
-    nofityPrayerCompletion({
-      roomId,
-    });
+    onPrayerComplete({ roomId });
     hideModal();
   };
 
@@ -62,6 +61,7 @@ function PrayerReadBottom() {
     </>
   );
 }
+
 
 const styles = StyleSheet.create({
   bottomButtonContainer: {

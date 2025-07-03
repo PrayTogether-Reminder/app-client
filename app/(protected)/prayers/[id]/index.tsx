@@ -12,20 +12,25 @@ import OverlayLoading from "@/common/components/loading/OverlayLoading";
 import { usePrayerCompletionMutation } from "../../../../src/domain/prayers/hooks/mutations/usePrayerMuations";
 
 export default function PrayerReadScreen() {
-  const { isPending } = usePrayerCompletionMutation();
+  const { mutate: notifyPrayerCompletion, isPending } = usePrayerCompletionMutation();
 
   return (
     <SafeAreaView style={styles.container}>
       <Top1Body10Bottom1
-        tops={[<PrayerReadTop />]}
-        bodies={[<PrayerReadBody />]}
-        bottoms={[<PrayerReadBottom />]}
+        tops={[<PrayerReadTop key="top" />]}
+        bodies={[<PrayerReadBody key="body" />]}
+        bottoms={[
+          <PrayerReadBottom 
+            key="bottom"
+            onPrayerComplete={notifyPrayerCompletion}
+            isPending={isPending}
+          />
+        ]}
       />
       {isPending && <OverlayLoading />}
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
