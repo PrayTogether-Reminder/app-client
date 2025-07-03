@@ -8,7 +8,6 @@ import { useSelectedPrayerTitleStore } from "../../../../../src/domain/prayers/s
 import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
 import { usePrayerCompletionMutation } from "../../../../../src/domain/prayers/hooks/mutations/usePrayerMuations";
 import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
-import OverlayLoading from "@/common/components/loading/OverlayLoading";
 
 function PrayerReadBottom() {
   const router = useRouter();
@@ -60,8 +59,6 @@ function PrayerReadBottom() {
         cancelText="취소"
         iconColor={color.secondary}
       />
-
-      {isPending && <OverlayLoading />}
     </>
   );
 }

@@ -8,8 +8,12 @@ import Top1Body10Bottom1 from "../../../../src/common/layout/Top1Body10Bottom1";
 import PrayerReadBody from "./_components/PrayerReadBody";
 import PrayerReadBottom from "./_components/PrayerReadBottom";
 import PrayerReadTop from "./_components/PrayerReadTop";
+import OverlayLoading from "@/common/components/loading/OverlayLoading";
+import { usePrayerCompletionMutation } from "../../../../src/domain/prayers/hooks/mutations/usePrayerMuations";
 
 export default function PrayerReadScreen() {
+  const { isPending } = usePrayerCompletionMutation();
+
   return (
     <SafeAreaView style={styles.container}>
       <Top1Body10Bottom1
@@ -17,6 +21,7 @@ export default function PrayerReadScreen() {
         bodies={[<PrayerReadBody />]}
         bottoms={[<PrayerReadBottom />]}
       />
+      {isPending && <OverlayLoading />}
     </SafeAreaView>
   );
 }
