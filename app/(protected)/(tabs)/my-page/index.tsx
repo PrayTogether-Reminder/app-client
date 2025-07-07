@@ -12,6 +12,7 @@ import { useAuthStore } from "@/domain/auth/stores/useAuthStore";
 import FcmManager from "@/common/services/fcm/fcmManager";
 import { checkNotificationPermission } from "@/common/services/fcm/fcmUtils";
 import { useRegisterFcmTokenMutation } from "@/domain/fcmToken/hooks/useFcmTokenMutation";
+import { useDeleteFcmTokenMutation } from "@/domain/fcmToken/hooks/useDeleteFcmTokenMutation";
 
 type MyPageScreenProps = {};
 
@@ -22,6 +23,7 @@ export default function MyPageScreen(props: MyPageScreenProps) {
   const fcmManager = FcmManager.getInstance();
   const prevPermissionStatus = useRef<boolean | null>(null);
   const { mutate: registerFcmTokenRequest } = useRegisterFcmTokenMutation();
+  const { mutate: deleteFcmTokenRequest } = useDeleteFcmTokenMutation();
 
   // 알림 권한 확인 및 변경 처리 함수
   const checkAndUpdatePermission = async () => {
@@ -121,6 +123,28 @@ export default function MyPageScreen(props: MyPageScreenProps) {
     console.log("로그아웃 처리");
     try {
       const refreshToken = await getRefreshToken();
+      
+      // FCM 토큰 가져오기
+      const fcmToken = await fcmManager.getFCMTokenByStorage();
+      
+      // FCM 토큰이 있으면 서버에서 삭제 (동기적으로 처리)
+      if (fcmToken) {
+        await new Promise<void>((resolve, reject) => {
+          deleteFcmTokenRequest(fcmToken, {
+            onSuccess: () => {
+              console.log("FCM 토큰 삭제 완료");
+              resolve();
+            },
+            onError: (error) => {
+              console.error("FCM 토큰 삭제 실패:", error);
+              // 토큰 삭제 실패해도 로그아웃은 진행
+              resolve();
+            },
+          });
+        });
+      }
+      
+      // FCM 토큰 삭제 후 로그아웃 진행
       logoutRequest(
         { refreshToken },
         {
