@@ -131,13 +131,16 @@ export default function MyPageScreen(props: MyPageScreenProps) {
       if (fcmToken) {
         await new Promise<void>((resolve, reject) => {
           deleteFcmTokenRequest(fcmToken, {
-            onSuccess: () => {
+            onSuccess: async () => {
               console.log("FCM 토큰 삭제 완료");
+              // 로컬에서도 토큰 삭제
+              await fcmManager.deleteFCMToken();
               resolve();
             },
-            onError: (error) => {
+            onError: async (error) => {
               console.error("FCM 토큰 삭제 실패:", error);
-              // 토큰 삭제 실패해도 로그아웃은 진행
+              // 서버 삭제 실패해도 로컬 토큰은 삭제
+              await fcmManager.deleteFCMToken();
               resolve();
             },
           });

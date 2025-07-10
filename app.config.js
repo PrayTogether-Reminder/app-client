@@ -39,7 +39,7 @@ module.exports = {
       },
       ITSAppUsesNonExemptEncryption: false, // 암호화 관련 설정 추가
     },
-    buildNumber: "1",
+    buildNumber: "1.0.0",
   },
   android: {
     adaptiveIcon: {
@@ -51,7 +51,7 @@ module.exports = {
     googleServicesFile:
       process.env.GOOGLE_SERVICES_JSON || "./google-services.json",
     permissions: ["RECEIVE_BOOT_COMPLETED", "VIBRATE"],
-    versionCode: 1,
+    versionCode: 3,
   },
   web: {
     favicon: "./assets/main_logo.png",
