@@ -35,7 +35,7 @@ module.exports = {
       NSUserNotificationUsageDescription:
         "앱에서 중요한 알림을 보내기 위해 알림 권한이 필요합니다.",
       NSAppTransportSecurity: {
-        NSAllowsArbitraryLoads: true,
+        // NSAllowsArbitraryLoads: true, // http 요청 허용
       },
       ITSAppUsesNonExemptEncryption: false, // 암호화 관련 설정 추가
     },
@@ -63,7 +63,7 @@ module.exports = {
       "expo-build-properties",
       {
         android: {
-          usesCleartextTraffic: true,
+          // usesCleartextTraffic: true, // http 요청 허용
         },
         ios: {
           useFrameworks: "static",

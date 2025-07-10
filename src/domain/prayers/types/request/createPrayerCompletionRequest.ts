@@ -1,3 +1,3 @@
 export interface CreatePrayerCompletionRequest {
-  roomId: number;
+  prayerTitleId: number;
 }
