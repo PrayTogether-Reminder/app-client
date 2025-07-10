@@ -80,9 +80,10 @@ export const usePrayerCompletionMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ prayerTitleId }: CreatePrayerCompletionRequest) => {
+    mutationFn: ({ prayerTitleId, roomId }: CreatePrayerCompletionRequest) => {
       return prayerService.completePrayer({
         prayerTitleId,
+        roomId,
       });
     },
     onError: (error: ApiError, variables, context) => {

@@ -9,7 +9,7 @@ import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/use
 import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
 
 interface PrayerReadBottomProps {
-  onPrayerComplete: (params: { prayerTitleId: number }) => void;
+  onPrayerComplete: (params: { prayerTitleId: number; roomId: number }) => void;
   isPending: boolean;
 }
 
@@ -27,7 +27,7 @@ function PrayerReadBottom({ onPrayerComplete, isPending }: PrayerReadBottomProps
   };
 
   const handleConfirm = () => {
-    onPrayerComplete({ prayerTitleId });
+    onPrayerComplete({ prayerTitleId, roomId });
     hideModal();
   };
 
