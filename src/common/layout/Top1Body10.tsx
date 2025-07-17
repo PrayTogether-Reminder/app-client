@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 import { View, StyleSheet } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 import { backgroundColor, flexMarker, color } from "../styles/color";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface LayoutProps {
   tops: ReactNode[];
@@ -9,9 +10,11 @@ interface LayoutProps {
 }
 
 export default function Top1Body10Bottom1({ tops, bodies }: LayoutProps) {
+  const insets = useSafeAreaInsets();
+
   return (
     <View style={styles.container}>
-      <View style={styles.topSection}>
+      <View style={[styles.topSection, { paddingTop: insets.top }]}>
         {tops.map((top, index) => (
           <React.Fragment key={`top-${index}`}>{top}</React.Fragment>
         ))}
@@ -34,7 +37,7 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   topSection: {
-    flex: 1.3,
+    flex: 1.3,  
     backgroundColor: color.third,
     width: "100%",
     height: "100%",

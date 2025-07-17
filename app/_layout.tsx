@@ -51,7 +51,7 @@ export default function RootLayout() {
         {/* catch rendering error */}
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <CustomQueryClientProvider>
-            <StatusBar backgroundColor={backgroundColor.white} />
+            <StatusBar style="light" />
             <AuthEventListener />
             <AuthStateListener>
               <GlobalAlertModal />
