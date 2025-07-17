@@ -1,7 +1,7 @@
 import { usePrayerCreationStore } from "@/domain/prayers/stores/usePrayerCreationStore";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { BackHandler, SafeAreaView, StyleSheet } from "react-native";
+import { BackHandler, SafeAreaView, StyleSheet, View } from "react-native";
 import Top1Body10Bottom1 from "../../../../src/common/layout/Top1Body10Bottom1";
 import { color } from "../../../../src/common/styles/color";
 import { useSelectedRoomStore } from "../../../../src/domain/rooms/stores/useSelectedRoomStore";
@@ -52,7 +52,7 @@ export default function PrayerCreationScreen() {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Top1Body10Bottom1
         tops={[
           <PrayerCreationTop
@@ -86,7 +86,7 @@ export default function PrayerCreationScreen() {
         confirmText="확인"
         cancelText="돌아가기"
       />
-    </SafeAreaView>
+    </View>
   );
 }
 

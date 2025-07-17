@@ -16,7 +16,7 @@ export default function InvitationAppBar({}: InvitationAppBarProps): React.React
       <Appbar.BackAction
         size={RFValue(24)}
         color={color.white}
-        onPress={() => router.back()}
+        onPress={() => router.navigate("/(protected)/(tabs)/my-page" as any)}
       />
       <Appbar.Content
         mode="medium"
@@ -30,6 +30,7 @@ export default function InvitationAppBar({}: InvitationAppBarProps): React.React
 
 const styles = StyleSheet.create({
   header: {
+    height: RFValue(36),
     backgroundColor: color.third,
   },
   backAction: {},
