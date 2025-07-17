@@ -57,17 +57,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     alignSelf: "center", // 제목 자체도 중앙 정렬
-    paddingBottom: Platform.OS === "ios" ? RFValue(40) : 0, // iOS에서만 패딩 조정
   },
   headerAction: {
     alignSelf: "center", // 메뉴 버튼 중앙 정렬
     marginRight: 0, // 기본 마진 제거
-    paddingBottom: Platform.OS === "ios" ? RFValue(30) : 0, // iOS에서만 패딩 조정
   },
   headerBackAction: {
     alignSelf: "center", // 뒤로가기 버튼 중앙 정렬
     marginLeft: 0, // 기본 마진 제거
-    paddingBottom: Platform.OS === "ios" ? RFValue(30) : 0, // iOS에서만 패딩 조정
   },
 });
 

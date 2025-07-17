@@ -47,7 +47,7 @@ const PrayerReadTop: React.FC<PrayerReadTopProps> = () => {
 const styles = StyleSheet.create({
   header: {
     backgroundColor: color.third,
-    height: RFValue(56), // 고정된 높이 설정
+    height: "100%", // 고정된 높이 설정
     alignItems: "center", // 수직 중앙 정렬
     flexDirection: "row", // 명시적으로 가로 방향 설정
     justifyContent: "space-between", // 요소들 사이 간격 균등하게
