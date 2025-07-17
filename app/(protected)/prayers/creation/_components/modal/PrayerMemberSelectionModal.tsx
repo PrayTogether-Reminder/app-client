@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, ScrollView, TouchableOpacity } from "react-native";
+import { StyleSheet, View, ScrollView, TouchableOpacity, Text as RNText } from "react-native";
 import {
   Title,
   Text,
@@ -10,7 +10,7 @@ import {
   Modal,
 } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { color, flexMarker } from "../../../../../../src/common/styles/color";
+import { color, flexMarker } from '../../../../../../src/common/styles/color';
 import { RoomMember } from "../../../../../../src/domain/rooms/types/roomMember";
 import { backgroundColor } from "../../../../../../src/common/styles/color";
 
@@ -120,9 +120,11 @@ const styles = StyleSheet.create({
     marginBottom: RFValue(16),
   },
   memberName: {
+    height: RFValue(70),
     marginTop: RFValue(8),
     textAlign: "center",
     fontSize: RFValue(14),
+    color: color.black,
   },
   emptyText: {
     textAlign: "center",
