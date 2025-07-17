@@ -21,7 +21,7 @@ export default function Top1Body10Bottom1({
     <View style={styles.container}>
       <View style={[
         styles.topSection,
-        Platform.OS === 'ios' && { paddingTop: insets.top }
+        Platform.OS === 'ios' && { paddingTop: insets.top, marginTop: -insets.top }
       ]}>
         {tops.map((top, index) => (
           <React.Fragment key={`top-${index}`}>{top}</React.Fragment>

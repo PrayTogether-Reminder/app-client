@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     alignItems: "center", // 수직 중앙 정렬 추가
     paddingLeft: RFValue(22),
     backgroundColor: color.third,
-    height: RFValue(56), // 헤더 높이 고정
+    height: "100%", // 헤더 높이 고정
     paddingTop: 0, // 상단 패딩 제거
     elevation: 0, // 그림자 제거 (Android)
   },
