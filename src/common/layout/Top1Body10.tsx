@@ -14,7 +14,7 @@ export default function Top1Body10Bottom1({ tops, bodies }: LayoutProps) {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.topSection, { paddingTop: insets.top }]}>
+      <View style={[styles.topSection, { paddingTop: insets.top,marginTop: -insets.top }]}>
         {tops.map((top, index) => (
           <React.Fragment key={`top-${index}`}>{top}</React.Fragment>
         ))}
