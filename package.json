@@ -13,7 +13,10 @@
     "build-android-preview": "eas build --platform android --profile preview --local --clear-cache",
     "build-android-dev": "eas build --platform android --profile development --local --clear-cache",
     "build-ios-preview": "eas build --platform ios --profile preview --local --clear-cache",
-    "build-ios-dev": "eas build --platform ios --profile development --local --clear-cache"
+    "build-ios-preview-cloud-submit": "eas build --platform ios --profile preview --auto-submit --clear-cache",
+    "build-ios-production-cloud-submit": "eas build --platform ios --profile production --auto-submit --clear-cache",
+    "build-ios-dev-submit": "eas build --platform ios --profile development --local --clear-cache && eas submit --platform ios --profile development",
+    "build-ios-dev-cloud-submit": "eas build --platform ios --profile development --auto-submit --clear-cache"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",

@@ -104,18 +104,59 @@ export default function MyPageScreen(props: MyPageScreenProps) {
   }
 
   async function handleGoToNotifications() {
-    console.log("시스템 알림 설정으로 직접 이동");
+    console.log("알림 설정 처리 시작");
 
-    // 현재 권한 상태 저장 (설정으로 이동 전 참조 기준점)
+    // 현재 권한 상태 확인
     const currentStatus = await checkNotificationPermission();
-    prevPermissionStatus.current = currentStatus;
-    console.log("설정으로 이동하기 전 알림 권한 상태:", currentStatus);
+    console.log("현재 알림 권한 상태:", currentStatus);
 
-    // 설정 열기
-    if (Platform.OS === "ios") {
-      Linking.openURL("app-settings:");
+    if (!currentStatus) {
+      // 권한이 없으면 먼저 권한 요청 시도
+      console.log("알림 권한 요청 시작");
+      const granted = await fcmManager.requestPermission();
+      console.log("알림 권한 요청 결과:", granted);
+      
+      if (granted) {
+        // 권한이 허용되면 FCM 토큰 처리
+        console.log("알림 권한 허용됨 - FCM 토큰 처리");
+        const token = (await fcmManager.getFCMTokenByFB()) ?? "";
+        await fcmManager.saveFCMToken(token);
+        registerFcmTokenRequest({ fcmToken: token });
+        prevPermissionStatus.current = granted;
+      } else {
+        // 권한이 거부되었거나 이미 요청했던 경우 설정으로 이동
+        console.log("알림 권한 거부됨 또는 이미 요청됨 - 시스템 설정으로 이동");
+        await openSystemSettings();
+      }
     } else {
-      Linking.openSettings();
+      // 이미 권한이 있으면 설정으로 이동
+      console.log("이미 알림 권한이 있음 - 시스템 설정으로 이동");
+      await openSystemSettings();
+    }
+  }
+
+  // 시스템 설정 열기 함수
+  async function openSystemSettings() {
+    try {
+      console.log("시스템 설정으로 이동");
+      await Linking.openSettings();
+    } catch (error) {
+      console.error("설정 페이지 열기 실패:", error);
+      
+      // iOS에서만 대체 URL scheme 시도
+      if (Platform.OS === "ios") {
+        try {
+          console.log("대안 URL scheme 시도");
+          const canOpenAppSettings = await Linking.canOpenURL("app-settings:");
+          if (canOpenAppSettings) {
+            await Linking.openURL("app-settings:");
+          } else {
+            console.log("모든 설정 열기 방법 실패");
+          }
+        } catch (fallbackError) {
+          console.error("대안 URL scheme도 실패:", fallbackError);
+        }
+      }
     }
   }
 

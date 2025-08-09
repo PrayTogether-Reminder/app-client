@@ -27,6 +27,24 @@ export const checkNotificationPermission = async (): Promise<boolean> => {
   }
 };
 
+// 알림 권한 요청
+export const requestNotificationPermission = async (): Promise<boolean> => {
+  try {
+    const app = getApp();
+    const messaging = getMessaging(app);
+    const authStatus = await requestPerm(messaging);
+    console.log("Notification permission status:", authStatus);
+    
+    return (
+      authStatus === AuthorizationStatus.AUTHORIZED ||
+      authStatus === AuthorizationStatus.PROVISIONAL
+    );
+  } catch (error) {
+    console.error("Error requesting notification permission:", error);
+    return false;
+  }
+};
+
 // 첫 실행 확인
 export const isFirstLaunch = async (): Promise<boolean> => {
   try {
