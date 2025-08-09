@@ -39,7 +39,10 @@ module.exports = {
       },
       ITSAppUsesNonExemptEncryption: false, // 암호화 관련 설정 추가
     },
-    buildNumber: "1.0.0",
+    entitlements: {
+      "aps-environment": "production", // 운영 환경에서 푸시 알림 사용
+    },
+    buildNumber: "1.0.8",
   },
   android: {
     adaptiveIcon: {
@@ -51,7 +54,7 @@ module.exports = {
     googleServicesFile:
       process.env.GOOGLE_SERVICES_JSON || "./google-services.json",
     permissions: ["RECEIVE_BOOT_COMPLETED", "VIBRATE"],
-    versionCode: 3,
+    versionCode: 5,
   },
   web: {
     favicon: "./assets/main_logo.png",
@@ -73,7 +76,7 @@ module.exports = {
     "@react-native-firebase/app",
     "@react-native-firebase/messaging",
     "expo-notifications",
-    // "expo-dev-client",
+    "expo-dev-client",
   ],
   extra: {
     router: {

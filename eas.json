@@ -4,11 +4,14 @@
   },
   "build": {
     "development": {
+      "developmentClient": true,
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "distribution": "internal"
       },
       "ios": {
-        "simulator": true
+        "simulator": false,
+        "distribution": "store",
       },
       "environment": "development",
       "env": {
@@ -22,9 +25,8 @@
         "gradleCommand": ":app:assembleRelease"
       },
       "ios": {
-        "distribution": "internal"
+        "distribution": "store"
       },
-      "distribution": "internal",
       "environment": "preview",
       "env": {
         "GOOGLE_SERVICES_JSON": "./google-services.json",
@@ -43,6 +45,29 @@
       "env": {
         "GOOGLE_SERVICES_JSON": "./google-services.json",
         "GOOGLE_SERVICES_FILE_IOS": "./GoogleService-Info.plist"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "email@example.com",
+        "ascAppId": "number",
+        "appleTeamId": "code"
+      }
+    },
+    "preview": {
+      "ios": {
+        "appleId": "email@example.com",
+        "ascAppId": "number",
+        "appleTeamId": "code"
+      }
+    },
+    "development": { 
+      "ios": {
+        "appleId": "email@example.com",
+        "ascAppId": "number",
+        "appleTeamId": "code"
       }
     }
   }
