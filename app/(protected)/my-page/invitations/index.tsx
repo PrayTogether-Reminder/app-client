@@ -44,7 +44,7 @@ export default function InvitationsScreen(): React.ReactElement {
   }, [isLoading, isRefetching, isPendingUpdate, refetch]);
 
   return (
-    <View>
+    <View style={styles.outerContainer}>
       <Top1Body10
         tops={[<InvitationTop />]} // 분리된 AppBar 컴포넌트 사용
         bodies={[
