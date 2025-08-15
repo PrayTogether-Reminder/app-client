@@ -36,5 +36,6 @@ const styles = StyleSheet.create({
   backAction: {},
   content: {
     fontWeight: "bold",
+    lineHeight: RFValue(24),
   },
 });

@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
   dialogTitle: {
     fontSize: RFValue(16),
     fontWeight: "bold",
+    lineHeight: RFValue(22),
   },
   textInput: {
     fontSize: RFValue(14),
@@ -114,6 +115,7 @@ const styles = StyleSheet.create({
   },
   buttonLabel: {
     fontSize: RFValue(14),
+    lineHeight: RFValue(20),
   },
 });
 

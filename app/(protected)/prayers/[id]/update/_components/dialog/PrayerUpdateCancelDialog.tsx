@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     fontSize: RFValue(16),
     fontWeight: "bold",
     marginBottom: RFValue(5),
+    lineHeight: RFValue(22),
   },
   dialogActions: {
     marginTop: RFValue(10),
@@ -51,6 +52,7 @@ const styles = StyleSheet.create({
   },
   buttonLabel: {
     fontSize: RFValue(14),
+    lineHeight: RFValue(20),
   },
 });
 

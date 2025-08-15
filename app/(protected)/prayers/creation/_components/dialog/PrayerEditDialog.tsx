@@ -52,9 +52,11 @@ const styles = StyleSheet.create({
   dialogTitle: {
     fontSize: RFValue(28),
     fontWeight: "bold",
+    lineHeight: RFValue(36),
   },
   dialogContent: {
     fontSize: RFValue(16),
+    lineHeight: RFValue(22),
   },
   dialogSubContent: {
     fontSize: RFValue(13),
@@ -62,6 +64,7 @@ const styles = StyleSheet.create({
     color: color.secondary,
     marginTop: RFValue(4),
     textDecorationLine: "underline",
+    lineHeight: RFValue(19),
   },
 });
 

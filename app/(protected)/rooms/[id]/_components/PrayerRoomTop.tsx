@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     alignSelf: "center", // 제목 자체도 중앙 정렬
+    lineHeight: RFValue(26),
   },
   headerAction: {
     alignSelf: "center", // 메뉴 버튼 중앙 정렬

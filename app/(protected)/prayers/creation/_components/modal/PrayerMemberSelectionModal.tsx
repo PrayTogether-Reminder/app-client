@@ -104,6 +104,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: RFValue(18),
     fontWeight: "bold",
+    lineHeight: RFValue(24),
   },
   modalScrollView: {
     maxHeight: RFValue(400),
@@ -125,6 +126,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: RFValue(14),
     color: color.black,
+    lineHeight: RFValue(20),
   },
   emptyText: {
     textAlign: "center",
@@ -132,6 +134,7 @@ const styles = StyleSheet.create({
     color: color.black,
     fontStyle: "italic",
     fontSize: RFValue(14),
+    lineHeight: RFValue(20),
   },
   addCustomButton: {
     marginTop: RFValue(8),
@@ -156,12 +159,14 @@ const styles = StyleSheet.create({
     fontSize: RFValue(16),
     fontWeight: "bold",
     marginLeft: RFValue(8), // 아이콘과 텍스트 사이 간격 조정
+    lineHeight: RFValue(22),
   },
   avatarCricle: {
     backgroundColor: color.secondary,
   },
   avatarLabel: {
     fontSize: RFValue(16),
+    lineHeight: RFValue(22),
   },
 });
 

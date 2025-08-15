@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: color.primary,
     alignSelf: "center", // 자체적으로도 중앙 정렬
+    lineHeight: RFValue(24),
   },
   close: {
     alignSelf: "center", // X 버튼 중앙 정렬

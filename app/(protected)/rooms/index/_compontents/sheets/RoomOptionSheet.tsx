@@ -211,6 +211,7 @@ const styles = StyleSheet.create({
     fontSize: RFValue(24),
     fontWeight: "bold",
     textAlign: "center",
+    lineHeight: RFValue(30),
   },
   scrollView: {
     height: "65%",
@@ -218,6 +219,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: RFValue(18),
     textAlign: "center",
+    lineHeight: RFValue(24),
   },
   buttonContainer: {
     gap: RFValue(16),

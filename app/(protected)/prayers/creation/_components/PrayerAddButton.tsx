@@ -44,5 +44,6 @@ const styles = StyleSheet.create({
   addButtonLabel: {
     fontSize: RFValue(14),
     color: color.white,
+    lineHeight: RFValue(20),
   },
 });

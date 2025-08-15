@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
     fontSize: RFValue(16),
     fontWeight: "500",
     color: color.white,
+    lineHeight: RFValue(22),
   },
 });
 

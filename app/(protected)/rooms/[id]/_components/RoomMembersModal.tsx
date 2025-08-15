@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
     fontSize: RFValue(16),
     fontWeight: "bold",
     color: color.black,
+    lineHeight: RFValue(22),
   },
   memberListSection: {
     // flex: 1,
@@ -140,6 +141,7 @@ const styles = StyleSheet.create({
   memberName: {
     fontSize: RFValue(14),
     color: color.black,
+    lineHeight: RFValue(20),
   },
   footerSection: {
     padding: RFValue(20),
@@ -153,6 +155,7 @@ const styles = StyleSheet.create({
     fontSize: RFValue(14),
     color: color.primary,
     fontWeight: "bold",
+    lineHeight: RFValue(20),
   },
 });
 

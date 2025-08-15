@@ -20,7 +20,7 @@ export default function PrayerTitleInput({
       value={prayerTitle}
       onChangeText={setPrayerTitle}
       style={styles.titleInput}
-      contentStyle={{ fontSize: RFValue(14) }}
+      contentStyle={{ fontSize: RFValue(14), lineHeight: RFValue(20) }}
       mode="outlined"
       maxLength={50}
     />

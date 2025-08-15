@@ -49,9 +49,11 @@ const styles = StyleSheet.create({
   dialogTitle: {
     fontSize: RFValue(28),
     fontWeight: "bold",
+    lineHeight: RFValue(36),
   },
   dialogContent: {
     fontSize: RFValue(16),
+    lineHeight: RFValue(22),
   },
 });
 

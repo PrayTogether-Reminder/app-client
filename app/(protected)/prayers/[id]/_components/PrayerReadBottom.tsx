@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
   bottomButtonText: {
     fontSize: RFValue(16),
     fontWeight: "500",
+    lineHeight: RFValue(22),
   },
 });
 
