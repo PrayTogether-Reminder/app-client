@@ -184,6 +184,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     color: color.primary,
+    lineHeight: RFValue(32),
   },
   // formContainer가 늘어나서 actionContainer를 아래로 밀어냄
   formContainer: {
@@ -212,6 +213,7 @@ const styles = StyleSheet.create({
   buttonLabel: {
     fontSize: RFValue(16),
     fontWeight: "bold",
+    lineHeight: RFValue(20),
   },
   buttonContent: {
     paddingVertical: RFValue(8),
@@ -225,6 +227,7 @@ const styles = StyleSheet.create({
   switchButtonLabel: {
     fontSize: RFValue(14),
     textAlign: "center", // 텍스트 중앙 정렬
+    lineHeight: RFValue(18),
   },
   switchButtonHighlight: {
     fontWeight: "bold",

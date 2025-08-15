@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     fontSize: RFValue(22),
+    lineHeight: RFValue(28),
   },
   input: {
     marginBottom: RFValue(8),
@@ -156,7 +157,7 @@ const styles = StyleSheet.create({
   },
   buttonLabel: {
     fontSize: RFValue(18),
-    lineHeight: RFValue(30),
+    lineHeight: RFValue(24),
   },
   loadingIndicator: {
     marginTop: RFValue(20),

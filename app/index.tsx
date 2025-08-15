@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   },
   slogan: {
     textAlign: "center",
-    lineHeight: RFValue(22),
+    lineHeight: RFValue(28),
   },
   buttonContainer: {
     flex: 2, // 남은 공간 차지
@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
   buttonLabel: {
     fontSize: RFValue(16),
     fontWeight: "600", // Medium-Bold
+    lineHeight: RFValue(20),
   },
   buttonContent: {
     paddingVertical: RFValue(8), // 버튼 내부 높이 조절
