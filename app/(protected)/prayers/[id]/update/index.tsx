@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef } from "react";
+import React, { useState, useMemo, useEffect, useRef, Fragment } from "react";
 import { StyleSheet, SafeAreaView, BackHandler } from "react-native";
 import { useSelectedPrayerTitleStore } from "../../../../../src/domain/prayers/stores/useSelectedPrayerTitleStore";
 import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
@@ -39,7 +39,7 @@ export default function PrayerUpdateScreen() {
   useCloseOnBack(handlePrayeCancellation);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <Fragment>
       <Top1Body10Bottom1
         tops={[
           <PrayerUpdateTop
@@ -72,7 +72,7 @@ export default function PrayerUpdateScreen() {
         confirmText="확인"
         cancelText="돌아가기"
       />
-    </SafeAreaView>
+    </Fragment>
   );
 }
 

@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
     fontSize: RFValue(20),
     fontWeight: "bold",
     color: color.secondary,
+    lineHeight: RFValue(26),
   },
   buttonPosition: {
     flex: 1,

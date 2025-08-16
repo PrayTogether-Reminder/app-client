@@ -1,7 +1,5 @@
-"use client";
-
 import React from "react";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 
 import { backgroundColor } from "@/common/styles/color";
 import Top1Body10Bottom1 from "../../../../src/common/layout/Top1Body10Bottom1";
@@ -11,6 +9,7 @@ import PrayerReadTop from "./_components/PrayerReadTop";
 import OverlayLoading from "@/common/components/loading/OverlayLoading";
 import { usePrayerCompletionMutation } from "../../../../src/domain/prayers/hooks/mutations/usePrayerMuations";
 import { useCloseOnBack } from "@/common/services/back-handler/useCloseOnBack";
+import { Fragment } from "react";
 
 export default function PrayerReadScreen() {
   const { mutate: notifyPrayerCompletion, isPending } = usePrayerCompletionMutation();
@@ -20,9 +19,8 @@ export default function PrayerReadScreen() {
     console.log("로딩 중에는 뒤로가기가 막혔습니다.");
   }, isPending);
 
-
   return (
-    <SafeAreaView style={styles.container}>
+    <Fragment>
       <Top1Body10Bottom1
         tops={[<PrayerReadTop key="top" />]}
         bodies={[<PrayerReadBody key="body" />]}
@@ -35,7 +33,7 @@ export default function PrayerReadScreen() {
         ]}
       />
       {isPending && <OverlayLoading />}
-    </SafeAreaView>
+    </Fragment>
   );
 }
 const styles = StyleSheet.create({

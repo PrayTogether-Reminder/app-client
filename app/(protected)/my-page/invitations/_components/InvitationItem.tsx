@@ -173,6 +173,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     flex: 1, // Allow title to take available space
     marginRight: RFValue(8), // Add space if an icon is used on the right
+    lineHeight: RFValue(22),
   },
   infoRow: {
     flexDirection: "column", // Stack inviter and time vertically
@@ -186,14 +187,17 @@ const styles = StyleSheet.create({
   detailInviter: {
     fontSize: RFValue(13),
     color: color.black, // Use a defined gray color
+    lineHeight: RFValue(17),
   },
   inviterName: {
     fontWeight: "600", // Medium weight
     color: color.secondary, // Or slightly darker gray
+    lineHeight: RFValue(17),
   },
   invitedTime: {
     fontSize: RFValue(12),
     color: color.secondary, // Lighter gray for time
+    lineHeight: RFValue(16),
   },
   detailRowDescription: {
     flexDirection: "row",
@@ -203,6 +207,7 @@ const styles = StyleSheet.create({
   detailDescription: {
     fontSize: RFValue(13),
     color: color.black,
+    lineHeight: RFValue(17),
   },
   actions: {
     justifyContent: "flex-end",
@@ -222,5 +227,6 @@ const styles = StyleSheet.create({
   },
   buttonLabel: {
     fontSize: RFValue(13),
+    lineHeight: RFValue(17),
   },
 });

@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: RFValue(24), // Dialog title text size
+    lineHeight: RFValue(30),
   },
   content: {
     paddingBottom: RFValue(10),
@@ -138,6 +139,7 @@ const styles = StyleSheet.create({
     fontSize: RFValue(16), // Changed from static 16 to responsive RFValue(16)
     fontWeight: "bold",
     paddingVertical: 2, // 버튼 내 텍스트 패딩으로 버튼 높이 증가
+    lineHeight: RFValue(22),
   },
 });
 

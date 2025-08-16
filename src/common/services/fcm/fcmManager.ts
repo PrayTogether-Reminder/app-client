@@ -110,6 +110,17 @@ class FcmManager {
     }
   }
 
+  async deleteFCMToken(): Promise<boolean> {
+    console.log("FCM 토큰 삭제 By SecureStore");
+    try {
+      await SecureStore.deleteItemAsync(FCM_TOKEN_KEY);
+      return true;
+    } catch (error) {
+      console.error("Error deleting FCM token:", error);
+      return false;
+    }
+  }
+
   // 추후 사용을 위해 남겨둡니다
   async subscribeTopic(topic: string): Promise<boolean> {
     try {

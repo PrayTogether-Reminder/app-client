@@ -36,5 +36,6 @@ const styles = StyleSheet.create({
   buttonLabel: {
     fontSize: RFValue(14),
     color: color.secondary,
+    lineHeight: RFValue(20),
   },
 });

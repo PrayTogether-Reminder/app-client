@@ -54,10 +54,12 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: RFValue(20),
     fontWeight: "bold",
+    lineHeight: RFValue(26),
   },
   userEmail: {
     fontSize: RFValue(14),
     marginBottom: RFValue(8),
+    lineHeight: RFValue(18),
   },
   editButton: {
     // marginTop: RFValue(8),

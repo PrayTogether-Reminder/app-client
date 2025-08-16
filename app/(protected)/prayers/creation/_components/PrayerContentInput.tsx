@@ -31,6 +31,7 @@ export default function PrayerContentInput({
         contentStyle={{
           fontSize: RFValue(14),
           textAlignVertical: "top",
+          lineHeight: RFValue(20),
         }}
         mode="outlined"
         multiline

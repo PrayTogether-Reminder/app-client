@@ -10,11 +10,11 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { DefaultTheme, PaperProvider } from "react-native-paper";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import ErrorFallback from "../src/common/components/error/ErrorFallback";
 import CustomQueryClientProvider from "../src/common/hooks/queries/customQueryClientProvider";
 import { backgroundColor } from "../src/common/styles/color";
 import AuthEventListener from "./../src/domain/auth/events/authEventListener";
-import FcmInitializer from "@/common/services/fcm/fcmInitializer";
 import { GlobalAlertModal } from "@/common/components/modal/GlobalAlertModal";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -45,28 +45,30 @@ export default function RootLayout() {
   }
 
   return (
-    <PaperProvider theme={theme}>
-      {/* catch rendering error */}
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <CustomQueryClientProvider>
-          <StatusBar backgroundColor={backgroundColor.white} />
-          <AuthEventListener />
-          <AuthStateListener>
-            <GlobalAlertModal />
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="index" />
+    <SafeAreaProvider>
+      <PaperProvider theme={theme}>
+        {/* catch rendering error */}
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <CustomQueryClientProvider>
+            <StatusBar style="light" />
+            <AuthEventListener />
+            <AuthStateListener>
+              <GlobalAlertModal />
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="index" />
 
-              <Stack.Screen
-                name="(protected)/prayers/creation/index"
-                options={{
-                  animation: "slide_from_bottom",
-                  presentation: "modal",
-                }}
-              />
-            </Stack>
-          </AuthStateListener>
-        </CustomQueryClientProvider>
-      </ErrorBoundary>
-    </PaperProvider>
+                <Stack.Screen
+                  name="(protected)/prayers/creation/index"
+                  options={{
+                    animation: "slide_from_bottom",
+                    presentation: "modal",
+                  }}
+                />
+              </Stack>
+            </AuthStateListener>
+          </CustomQueryClientProvider>
+        </ErrorBoundary>
+      </PaperProvider>
+    </SafeAreaProvider>
   );
 }

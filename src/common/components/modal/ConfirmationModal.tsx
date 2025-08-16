@@ -123,6 +123,7 @@ const styles = StyleSheet.create({
     color: "#333",
     textAlign: "center",
     marginLeft: RFValue(4),
+    lineHeight: RFValue(26),
   },
   modalText: {
     fontSize: RFValue(16),
@@ -157,11 +158,13 @@ const styles = StyleSheet.create({
     fontSize: RFValue(18),
     color: "#666",
     fontWeight: "600",
+    lineHeight: RFValue(24),
   },
   confirmButtonLabel: {
     fontSize: RFValue(18),
     color: "white",
     fontWeight: "600",
+    lineHeight: RFValue(24),
   },
 });
 

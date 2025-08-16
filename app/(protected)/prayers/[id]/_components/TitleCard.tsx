@@ -46,5 +46,6 @@ const styles = StyleSheet.create({
     textShadowColor: "rgba(0, 0, 0, 0.1)",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
+    lineHeight: RFValue(22),
   },
 });

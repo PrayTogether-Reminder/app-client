@@ -93,7 +93,7 @@ const RoomMembersModal: React.FC<RoomMembersModalProps> = ({
         onDismiss={closeRightMenu}
         contentContainerStyle={[styles.modal, { width: drawerWidth }]}
       >
-        <View style={styles.container}>{renderModalContent()}</View>
+        <View>{renderModalContent()}</View>
       </Modal>
     </Portal>
   );
@@ -101,18 +101,16 @@ const RoomMembersModal: React.FC<RoomMembersModalProps> = ({
 
 const styles = StyleSheet.create({
   modal: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: color.primary,
-    margin: 0,
-    elevation: 5,
-  },
-  container: {
     flex: 1,
-    flexDirection: "column",
-    paddingTop: 50,
+    justifyContent: "space-between",
+    alignItems: "center",
+    position: "absolute",
+    top: "0%",
+    right: "0%",
+    bottom: "0%",
+    backgroundColor: color.primary,
+    margin: "0%",
+    elevation: 5,
   },
   centeredContent: {
     flex: 1,
@@ -120,8 +118,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headerSection: {
-    paddingHorizontal: 20,
-    paddingVertical: 15,
+    paddingHorizontal: RFValue(20),
+    paddingVertical: RFValue(20),
     borderBottomWidth: 1,
     borderBottomColor: color.white,
   },
@@ -129,22 +127,24 @@ const styles = StyleSheet.create({
     fontSize: RFValue(16),
     fontWeight: "bold",
     color: color.black,
+    lineHeight: RFValue(22),
   },
   memberListSection: {
-    flex: 1,
-    paddingHorizontal: 20,
+    // flex: 1,
+    paddingHorizontal: RFValue(20),
   },
   memberItem: {
-    paddingVertical: 10,
+    paddingVertical: RFValue(10),
     borderBottomWidth: 0.5,
     borderBottomColor: color.white,
   },
   memberName: {
     fontSize: RFValue(14),
     color: color.black,
+    lineHeight: RFValue(20),
   },
   footerSection: {
-    padding: 20,
+    padding: RFValue(20),
     borderTopWidth: 1,
     borderTopColor: color.white,
   },
@@ -155,6 +155,7 @@ const styles = StyleSheet.create({
     fontSize: RFValue(14),
     color: color.primary,
     fontWeight: "bold",
+    lineHeight: RFValue(20),
   },
 });
 

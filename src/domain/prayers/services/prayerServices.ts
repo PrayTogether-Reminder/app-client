@@ -62,12 +62,12 @@ export const prayerService = {
   },
 
   // 기도 완료 알림
-  completePrayer: async ({ roomId }: CreatePrayerCompletionRequest) => {
+  completePrayer: async ({ prayerTitleId, roomId }: CreatePrayerCompletionRequest) => {
     const response = await apiService.post<MessageResponse>(
-      `/prayers/${roomId}/completion`,
+      `/prayers/${prayerTitleId}/completion`,
       {
         roomId,
-      } as CreatePrayerCompletionRequest
+      }
     );
     return response.data;
   },

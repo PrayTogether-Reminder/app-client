@@ -80,8 +80,9 @@ export const usePrayerCompletionMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ roomId }: CreatePrayerCompletionRequest) => {
+    mutationFn: ({ prayerTitleId, roomId }: CreatePrayerCompletionRequest) => {
       return prayerService.completePrayer({
+        prayerTitleId,
         roomId,
       });
     },

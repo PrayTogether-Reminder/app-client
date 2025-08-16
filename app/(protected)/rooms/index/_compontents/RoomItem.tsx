@@ -170,6 +170,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: RFValue(18),
     fontWeight: "bold",
+    lineHeight: RFValue(24),
   },
   infoRow: {
     flexDirection: "row",
@@ -183,6 +184,7 @@ const styles = StyleSheet.create({
   memberText: {
     fontSize: RFValue(14),
     color: "gray",
+    lineHeight: RFValue(20),
   },
 });
 

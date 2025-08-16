@@ -181,6 +181,7 @@ const styles = StyleSheet.create({
     fontSize: RFValue(18),
     fontWeight: "bold",
     marginBottom: RFValue(8),
+    lineHeight: RFValue(24),
   },
   fieldset: {
     marginVertical: RFValue(4),
@@ -191,6 +192,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: RFValue(14),
     marginBottom: RFValue(4),
+    lineHeight: RFValue(20),
   },
   input: {
     width: "100%",
@@ -209,6 +211,7 @@ const styles = StyleSheet.create({
   },
   buttonLabel: {
     fontSize: RFValue(16),
+    lineHeight: RFValue(22),
   },
   closeButton: {
     position: "absolute",

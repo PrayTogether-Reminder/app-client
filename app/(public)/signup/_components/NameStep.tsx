@@ -341,6 +341,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     fontSize: RFValue(22),
+    lineHeight: RFValue(28),
   },
   input: {
     fontSize: RFValue(16),
@@ -366,6 +367,7 @@ const styles = StyleSheet.create({
   agreementText: {
     fontSize: RFValue(14),
     color: "#333",
+    lineHeight: RFValue(18),
   },
   requiredMark: {
     color: color.error || "#d32f2f",
@@ -392,6 +394,7 @@ const styles = StyleSheet.create({
   allAgreeText: {
     fontSize: RFValue(14),
     fontWeight: "600",
+    lineHeight: RFValue(18),
   },
   buttonContainer: {
     height: RFValue(50),
@@ -403,7 +406,7 @@ const styles = StyleSheet.create({
   },
   buttonLabel: {
     fontSize: RFValue(22),
-    lineHeight: RFValue(30),
+    lineHeight: RFValue(28),
   },
   modalContainer: {
     flex: 1,
@@ -445,7 +448,7 @@ const styles = StyleSheet.create({
   },
   modalButtonLabel: {
     fontSize: RFValue(16),
-    lineHeight: RFValue(18),
+    lineHeight: RFValue(20),
   },
 });
 

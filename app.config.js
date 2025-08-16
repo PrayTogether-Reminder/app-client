@@ -35,11 +35,14 @@ module.exports = {
       NSUserNotificationUsageDescription:
         "앱에서 중요한 알림을 보내기 위해 알림 권한이 필요합니다.",
       NSAppTransportSecurity: {
-        NSAllowsArbitraryLoads: true,
+        // NSAllowsArbitraryLoads: true, // http 요청 허용
       },
       ITSAppUsesNonExemptEncryption: false, // 암호화 관련 설정 추가
     },
-    buildNumber: "1",
+    entitlements: {
+      "aps-environment": "production", // 운영 환경에서 푸시 알림 사용
+    },
+    buildNumber: "1.0.8",
   },
   android: {
     adaptiveIcon: {
@@ -51,7 +54,7 @@ module.exports = {
     googleServicesFile:
       process.env.GOOGLE_SERVICES_JSON || "./google-services.json",
     permissions: ["RECEIVE_BOOT_COMPLETED", "VIBRATE"],
-    versionCode: 1,
+    versionCode: 5,
   },
   web: {
     favicon: "./assets/main_logo.png",
@@ -63,7 +66,7 @@ module.exports = {
       "expo-build-properties",
       {
         android: {
-          usesCleartextTraffic: true,
+          // usesCleartextTraffic: true, // http 요청 허용
         },
         ios: {
           useFrameworks: "static",
@@ -73,7 +76,7 @@ module.exports = {
     "@react-native-firebase/app",
     "@react-native-firebase/messaging",
     "expo-notifications",
-    // "expo-dev-client",
+    "expo-dev-client",
   ],
   extra: {
     router: {

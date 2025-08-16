@@ -9,13 +9,13 @@ import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/use
 import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
 
 interface PrayerReadBottomProps {
-  onPrayerComplete: (params: { roomId: number }) => void;
+  onPrayerComplete: (params: { prayerTitleId: number; roomId: number }) => void;
   isPending: boolean;
 }
 
 function PrayerReadBottom({ onPrayerComplete, isPending }: PrayerReadBottomProps) {
   const router = useRouter();
-  useSelectedPrayerTitleStore().selectedPrayerTitle?.id ?? null;
+  const prayerTitleId = useSelectedPrayerTitleStore().selectedPrayerTitle?.id ?? 0;
   const roomId = useSelectedRoomStore().selectedRoom?.id ?? 0;
   const [visible, setVisible] = useState(false);
 
@@ -27,7 +27,7 @@ function PrayerReadBottom({ onPrayerComplete, isPending }: PrayerReadBottomProps
   };
 
   const handleConfirm = () => {
-    onPrayerComplete({ roomId });
+    onPrayerComplete({ prayerTitleId, roomId });
     hideModal();
   };
 
@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
   bottomButtonText: {
     fontSize: RFValue(16),
     fontWeight: "500",
+    lineHeight: RFValue(22),
   },
 });
 

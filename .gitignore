@@ -46,11 +46,14 @@ android/**
 # ios
 ios/**
 
-# app
-*.app/**
-
 # json-server
 db.json
+
+# build
 *.apk
-#GoogleService-Info.plist
-#google-services.json
+*.app/**
+*.tar.gz
+
+# firebase
+GoogleService-Info.plist
+google-services.json
