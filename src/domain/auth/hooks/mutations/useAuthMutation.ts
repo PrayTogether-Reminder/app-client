@@ -102,3 +102,17 @@ export const useLogoutMutation = () => {
     },
   });
 };
+
+export const useDeleteAccountMutation = () => {
+  return useMutation({
+    mutationFn: () => authService.deleteAccount(),
+    onError: (error, requests, context) => {
+      console.error("회원 탈퇴 실패:", error);
+      showAlert({
+        title: "회원 탈퇴 실패",
+        message: error.message,
+        icon: "account-remove",
+      });
+    },
+  });
+};

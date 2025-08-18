@@ -6,12 +6,14 @@ type ListSectionProps = {
   onGoToInvitations: () => void;
   onGoToNotifications: () => void;
   onLogout: () => void;
+  onDeleteAccount: () => void;
 };
 
 export default function ListSection({
   onGoToInvitations,
   onGoToNotifications,
   onLogout,
+  onDeleteAccount,
 }: ListSectionProps): React.ReactElement {
   return (
     <ScrollView
@@ -32,6 +34,13 @@ export default function ListSection({
           left={(props) => <List.Icon {...props} icon="bell-outline" />}
           right={(props) => <List.Icon {...props} icon="chevron-right" />}
           onPress={onGoToNotifications}
+        />
+        <List.Item
+          title="회원 탈퇴"
+          description="계정을 완전히 삭제합니다."
+          left={(props) => <List.Icon {...props} icon="account-remove-outline" />}
+          right={(props) => <List.Icon {...props} icon="chevron-right" />}
+          onPress={onDeleteAccount}
         />
       </List.Section>
 

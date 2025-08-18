@@ -67,4 +67,10 @@ export const authService = {
       refreshToken,
     } as LogoutRequest);
   },
+
+  // 회원 탈퇴
+  deleteAccount: async (): Promise<MessageResponse> => {
+    const response = await apiService.delete<MessageResponse>(`/auth/withdraw`);
+    return response;
+  },
 };

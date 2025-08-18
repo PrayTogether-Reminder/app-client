@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, View, Linking, Platform, AppState } from "react-native";
 import { useRouter } from "expo-router";
 import { backgroundColor } from "@/common/styles/color";
@@ -7,23 +7,27 @@ import Top4Body10 from "@/common/layout/Top4Body10";
 import ProfileSection from "../../my-page/index/_components/ProfileSection";
 import ListSection from "../../my-page/index/_components/ListSection";
 import path from "@/common/constants/path";
-import { useLogoutMutation } from "@/domain/auth/hooks/mutations/useAuthMutation";
+import { useLogoutMutation, useDeleteAccountMutation } from "@/domain/auth/hooks/mutations/useAuthMutation";
 import { useAuthStore } from "@/domain/auth/stores/useAuthStore";
 import FcmManager from "@/common/services/fcm/fcmManager";
 import { checkNotificationPermission } from "@/common/services/fcm/fcmUtils";
 import { useRegisterFcmTokenMutation } from "@/domain/fcmToken/hooks/useFcmTokenMutation";
 import { useDeleteFcmTokenMutation } from "@/domain/fcmToken/hooks/useDeleteFcmTokenMutation";
+import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
+import { showAlert } from "@/common/components/modal/stores/useAlertStore";
 
 type MyPageScreenProps = {};
 
 export default function MyPageScreen(props: MyPageScreenProps) {
   const router = useRouter();
   const { mutate: logoutRequest } = useLogoutMutation();
+  const { mutate: deleteAccountRequest } = useDeleteAccountMutation();
   const { getRefreshToken, logout: setLogoutState } = useAuthStore();
   const fcmManager = FcmManager.getInstance();
   const prevPermissionStatus = useRef<boolean | null>(null);
   const { mutate: registerFcmTokenRequest } = useRegisterFcmTokenMutation();
   const { mutate: deleteFcmTokenRequest } = useDeleteFcmTokenMutation();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   // 알림 권한 확인 및 변경 처리 함수
   const checkAndUpdatePermission = async () => {
@@ -203,6 +207,49 @@ export default function MyPageScreen(props: MyPageScreenProps) {
     }
   }
 
+  function handleDeleteAccount() {
+    setShowDeleteModal(true);
+  }
+
+  async function confirmDeleteAccount() {
+    try {
+      // FCM 토큰 가져오기
+      const fcmToken = await fcmManager.getFCMTokenByStorage();
+      
+      // FCM 토큰이 있으면 서버에서 삭제
+      if (fcmToken) {
+        await new Promise<void>((resolve) => {
+          deleteFcmTokenRequest(fcmToken, {
+            onSuccess: async () => {
+              await fcmManager.deleteFCMToken();
+              resolve();
+            },
+            onError: async () => {
+              await fcmManager.deleteFCMToken();
+              resolve();
+            },
+          });
+        });
+      }
+      
+      // 회원 탈퇴 요청
+      deleteAccountRequest(undefined, {
+        onSuccess: () => {
+          setLogoutState();
+          setShowDeleteModal(false);
+          showAlert({
+            title: "탈퇴 완료",
+            message: "계정이 성공적으로 삭제되었습니다.",
+            icon: "check-circle",
+            onConfirm: () => router.replace(path.showWelcome())
+          });
+        },
+      });
+    } catch (error) {
+      console.error("회원 탈퇴 중 오류 발생:", error);
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Top4Body10
@@ -212,8 +259,20 @@ export default function MyPageScreen(props: MyPageScreenProps) {
             onGoToInvitations={handleGoToInvitations}
             onGoToNotifications={handleGoToNotifications}
             onLogout={handleLogout}
+            onDeleteAccount={handleDeleteAccount}
           />,
         ]}
+      />
+      <ConfirmationModal
+        visible={showDeleteModal}
+        onDismiss={() => setShowDeleteModal(false)}
+        onConfirm={confirmDeleteAccount}
+        icon="account-remove"
+        title="회원 탈퇴"
+        content={"정말로 계정을 삭제하시겠습니까?\n모든 데이터가 영구적으로 삭제되며 복구할 수 없습니다."}
+        confirmText="탈퇴"
+        cancelText="취소"
+        iconColor="#FF4444"
       />
     </View>
   );
