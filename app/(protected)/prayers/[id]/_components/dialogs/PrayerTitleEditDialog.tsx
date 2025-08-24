@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -17,6 +17,7 @@ import {
 import { RFValue } from "react-native-responsive-fontsize";
 import Feather from "@expo/vector-icons/Feather";
 import { showAlert } from "@/common/components/modal/stores/useAlertStore";
+import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
 
 interface PrayerTitleEditDialogProps {
   visible: boolean;
@@ -32,10 +33,16 @@ export default function PrayerTitleEditDialog({
   onSave,
 }: PrayerTitleEditDialogProps) {
   const [editedTitle, setEditedTitle] = useState(title);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const originalTitle = useRef(title);
 
   useEffect(() => {
-    setEditedTitle(title);
+    if (visible) {
+      setEditedTitle(title);
+      originalTitle.current = title;
+    }
   }, [title, visible]);
+
 
   const handleSave = () => {
     if (!editedTitle.trim()) {
@@ -51,15 +58,31 @@ export default function PrayerTitleEditDialog({
   };
 
   const handleCancel = () => {
+    // 항상 확인 팝업 표시
+    setShowCancelConfirm(true);
+  };
+
+  const confirmCancel = () => {
     setEditedTitle(title);
+    setShowCancelConfirm(false);
     onDismiss();
   };
 
+  const cancelCancel = () => {
+    setShowCancelConfirm(false);
+  };
+
   return (
+    <>
     <Portal>
       <Modal
         visible={visible}
-        onDismiss={handleCancel}
+        onDismiss={() => {
+          console.log('Modal onDismiss called');
+          handleCancel();
+        }}
+        dismissable={true}
+        dismissableBackButton={true}
         contentContainerStyle={styles.modalContainer}
         style={styles.modal}
       >
@@ -107,6 +130,19 @@ export default function PrayerTitleEditDialog({
         </TouchableWithoutFeedback>
       </Modal>
     </Portal>
+
+    {/* 변경 취소 확인 모달 */}
+    <ConfirmationModal
+      visible={showCancelConfirm}
+      onDismiss={cancelCancel}
+      onConfirm={confirmCancel}
+      icon="alert-circle"
+      title="변경 취소"
+      content="수정한 내용이 저장되지 않습니다. 취소하시겠습니까?"
+      confirmText="취소"
+      cancelText="계속 수정"
+    />
+    </>
   );
 }
 

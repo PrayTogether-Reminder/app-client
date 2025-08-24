@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 
 import { backgroundColor } from "@/common/styles/color";
 import Top1Body10Bottom1 from "../../../../src/common/layout/Top1Body10Bottom1";
-import PrayerDetailScreen from "./_components/PrayerDetailScreen";
+import PrayerReadBody from "./_components/PrayerReadBody";
 import PrayerReadBottom from "./_components/PrayerReadBottom";
 import PrayerReadTop from "./_components/PrayerReadTop";
 import OverlayLoading from "@/common/components/loading/OverlayLoading";
@@ -31,7 +31,7 @@ export default function PrayerReadScreen() {
           />
         ]}
         bodies={[
-          <PrayerDetailScreen 
+          <PrayerReadBody 
             key="body" 
             isEditMode={isEditMode}
             onEditModeChange={setIsEditMode}

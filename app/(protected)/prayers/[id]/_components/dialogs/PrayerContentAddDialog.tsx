@@ -74,6 +74,7 @@ export default function PrayerContentAddDialog({
           visible={visible}
           onDismiss={handleCancel}
           contentContainerStyle={styles.modalContainer}
+          style={styles.modal}
         >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <View style={styles.content}>
@@ -153,6 +154,10 @@ export default function PrayerContentAddDialog({
 const windowWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
+  modal: {
+    justifyContent: "flex-start",
+    paddingTop: RFValue(50),
+  },
   modalContainer: {
     backgroundColor: "white",
     width: windowWidth < 600 ? "90%" : "70%",

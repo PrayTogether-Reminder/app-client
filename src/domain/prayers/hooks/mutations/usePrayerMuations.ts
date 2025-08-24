@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { prayerService } from "../../services/prayerServices";
 import { CreatePrayerParams } from "./../../types/params/createPrayerParams";
 import { CreatePrayerTitleParams } from "./../../types/params/createPrayerTitleParams";
-import { UpdatePrayerParams } from "../../types/params/updatePrayerParams";
 import QUERY_KEYS from "@/common/constants/queryKeys";
 import { ApiError } from "@/common/apis/api";
 import { CreatePrayerCompletionRequest } from "../../types/request/createPrayerCompletionRequest";

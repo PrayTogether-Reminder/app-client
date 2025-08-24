@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -18,6 +18,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import Feather from "@expo/vector-icons/Feather";
 import { showAlert } from "@/common/components/modal/stores/useAlertStore";
 import { PrayerContent } from "@/domain/prayers/types/prayerContent";
+import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
 
 interface PrayerContentEditDialogProps {
   visible: boolean;
@@ -33,10 +34,32 @@ export default function PrayerContentEditDialog({
   onSave,
 }: PrayerContentEditDialogProps) {
   const [editedContent, setEditedContent] = useState(content.content);
+  const [selection, setSelection] = useState({ start: 0, end: 0 });
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const textInputRef = useRef<any>(null);
+  const originalContent = useRef(content.content);
 
   useEffect(() => {
-    setEditedContent(content.content);
-  }, [content]);
+    if (visible) {
+      setEditedContent(content.content);
+      originalContent.current = content.content;
+      // Dialog가 열릴 때 커서를 맨 앞으로 이동
+      setSelection({ start: 0, end: 0 });
+      setTimeout(() => {
+        if (textInputRef.current) {
+          // React Native Paper TextInput의 내부 TextInput에 접근
+          textInputRef.current?.focus();
+          textInputRef.current?.setNativeProps({ 
+            selection: { start: 0, end: 0 },
+            scrollEnabled: true
+          });
+          // 스크롤을 맨 위로
+          textInputRef.current?.scrollTo?.({ y: 0, animated: false });
+        }
+      }, 150);
+    }
+  }, [content, visible]);
+
 
   const handleSave = () => {
     if (!editedContent.trim()) {
@@ -51,16 +74,33 @@ export default function PrayerContentEditDialog({
   };
 
   const handleCancel = () => {
+    // 항상 확인 팝업 표시 (테스트용)
+    setShowCancelConfirm(true);
+  };
+
+  const confirmCancel = () => {
     setEditedContent(content.content);
+    setShowCancelConfirm(false);
     onDismiss();
   };
 
+  const cancelCancel = () => {
+    setShowCancelConfirm(false);
+  };
+
   return (
+    <>
     <Portal>
       <Modal
         visible={visible}
-        onDismiss={handleCancel}
+        onDismiss={() => {
+          console.log('Modal onDismiss called');
+          handleCancel();
+        }}
+        dismissable={true}
+        dismissableBackButton={true}
         contentContainerStyle={styles.modalContainer}
+        style={styles.modal}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View style={styles.content}>
@@ -69,13 +109,19 @@ export default function PrayerContentEditDialog({
             <View style={styles.fieldset}>
               <Text style={styles.label}>{content.memberName}님의 기도</Text>
               <TextInput
+                ref={textInputRef}
                 placeholder="기도 내용을 입력하세요"
                 value={editedContent}
                 onChangeText={setEditedContent}
+                selection={selection}
+                onSelectionChange={(e) => setSelection(e.nativeEvent.selection)}
                 style={styles.inputMultiline}
                 mode="outlined"
                 multiline
                 numberOfLines={8}
+                scrollEnabled={true}
+                textAlignVertical="top"
+                autoFocus={false}
               />
             </View>
 
@@ -108,12 +154,29 @@ export default function PrayerContentEditDialog({
         </TouchableWithoutFeedback>
       </Modal>
     </Portal>
+
+    {/* 변경 취소 확인 모달 */}
+    <ConfirmationModal
+      visible={showCancelConfirm}
+      onDismiss={cancelCancel}
+      onConfirm={confirmCancel}
+      icon="alert-circle"
+      title="변경 취소"
+      content="수정한 내용이 저장되지 않습니다. 취소하시겠습니까?"
+      confirmText="취소"
+      cancelText="계속 수정"
+    />
+    </>
   );
 }
 
 const windowWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
+  modal: {
+    justifyContent: "flex-start",
+    paddingTop: RFValue(50),
+  },
   modalContainer: {
     backgroundColor: "white",
     width: windowWidth < 600 ? "90%" : "70%",
