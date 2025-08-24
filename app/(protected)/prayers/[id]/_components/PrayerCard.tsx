@@ -1,7 +1,8 @@
 // PrayerCard.tsx
 import React from "react";
-import { View, StyleSheet, Animated, ScrollView } from "react-native";
-import { Card, Text, IconButton } from "react-native-paper";
+import { View, StyleSheet, Animated, ScrollView, TouchableOpacity } from "react-native";
+import { Card, Text } from "react-native-paper";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../../../src/common/styles/color";
 import { PrayerContent } from "../../../../../src/domain/prayers/types/prayerContent";
@@ -22,6 +23,7 @@ export default function PrayerCard({
   cardHeight,
 }: PrayerCardProps) {
   const cardBorderStyle = { borderLeftColor: color.secondary };
+  
 
   return (
     <Animated.View
@@ -43,26 +45,34 @@ export default function PrayerCard({
         <Card.Content style={styles.cardContentContainer}>
           <View style={styles.cardHeader}>
             <Text style={styles.nameText}>{item.memberName}</Text>
-            {(onEdit || onDelete) && (
+            {(onEdit || onDelete) ? (
               <View style={styles.buttonContainer}>
-                {onEdit && (
-                  <IconButton
-                    icon="playlist-edit"
+                {onEdit ? (
+                  <TouchableOpacity 
                     onPress={() => onEdit(item)}
-                    size={RFValue(28)}
-                    style={styles.editButton}
-                  />
-                )}
-                {onDelete && (
-                  <IconButton
-                    icon="close"
+                    style={styles.iconButton}
+                  >
+                    <MaterialCommunityIcons 
+                      name="pencil" 
+                      size={RFValue(18)} 
+                      color={color.secondary} 
+                    />
+                  </TouchableOpacity>
+                ) : null}
+                {onDelete ? (
+                  <TouchableOpacity 
                     onPress={() => onDelete(item)}
-                    size={RFValue(28)}
-                    style={styles.deleteButton}
-                  />
-                )}
+                    style={styles.iconButton}
+                  >
+                    <MaterialCommunityIcons 
+                      name="delete" 
+                      size={RFValue(18)} 
+                      color="#FF6B6B" 
+                    />
+                  </TouchableOpacity>
+                ) : null}
               </View>
-            )}
+            ) : null}
           </View>
           <View style={styles.divider} />
           <ScrollView
@@ -116,14 +126,18 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "flex-end",
+    alignItems: "center",
+    gap: RFValue(8),
   },
-  editButton: {
-    margin: 0,
-    padding: 0,
-  },
-  deleteButton: {
-    margin: 0,
-    padding: 0,
+  iconButton: {
+    padding: RFValue(6),
+    borderRadius: RFValue(20),
+    backgroundColor: "#F8F9FA",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
+    elevation: 3,
   },
   divider: {
     height: RFValue(1),

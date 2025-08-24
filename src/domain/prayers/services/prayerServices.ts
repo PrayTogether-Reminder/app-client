@@ -11,6 +11,20 @@ import { UpdatePrayerRequest } from "../types/request/updatePrayerRequest";
 import { CreatePrayerCompletionRequest } from "../types/request/createPrayerCompletionRequest";
 
 export const prayerService = {
+  // 기도 제목만 생성
+  createTitle: async (
+    roomId: number,
+    title: string
+  ): Promise<MessageResponse> => {
+    const response: MessageResponse =
+      await apiService.post<CreatePrayerRequest>(`/prayers`, {
+        roomId,
+        title,
+        contents: [],
+      } as CreatePrayerRequest);
+    console.log("API response=", response.message);
+    return response;
+  },
   // 기도 제목 작성
   create: async (
     roomId: number,
@@ -58,6 +72,55 @@ export const prayerService = {
       } as UpdatePrayerRequest
     );
     console.log("API response=", response.message);
+    return response;
+  },
+
+  // 기도 제목만 수정
+  updateTitle: async (
+    prayerTitleId: number | null,
+    title: string
+  ): Promise<MessageResponse> => {
+    const response: MessageResponse = await apiService.put(
+      `/prayers/${prayerTitleId}/title`,
+      { title }
+    );
+    return response;
+  },
+  
+  // 기도 내용 추가
+  createContent: async (
+    prayerTitleId: number | null,
+    memberName: string,
+    content: string
+  ): Promise<MessageResponse> => {
+    const response: MessageResponse = await apiService.post(
+      `/prayers/${prayerTitleId}/contents`,
+      { memberName, content }
+    );
+    return response;
+  },
+  
+  // 기도 내용 수정
+  updateContent: async (
+    prayerTitleId: number | null,
+    contentId: number | null,
+    content: string
+  ): Promise<MessageResponse> => {
+    const response: MessageResponse = await apiService.put(
+      `/prayers/${prayerTitleId}/contents/${contentId}`,
+      { content }
+    );
+    return response;
+  },
+  
+  // 기도 내용 삭제
+  deleteContent: async (
+    prayerTitleId: number | null,
+    contentId: number | null
+  ): Promise<MessageResponse> => {
+    const response: MessageResponse = await apiService.delete(
+      `/prayers/${prayerTitleId}/contents/${contentId}`
+    );
     return response;
   },
 

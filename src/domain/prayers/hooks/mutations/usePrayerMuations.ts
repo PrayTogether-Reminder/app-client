@@ -1,12 +1,43 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { prayerService } from "../../services/prayerServices";
 import { CreatePrayerParams } from "./../../types/params/createPrayerParams";
+import { CreatePrayerTitleParams } from "./../../types/params/createPrayerTitleParams";
 import { UpdatePrayerParams } from "../../types/params/updatePrayerParams";
 import QUERY_KEYS from "@/common/constants/queryKeys";
 import { ApiError } from "@/common/apis/api";
 import { CreatePrayerCompletionRequest } from "../../types/request/createPrayerCompletionRequest";
 import { queryClient } from "@/common/hooks/queries/customQueryClientProvider";
 import { showAlert } from "@/common/components/modal/stores/useAlertStore";
+
+// 기도 제목만 생성
+export const useCreatePrayerTitleMutation = () => {
+  return useMutation({
+    mutationFn: ({ roomId, title }: CreatePrayerTitleParams) =>
+      prayerService.createTitle(roomId, title),
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          QUERY_KEYS.rooms,
+          variables.roomId,
+          QUERY_KEYS.prayerTitles,
+          QUERY_KEYS.infinite,
+        ],
+      });
+      showAlert({
+        title: "기도 제목 생성",
+        message: "기도 제목이 생성되었습니다.",
+        icon: "check-circle",
+      });
+    },
+    onError: (error: ApiError) => {
+      showAlert({
+        title: "기도 제목 생성 실패",
+        message: error.message,
+        icon: "alert-circle",
+      });
+    },
+  });
+};
 
 // 기도(제목+내용) 작성
 export const usePrayerCreationMutation = () => {
@@ -68,6 +99,110 @@ export const usePrayerUpdateMutation = () => {
     onError: (error: ApiError) => {
       showAlert({
         title: "기도 수정 실패",
+        message: error.message,
+        icon: "alert-circle",
+      });
+    },
+  });
+};
+
+// 기도 제목만 수정
+export const useUpdatePrayerTitleMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ prayerTitleId, title }: { prayerTitleId: number | null; title: string }) =>
+      prayerService.updateTitle(prayerTitleId, title),
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.prayerTitles],
+      });
+      showAlert({
+        title: "기도 제목 수정",
+        message: "기도 제목이 수정되었습니다.",
+        icon: "check-circle",
+      });
+    },
+    onError: (error: ApiError) => {
+      showAlert({
+        title: "기도 제목 수정 실패",
+        message: error.message,
+        icon: "alert-circle",
+      });
+    },
+  });
+};
+
+// 기도 내용 추가
+export const useCreatePrayerContentMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ prayerTitleId, memberName, content }: { prayerTitleId: number | null; memberName: string; content: string }) =>
+      prayerService.createContent(prayerTitleId, memberName, content),
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.prayerContents],
+      });
+      showAlert({
+        title: "기도 내용 추가",
+        message: "기도 내용이 추가되었습니다.",
+        icon: "check-circle",
+      });
+    },
+    onError: (error: ApiError) => {
+      showAlert({
+        title: "기도 내용 추가 실패",
+        message: error.message,
+        icon: "alert-circle",
+      });
+    },
+  });
+};
+
+// 기도 내용 수정
+export const useUpdatePrayerContentMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ prayerTitleId, contentId, content }: { prayerTitleId: number | null; contentId: number | null; content: string }) =>
+      prayerService.updateContent(prayerTitleId, contentId, content),
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.prayerContents],
+      });
+      showAlert({
+        title: "기도 내용 수정",
+        message: "기도 내용이 수정되었습니다.",
+        icon: "check-circle",
+      });
+    },
+    onError: (error: ApiError) => {
+      showAlert({
+        title: "기도 내용 수정 실패",
+        message: error.message,
+        icon: "alert-circle",
+      });
+    },
+  });
+};
+
+// 기도 내용 삭제
+export const useDeletePrayerContentMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ prayerTitleId, contentId }: { prayerTitleId: number | null; contentId: number | null }) =>
+      prayerService.deleteContent(prayerTitleId, contentId),
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.prayerContents],
+      });
+      showAlert({
+        title: "기도 내용 삭제",
+        message: "기도 내용이 삭제되었습니다.",
+        icon: "check-circle",
+      });
+    },
+    onError: (error: ApiError) => {
+      showAlert({
+        title: "기도 내용 삭제 실패",
         message: error.message,
         icon: "alert-circle",
       });
