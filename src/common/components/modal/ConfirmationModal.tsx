@@ -80,6 +80,8 @@ function ConfirmationModal({
             style={styles.cancelButton}
             labelStyle={styles.cancelButtonLabel}
             contentStyle={styles.buttonContent}
+            numberOfLines={1}
+            ellipsizeMode="tail"
           >
             {cancelText}
           </Button>
@@ -89,6 +91,8 @@ function ConfirmationModal({
             style={styles.confirmButton}
             labelStyle={styles.confirmButtonLabel}
             contentStyle={styles.buttonContent}
+            numberOfLines={1}
+            ellipsizeMode="tail"
           >
             {confirmText}
           </Button>
@@ -170,16 +174,16 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   cancelButtonLabel: {
-    fontSize: RFValue(18),
+    fontSize: RFValue(14),
     color: "#666",
     fontWeight: "600",
-    lineHeight: RFValue(24),
+    lineHeight: RFValue(20),
   },
   confirmButtonLabel: {
-    fontSize: RFValue(18),
+    fontSize: RFValue(14),
     color: "white",
     fontWeight: "600",
-    lineHeight: RFValue(24),
+    lineHeight: RFValue(20),
   },
 });
 

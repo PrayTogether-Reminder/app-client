@@ -1,6 +1,6 @@
 // PrayerCard.tsx
 import React from "react";
-import { View, StyleSheet, Animated, ScrollView, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Animated, ScrollView, TouchableOpacity, Platform } from "react-native";
 import { Card, Text } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -45,34 +45,33 @@ export default function PrayerCard({
         <Card.Content style={styles.cardContentContainer}>
           <View style={styles.cardHeader}>
             <Text style={styles.nameText}>{item.memberName}</Text>
-            {(onEdit || onDelete) ? (
-              <View style={styles.buttonContainer}>
-                {onEdit ? (
-                  <TouchableOpacity 
-                    onPress={() => onEdit(item)}
-                    style={styles.iconButton}
-                  >
-                    <MaterialCommunityIcons 
-                      name="pencil" 
-                      size={RFValue(18)} 
-                      color={color.secondary} 
-                    />
-                  </TouchableOpacity>
-                ) : null}
-                {onDelete ? (
-                  <TouchableOpacity 
-                    onPress={() => onDelete(item)}
-                    style={styles.iconButton}
-                  >
-                    <MaterialCommunityIcons 
-                      name="delete" 
-                      size={RFValue(18)} 
-                      color="#FF6B6B" 
-                    />
-                  </TouchableOpacity>
-                ) : null}
-              </View>
-            ) : null}
+            {/* 버튼 공간은 항상 확보, 편집 모드에 따라 표시/숨김만 처리 */}
+            <View style={[styles.buttonContainer, { opacity: (onEdit || onDelete) ? 1 : 0 }]}>
+              <TouchableOpacity 
+                onPress={() => onEdit && onEdit(item)}
+                style={styles.iconButton}
+                activeOpacity={Platform.OS === 'ios' ? 0.8 : 0.2}
+                disabled={!onEdit}
+              >
+                <MaterialCommunityIcons 
+                  name="pencil" 
+                  size={RFValue(18)} 
+                  color={color.secondary} 
+                />
+              </TouchableOpacity>
+              <TouchableOpacity 
+                onPress={() => onDelete && onDelete(item)}
+                style={[styles.iconButton, { marginLeft: RFValue(8) }]}
+                activeOpacity={Platform.OS === 'ios' ? 0.8 : 0.2}
+                disabled={!onDelete}
+              >
+                <MaterialCommunityIcons 
+                  name="delete" 
+                  size={RFValue(18)} 
+                  color="#FF6B6B" 
+                />
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={styles.divider} />
           <ScrollView
@@ -116,28 +115,33 @@ const styles = StyleSheet.create({
     marginBottom: RFValue(10),
     paddingHorizontal: RFValue(8),
     paddingTop: RFValue(8),
+    height: RFValue(40), // 고정 높이 설정
   },
   nameText: {
     fontSize: RFValue(22),
     fontWeight: "bold",
     color: color.secondary,
     flex: 1,
+    marginRight: RFValue(8), // 버튼과의 간격
   },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "center",
-    gap: RFValue(8),
+    width: RFValue(80), // minWidth 대신 고정 width
+    height: RFValue(40), // 고정 높이
+    flexShrink: 0, // 크기 축소 방지
   },
   iconButton: {
     padding: RFValue(6),
     borderRadius: RFValue(20),
     backgroundColor: "#F8F9FA",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.15,
-    shadowRadius: 3,
-    elevation: 3,
+    // iOS에서 shadow가 UI 움직임을 유발할 수 있어 제거
+    // shadowColor: "#000",
+    // shadowOffset: { width: 0, height: 1 },
+    // shadowOpacity: 0.15,
+    // shadowRadius: 3,
+    // elevation: 3,
   },
   divider: {
     height: RFValue(1),

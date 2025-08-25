@@ -36,6 +36,7 @@ export default function PrayerContentAddDialog({
 }: PrayerContentAddDialogProps) {
   const [memberName, setMemberName] = useState("");
   const [memberSelectionModal, setMemberSelectionModal] = useState(false);
+  const [isDirectInput, setIsDirectInput] = useState(false);
   
   const room = useSelectedRoomStore().selectedRoom;
   const { data: roomMembers } = useRoomMembersQuery(room?.id ?? null);
@@ -64,6 +65,7 @@ export default function PrayerContentAddDialog({
   useEffect(() => {
     if (visible) {
       setMemberName("");
+      setIsDirectInput(false);
       clear();
     }
   }, [visible, clear]);
@@ -112,15 +114,56 @@ export default function PrayerContentAddDialog({
 
               <View style={dialogStyles.fieldset}>
                 <Text style={dialogStyles.label}>기도 대상</Text>
-                <Button
-                  mode="outlined"
-                  onPress={() => setMemberSelectionModal(true)}
-                  style={dialogStyles.memberButton}
-                  accessibilityLabel="기도 대상 선택"
-                  accessibilityHint="기도 대상을 선택합니다"
-                >
-                  {memberName || "선택하세요"}
-                </Button>
+                <View style={{ height: RFValue(45) }}>
+                  {isDirectInput ? (
+                    <View style={{ flexDirection: 'row', gap: RFValue(8), alignItems: 'center', height: '100%' }}>
+                      <TextInput
+                        value={memberName}
+                        onChangeText={setMemberName}
+                        placeholder="이름을 입력하세요"
+                        style={[dialogStyles.input, { flex: 1, height: RFValue(45) }]}
+                        contentStyle={{ paddingVertical: RFValue(8) }}
+                        mode="outlined"
+                        autoFocus
+                        accessibilityLabel="기도 대상 이름 입력"
+                        accessibilityHint="기도 대상의 이름을 직접 입력하세요"
+                      />
+                      <IconButton
+                        icon="account-multiple"
+                        mode="contained"
+                        size={RFValue(20)}
+                        onPress={() => {
+                          setIsDirectInput(false);
+                          setMemberName("");
+                        }}
+                        style={{ margin: 0, height: RFValue(45), width: RFValue(45) }}
+                        accessibilityLabel="멤버 선택으로 전환"
+                      />
+                    </View>
+                  ) : (
+                    <View style={{ flexDirection: 'row', gap: RFValue(8), height: '100%' }}>
+                      <Button
+                        mode="outlined"
+                        onPress={() => setMemberSelectionModal(true)}
+                        style={[dialogStyles.memberButton, { flex: 1, height: RFValue(45) }]}
+                        contentStyle={{ height: RFValue(45), paddingVertical: 0 }}
+                        labelStyle={{ marginVertical: RFValue(8) }}
+                        accessibilityLabel="기도 대상 선택"
+                        accessibilityHint="기도 대상을 선택합니다"
+                      >
+                        {memberName || "선택하세요"}
+                      </Button>
+                      <IconButton
+                        icon="pencil"
+                        mode="contained"
+                        size={RFValue(20)}
+                        onPress={() => setIsDirectInput(true)}
+                        style={{ margin: 0, height: RFValue(45), width: RFValue(45) }}
+                        accessibilityLabel="직접 입력으로 전환"
+                      />
+                    </View>
+                  )}
+                </View>
               </View>
 
               <View style={dialogStyles.fieldset}>
@@ -176,10 +219,6 @@ export default function PrayerContentAddDialog({
         members={roomMembers || []}
         onSelectMember={(member) => {
           setMemberName(member.name);
-          setMemberSelectionModal(false);
-        }}
-        onCustomNamePress={() => {
-          // 직접 입력 기능 구현 필요 시 추가
           setMemberSelectionModal(false);
         }}
       />

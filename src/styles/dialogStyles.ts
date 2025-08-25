@@ -6,19 +6,17 @@ const windowWidth = Dimensions.get("window").width;
 export const dialogStyles = StyleSheet.create({
   modal: {
     justifyContent: "flex-start",
-    paddingTop: RFValue(50),
+    paddingTop: RFValue(50), // 상단에서 50px 떨어진 위치
   },
   modalContainer: {
     backgroundColor: "white",
-    width: windowWidth < 600 ? "90%" : "70%",
-    alignSelf: "center",
+    marginHorizontal: RFValue(20),
     borderRadius: RFValue(8),
     padding: RFValue(16),
-    elevation: 5,
+    alignItems: "center",
   },
   content: {
-    gap: RFValue(16),
-    position: "relative",
+    width: "100%",
   },
   title: {
     fontSize: RFValue(18),
@@ -26,7 +24,8 @@ export const dialogStyles = StyleSheet.create({
     marginBottom: RFValue(8),
   },
   fieldset: {
-    marginVertical: RFValue(4),
+    marginTop: RFValue(8),
+    marginBottom: RFValue(8),
   },
   label: {
     fontSize: RFValue(14),

@@ -19,7 +19,7 @@ interface PrayerMemberSelectionModalProps {
   onDismiss: () => void;
   members: RoomMember[];
   onSelectMember: (member: RoomMember) => void;
-  onCustomNamePress: () => void;
+  onCustomNamePress?: () => void;
 }
 
 const PrayerMemberSelectionModal = ({
@@ -66,22 +66,24 @@ const PrayerMemberSelectionModal = ({
           </View>
         </ScrollView>
 
-        <Button
-          mode="contained"
-          onPress={onCustomNamePress}
-          style={styles.addCustomButton}
-          contentStyle={styles.buttonContent}
-        >
-          <View style={styles.buttonInnerContainer}>
-            <IconButton
-              icon="plus"
-              size={RFValue(24)}
-              iconColor={color.white}
-              style={styles.plusIcon}
-            />
-            <Text style={styles.buttonText}>직접 입력</Text>
-          </View>
-        </Button>
+        {onCustomNamePress && (
+          <Button
+            mode="contained"
+            onPress={onCustomNamePress}
+            style={styles.addCustomButton}
+            contentStyle={styles.buttonContent}
+          >
+            <View style={styles.buttonInnerContainer}>
+              <IconButton
+                icon="plus"
+                size={RFValue(24)}
+                iconColor={color.white}
+                style={styles.plusIcon}
+              />
+              <Text style={styles.buttonText}>직접 입력</Text>
+            </View>
+          </Button>
+        )}
       </Modal>
     </Portal>
   );
