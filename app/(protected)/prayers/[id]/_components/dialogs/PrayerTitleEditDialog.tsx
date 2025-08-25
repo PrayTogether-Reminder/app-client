@@ -32,20 +32,26 @@ export default function PrayerTitleEditDialog({
   title,
   onSave,
 }: PrayerTitleEditDialogProps) {
-  const [editedTitle, setEditedTitle] = useState(title);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const originalTitle = useRef(title);
+  const textInputRef = useRef<any>(null);
+  const currentValue = useRef(title);
 
   useEffect(() => {
     if (visible) {
-      setEditedTitle(title);
       originalTitle.current = title;
+      currentValue.current = title;
+      // Reset the input when dialog opens
+      if (textInputRef.current) {
+        textInputRef.current.setNativeProps({ text: title });
+      }
     }
   }, [title, visible]);
 
 
   const handleSave = () => {
-    if (!editedTitle.trim()) {
+    const trimmedValue = currentValue.current.trim();
+    if (!trimmedValue) {
       showAlert({
         title: "입력 확인",
         message: "기도 제목을 입력해주세요.",
@@ -53,7 +59,7 @@ export default function PrayerTitleEditDialog({
       return;
     }
 
-    onSave(editedTitle.trim());
+    onSave(trimmedValue);
     onDismiss();
   };
 
@@ -63,7 +69,10 @@ export default function PrayerTitleEditDialog({
   };
 
   const confirmCancel = () => {
-    setEditedTitle(title);
+    currentValue.current = title;
+    if (textInputRef.current) {
+      textInputRef.current.setNativeProps({ text: title });
+    }
     setShowCancelConfirm(false);
     onDismiss();
   };
@@ -92,9 +101,12 @@ export default function PrayerTitleEditDialog({
 
             <View style={styles.fieldset}>
               <TextInput
+                ref={textInputRef}
                 placeholder="기도 제목을 입력하세요"
-                value={editedTitle}
-                onChangeText={setEditedTitle}
+                defaultValue={title}
+                onChangeText={(text) => {
+                  currentValue.current = text;
+                }}
                 style={styles.input}
                 mode="outlined"
                 autoFocus

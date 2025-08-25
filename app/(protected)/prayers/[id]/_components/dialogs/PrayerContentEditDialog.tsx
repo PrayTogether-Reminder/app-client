@@ -33,27 +33,26 @@ export default function PrayerContentEditDialog({
   content,
   onSave,
 }: PrayerContentEditDialogProps) {
-  const [editedContent, setEditedContent] = useState(content.content);
-  const [selection, setSelection] = useState({ start: 0, end: 0 });
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const textInputRef = useRef<any>(null);
   const originalContent = useRef(content.content);
+  const currentValue = useRef(content.content);
 
   useEffect(() => {
     if (visible) {
-      setEditedContent(content.content);
       originalContent.current = content.content;
-      // Dialog가 열릴 때 커서를 맨 앞으로 이동
-      setSelection({ start: 0, end: 0 });
+      currentValue.current = content.content;
+      // Reset the input when dialog opens
+      if (textInputRef.current) {
+        textInputRef.current.setNativeProps({ text: content.content });
+      }
       setTimeout(() => {
         if (textInputRef.current) {
-          // React Native Paper TextInput의 내부 TextInput에 접근
           textInputRef.current?.focus();
           textInputRef.current?.setNativeProps({ 
             selection: { start: 0, end: 0 },
             scrollEnabled: true
           });
-          // 스크롤을 맨 위로
           textInputRef.current?.scrollTo?.({ y: 0, animated: false });
         }
       }, 150);
@@ -62,7 +61,8 @@ export default function PrayerContentEditDialog({
 
 
   const handleSave = () => {
-    if (!editedContent.trim()) {
+    const trimmedValue = currentValue.current.trim();
+    if (!trimmedValue) {
       showAlert({
         title: "입력 확인",
         message: "기도 내용을 입력해주세요.",
@@ -70,7 +70,7 @@ export default function PrayerContentEditDialog({
       return;
     }
 
-    onSave(editedContent);
+    onSave(currentValue.current);
   };
 
   const handleCancel = () => {
@@ -79,7 +79,10 @@ export default function PrayerContentEditDialog({
   };
 
   const confirmCancel = () => {
-    setEditedContent(content.content);
+    currentValue.current = content.content;
+    if (textInputRef.current) {
+      textInputRef.current.setNativeProps({ text: content.content });
+    }
     setShowCancelConfirm(false);
     onDismiss();
   };
@@ -111,10 +114,10 @@ export default function PrayerContentEditDialog({
               <TextInput
                 ref={textInputRef}
                 placeholder="기도 내용을 입력하세요"
-                value={editedContent}
-                onChangeText={setEditedContent}
-                selection={selection}
-                onSelectionChange={(e) => setSelection(e.nativeEvent.selection)}
+                defaultValue={content.content}
+                onChangeText={(text) => {
+                  currentValue.current = text;
+                }}
                 style={styles.inputMultiline}
                 mode="outlined"
                 multiline

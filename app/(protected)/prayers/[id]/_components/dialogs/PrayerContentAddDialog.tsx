@@ -33,8 +33,9 @@ export default function PrayerContentAddDialog({
   onAdd,
 }: PrayerContentAddDialogProps) {
   const [memberName, setMemberName] = useState("");
-  const [content, setContent] = useState("");
   const [memberSelectionModal, setMemberSelectionModal] = useState(false);
+  const textInputRef = useRef<any>(null);
+  const currentContent = useRef("");
   
   const room = useSelectedRoomStore().selectedRoom;
   const { data: roomMembers } = useRoomMembersQuery(room?.id ?? null);
@@ -48,7 +49,8 @@ export default function PrayerContentAddDialog({
       return;
     }
 
-    if (!content.trim()) {
+    const trimmedContent = currentContent.current.trim();
+    if (!trimmedContent) {
       showAlert({
         title: "입력 확인",
         message: "기도 내용을 입력해주세요.",
@@ -56,14 +58,20 @@ export default function PrayerContentAddDialog({
       return;
     }
 
-    onAdd(memberName, content);
+    onAdd(memberName, currentContent.current);
     setMemberName("");
-    setContent("");
+    currentContent.current = "";
+    if (textInputRef.current) {
+      textInputRef.current.clear();
+    }
   };
 
   const handleCancel = () => {
     setMemberName("");
-    setContent("");
+    currentContent.current = "";
+    if (textInputRef.current) {
+      textInputRef.current.clear();
+    }
     onDismiss();
   };
 
@@ -94,9 +102,12 @@ export default function PrayerContentAddDialog({
               <View style={styles.fieldset}>
                 <Text style={styles.label}>기도 내용</Text>
                 <TextInput
+                  ref={textInputRef}
                   placeholder="기도 내용을 입력하세요"
-                  value={content}
-                  onChangeText={setContent}
+                  defaultValue=""
+                  onChangeText={(text) => {
+                    currentContent.current = text;
+                  }}
                   style={styles.inputMultiline}
                   mode="outlined"
                   multiline
