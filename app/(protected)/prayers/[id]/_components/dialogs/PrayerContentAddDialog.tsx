@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -20,6 +20,7 @@ import { showAlert } from "@/common/components/modal/stores/useAlertStore";
 import { useRoomMembersQuery } from "@/domain/rooms/hooks/queries/useRoomQueries";
 import { useSelectedRoomStore } from "@/domain/rooms/stores/useSelectedRoomStore";
 import PrayerMemberSelectionModal from "../../../creation/_components/modal/PrayerMemberSelectionModal";
+import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
 
 interface PrayerContentAddDialogProps {
   visible: boolean;
@@ -34,11 +35,25 @@ export default function PrayerContentAddDialog({
 }: PrayerContentAddDialogProps) {
   const [memberName, setMemberName] = useState("");
   const [memberSelectionModal, setMemberSelectionModal] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const textInputRef = useRef<any>(null);
   const currentContent = useRef("");
+  const originalMemberName = useRef("");
   
   const room = useSelectedRoomStore().selectedRoom;
   const { data: roomMembers } = useRoomMembersQuery(room?.id ?? null);
+
+  useEffect(() => {
+    if (visible) {
+      // Dialog가 열릴 때 초기값 저장
+      originalMemberName.current = "";
+      currentContent.current = "";
+      setMemberName("");
+      if (textInputRef.current) {
+        textInputRef.current.clear();
+      }
+    }
+  }, [visible]);
 
   const handleAdd = () => {
     if (!memberName.trim()) {
@@ -67,12 +82,27 @@ export default function PrayerContentAddDialog({
   };
 
   const handleCancel = () => {
+    // 내용이 있거나 멤버를 선택했으면 확인 팝업 표시
+    if (memberName.trim() || currentContent.current.trim()) {
+      setShowCancelConfirm(true);
+    } else {
+      // 아무것도 입력하지 않았으면 바로 닫기
+      onDismiss();
+    }
+  };
+
+  const confirmCancel = () => {
     setMemberName("");
     currentContent.current = "";
     if (textInputRef.current) {
       textInputRef.current.clear();
     }
+    setShowCancelConfirm(false);
     onDismiss();
+  };
+
+  const cancelCancel = () => {
+    setShowCancelConfirm(false);
   };
 
   return (
@@ -81,6 +111,8 @@ export default function PrayerContentAddDialog({
         <Modal
           visible={visible}
           onDismiss={handleCancel}
+          dismissable={false}
+          dismissableBackButton={true}
           contentContainerStyle={styles.modalContainer}
           style={styles.modal}
         >
@@ -157,6 +189,18 @@ export default function PrayerContentAddDialog({
           // 직접 입력 기능 구현 필요 시 추가
           setMemberSelectionModal(false);
         }}
+      />
+
+      {/* 변경 취소 확인 모달 */}
+      <ConfirmationModal
+        visible={showCancelConfirm}
+        onDismiss={cancelCancel}
+        onConfirm={confirmCancel}
+        icon="alert-circle"
+        title="작성 취소"
+        content="작성한 내용이 저장되지 않습니다. 취소하시겠습니까?"
+        confirmText="취소"
+        cancelText="계속 작성"
       />
     </>
   );

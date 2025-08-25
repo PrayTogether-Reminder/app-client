@@ -96,11 +96,8 @@ export default function PrayerContentEditDialog({
     <Portal>
       <Modal
         visible={visible}
-        onDismiss={() => {
-          console.log('Modal onDismiss called');
-          handleCancel();
-        }}
-        dismissable={true}
+        onDismiss={handleCancel}
+        dismissable={false}
         dismissableBackButton={true}
         contentContainerStyle={styles.modalContainer}
         style={styles.modal}
