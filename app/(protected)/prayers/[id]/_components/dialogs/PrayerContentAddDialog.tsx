@@ -41,12 +41,21 @@ export default function PrayerContentAddDialog({
   const room = useSelectedRoomStore().selectedRoom;
   const { data: roomMembers } = useRoomMembersQuery(room?.id ?? null);
 
+  // 기도 내용용 훅
   const {
     textInputRef,
     handleChange,
     getValue,
     clear,
   } = useKoreanInput({ initialValue: "", visible });
+
+  // 직접 입력용 훅 (멤버 이름)
+  const {
+    textInputRef: memberInputRef,
+    handleChange: handleMemberChange,
+    getValue: getMemberValue,
+    clear: clearMember,
+  } = useKoreanInput({ initialValue: "", visible: visible && isDirectInput });
 
   const {
     showCancelConfirm,
@@ -55,10 +64,11 @@ export default function PrayerContentAddDialog({
     cancelCancel,
   } = useDialogWithConfirmation({
     onDismiss,
-    checkDirty: () => memberName.trim() !== "" || getValue().trim() !== "",
+    checkDirty: () => (isDirectInput ? getMemberValue().trim() : memberName.trim()) !== "" || getValue().trim() !== "",
     onConfirmCancel: () => {
       setMemberName("");
       clear();
+      clearMember();
     },
   });
 
@@ -67,11 +77,14 @@ export default function PrayerContentAddDialog({
       setMemberName("");
       setIsDirectInput(false);
       clear();
+      clearMember();
     }
-  }, [visible, clear]);
+  }, [visible, clear, clearMember]);
 
   const handleAdd = useCallback(() => {
-    if (!memberName.trim()) {
+    const finalMemberName = isDirectInput ? getMemberValue().trim() : memberName.trim();
+    
+    if (!finalMemberName) {
       showAlert({
         title: "입력 확인",
         message: "기도 대상을 선택해주세요.",
@@ -88,10 +101,11 @@ export default function PrayerContentAddDialog({
       return;
     }
 
-    onAdd(memberName, getValue());
+    onAdd(finalMemberName, getValue());
     setMemberName("");
     clear();
-  }, [memberName, getValue, onAdd, clear]);
+    clearMember();
+  }, [memberName, getValue, getMemberValue, isDirectInput, onAdd, clear, clearMember]);
 
   return (
     <>
@@ -118,8 +132,9 @@ export default function PrayerContentAddDialog({
                   {isDirectInput ? (
                     <View style={{ flexDirection: 'row', gap: RFValue(8), alignItems: 'center', height: '100%' }}>
                       <TextInput
-                        value={memberName}
-                        onChangeText={setMemberName}
+                        ref={memberInputRef}
+                        defaultValue=""
+                        onChangeText={handleMemberChange}
                         placeholder="이름을 입력하세요"
                         style={[dialogStyles.input, { flex: 1, height: RFValue(45) }]}
                         contentStyle={{ paddingVertical: RFValue(8) }}
@@ -135,6 +150,7 @@ export default function PrayerContentAddDialog({
                         onPress={() => {
                           setIsDirectInput(false);
                           setMemberName("");
+                          clearMember();
                         }}
                         style={{ margin: 0, height: RFValue(45), width: RFValue(45) }}
                         accessibilityLabel="멤버 선택으로 전환"
