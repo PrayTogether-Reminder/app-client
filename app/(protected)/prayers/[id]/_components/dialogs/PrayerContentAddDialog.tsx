@@ -1,8 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
-  StyleSheet,
-  Dimensions,
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
@@ -21,6 +19,9 @@ import { useRoomMembersQuery } from "@/domain/rooms/hooks/queries/useRoomQueries
 import { useSelectedRoomStore } from "@/domain/rooms/stores/useSelectedRoomStore";
 import PrayerMemberSelectionModal from "../../../creation/_components/modal/PrayerMemberSelectionModal";
 import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
+import { dialogStyles } from "@/styles/dialogStyles";
+import { useDialogWithConfirmation } from "@/hooks/useDialogWithConfirmation";
+import { useKoreanInput } from "@/hooks/useKoreanInput";
 
 interface PrayerContentAddDialogProps {
   visible: boolean;
@@ -35,27 +36,39 @@ export default function PrayerContentAddDialog({
 }: PrayerContentAddDialogProps) {
   const [memberName, setMemberName] = useState("");
   const [memberSelectionModal, setMemberSelectionModal] = useState(false);
-  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
-  const textInputRef = useRef<any>(null);
-  const currentContent = useRef("");
-  const originalMemberName = useRef("");
   
   const room = useSelectedRoomStore().selectedRoom;
   const { data: roomMembers } = useRoomMembersQuery(room?.id ?? null);
 
+  const {
+    textInputRef,
+    handleChange,
+    getValue,
+    clear,
+  } = useKoreanInput({ initialValue: "", visible });
+
+  const {
+    showCancelConfirm,
+    handleCancel,
+    confirmCancel,
+    cancelCancel,
+  } = useDialogWithConfirmation({
+    onDismiss,
+    checkDirty: () => memberName.trim() !== "" || getValue().trim() !== "",
+    onConfirmCancel: () => {
+      setMemberName("");
+      clear();
+    },
+  });
+
   useEffect(() => {
     if (visible) {
-      // Dialog가 열릴 때 초기값 저장
-      originalMemberName.current = "";
-      currentContent.current = "";
       setMemberName("");
-      if (textInputRef.current) {
-        textInputRef.current.clear();
-      }
+      clear();
     }
-  }, [visible]);
+  }, [visible, clear]);
 
-  const handleAdd = () => {
+  const handleAdd = useCallback(() => {
     if (!memberName.trim()) {
       showAlert({
         title: "입력 확인",
@@ -64,7 +77,7 @@ export default function PrayerContentAddDialog({
       return;
     }
 
-    const trimmedContent = currentContent.current.trim();
+    const trimmedContent = getValue().trim();
     if (!trimmedContent) {
       showAlert({
         title: "입력 확인",
@@ -73,37 +86,10 @@ export default function PrayerContentAddDialog({
       return;
     }
 
-    onAdd(memberName, currentContent.current);
+    onAdd(memberName, getValue());
     setMemberName("");
-    currentContent.current = "";
-    if (textInputRef.current) {
-      textInputRef.current.clear();
-    }
-  };
-
-  const handleCancel = () => {
-    // 내용이 있거나 멤버를 선택했으면 확인 팝업 표시
-    if (memberName.trim() || currentContent.current.trim()) {
-      setShowCancelConfirm(true);
-    } else {
-      // 아무것도 입력하지 않았으면 바로 닫기
-      onDismiss();
-    }
-  };
-
-  const confirmCancel = () => {
-    setMemberName("");
-    currentContent.current = "";
-    if (textInputRef.current) {
-      textInputRef.current.clear();
-    }
-    setShowCancelConfirm(false);
-    onDismiss();
-  };
-
-  const cancelCancel = () => {
-    setShowCancelConfirm(false);
-  };
+    clear();
+  }, [memberName, getValue, onAdd, clear]);
 
   return (
     <>
@@ -113,54 +99,61 @@ export default function PrayerContentAddDialog({
           onDismiss={handleCancel}
           dismissable={false}
           dismissableBackButton={true}
-          contentContainerStyle={styles.modalContainer}
-          style={styles.modal}
+          contentContainerStyle={dialogStyles.modalContainer}
+          style={dialogStyles.modal}
         >
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-            <View style={styles.content}>
-              <Text style={styles.title}>기도 내용 추가</Text>
+          <TouchableWithoutFeedback 
+            onPress={Keyboard.dismiss}
+            accessible={true}
+            accessibilityRole="none"
+            accessibilityLabel="다이얼로그 배경">
+            <View style={dialogStyles.content}>
+              <Text style={dialogStyles.title}>기도 내용 추가</Text>
 
-              <View style={styles.fieldset}>
-                <Text style={styles.label}>기도 대상</Text>
+              <View style={dialogStyles.fieldset}>
+                <Text style={dialogStyles.label}>기도 대상</Text>
                 <Button
                   mode="outlined"
                   onPress={() => setMemberSelectionModal(true)}
-                  style={styles.memberButton}
+                  style={dialogStyles.memberButton}
+                  accessibilityLabel="기도 대상 선택"
+                  accessibilityHint="기도 대상을 선택합니다"
                 >
                   {memberName || "선택하세요"}
                 </Button>
               </View>
 
-              <View style={styles.fieldset}>
-                <Text style={styles.label}>기도 내용</Text>
+              <View style={dialogStyles.fieldset}>
+                <Text style={dialogStyles.label}>기도 내용</Text>
                 <TextInput
                   ref={textInputRef}
                   placeholder="기도 내용을 입력하세요"
                   defaultValue=""
-                  onChangeText={(text) => {
-                    currentContent.current = text;
-                  }}
-                  style={styles.inputMultiline}
+                  onChangeText={handleChange}
+                  style={dialogStyles.inputMultilineSmall}
                   mode="outlined"
                   multiline
                   numberOfLines={6}
+                  accessibilityLabel="기도 내용 입력"
+                  accessibilityHint="기도 내용을 입력하세요"
+                  accessibilityMultiline={true}
                 />
               </View>
 
-              <View style={styles.buttonContainer}>
+              <View style={dialogStyles.buttonContainer}>
                 <Button
                   mode="outlined"
                   onPress={handleCancel}
-                  style={styles.cancelButton}
-                  labelStyle={styles.buttonLabel}
+                  style={dialogStyles.cancelButton}
+                  labelStyle={dialogStyles.buttonLabel}
                 >
                   취소
                 </Button>
                 <Button
                   mode="contained"
                   onPress={handleAdd}
-                  style={styles.addButton}
-                  labelStyle={styles.buttonLabel}
+                  style={dialogStyles.addButton}
+                  labelStyle={dialogStyles.buttonLabel}
                 >
                   추가
                 </Button>
@@ -169,7 +162,7 @@ export default function PrayerContentAddDialog({
               <IconButton
                 icon={() => <Feather name="x" size={RFValue(24)} color="black" />}
                 onPress={handleCancel}
-                style={styles.closeButton}
+                style={dialogStyles.closeButton}
                 size={24}
               />
             </View>
@@ -205,65 +198,3 @@ export default function PrayerContentAddDialog({
     </>
   );
 }
-
-const windowWidth = Dimensions.get("window").width;
-
-const styles = StyleSheet.create({
-  modal: {
-    justifyContent: "flex-start",
-    paddingTop: RFValue(50),
-  },
-  modalContainer: {
-    backgroundColor: "white",
-    width: windowWidth < 600 ? "90%" : "70%",
-    alignSelf: "center",
-    borderRadius: RFValue(8),
-    padding: RFValue(16),
-    elevation: 5,
-  },
-  content: {
-    gap: RFValue(16),
-    position: "relative",
-  },
-  title: {
-    fontSize: RFValue(18),
-    fontWeight: "bold",
-    marginBottom: RFValue(8),
-  },
-  fieldset: {
-    marginVertical: RFValue(4),
-  },
-  label: {
-    fontSize: RFValue(14),
-    marginBottom: RFValue(4),
-  },
-  memberButton: {
-    width: "100%",
-  },
-  inputMultiline: {
-    width: "100%",
-    height: RFValue(120),
-    backgroundColor: "white",
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: RFValue(12),
-    marginTop: RFValue(8),
-    marginBottom: RFValue(16),
-  },
-  cancelButton: {
-    width: windowWidth < 400 ? "35%" : "30%",
-  },
-  addButton: {
-    width: windowWidth < 400 ? "35%" : "30%",
-  },
-  buttonLabel: {
-    fontSize: RFValue(16),
-  },
-  closeButton: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-  },
-});

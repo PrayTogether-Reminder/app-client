@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useCallback } from "react";
 import {
   View,
-  StyleSheet,
-  Dimensions,
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
@@ -18,6 +16,9 @@ import { RFValue } from "react-native-responsive-fontsize";
 import Feather from "@expo/vector-icons/Feather";
 import { showAlert } from "@/common/components/modal/stores/useAlertStore";
 import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
+import { dialogStyles } from "@/styles/dialogStyles";
+import { useDialogWithConfirmation } from "@/hooks/useDialogWithConfirmation";
+import { useKoreanInput } from "@/hooks/useKoreanInput";
 
 interface PrayerTitleEditDialogProps {
   visible: boolean;
@@ -32,25 +33,27 @@ export default function PrayerTitleEditDialog({
   title,
   onSave,
 }: PrayerTitleEditDialogProps) {
-  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
-  const originalTitle = useRef(title);
-  const textInputRef = useRef<any>(null);
-  const currentValue = useRef(title);
+  const {
+    textInputRef,
+    handleChange,
+    getValue,
+    setValue,
+  } = useKoreanInput({ initialValue: title, visible });
 
-  useEffect(() => {
-    if (visible) {
-      originalTitle.current = title;
-      currentValue.current = title;
-      // Reset the input when dialog opens
-      if (textInputRef.current) {
-        textInputRef.current.setNativeProps({ text: title });
-      }
-    }
-  }, [title, visible]);
+  const {
+    showCancelConfirm,
+    handleCancel,
+    confirmCancel,
+    cancelCancel,
+  } = useDialogWithConfirmation({
+    onDismiss,
+    checkDirty: () => getValue() !== title,
+    onConfirmCancel: () => setValue(title),
+  });
 
 
-  const handleSave = () => {
-    const trimmedValue = currentValue.current.trim();
+  const handleSave = useCallback(() => {
+    const trimmedValue = getValue().trim();
     if (!trimmedValue) {
       showAlert({
         title: "입력 확인",
@@ -61,25 +64,7 @@ export default function PrayerTitleEditDialog({
 
     onSave(trimmedValue);
     onDismiss();
-  };
-
-  const handleCancel = () => {
-    // 항상 확인 팝업 표시
-    setShowCancelConfirm(true);
-  };
-
-  const confirmCancel = () => {
-    currentValue.current = title;
-    if (textInputRef.current) {
-      textInputRef.current.setNativeProps({ text: title });
-    }
-    setShowCancelConfirm(false);
-    onDismiss();
-  };
-
-  const cancelCancel = () => {
-    setShowCancelConfirm(false);
-  };
+  }, [getValue, onSave, onDismiss]);
 
   return (
     <>
@@ -89,41 +74,49 @@ export default function PrayerTitleEditDialog({
         onDismiss={handleCancel}
         dismissable={false}
         dismissableBackButton={true}
-        contentContainerStyle={styles.modalContainer}
-        style={styles.modal}
+        contentContainerStyle={dialogStyles.modalContainer}
+        style={dialogStyles.modal}
       >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <View style={styles.content}>
-            <Text style={styles.title}>기도 제목 수정</Text>
+        <TouchableWithoutFeedback 
+          onPress={Keyboard.dismiss}
+          accessible={true}
+          accessibilityRole="none"
+          accessibilityLabel="다이얼로그 배경">
+          <View style={dialogStyles.content}>
+            <Text style={dialogStyles.title}>기도 제목 수정</Text>
 
-            <View style={styles.fieldset}>
+            <View style={dialogStyles.fieldset}>
               <TextInput
                 ref={textInputRef}
                 placeholder="기도 제목을 입력하세요"
                 defaultValue={title}
-                onChangeText={(text) => {
-                  currentValue.current = text;
-                }}
-                style={styles.input}
+                onChangeText={handleChange}
+                style={dialogStyles.input}
                 mode="outlined"
                 autoFocus
+                accessibilityLabel="기도 제목 입력"
+                accessibilityHint="수정할 기도 제목을 입력하세요"
               />
             </View>
 
-            <View style={styles.buttonContainer}>
+            <View style={dialogStyles.buttonContainer}>
               <Button
                 mode="outlined"
                 onPress={handleCancel}
-                style={styles.cancelButton}
-                labelStyle={styles.buttonLabel}
+                style={dialogStyles.cancelButton}
+                labelStyle={dialogStyles.buttonLabel}
+                accessibilityLabel="취소 버튼"
+                accessibilityHint="변경 사항을 취소하고 대화상자를 닫습니다"
               >
                 취소
               </Button>
               <Button
                 mode="contained"
                 onPress={handleSave}
-                style={styles.saveButton}
-                labelStyle={styles.buttonLabel}
+                style={dialogStyles.saveButton}
+                labelStyle={dialogStyles.buttonLabel}
+                accessibilityLabel="저장 버튼"
+                accessibilityHint="변경 사항을 저장합니다"
               >
                 저장
               </Button>
@@ -132,8 +125,10 @@ export default function PrayerTitleEditDialog({
             <IconButton
               icon={() => <Feather name="x" size={RFValue(24)} color="black" />}
               onPress={handleCancel}
-              style={styles.closeButton}
+              style={dialogStyles.closeButton}
               size={24}
+              accessibilityLabel="닫기 버튼"
+              accessibilityHint="대화상자를 닫습니다"
             />
           </View>
         </TouchableWithoutFeedback>
@@ -154,58 +149,3 @@ export default function PrayerTitleEditDialog({
     </>
   );
 }
-
-const windowWidth = Dimensions.get("window").width;
-
-const styles = StyleSheet.create({
-  modal: {
-    justifyContent: "flex-start",
-    paddingTop: RFValue(100),
-  },
-  modalContainer: {
-    backgroundColor: "white",
-    width: windowWidth < 600 ? "85%" : "70%",
-    alignSelf: "center",
-    borderRadius: RFValue(8),
-    padding: RFValue(16),
-    elevation: 5,
-  },
-  content: {
-    gap: RFValue(16),
-    position: "relative",
-  },
-  title: {
-    fontSize: RFValue(18),
-    fontWeight: "bold",
-    marginBottom: RFValue(8),
-  },
-  fieldset: {
-    marginVertical: RFValue(4),
-  },
-  input: {
-    width: "100%",
-    backgroundColor: "white",
-    fontSize: RFValue(16),
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: RFValue(12),
-    marginTop: RFValue(8),
-    marginBottom: RFValue(16),
-  },
-  cancelButton: {
-    width: windowWidth < 400 ? "35%" : "30%",
-  },
-  saveButton: {
-    width: windowWidth < 400 ? "35%" : "30%",
-  },
-  buttonLabel: {
-    fontSize: RFValue(16),
-  },
-  closeButton: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-  },
-});
