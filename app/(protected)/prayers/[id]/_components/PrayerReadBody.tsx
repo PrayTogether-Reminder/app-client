@@ -130,6 +130,7 @@ function PrayerReadBody({ isEditMode, onEditModeChange }: PrayerReadBodyProps) {
         <PrayerContentAddDialog
           visible={isAddDialogOpen}
           onDismiss={() => setIsAddDialogOpen(false)}
+          existingPrayerContents={prayerContents || []}
           onAdd={(memberName, content) => {
             if (!selectedPrayerTitle?.id) {
               console.error('Prayer title ID is missing');
@@ -185,7 +186,9 @@ function PrayerReadBody({ isEditMode, onEditModeChange }: PrayerReadBodyProps) {
       <PrayerContentAddDialog
         visible={isAddDialogOpen}
         onDismiss={() => setIsAddDialogOpen(false)}
+        existingPrayerContents={prayerContents || []}
         onAdd={(memberName, content) => {
+          console.log('PrayerReadBody - prayerContents:', prayerContents);
           if (!selectedPrayerTitle?.id) {
             console.error('Prayer title ID is missing');
             return;

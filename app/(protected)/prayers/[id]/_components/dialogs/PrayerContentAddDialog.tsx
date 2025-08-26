@@ -23,16 +23,20 @@ import { dialogStyles } from "@/styles/dialogStyles";
 import { useDialogWithConfirmation } from "@/hooks/useDialogWithConfirmation";
 import { useKoreanInput } from "@/hooks/useKoreanInput";
 
+import { PrayerContent } from "@/domain/prayers/types/prayerContent";
+
 interface PrayerContentAddDialogProps {
   visible: boolean;
   onDismiss: () => void;
   onAdd: (memberName: string, content: string) => void;
+  existingPrayerContents?: PrayerContent[];
 }
 
 export default function PrayerContentAddDialog({
   visible,
   onDismiss,
   onAdd,
+  existingPrayerContents = [],
 }: PrayerContentAddDialogProps) {
   const [memberName, setMemberName] = useState("");
   const [memberSelectionModal, setMemberSelectionModal] = useState(false);
@@ -92,6 +96,20 @@ export default function PrayerContentAddDialog({
       return;
     }
 
+    // 중복 이름 체크
+    const isDuplicate = existingPrayerContents.some(
+      content => content.memberName === finalMemberName
+    );
+    
+    if (isDuplicate) {
+      showAlert({
+        title: "중복 확인",
+        message: `${finalMemberName}님은 이미 기도 내용이 작성되어 있습니다.`,
+        icon: "alert-circle",
+      });
+      return;
+    }
+
     const trimmedContent = getValue().trim();
     if (!trimmedContent) {
       showAlert({
@@ -105,7 +123,7 @@ export default function PrayerContentAddDialog({
     setMemberName("");
     clear();
     clearMember();
-  }, [memberName, getValue, getMemberValue, isDirectInput, onAdd, clear, clearMember]);
+  }, [memberName, getValue, getMemberValue, isDirectInput, onAdd, clear, clearMember, existingPrayerContents]);
 
   return (
     <>
@@ -232,7 +250,14 @@ export default function PrayerContentAddDialog({
       <PrayerMemberSelectionModal
         visible={memberSelectionModal}
         onDismiss={() => setMemberSelectionModal(false)}
-        members={roomMembers || []}
+        members={
+          // 이미 기도 내용이 작성된 멤버 제외
+          (roomMembers || []).filter(
+            member => !existingPrayerContents.some(
+              content => content.memberName === member.name
+            )
+          )
+        }
         onSelectMember={(member) => {
           setMemberName(member.name);
           setMemberSelectionModal(false);
