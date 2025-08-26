@@ -76,6 +76,10 @@ export const useUpdatePrayerTitleMutation = () => {
     mutationFn: ({ prayerTitleId, title }: { prayerTitleId: number; title: string }) =>
       prayerService.updateTitle(prayerTitleId, title),
     onSuccess: (data, variables) => {
+      // 기도방 목록과 기도 제목 관련 캐시 무효화
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.rooms],
+      });
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.prayerTitles],
       });
@@ -102,8 +106,9 @@ export const useCreatePrayerContentMutation = () => {
     mutationFn: ({ prayerTitleId, memberName, content, memberId }: { prayerTitleId: number; memberName: string; content: string; memberId?: number | null }) =>
       prayerService.createContent(prayerTitleId, memberName, content, memberId),
     onSuccess: (data, variables) => {
+      // 기도 내용 관련 캐시 무효화
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.prayerContents],
+        queryKey: [QUERY_KEYS.rooms],
       });
       showAlert({
         title: "기도 내용 추가",
@@ -128,8 +133,9 @@ export const useUpdatePrayerContentMutation = () => {
     mutationFn: ({ prayerTitleId, contentId, content }: { prayerTitleId: number; contentId: number; content: string }) =>
       prayerService.updateContent(prayerTitleId, contentId, content),
     onSuccess: (data, variables) => {
+      // 기도 내용 관련 캐시 무효화
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.prayerContents],
+        queryKey: [QUERY_KEYS.rooms],
       });
       showAlert({
         title: "기도 내용 수정",
@@ -154,8 +160,9 @@ export const useDeletePrayerContentMutation = () => {
     mutationFn: ({ prayerTitleId, contentId }: { prayerTitleId: number; contentId: number }) =>
       prayerService.deleteContent(prayerTitleId, contentId),
     onSuccess: (data, variables) => {
+      // 기도 내용 관련 캐시 무효화
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.prayerContents],
+        queryKey: [QUERY_KEYS.rooms],
       });
       showAlert({
         title: "기도 내용 삭제",
