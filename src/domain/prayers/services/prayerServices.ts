@@ -2,6 +2,9 @@ import apiService from "../../../common/apis/apiService";
 import { ApiResponse } from "../../../common/apis/api";
 import type { PrayerCreationItem } from "../types/PrayerCreationItem";
 import { CreatePrayerRequest } from "../types/request/createPrayerRequest";
+import { CreatePrayerContentRequest } from "../types/request/createPrayerContentRequest";
+import { UpdatePrayerTitleRequest } from "../types/request/updatePrayerTitleRequest";
+import { UpdatePrayerContentRequest } from "../types/request/updatePrayerContentRequest";
 import { MessageResponse } from "../../../common/types/messageResponse";
 import { PrayerTitle } from "../types/prayerTitle";
 import { FetchPrayerTitlesResponse } from "../types/response/fetchPrayerTitlesResponse";
@@ -62,9 +65,10 @@ export const prayerService = {
     prayerTitleId: number,
     title: string
   ): Promise<MessageResponse> => {
+    const requestBody: UpdatePrayerTitleRequest = { changedTitle: title };
     const response: MessageResponse = await apiService.put(
       `/prayers/${prayerTitleId}`,
-      { changedTitle: title }
+      requestBody
     );
     return response;
   },
@@ -76,12 +80,7 @@ export const prayerService = {
     content: string,
     memberId?: number | null
   ): Promise<MessageResponse> => {
-    interface CreateContentRequest {
-      memberName: string;
-      content: string;
-      memberId?: number;
-    }
-    const requestBody: CreateContentRequest = { memberName, content };
+    const requestBody: CreatePrayerContentRequest = { memberName, content };
     if (memberId !== undefined && memberId !== null) {
       requestBody.memberId = memberId;
     }
@@ -98,9 +97,10 @@ export const prayerService = {
     contentId: number,
     content: string
   ): Promise<MessageResponse> => {
+    const requestBody: UpdatePrayerContentRequest = { changedContent: content };
     const response: MessageResponse = await apiService.put(
       `/prayers/${prayerTitleId}/contents/${contentId}`,
-      { changedContent: content }
+      requestBody
     );
     return response;
   },
