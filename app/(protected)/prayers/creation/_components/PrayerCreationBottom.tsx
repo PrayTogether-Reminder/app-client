@@ -5,7 +5,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../../../src/common/styles/color";
 import { useRouter } from "expo-router";
 import path from "../../../../../src/common/constants/path";
-import { usePrayerCreationMutation } from "@/domain/prayers/hooks/mutations/usePrayerMuations";
+import { usePrayerCreationMutation } from "@/domain/prayers/hooks/mutations/usePrayerMutations";
 import { usePrayerCreationStore } from "@/domain/prayers/stores/usePrayerCreationStore";
 import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
 import { useQueryClient } from "@tanstack/react-query";

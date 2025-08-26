@@ -50,7 +50,7 @@ export const prayerService = {
     return response.data.prayerTitles;
   },
   // 기도 내용 조회
-  fetchContents: async (titleId: number | null) => {
+  fetchContents: async (titleId: number) => {
     const response = await apiService.get<FetchPrayerContentsResponse>(
       `/prayers/${titleId}/contents`
     );
@@ -59,46 +59,56 @@ export const prayerService = {
   // 기도 제목 변경
   // 기도 제목만 수정
   updateTitle: async (
-    prayerTitleId: number | null,
+    prayerTitleId: number,
     title: string
   ): Promise<MessageResponse> => {
     const response: MessageResponse = await apiService.put(
-      `/prayers/${prayerTitleId}/title`,
-      { title }
+      `/prayers/${prayerTitleId}`,
+      { changedTitle: title }
     );
     return response;
   },
   
   // 기도 내용 추가
   createContent: async (
-    prayerTitleId: number | null,
+    prayerTitleId: number,
     memberName: string,
-    content: string
+    content: string,
+    memberId?: number | null
   ): Promise<MessageResponse> => {
+    interface CreateContentRequest {
+      memberName: string;
+      content: string;
+      memberId?: number;
+    }
+    const requestBody: CreateContentRequest = { memberName, content };
+    if (memberId !== undefined && memberId !== null) {
+      requestBody.memberId = memberId;
+    }
     const response: MessageResponse = await apiService.post(
       `/prayers/${prayerTitleId}/contents`,
-      { memberName, content }
+      requestBody
     );
     return response;
   },
   
   // 기도 내용 수정
   updateContent: async (
-    prayerTitleId: number | null,
-    contentId: number | null,
+    prayerTitleId: number,
+    contentId: number,
     content: string
   ): Promise<MessageResponse> => {
     const response: MessageResponse = await apiService.put(
       `/prayers/${prayerTitleId}/contents/${contentId}`,
-      { content }
+      { changedContent: content }
     );
     return response;
   },
   
   // 기도 내용 삭제
   deleteContent: async (
-    prayerTitleId: number | null,
-    contentId: number | null
+    prayerTitleId: number,
+    contentId: number
   ): Promise<MessageResponse> => {
     const response: MessageResponse = await apiService.delete(
       `/prayers/${prayerTitleId}/contents/${contentId}`

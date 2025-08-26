@@ -68,48 +68,12 @@ export const usePrayerCreationMutation = () => {
   });
 };
 
-// 기도(제목+내용) 수정
-export const usePrayerUpdateMutation = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: ({
-      roomId,
-      prayerTitleId,
-      title,
-      prayerList,
-    }: UpdatePrayerParams) =>
-      prayerService.update(prayerTitleId, title, prayerList),
-    onSuccess: (data, param) => {
-      queryClient.invalidateQueries({
-        queryKey: [
-          QUERY_KEYS.rooms,
-          param.roomId,
-          QUERY_KEYS.prayerTitles,
-          param.prayerTitleId,
-          QUERY_KEYS.prayerContents,
-        ],
-      });
-      showAlert({
-        title: "기도 수정 완료",
-        message: data.message,
-        icon: "check-circle",
-      });
-    },
-    onError: (error: ApiError) => {
-      showAlert({
-        title: "기도 수정 실패",
-        message: error.message,
-        icon: "alert-circle",
-      });
-    },
-  });
-};
 
 // 기도 제목만 수정
 export const useUpdatePrayerTitleMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ prayerTitleId, title }: { prayerTitleId: number | null; title: string }) =>
+    mutationFn: ({ prayerTitleId, title }: { prayerTitleId: number; title: string }) =>
       prayerService.updateTitle(prayerTitleId, title),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({
@@ -135,8 +99,8 @@ export const useUpdatePrayerTitleMutation = () => {
 export const useCreatePrayerContentMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ prayerTitleId, memberName, content }: { prayerTitleId: number | null; memberName: string; content: string }) =>
-      prayerService.createContent(prayerTitleId, memberName, content),
+    mutationFn: ({ prayerTitleId, memberName, content, memberId }: { prayerTitleId: number; memberName: string; content: string; memberId?: number | null }) =>
+      prayerService.createContent(prayerTitleId, memberName, content, memberId),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.prayerContents],
@@ -161,7 +125,7 @@ export const useCreatePrayerContentMutation = () => {
 export const useUpdatePrayerContentMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ prayerTitleId, contentId, content }: { prayerTitleId: number | null; contentId: number | null; content: string }) =>
+    mutationFn: ({ prayerTitleId, contentId, content }: { prayerTitleId: number; contentId: number; content: string }) =>
       prayerService.updateContent(prayerTitleId, contentId, content),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({
@@ -187,7 +151,7 @@ export const useUpdatePrayerContentMutation = () => {
 export const useDeletePrayerContentMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ prayerTitleId, contentId }: { prayerTitleId: number | null; contentId: number | null }) =>
+    mutationFn: ({ prayerTitleId, contentId }: { prayerTitleId: number; contentId: number }) =>
       prayerService.deleteContent(prayerTitleId, contentId),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({

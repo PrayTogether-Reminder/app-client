@@ -1,5 +1,5 @@
 import { showAlert } from "@/common/components/modal/stores/useAlertStore";
-import { useCreatePrayerTitleMutation } from "@/domain/prayers/hooks/mutations/usePrayerMuations";
+import { useCreatePrayerTitleMutation } from "@/domain/prayers/hooks/mutations/usePrayerMutations";
 import { useSelectedRoomStore } from "@/domain/rooms/stores/useSelectedRoomStore";
 import Feather from "@expo/vector-icons/Feather";
 import React, { useEffect, useRef } from "react";

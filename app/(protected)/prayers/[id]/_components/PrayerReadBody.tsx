@@ -11,7 +11,7 @@ import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/use
 import { usePrayerContentsQuery } from "@/domain/prayers/hooks/queries/usePrayerQueries";
 import FetchError from "@/common/components/error/FetchError";
 import OverlayLoading from "@/common/components/loading/OverlayLoading";
-import { useUpdatePrayerTitleMutation, useCreatePrayerContentMutation, useUpdatePrayerContentMutation, useDeletePrayerContentMutation } from "@/domain/prayers/hooks/mutations/usePrayerMuations";
+import { useUpdatePrayerTitleMutation, useCreatePrayerContentMutation, useUpdatePrayerContentMutation, useDeletePrayerContentMutation } from "@/domain/prayers/hooks/mutations/usePrayerMutations";
 import { color } from "@/common/styles/color";
 import PrayerContentAddDialog from "./dialogs/PrayerContentAddDialog";
 import PrayerContentEditDialog from "./dialogs/PrayerContentEditDialog";
@@ -55,8 +55,12 @@ function PrayerReadBody({ isEditMode, onEditModeChange }: PrayerReadBodyProps) {
 
   // 제목 수정 핸들러
   const handleTitleSave = (newTitle: string) => {
+    if (!selectedPrayerTitle?.id) {
+      console.error('Prayer title ID is missing');
+      return;
+    }
     updateTitle({
-      prayerTitleId: selectedPrayerTitle?.id ?? null,
+      prayerTitleId: selectedPrayerTitle.id,
       title: newTitle
     });
     setEditingTitle(newTitle);
@@ -80,9 +84,9 @@ function PrayerReadBody({ isEditMode, onEditModeChange }: PrayerReadBodyProps) {
   };
 
   const confirmDeleteContent = () => {
-    if (deletingContent) {
+    if (deletingContent && selectedPrayerTitle?.id && deletingContent.id) {
       deleteContent({
-        prayerTitleId: selectedPrayerTitle?.id ?? null,
+        prayerTitleId: selectedPrayerTitle.id,
         contentId: deletingContent.id
       });
       setDeletingContent(null);
@@ -127,8 +131,12 @@ function PrayerReadBody({ isEditMode, onEditModeChange }: PrayerReadBodyProps) {
           visible={isAddDialogOpen}
           onDismiss={() => setIsAddDialogOpen(false)}
           onAdd={(memberName, content) => {
+            if (!selectedPrayerTitle?.id) {
+              console.error('Prayer title ID is missing');
+              return;
+            }
             createContent({
-              prayerTitleId: selectedPrayerTitle?.id ?? null,
+              prayerTitleId: selectedPrayerTitle.id,
               memberName,
               content
             });
@@ -178,8 +186,12 @@ function PrayerReadBody({ isEditMode, onEditModeChange }: PrayerReadBodyProps) {
         visible={isAddDialogOpen}
         onDismiss={() => setIsAddDialogOpen(false)}
         onAdd={(memberName, content) => {
+          if (!selectedPrayerTitle?.id) {
+            console.error('Prayer title ID is missing');
+            return;
+          }
           createContent({
-            prayerTitleId: selectedPrayerTitle?.id ?? null,
+            prayerTitleId: selectedPrayerTitle.id,
             memberName,
             content
           });
@@ -194,8 +206,12 @@ function PrayerReadBody({ isEditMode, onEditModeChange }: PrayerReadBodyProps) {
           onDismiss={() => setEditingContent(null)}
           content={editingContent}
           onSave={(content) => {
+            if (!selectedPrayerTitle?.id || !editingContent.id) {
+              console.error('Required IDs are missing');
+              return;
+            }
             updateContent({
-              prayerTitleId: selectedPrayerTitle?.id ?? null,
+              prayerTitleId: selectedPrayerTitle.id,
               contentId: editingContent.id,
               content
             });

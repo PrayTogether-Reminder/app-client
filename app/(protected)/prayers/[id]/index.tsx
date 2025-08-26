@@ -7,7 +7,7 @@ import PrayerReadBody from "./_components/PrayerReadBody";
 import PrayerReadBottom from "./_components/PrayerReadBottom";
 import PrayerReadTop from "./_components/PrayerReadTop";
 import OverlayLoading from "@/common/components/loading/OverlayLoading";
-import { usePrayerCompletionMutation } from "../../../../src/domain/prayers/hooks/mutations/usePrayerMuations";
+import { usePrayerCompletionMutation } from "../../../../src/domain/prayers/hooks/mutations/usePrayerMutations";
 import { useCloseOnBack } from "@/common/services/back-handler/useCloseOnBack";
 import { Fragment } from "react";
 
