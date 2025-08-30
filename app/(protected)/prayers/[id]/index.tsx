@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 
 import { backgroundColor } from "@/common/styles/color";
@@ -7,12 +7,13 @@ import PrayerReadBody from "./_components/PrayerReadBody";
 import PrayerReadBottom from "./_components/PrayerReadBottom";
 import PrayerReadTop from "./_components/PrayerReadTop";
 import OverlayLoading from "@/common/components/loading/OverlayLoading";
-import { usePrayerCompletionMutation } from "../../../../src/domain/prayers/hooks/mutations/usePrayerMuations";
+import { usePrayerCompletionMutation } from "../../../../src/domain/prayers/hooks/mutations/usePrayerMutations";
 import { useCloseOnBack } from "@/common/services/back-handler/useCloseOnBack";
 import { Fragment } from "react";
 
 export default function PrayerReadScreen() {
   const { mutate: notifyPrayerCompletion, isPending } = usePrayerCompletionMutation();
+  const [isEditMode, setIsEditMode] = useState(false);
 
   useCloseOnBack(() => {
     // 로딩 중일 때는 아무것도 하지 않음 (뒤로가기 막힘)
@@ -22,8 +23,20 @@ export default function PrayerReadScreen() {
   return (
     <Fragment>
       <Top1Body10Bottom1
-        tops={[<PrayerReadTop key="top" />]}
-        bodies={[<PrayerReadBody key="body" />]}
+        tops={[
+          <PrayerReadTop 
+            key="top" 
+            isEditMode={isEditMode}
+            onToggleEditMode={() => setIsEditMode(!isEditMode)}
+          />
+        ]}
+        bodies={[
+          <PrayerReadBody 
+            key="body" 
+            isEditMode={isEditMode}
+            onEditModeChange={setIsEditMode}
+          />
+        ]}
         bottoms={[
           <PrayerReadBottom 
             key="bottom"

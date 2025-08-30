@@ -19,7 +19,7 @@ interface PrayerMemberSelectionModalProps {
   onDismiss: () => void;
   members: RoomMember[];
   onSelectMember: (member: RoomMember) => void;
-  onCustomNamePress: () => void;
+  onCustomNamePress?: () => void;
 }
 
 const PrayerMemberSelectionModal = ({
@@ -41,47 +41,56 @@ const PrayerMemberSelectionModal = ({
           <IconButton icon="close" onPress={onDismiss} size={RFValue(32)} />
         </View>
 
-        <ScrollView style={styles.modalScrollView}>
-          <View style={styles.memberGrid}>
-            {members?.map((member) => (
-              <TouchableOpacity
-                key={member.id}
-                style={styles.memberGridItem}
-                onPress={() => onSelectMember(member)}
-              >
-                <Avatar.Text
-                  size={RFValue(40)}
-                  label={member.name.charAt(0)}
-                  labelStyle={styles.avatarLabel}
-                  style={styles.avatarCricle}
-                />
-                <Text style={styles.memberName}>{member.name}</Text>
-              </TouchableOpacity>
-            ))}
-            {members?.length === 0 && (
-              <Text style={styles.emptyText}>
-                모든 방 구성원에 대한 기도를 작성했습니다.
-              </Text>
-            )}
+        {members?.length === 0 ? (
+          <View style={styles.emptyStateContainer}>
+            <Text style={styles.emptyText}>
+              모든 방 구성원에 대한 기도를 작성했습니다.
+            </Text>
           </View>
-        </ScrollView>
+        ) : (
+          <ScrollView style={styles.modalScrollView} contentContainerStyle={styles.scrollViewContent}>
+            <View style={styles.memberGrid}>
+              {members?.map((member) => (
+                <View
+                  key={member.id}
+                  style={styles.memberGridItem}
+                >
+                  <TouchableOpacity
+                    style={styles.touchableArea}
+                    onPress={() => onSelectMember(member)}
+                  >
+                    <Avatar.Text
+                      size={RFValue(40)}
+                      label={member.name.charAt(0)}
+                      labelStyle={styles.avatarLabel}
+                      style={styles.avatarCricle}
+                    />
+                    <Text style={styles.memberName}>{member.name}</Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
+          </ScrollView>
+        )}
 
-        <Button
-          mode="contained"
-          onPress={onCustomNamePress}
-          style={styles.addCustomButton}
-          contentStyle={styles.buttonContent}
-        >
-          <View style={styles.buttonInnerContainer}>
-            <IconButton
-              icon="plus"
-              size={RFValue(24)}
-              iconColor={color.white}
-              style={styles.plusIcon}
-            />
-            <Text style={styles.buttonText}>직접 입력</Text>
-          </View>
-        </Button>
+        {onCustomNamePress && (
+          <Button
+            mode="contained"
+            onPress={onCustomNamePress}
+            style={styles.addCustomButton}
+            contentStyle={styles.buttonContent}
+          >
+            <View style={styles.buttonInnerContainer}>
+              <IconButton
+                icon="plus"
+                size={RFValue(24)}
+                iconColor={color.white}
+                style={styles.plusIcon}
+              />
+              <Text style={styles.buttonText}>직접 입력</Text>
+            </View>
+          </Button>
+        )}
       </Modal>
     </Portal>
   );
@@ -94,6 +103,7 @@ const styles = StyleSheet.create({
     borderRadius: RFValue(10),
     padding: RFValue(20),
     maxHeight: "80%",
+    minHeight: RFValue(300),
   },
   modalHeader: {
     flexDirection: "row",
@@ -107,7 +117,11 @@ const styles = StyleSheet.create({
     lineHeight: RFValue(24),
   },
   modalScrollView: {
+    minHeight: RFValue(150),
     maxHeight: RFValue(400),
+  },
+  scrollViewContent: {
+    paddingBottom: RFValue(10),
   },
   memberGrid: {
     flexDirection: "row",
@@ -117,24 +131,32 @@ const styles = StyleSheet.create({
   memberGridItem: {
     width: "33%",
     alignItems: "center",
-    padding: RFValue(10),
+    paddingHorizontal: RFValue(10),
     marginBottom: RFValue(16),
   },
+  touchableArea: {
+    alignItems: "center",
+  },
   memberName: {
-    height: RFValue(70),
     marginTop: RFValue(8),
     textAlign: "center",
     fontSize: RFValue(14),
     color: color.black,
     lineHeight: RFValue(20),
+    minHeight: RFValue(40),
+  },
+  emptyStateContainer: {
+    height: RFValue(200),
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: RFValue(30),
   },
   emptyText: {
     textAlign: "center",
-    padding: RFValue(8),
     color: color.black,
     fontStyle: "italic",
     fontSize: RFValue(14),
-    lineHeight: RFValue(20),
+    lineHeight: RFValue(22),
   },
   addCustomButton: {
     marginTop: RFValue(8),

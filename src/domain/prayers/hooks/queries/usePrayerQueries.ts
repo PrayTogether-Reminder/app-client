@@ -72,6 +72,9 @@ export const usePrayerContentsQuery = (
 
     queryFn: async () => {
       console.log("fetch 기도 내용: prayer title Id=", titleId);
+      if (!titleId) {
+        return [];
+      }
       return prayerService.fetchContents(titleId);
     },
 

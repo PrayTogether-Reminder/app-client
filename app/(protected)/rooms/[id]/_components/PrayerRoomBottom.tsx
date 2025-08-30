@@ -1,32 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Surface, Button, useTheme } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../../../src/common/styles/color";
 import { useRouter } from "expo-router";
 import path from "../../../../../src/common/constants/path";
+import PrayerTitleCreationDialog from "./dialogs/PrayerTitleCreationDialog";
 
 interface PrayerRoomBottomButtonProps {}
 
 const PrayerRoomBottomButton: React.FC<PrayerRoomBottomButtonProps> = ({}) => {
   const router = useRouter();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  
   const handlePress = () => {
-    router.push(path.showPrayersCreate());
+    setDialogOpen(true);
   };
 
   return (
-    <Surface style={styles.bottomButtonContainer}>
-      <Button
-        mode="contained"
-        uppercase={false}
-        style={styles.bottomButton}
-        labelStyle={styles.bottomButtonText}
-        icon="pencil"
-        onPress={handlePress}
-      >
-        기도제목 작성하기
-      </Button>
-    </Surface>
+    <>
+      <Surface style={styles.bottomButtonContainer}>
+        <Button
+          mode="contained"
+          uppercase={false}
+          style={styles.bottomButton}
+          labelStyle={styles.bottomButtonText}
+          icon="pencil"
+          onPress={handlePress}
+        >
+          기도제목 작성하기
+        </Button>
+      </Surface>
+      
+      <PrayerTitleCreationDialog 
+        open={dialogOpen} 
+        setOpen={setDialogOpen} 
+      />
+    </>
   );
 };
 

@@ -1,31 +1,34 @@
-import React, { useState } from "react";
+import React from "react";
 import { StyleSheet, Platform } from "react-native";
 import { Appbar, useTheme } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../../../src/common/styles/color";
-import path from "../../../../../src/common/constants/path";
 import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
-import { useSelectedPrayerTitleStore } from "../../../../../src/domain/prayers/stores/useSelectedPrayerTitleStore";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-interface PrayerReadTopProps {}
+interface PrayerReadTopProps {
+  isEditMode: boolean;
+  onToggleEditMode: () => void;
+}
 
-const PrayerReadTop: React.FC<PrayerReadTopProps> = () => {
+const PrayerReadTop: React.FC<PrayerReadTopProps> = ({ isEditMode, onToggleEditMode }) => {
   const router = useRouter();
   const room = useSelectedRoomStore().selectedRoom;
-  const titleId = useSelectedPrayerTitleStore().selectedPrayerTitle?.id ?? null;
   const insets = useSafeAreaInsets();
-  const onEdit = () => {
-    router.push(path.showPrayersUpdateById(titleId));
-  };
 
   return (
     <>
       <Appbar.Header style={styles.header}>
         <Appbar.BackAction
           style={styles.headerBackAction}
-          onPress={() => router.back()}
+          onPress={() => {
+            if (isEditMode) {
+              onToggleEditMode(); // 편집 모드 종료
+            } else {
+              router.back();
+            }
+          }}
           color={color.primary}
         />
         <Appbar.Content
@@ -33,11 +36,11 @@ const PrayerReadTop: React.FC<PrayerReadTopProps> = () => {
           titleStyle={styles.headerTitle}
         />
         <Appbar.Action
-          style={styles.headerAction}
-          icon="playlist-edit"
+          style={[styles.headerAction, isEditMode && styles.headerActionActive]}
+          icon={isEditMode ? "check" : "pencil"}
           color={color.primary}
-          onPress={onEdit}
-          size={RFValue(32)}
+          onPress={onToggleEditMode}
+          size={RFValue(28)}
         />
       </Appbar.Header>
     </>
@@ -65,6 +68,10 @@ const styles = StyleSheet.create({
   headerAction: {
     alignSelf: "center", // 메뉴 버튼 중앙 정렬
     marginRight: 0, // 기본 마진 제거
+  },
+  headerActionActive: {
+    backgroundColor: color.primary + "20", // 편집 모드일 때 배경색
+    borderRadius: RFValue(20),
   },
   headerBackAction: {
     alignSelf: "center", // 뒤로가기 버튼 중앙 정렬

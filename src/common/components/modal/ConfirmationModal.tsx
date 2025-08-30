@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet, View, Text, Dimensions } from "react-native";
+import React, { useEffect } from "react";
+import { StyleSheet, View, Text, Dimensions, BackHandler } from "react-native";
 import { Button, Portal, Modal, IconButton } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
@@ -29,6 +29,21 @@ function ConfirmationModal({
   cancelText = "취소",
   iconColor = color.secondary,
 }: ConfirmationModalProps) {
+  // 백 버튼 핸들러 추가 - 일단 주석 처리
+  // useEffect(() => {
+  //   if (visible) {
+  //     const backHandler = BackHandler.addEventListener(
+  //       'hardwareBackPress',
+  //       () => {
+  //         onDismiss();
+  //         return true; // 기본 뒤로가기 동작 막기
+  //       }
+  //     );
+
+  //     return () => backHandler.remove();
+  //   }
+  // }, [visible, onDismiss]);
+
   return (
     <Portal>
       <Modal
@@ -65,6 +80,8 @@ function ConfirmationModal({
             style={styles.cancelButton}
             labelStyle={styles.cancelButtonLabel}
             contentStyle={styles.buttonContent}
+            numberOfLines={1}
+            ellipsizeMode="tail"
           >
             {cancelText}
           </Button>
@@ -74,6 +91,8 @@ function ConfirmationModal({
             style={styles.confirmButton}
             labelStyle={styles.confirmButtonLabel}
             contentStyle={styles.buttonContent}
+            numberOfLines={1}
+            ellipsizeMode="tail"
           >
             {confirmText}
           </Button>
@@ -155,16 +174,16 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   cancelButtonLabel: {
-    fontSize: RFValue(18),
+    fontSize: RFValue(14),
     color: "#666",
     fontWeight: "600",
-    lineHeight: RFValue(24),
+    lineHeight: RFValue(20),
   },
   confirmButtonLabel: {
-    fontSize: RFValue(18),
+    fontSize: RFValue(14),
     color: "white",
     fontWeight: "600",
-    lineHeight: RFValue(24),
+    lineHeight: RFValue(20),
   },
 });
 

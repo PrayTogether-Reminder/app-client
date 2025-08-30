@@ -2,15 +2,30 @@ import apiService from "../../../common/apis/apiService";
 import { ApiResponse } from "../../../common/apis/api";
 import type { PrayerCreationItem } from "../types/PrayerCreationItem";
 import { CreatePrayerRequest } from "../types/request/createPrayerRequest";
+import { CreatePrayerContentRequest } from "../types/request/createPrayerContentRequest";
+import { UpdatePrayerTitleRequest } from "../types/request/updatePrayerTitleRequest";
+import { UpdatePrayerContentRequest } from "../types/request/updatePrayerContentRequest";
 import { MessageResponse } from "../../../common/types/messageResponse";
 import { PrayerTitle } from "../types/prayerTitle";
 import { FetchPrayerTitlesResponse } from "../types/response/fetchPrayerTitlesResponse";
 import type { FetchPrayerContentsResponse } from "../types/response/fetchPrayerContentsResponse";
-import { PrayerUpdateItem } from "../types/prayerUpdateItem";
-import { UpdatePrayerRequest } from "../types/request/updatePrayerRequest";
 import { CreatePrayerCompletionRequest } from "../types/request/createPrayerCompletionRequest";
 
 export const prayerService = {
+  // 기도 제목만 생성
+  createTitle: async (
+    roomId: number,
+    title: string
+  ): Promise<MessageResponse> => {
+    const response: MessageResponse =
+      await apiService.post<CreatePrayerRequest>(`/prayers`, {
+        roomId,
+        title,
+        contents: [],
+      } as CreatePrayerRequest);
+    console.log("API response=", response.message);
+    return response;
+  },
   // 기도 제목 작성
   create: async (
     roomId: number,
@@ -38,26 +53,66 @@ export const prayerService = {
     return response.data.prayerTitles;
   },
   // 기도 내용 조회
-  fetchContents: async (titleId: number | null) => {
+  fetchContents: async (titleId: number) => {
     const response = await apiService.get<FetchPrayerContentsResponse>(
       `/prayers/${titleId}/contents`
     );
     return response.data.prayerContents ?? [];
   },
   // 기도 제목 변경
-  update: async (
-    prayerTitleId: number | null,
-    title: string,
-    prayerList: PrayerUpdateItem[]
+  // 기도 제목만 수정
+  updateTitle: async (
+    prayerTitleId: number,
+    title: string
   ): Promise<MessageResponse> => {
-    const response: MessageResponse = await apiService.put<UpdatePrayerRequest>(
+    const requestBody: UpdatePrayerTitleRequest = { changedTitle: title };
+    const response: MessageResponse = await apiService.put(
       `/prayers/${prayerTitleId}`,
-      {
-        title,
-        contents: prayerList,
-      } as UpdatePrayerRequest
+      requestBody
     );
-    console.log("API response=", response.message);
+    return response;
+  },
+  
+  // 기도 내용 추가
+  createContent: async (
+    prayerTitleId: number,
+    memberName: string,
+    content: string,
+    memberId?: number | null
+  ): Promise<MessageResponse> => {
+    const requestBody: CreatePrayerContentRequest = { memberName, content };
+    if (memberId !== undefined && memberId !== null) {
+      requestBody.memberId = memberId;
+    }
+    const response: MessageResponse = await apiService.post(
+      `/prayers/${prayerTitleId}/contents`,
+      requestBody
+    );
+    return response;
+  },
+  
+  // 기도 내용 수정
+  updateContent: async (
+    prayerTitleId: number,
+    contentId: number,
+    content: string
+  ): Promise<MessageResponse> => {
+    const requestBody: UpdatePrayerContentRequest = { changedContent: content };
+    const response: MessageResponse = await apiService.put(
+      `/prayers/${prayerTitleId}/contents/${contentId}`,
+      requestBody
+    );
+    return response;
+  },
+  
+  // 기도 내용 삭제
+  deleteContent: async (
+    prayerTitleId: number,
+    contentId: number
+  ): Promise<MessageResponse> => {
+    const response: MessageResponse = await apiService.delete(
+      `/prayers/${prayerTitleId}/contents/${contentId}`
+    );
     return response;
   },
 
