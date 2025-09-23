@@ -51,7 +51,7 @@ module.exports = {
     entitlements: {
       "aps-environment": "production", // 운영 환경에서 푸시 알림 사용
     },
-    buildNumber: "1.0.13",
+    buildNumber: "1.0.14",
   },
   android: {
     adaptiveIcon: {
@@ -63,7 +63,7 @@ module.exports = {
     googleServicesFile:
       process.env.GOOGLE_SERVICES_JSON || "./google-services.json",
     permissions: ["RECEIVE_BOOT_COMPLETED", "VIBRATE"],
-    versionCode: 9,
+    versionCode: 10,
   },
   web: {
     favicon: "./assets/main_logo.png",
