@@ -16,6 +16,7 @@ import CustomQueryClientProvider from "../src/common/hooks/queries/customQueryCl
 import { backgroundColor } from "../src/common/styles/color";
 import AuthEventListener from "./../src/domain/auth/events/authEventListener";
 import { GlobalAlertModal } from "@/common/components/modal/GlobalAlertModal";
+import EASUpdateManager from "@/common/components/EASUpdateManager";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -54,6 +55,7 @@ export default function RootLayout() {
             <AuthEventListener />
             <AuthStateListener>
               <GlobalAlertModal />
+              <EASUpdateManager />
               <Stack screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="index" />
 
