@@ -9,7 +9,7 @@ const API_URL = process.env.EXPO_PUBLIC_API_URL;
 module.exports = {
   name: "기도함께",
   slug: "app-client",
-  version: "1.0.0",
+  version: "1.0.1",
   orientation: "portrait",
   icon: "./assets/main_logo.png",
   userInterfaceStyle: "light",
@@ -18,6 +18,15 @@ module.exports = {
     typedRoutes: true,
     tsconfigPaths: true,
     newArch: true,
+  },
+  updates: {
+    enabled: true,
+    checkAutomatically: "ON_LOAD",
+    fallbackToCacheTimeout: 30000,
+    url: "https://u.expo.dev/193687a6-0b20-445e-8ecd-5b35de386246"
+  },
+  runtimeVersion: {
+    policy: "appVersion"
   },
   scheme: "pray-together-scheme",
   splash: {
@@ -42,7 +51,7 @@ module.exports = {
     entitlements: {
       "aps-environment": "production", // 운영 환경에서 푸시 알림 사용
     },
-    buildNumber: "1.0.12",
+    buildNumber: "1.0.13",
   },
   android: {
     adaptiveIcon: {
@@ -54,7 +63,7 @@ module.exports = {
     googleServicesFile:
       process.env.GOOGLE_SERVICES_JSON || "./google-services.json",
     permissions: ["RECEIVE_BOOT_COMPLETED", "VIBRATE"],
-    versionCode: 8,
+    versionCode: 9,
   },
   web: {
     favicon: "./assets/main_logo.png",
