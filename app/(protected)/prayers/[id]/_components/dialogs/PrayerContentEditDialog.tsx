@@ -105,7 +105,7 @@ export default function PrayerContentEditDialog({
             <View style={dialogStyles.fieldset}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: RFValue(8) }}>
                 <Text style={dialogStyles.label}>{content.memberName}님의 기도</Text>
-                <Text style={{ fontSize: RFValue(12), color: '#666' }}>작성자: {content.writerName}</Text>
+                <Text style={{ fontSize: RFValue(12), color: '#666' }}>최근 작성자: {content.writerName}</Text>
               </View>
               <TextInput
                 ref={textInputRef}

@@ -46,7 +46,7 @@ export default function PrayerCard({
           <View style={styles.cardHeader}>
             <View style={styles.titleSection}>
               <Text style={styles.nameText}>{item.memberName}</Text>
-              <Text style={styles.writerText}>작성자: {item.writerName}</Text>
+              <Text style={styles.writerText}>최근 작성자: {item.writerName}</Text>
             </View>
             {/* 버튼 공간은 항상 확보, 편집 모드에 따라 표시/숨김만 처리 */}
             <View style={[styles.buttonContainer, { opacity: (onEdit || onDelete) ? 1 : 0 }]}>
