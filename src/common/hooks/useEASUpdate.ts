@@ -1,9 +1,9 @@
 import { useEffect, useState, useCallback } from 'react';
 import * as Updates from 'expo-updates';
 import { Alert, AppState, AppStateStatus } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 
-const LAST_UPDATE_CHECK_KEY = '@last_update_check';
+const LAST_UPDATE_CHECK_KEY = 'last_update_check';
 const CHECK_INTERVAL = 1000 * 60 * 60 * 4; // 4시간마다 체크
 
 interface UpdateStatus {
@@ -50,7 +50,7 @@ export function useEASUpdate() {
     try {
       // Silent 모드일 때 최근 체크 시간 확인
       if (silent) {
-        const lastCheck = await AsyncStorage.getItem(LAST_UPDATE_CHECK_KEY);
+        const lastCheck = await SecureStore.getItemAsync(LAST_UPDATE_CHECK_KEY);
         if (lastCheck) {
           const timeSinceLastCheck = Date.now() - parseInt(lastCheck, 10);
           if (timeSinceLastCheck < CHECK_INTERVAL) {
@@ -89,8 +89,7 @@ export function useEASUpdate() {
       }
 
       // 체크 시간 저장
-      await AsyncStorage.setItem(LAST_UPDATE_CHECK_KEY, Date.now().toString());
-
+      await SecureStore.setItemAsync(LAST_UPDATE_CHECK_KEY, Date.now().toString());
     } catch (error) {
       console.error('[EAS Update] 체크 실패:', error);
       setUpdateStatus(prev => ({ ...prev, isChecking: false }));
