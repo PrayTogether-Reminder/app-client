@@ -44,31 +44,34 @@ export default function PrayerCard({
       >
         <Card.Content style={styles.cardContentContainer}>
           <View style={styles.cardHeader}>
-            <Text style={styles.nameText}>{item.memberName}</Text>
+            <View style={styles.titleSection}>
+              <Text style={styles.nameText}>{item.memberName}</Text>
+              <Text style={styles.writerText}>작성자: {item.writerName}</Text>
+            </View>
             {/* 버튼 공간은 항상 확보, 편집 모드에 따라 표시/숨김만 처리 */}
             <View style={[styles.buttonContainer, { opacity: (onEdit || onDelete) ? 1 : 0 }]}>
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={() => onEdit && onEdit(item)}
                 style={styles.iconButton}
                 activeOpacity={Platform.OS === 'ios' ? 0.8 : 0.2}
                 disabled={!onEdit}
               >
-                <MaterialCommunityIcons 
-                  name="pencil" 
-                  size={RFValue(18)} 
-                  color={color.secondary} 
+                <MaterialCommunityIcons
+                  name="pencil"
+                  size={RFValue(18)}
+                  color={color.secondary}
                 />
               </TouchableOpacity>
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={() => onDelete && onDelete(item)}
                 style={[styles.iconButton, { marginLeft: RFValue(8) }]}
                 activeOpacity={Platform.OS === 'ios' ? 0.8 : 0.2}
                 disabled={!onDelete}
               >
-                <MaterialCommunityIcons 
-                  name="delete" 
-                  size={RFValue(18)} 
-                  color="#FF6B6B" 
+                <MaterialCommunityIcons
+                  name="delete"
+                  size={RFValue(18)}
+                  color="#FF6B6B"
                 />
               </TouchableOpacity>
             </View>
@@ -111,18 +114,25 @@ const styles = StyleSheet.create({
   cardHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "flex-start",
     marginBottom: RFValue(10),
     paddingHorizontal: RFValue(8),
     paddingTop: RFValue(8),
-    height: RFValue(40), // 고정 높이 설정
+    minHeight: RFValue(50), // 고정 높이를 minHeight로 변경
+  },
+  titleSection: {
+    flex: 1,
+    marginRight: RFValue(8),
   },
   nameText: {
     fontSize: RFValue(22),
     fontWeight: "bold",
     color: color.secondary,
-    flex: 1,
-    marginRight: RFValue(8), // 버튼과의 간격
+  },
+  writerText: {
+    fontSize: RFValue(13),
+    color: "#666",
+    marginTop: RFValue(2),
   },
   buttonContainer: {
     flexDirection: "row",

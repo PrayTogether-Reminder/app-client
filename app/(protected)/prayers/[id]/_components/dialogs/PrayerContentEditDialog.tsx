@@ -103,7 +103,10 @@ export default function PrayerContentEditDialog({
             <Text style={dialogStyles.title}>기도 내용 수정</Text>
 
             <View style={dialogStyles.fieldset}>
-              <Text style={dialogStyles.label}>{content.memberName}님의 기도</Text>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: RFValue(8) }}>
+                <Text style={dialogStyles.label}>{content.memberName}님의 기도</Text>
+                <Text style={{ fontSize: RFValue(12), color: '#666' }}>작성자: {content.writerName}</Text>
+              </View>
               <TextInput
                 ref={textInputRef}
                 placeholder="기도 내용을 입력하세요"
@@ -118,7 +121,6 @@ export default function PrayerContentEditDialog({
                 autoFocus={false}
                 accessibilityLabel="기도 내용 입력"
                 accessibilityHint="수정할 기도 내용을 입력하세요"
-                accessibilityMultiline={true}
               />
             </View>
 
