@@ -9,7 +9,7 @@ const API_URL = process.env.EXPO_PUBLIC_API_URL;
 module.exports = {
   name: "기도함께",
   slug: "app-client",
-  version: "1.0.1",
+  version: "1.0.2",
   orientation: "portrait",
   icon: "./assets/main_logo.png",
   userInterfaceStyle: "light",
@@ -63,7 +63,7 @@ module.exports = {
     googleServicesFile:
       process.env.GOOGLE_SERVICES_JSON || "./google-services.json",
     permissions: ["RECEIVE_BOOT_COMPLETED", "VIBRATE"],
-    versionCode: 10,
+    versionCode: 11,
   },
   web: {
     favicon: "./assets/main_logo.png",
