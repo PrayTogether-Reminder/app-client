@@ -15,9 +15,7 @@ import ErrorFallback from "../src/common/components/error/ErrorFallback";
 import CustomQueryClientProvider from "../src/common/hooks/queries/customQueryClientProvider";
 import AuthEventListener from "./../src/domain/auth/events/authEventListener";
 import { GlobalAlertModal } from "@/common/components/modal/GlobalAlertModal";
-import EASUpdateManager from "@/common/components/EASUpdateManager";
-import { useAppUpdate } from "../src/hooks/useAppUpdate";
-import { MaintenanceModal } from "../src/components/MaintenanceModal";
+import UpdateModalsManager from "@/common/components/UpdateModalsManager";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -28,7 +26,6 @@ export default function RootLayout() {
     ...FontAwesome6.font,
   });
 
-  const { updateInfo } = useAppUpdate();
 
   const theme = {
     ...DefaultTheme,
@@ -58,11 +55,7 @@ export default function RootLayout() {
             <AuthEventListener />
             <AuthStateListener>
               <GlobalAlertModal />
-              <EASUpdateManager />
-              <MaintenanceModal
-                visible={updateInfo.maintenanceMode}
-                message={updateInfo.maintenanceMessage}
-              />
+              <UpdateModalsManager />
               <Stack screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="index" />
 

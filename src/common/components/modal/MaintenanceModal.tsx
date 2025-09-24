@@ -1,13 +1,13 @@
 import React from 'react';
 import { Modal, View, Text, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { UPDATE_MESSAGES } from '../../../constants/updateMessages';
 
 interface MaintenanceModalProps {
   visible: boolean;
-  message: string;
 }
 
-export const MaintenanceModal: React.FC<MaintenanceModalProps> = ({ visible, message }) => {
+export const MaintenanceModal: React.FC<MaintenanceModalProps> = ({ visible }) => {
   return (
     <Modal
       visible={visible}
@@ -17,8 +17,8 @@ export const MaintenanceModal: React.FC<MaintenanceModalProps> = ({ visible, mes
       <View style={styles.overlay}>
         <View style={styles.content}>
           <MaterialIcons name="build" size={48} color="#666" />
-          <Text style={styles.title}>서버 점검 중</Text>
-          <Text style={styles.message}>{message}</Text>
+          <Text style={styles.title}>{UPDATE_MESSAGES.MAINTENANCE_TITLE}</Text>
+          <Text style={styles.message}>{UPDATE_MESSAGES.MAINTENANCE_MESSAGE}</Text>
         </View>
       </View>
     </Modal>

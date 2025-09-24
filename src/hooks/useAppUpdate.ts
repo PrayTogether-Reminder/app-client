@@ -2,17 +2,15 @@ import { useEffect, useState } from 'react';
 import { Linking, Platform } from 'react-native';
 import Constants from 'expo-constants';
 import * as Updates from 'expo-updates';
-import { getValue } from 'firebase/remote-config';
-import { remoteConfig, fetchRemoteConfig } from '../config/firebase';
 import { useAlertStore } from '@/common/components/modal/stores/useAlertStore';
 import { color } from '@/common/styles/color';
+import { appVersionApi } from '@/domain/appVersion/api/appVersionApi';
+import { UPDATE_MESSAGES } from '@/constants/updateMessages';
 
 interface UpdateInfo {
   needsUpdate: boolean;
   isForceUpdate: boolean;
-  message: string;
   maintenanceMode: boolean;
-  maintenanceMessage: string;
 }
 
 export const useAppUpdate = () => {
@@ -20,9 +18,7 @@ export const useAppUpdate = () => {
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo>({
     needsUpdate: false,
     isForceUpdate: false,
-    message: '',
     maintenanceMode: false,
-    maintenanceMessage: '',
   });
 
   useEffect(() => {
@@ -37,39 +33,34 @@ export const useAppUpdate = () => {
         if (update.isAvailable) {
           await Updates.fetchUpdateAsync();
           showAlert({
-            title: '업데이트 준비 완료',
-            message: '새로운 업데이트가 준비되었습니다.\n앱을 다시 시작하여 적용합니다.',
+            title: UPDATE_MESSAGES.EAS_UPDATE_READY_TITLE,
+            message: UPDATE_MESSAGES.EAS_UPDATE_READY_MESSAGE,
             icon: 'download-circle',
             iconColor: color.secondary,
-            confirmText: '다시 시작',
+            confirmText: UPDATE_MESSAGES.BUTTON_RESTART,
             onConfirm: () => Updates.reloadAsync(),
           });
         }
       }
 
-      // 2. Firebase Remote Config 체크 (강제 업데이트)
-      await fetchRemoteConfig();
-      
-      // 서버 점검 체크
-      const maintenanceMode = getValue(remoteConfig, 'maintenance_mode').asBoolean();
-      const maintenanceMessage = getValue(remoteConfig, 'maintenance_message').asString();
-      
+      // 2. API 서버에서 버전 정보 가져오기
+      const versionInfo = await appVersionApi.fetchVersionInfo();
+      const { maintenanceMode, minimumAppVersion, forceUpdateAppVersion } = versionInfo;
+
       if (maintenanceMode) {
         setUpdateInfo({
           needsUpdate: false,
           isForceUpdate: false,
-          message: '',
           maintenanceMode: true,
-          maintenanceMessage,
         });
 
         // 서버 점검 모달 표시
         showAlert({
-          title: '서버 점검 중',
-          message: maintenanceMessage || '서비스 개선을 위한 정기 점검 중입니다.\n잠시 후 다시 이용해주세요.',
+          title: UPDATE_MESSAGES.MAINTENANCE_TITLE,
+          message: UPDATE_MESSAGES.MAINTENANCE_MESSAGE,
           icon: 'tools',
-          iconColor: '#FFA500',
-          confirmText: '확인',
+          iconColor: color.secondary,
+          confirmText: UPDATE_MESSAGES.BUTTON_CONFIRM,
         });
 
         return;
@@ -77,27 +68,25 @@ export const useAppUpdate = () => {
 
       // 버전 체크
       const currentVersion = Constants.expoConfig?.version || '1.0.0';
-      const minimumVersion = getValue(remoteConfig, 'minimum_app_version').asString();
-      const forceUpdateVersion = getValue(remoteConfig, 'force_update_version').asString();
-      const updateMessage = getValue(remoteConfig, 'update_message').asString();
+      const isBelowMinimum = compareVersions(currentVersion, minimumAppVersion) < 0;
+      const isBelowForceUpdate = compareVersions(currentVersion, forceUpdateAppVersion) < 0;
 
-      const needsUpdate = compareVersions(currentVersion, minimumVersion) < 0;
-      const isForceUpdate = compareVersions(currentVersion, forceUpdateVersion) < 0;
-
-      if (needsUpdate) {
+      if (isBelowMinimum) {
+        // 최소 버전 미만 - 강제 업데이트
         setUpdateInfo({
           needsUpdate: true,
-          isForceUpdate,
-          message: updateMessage,
+          isForceUpdate: true,
           maintenanceMode: false,
-          maintenanceMessage: '',
         });
-        
-        if (isForceUpdate) {
-          showForceUpdateAlert(updateMessage);
-        } else {
-          showOptionalUpdateAlert(updateMessage);
-        }
+        showForceUpdateAlert();
+      } else if (isBelowForceUpdate) {
+        // 최소 버전 이상이지만 권장 버전 미만 - 선택적 업데이트
+        setUpdateInfo({
+          needsUpdate: true,
+          isForceUpdate: false,
+          maintenanceMode: false,
+        });
+        showOptionalUpdateAlert();
       }
     } catch (error) {
       console.error('Update check failed:', error);
@@ -119,26 +108,26 @@ export const useAppUpdate = () => {
     return 0;
   };
 
-  const showForceUpdateAlert = (message: string) => {
+  const showForceUpdateAlert = () => {
     showAlert({
-      title: '필수 업데이트',
-      message: message || '더 나은 서비스를 위해 앱 업데이트가 필요합니다.\n스토어에서 최신 버전으로 업데이트해주세요.',
+      title: UPDATE_MESSAGES.FORCE_UPDATE_TITLE,
+      message: UPDATE_MESSAGES.FORCE_UPDATE_MESSAGE,
       icon: 'alert-circle',
       iconColor: '#FF6B6B',
-      confirmText: '업데이트하기',
+      confirmText: UPDATE_MESSAGES.BUTTON_UPDATE,
       onConfirm: openStore,
     });
   };
 
-  const showOptionalUpdateAlert = (message: string) => {
+  const showOptionalUpdateAlert = () => {
     // 선택적 업데이트는 ConfirmationModal을 사용하는 것이 더 적합하므로
     // 여기서는 AlertModal 스타일로 간단히 구현
     showAlert({
-      title: '업데이트 사용 가능',
-      message: message || '새로운 기능과 개선사항이 포함된 업데이트가 있습니다.\n지금 업데이트하시겠습니까?',
+      title: UPDATE_MESSAGES.OPTIONAL_UPDATE_TITLE,
+      message: UPDATE_MESSAGES.OPTIONAL_UPDATE_MESSAGE,
       icon: 'download',
       iconColor: color.primary,
-      confirmText: '업데이트하기',
+      confirmText: UPDATE_MESSAGES.BUTTON_UPDATE,
       onConfirm: openStore,
     });
   };

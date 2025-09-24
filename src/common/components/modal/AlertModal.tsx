@@ -9,6 +9,7 @@ const { width } = Dimensions.get("window");
 interface AlertModalProps {
   visible: boolean;
   onDismiss: () => void;
+  onConfirm?: () => void;
   icon?: string;
   title: string;
   content: string;
@@ -19,6 +20,7 @@ interface AlertModalProps {
 export function AlertModal({
   visible,
   onDismiss,
+  onConfirm,
   icon = "information-outline",
   title,
   content,
@@ -57,7 +59,7 @@ export function AlertModal({
         <View style={styles.modalActions}>
           <Button
             mode="contained"
-            onPress={onDismiss}
+            onPress={onConfirm || onDismiss}
             style={styles.confirmButton}
             labelStyle={styles.confirmButtonLabel}
             contentStyle={styles.buttonContent}

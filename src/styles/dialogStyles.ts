@@ -95,7 +95,7 @@ export const createDialogStyles = (config?: {
     customStyles.modalContainer = {
       ...dialogStyles.modalContainer,
       width: windowWidth < 600 ? config.containerWidth.small : config.containerWidth.large,
-    };
+    } as any;
   }
   
   if (config?.inputHeight) {
