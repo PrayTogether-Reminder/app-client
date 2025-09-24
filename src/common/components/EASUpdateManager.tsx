@@ -2,12 +2,12 @@ import React from 'react';
 import {
   View,
   Text,
-  Modal,
   TouchableOpacity,
   ActivityIndicator,
   StyleSheet,
   Dimensions,
 } from 'react-native';
+import { Portal, Modal, IconButton } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useEASUpdate } from '../hooks/useEASUpdate';
@@ -32,22 +32,38 @@ export default function EASUpdateManager() {
     return null;
   }
 
-  // 다운로드 중일 때 모달 표시
+  // 다운로드 중일 때 모달 표시 - AlertModal 스타일 적용
   if (isDownloading) {
     return (
-      <Modal
-        visible={true}
-        transparent={true}
-        animationType="fade"
-      >
-        <View style={styles.overlay}>
-          <View style={styles.modalContainer}>
-            <ActivityIndicator size="large" color={color.primary} />
-            <Text style={styles.downloadingText}>업데이트 다운로드 중...</Text>
-            <Text style={styles.subText}>잠시만 기다려주세요</Text>
+      <Portal>
+        <Modal
+          visible={true}
+          dismissable={false}
+          contentContainerStyle={styles.modalContainer}
+        >
+          <View style={styles.modalContent}>
+            <View style={styles.loadingContainer}>
+              <IconButton
+                icon="download"
+                size={RFValue(32)}
+                iconColor={color.secondary}
+                style={styles.downloadIcon}
+                animated
+              />
+              <ActivityIndicator
+                size="large"
+                color={color.secondary}
+                style={styles.loadingIndicator}
+              />
+            </View>
+            <Text style={styles.modalTitle}>업데이트 다운로드 중</Text>
+            <Text style={styles.modalText}>
+              새로운 버전을 준비하고 있습니다.{'\n'}
+              잠시만 기다려주세요...
+            </Text>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+      </Portal>
     );
   }
 
@@ -125,29 +141,46 @@ export function UpdateStatusBadge() {
 }
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   modalContainer: {
-    width: width * 0.8,
     backgroundColor: 'white',
-    borderRadius: RFValue(12),
-    padding: RFValue(24),
+    borderRadius: RFValue(16),
+    width: width * 0.85,
+    alignSelf: 'center',
+    overflow: 'hidden',
+    elevation: 5,
+  },
+  modalContent: {
+    paddingVertical: RFValue(32),
+    paddingHorizontal: RFValue(24),
     alignItems: 'center',
   },
-  downloadingText: {
-    marginTop: RFValue(16),
-    fontSize: RFValue(16),
-    fontWeight: '600',
-    color: '#333',
+  loadingContainer: {
+    position: 'relative',
+    marginBottom: RFValue(20),
   },
-  subText: {
-    marginTop: RFValue(8),
-    fontSize: RFValue(14),
-    color: '#666',
+  downloadIcon: {
+    margin: 0,
+    backgroundColor: 'transparent',
+  },
+  loadingIndicator: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -20 }, { translateY: -20 }],
+  },
+  modalTitle: {
+    fontSize: RFValue(20),
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: RFValue(12),
+    lineHeight: RFValue(26),
+  },
+  modalText: {
+    fontSize: RFValue(16),
+    color: '#555',
+    textAlign: 'center',
+    lineHeight: RFValue(22),
   },
   updateButton: {
     backgroundColor: 'white',
