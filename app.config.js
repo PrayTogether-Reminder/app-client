@@ -4,7 +4,7 @@ console.log(
 );
 console.log("Current working directory:", process.cwd());
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL;
+const API_URL = "https://praytogether.site/api/v1";
 
 module.exports = {
   name: "기도함께",
@@ -97,6 +97,6 @@ module.exports = {
   },
   // SDK 53
   runtimeEnvs: {
-    EXPO_PUBLIC_API_URL: API_URL ? API_URL : "There is no API URL",
+    EXPO_PUBLIC_API_URL: API_URL,
   },
 };
