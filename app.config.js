@@ -9,7 +9,7 @@ const API_URL = "https://praytogether.site/api/v1";
 module.exports = {
   name: "기도함께",
   slug: "app-client",
-  version: "1.0.2",
+  version: "1.0.3",
   orientation: "portrait",
   icon: "./assets/main_logo.png",
   userInterfaceStyle: "light",
@@ -51,7 +51,7 @@ module.exports = {
     entitlements: {
       "aps-environment": "production", // 운영 환경에서 푸시 알림 사용
     },
-    buildNumber: "1.0.14",
+    buildNumber: "1.0.15",
   },
   android: {
     adaptiveIcon: {
@@ -63,7 +63,7 @@ module.exports = {
     googleServicesFile:
       process.env.GOOGLE_SERVICES_JSON || "./google-services.json",
     permissions: ["RECEIVE_BOOT_COMPLETED", "VIBRATE"],
-    versionCode: 11,
+    versionCode: 12,
   },
   web: {
     favicon: "./assets/main_logo.png",
