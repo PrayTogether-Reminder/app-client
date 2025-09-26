@@ -135,7 +135,7 @@ export const useAppUpdate = () => {
   const openStore = () => {
     const storeUrl = Platform.select({
       ios: 'https://apps.apple.com/app/id6738428439',
-      android: 'https://play.google.com/store/apps/details?id=com.praytogether.app',
+      android: 'https://play.google.com/apps/internaltest/4701538775177797800'
     });
     
     if (storeUrl) {
