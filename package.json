@@ -16,7 +16,10 @@
     "build-ios-preview-cloud-submit": "eas build --platform ios --profile preview --auto-submit --clear-cache",
     "build-ios-production-cloud-submit": "eas build --platform ios --profile production --auto-submit --clear-cache",
     "build-ios-dev-submit": "eas build --platform ios --profile development --local --clear-cache && eas submit --platform ios --profile development",
-    "build-ios-dev-cloud-submit": "eas build --platform ios --profile development --auto-submit --clear-cache"
+    "build-ios-dev-cloud-submit": "eas build --platform ios --profile development --auto-submit --clear-cache",
+    "update-preview": "eas update --branch preview --message",
+    "update-production": "eas update --branch production --message",
+    "update-development": "eas update --branch development --message"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
