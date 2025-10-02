@@ -11,7 +11,7 @@ export const invitationService = {
     roomId: number | null,
     email: string
   ): Promise<MessageResponse> => {
-    const response = await apiService.post<MessageResponse>(`/invitations`, {
+    const response = await apiService.post<MessageResponse>(`/v1/invitations`, {
       roomId,
       email,
     });
@@ -21,7 +21,7 @@ export const invitationService = {
   // 초대 목록 조회
   fetch: async (): Promise<Invitation[]> => {
     const response =
-      await apiService.get<FetchInvitationsResponse>(`/invitations`);
+      await apiService.get<FetchInvitationsResponse>(`/v1/invitations`);
     return response.data.invitations;
   },
 
@@ -31,7 +31,7 @@ export const invitationService = {
     status: INVITATION_STATUS
   ): Promise<MessageResponse> => {
     const response = await apiService.patch<MessageResponse>(
-      `/invitations/${invitationId}`,
+      `/v1/invitations/${invitationId}`,
       {
         status,
       } as UpdateInvitationStatusRequest

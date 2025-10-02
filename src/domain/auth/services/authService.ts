@@ -12,7 +12,7 @@ export const authService = {
   // 이메일 OTP 요청 API
   requestOtpByEmail: async (email: string): Promise<MessageResponse> => {
     const response = await apiService.post<MessageResponse>(
-      `/auth/otp/email`,
+      `/v1/auth/otp/email`,
       {
         email,
       } as OtpEmailRequest,
@@ -29,7 +29,7 @@ export const authService = {
     otp: string
   ): Promise<MessageResponse> => {
     const response = await apiService.post<MessageResponse>(
-      `/auth/otp/email/verification`,
+      `/v1/auth/otp/email/verification`,
       {
         email,
         otp,
@@ -44,7 +44,7 @@ export const authService = {
     email: string,
     password: string
   ): Promise<MessageResponse> => {
-    const response = await apiService.post<MessageResponse>(`/auth/signup`, {
+    const response = await apiService.post<MessageResponse>(`/v1/auth/signup`, {
       name,
       email,
       password,
@@ -54,7 +54,7 @@ export const authService = {
 
   // 로그인
   login: async (email: string, password: string): Promise<LoginResponse> => {
-    const response = await apiService.post<LoginResponse>(`/auth/login`, {
+    const response = await apiService.post<LoginResponse>(`/v1/auth/login`, {
       email,
       password,
     } as LoginRequest);
@@ -63,14 +63,14 @@ export const authService = {
 
   // 로그아웃
   logout: async (refreshToken: string): Promise<void> => {
-    const response = await apiService.post<LoginResponse>(`/auth/logout`, {
+    const response = await apiService.post<LoginResponse>(`/v1/auth/logout`, {
       refreshToken,
     } as LogoutRequest);
   },
 
   // 회원 탈퇴
   deleteAccount: async (): Promise<MessageResponse> => {
-    const response = await apiService.delete<MessageResponse>(`/auth/withdraw`);
+    const response = await apiService.delete<MessageResponse>(`/v1/auth/withdraw`);
     return response;
   },
 };

@@ -14,7 +14,7 @@ export const friendService = {
     inviteeEmail: string
   ): Promise<MessageResponse> => {
     const response = await apiService.post<MessageResponse>(
-      `/friends/requests`,
+      `/v1/friends/requests`,
       { inviteeEmail } as SendFriendInvitationRequest
     );
     return response;
@@ -23,7 +23,7 @@ export const friendService = {
   // 2. 친구 요청 목록 조회
   fetchFriendInvitations: async (): Promise<FriendInvitation[]> => {
     const response = await apiService.get<FetchFriendInvitationsResponse>(
-      `/friends/requests`
+      `/v1/friends/requests`
     );
     return response.data.friendInvitations;
   },
@@ -34,7 +34,7 @@ export const friendService = {
     status: FRIEND_INVITATION_STATUS
   ): Promise<MessageResponse> => {
     const response = await apiService.patch<MessageResponse>(
-      `/friends/requests/${requestId}`,
+      `/v1/friends/requests/${requestId}`,
       { status } as UpdateFriendInvitationStatusRequest
     );
     return response;
@@ -42,14 +42,14 @@ export const friendService = {
 
   // 4. 친구 목록 조회
   fetchFriends: async (): Promise<Friend[]> => {
-    const response = await apiService.get<FetchFriendsResponse>(`/friends`);
+    const response = await apiService.get<FetchFriendsResponse>(`/v1/friends`);
     return response.data.friends;
   },
 
   // 5. 친구 삭제
   deleteFriend: async (friendId: number): Promise<MessageResponse> => {
     const response = await apiService.delete<MessageResponse>(
-      `/friends/${friendId}`
+      `/v1/friends/${friendId}`
     );
     return response;
   },

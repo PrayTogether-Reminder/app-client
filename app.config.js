@@ -5,7 +5,7 @@ console.log(
 console.log("Current working directory:", process.cwd());
 
 // const API_URL = process.env.EXPO_PUBLIC_API_URL;
-const API_URL = "https://praytogether.site/api/v1";
+const API_URL = "https://praytogether.site/api";
 
 // 환경별 설정
 const environment = process.env.EAS_BUILD_PROFILE || 'production';
