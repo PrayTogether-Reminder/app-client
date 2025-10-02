@@ -4,6 +4,7 @@ console.log(
 );
 console.log("Current working directory:", process.cwd());
 
+// const API_URL = process.env.EXPO_PUBLIC_API_URL;
 const API_URL = "https://praytogether.site/api/v1";
 
 // 환경별 설정
@@ -20,7 +21,7 @@ const config = {
   },
   preview: {
     name: '기도함께Preview',
-    androidPackage: 'site.praytogether',
+    androidPackage: 'site.praytogether.preview',
   }
 };
 
