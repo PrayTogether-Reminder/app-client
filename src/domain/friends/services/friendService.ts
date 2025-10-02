@@ -5,13 +5,17 @@ import { Friend } from "../types/Friend";
 import { FetchFriendInvitationsResponse } from "../types/response/fetchFriendInvitationsResponse";
 import { FetchFriendsResponse } from "../types/response/fetchFriendsResponse";
 import { UpdateFriendInvitationStatusRequest } from "../types/request/updateFriendInvitationStatusRequest";
+import { SendFriendInvitationRequest } from "../types/request/sendFriendInvitationRequest";
 import { FRIEND_INVITATION_STATUS } from "../constants/friendInvitationStatus";
 
 export const friendService = {
   // 1. 친구 요청 보내기
-  sendFriendInvitation: async (memberId: number): Promise<MessageResponse> => {
+  sendFriendInvitation: async (
+    inviteeEmail: string
+  ): Promise<MessageResponse> => {
     const response = await apiService.post<MessageResponse>(
-      `/friends/${memberId}/requests`
+      `/friends/requests`,
+      { inviteeEmail } as SendFriendInvitationRequest
     );
     return response;
   },

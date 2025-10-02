@@ -10,8 +10,8 @@ export const useSendFriendInvitationMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (memberId: number) => {
-      return friendService.sendFriendInvitation(memberId);
+    mutationFn: (inviteeEmail: string) => {
+      return friendService.sendFriendInvitation(inviteeEmail);
     },
     onError: (error: ApiError, variables, context) => {
       showAlert({
