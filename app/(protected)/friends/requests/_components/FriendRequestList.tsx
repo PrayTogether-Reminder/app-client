@@ -1,6 +1,7 @@
 import React from "react";
 import { FlatList, StyleSheet, View, RefreshControl } from "react-native";
 import { Text, ActivityIndicator } from "react-native-paper";
+import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
 import { FriendInvitation } from "@/domain/friends/types/FriendInvitation";
 import { FRIEND_INVITATION_STATUS } from "@/domain/friends/constants/friendInvitationStatus";
@@ -77,22 +78,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContent: {
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 20,
+    paddingHorizontal: RFValue(16),
+    paddingTop: RFValue(12),
+    paddingBottom: RFValue(20),
   },
   centerContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    padding: RFValue(20),
   },
   loadingText: {
-    marginTop: 12,
+    marginTop: RFValue(12),
     color: color.gray,
   },
   emptyTitle: {
-    marginBottom: 8,
+    marginBottom: RFValue(8),
     fontWeight: "bold",
     color: color.dark,
   },

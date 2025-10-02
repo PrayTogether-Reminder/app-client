@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
 import { TextInput, Button, Text } from "react-native-paper";
+import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
 
 interface FriendAddFormProps {
@@ -82,36 +83,36 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 24,
+    padding: RFValue(24),
   },
   title: {
-    marginBottom: 24,
+    marginBottom: RFValue(24),
     fontWeight: "bold",
     color: color.dark,
     textAlign: "center",
   },
   input: {
-    marginBottom: 16,
+    marginBottom: RFValue(16),
     backgroundColor: color.white,
   },
   button: {
-    marginTop: 8,
-    paddingVertical: 4,
+    marginTop: RFValue(8),
+    paddingVertical: RFValue(4),
   },
   infoContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 32,
-    paddingHorizontal: 16,
+    marginTop: RFValue(32),
+    paddingHorizontal: RFValue(16),
   },
   infoIcon: {
-    marginRight: 8,
-    fontSize: 20,
+    marginRight: RFValue(8),
+    fontSize: RFValue(20),
   },
   infoText: {
     color: color.gray,
     textAlign: "center",
-    lineHeight: 22,
+    lineHeight: RFValue(22),
   },
 });

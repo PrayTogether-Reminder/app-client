@@ -1,6 +1,8 @@
 import React from "react";
 import { StyleSheet, View, TouchableOpacity, Modal, Pressable } from "react-native";
 import { Text } from "react-native-paper";
+import { RFValue } from "react-native-responsive-fontsize";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { color } from "@/common/styles/color";
 import { Friend } from "@/domain/friends/types/Friend";
 
@@ -17,6 +19,8 @@ export default function FriendActionSheet({
   onDismiss,
   onDelete,
 }: FriendActionSheetProps): React.ReactElement {
+  const insets = useSafeAreaInsets();
+
   if (!friend) return <></>;
 
   return (
@@ -27,7 +31,10 @@ export default function FriendActionSheet({
       onRequestClose={onDismiss}
     >
       <Pressable style={styles.overlay} onPress={onDismiss}>
-        <Pressable style={styles.sheet} onPress={(e) => e.stopPropagation()}>
+        <Pressable
+          style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, RFValue(20)) }]}
+          onPress={(e) => e.stopPropagation()}
+        >
           <View style={styles.header}>
             <Text variant="titleMedium" style={styles.name}>
               {friend.friendName}
@@ -58,16 +65,15 @@ const styles = StyleSheet.create({
   },
   sheet: {
     backgroundColor: color.white,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingBottom: 34,
-    paddingTop: 20,
-    paddingHorizontal: 16,
+    borderTopLeftRadius: RFValue(20),
+    borderTopRightRadius: RFValue(20),
+    paddingTop: RFValue(20),
+    paddingHorizontal: RFValue(16),
   },
   header: {
     alignItems: "center",
-    marginBottom: 20,
-    paddingBottom: 16,
+    marginBottom: RFValue(20),
+    paddingBottom: RFValue(16),
     borderBottomWidth: 1,
     borderBottomColor: color.light,
   },
@@ -76,25 +82,25 @@ const styles = StyleSheet.create({
     color: color.dark,
   },
   deleteButton: {
-    paddingVertical: 16,
+    paddingVertical: RFValue(16),
     alignItems: "center",
     backgroundColor: color.white,
-    borderRadius: 8,
-    marginBottom: 8,
+    borderRadius: RFValue(8),
+    marginBottom: RFValue(8),
   },
   deleteButtonText: {
-    fontSize: 16,
+    fontSize: RFValue(16),
     color: color.red,
     fontWeight: "500",
   },
   cancelButton: {
-    paddingVertical: 16,
+    paddingVertical: RFValue(16),
     alignItems: "center",
     backgroundColor: color.light,
-    borderRadius: 8,
+    borderRadius: RFValue(8),
   },
   cancelButtonText: {
-    fontSize: 16,
+    fontSize: RFValue(16),
     color: color.dark,
     fontWeight: "500",
   },
