@@ -58,7 +58,6 @@ export default function FriendList({
           colors={[color.primary]}
         />
       }
-      ItemSeparatorComponent={() => <View style={styles.separator} />}
     />
   );
 }
@@ -69,6 +68,8 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 20,
   },
   centerContainer: {
     flex: 1,
@@ -88,10 +89,5 @@ const styles = StyleSheet.create({
   emptyDescription: {
     color: color.gray,
     textAlign: "center",
-  },
-  separator: {
-    height: 1,
-    backgroundColor: color.light,
-    marginVertical: 4,
   },
 });

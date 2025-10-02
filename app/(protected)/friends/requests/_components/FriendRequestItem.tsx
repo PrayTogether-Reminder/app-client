@@ -1,7 +1,22 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
-import { List, Avatar, Button } from "react-native-paper";
-import { color } from "@/common/styles/color";
+import React, { useRef } from "react";
+import {
+  StyleSheet,
+  View,
+  Animated,
+  Pressable,
+  useWindowDimensions,
+} from "react-native";
+import {
+  Card,
+  Text,
+  Button,
+  useTheme,
+  Paragraph,
+  Title,
+} from "react-native-paper";
+import { RFValue } from "react-native-responsive-fontsize";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import { backgroundColor, color } from "@/common/styles/color";
 import { FriendInvitation } from "@/domain/friends/types/FriendInvitation";
 import { FRIEND_INVITATION_STATUS } from "@/domain/friends/constants/friendInvitationStatus";
 
@@ -19,87 +34,156 @@ export default function FriendRequestItem({
   onStatusUpdate,
   isPending,
 }: FriendRequestItemProps): React.ReactElement {
+  const theme = useTheme();
+  const { width } = useWindowDimensions();
+
+  // Animation setup
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  const handlePressIn = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 0.96,
+      useNativeDriver: true,
+      speed: 50,
+      bounciness: 10,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      useNativeDriver: true,
+      speed: 50,
+      bounciness: 10,
+    }).start();
+  };
+
   return (
-    <View style={styles.container}>
-      <List.Item
-        title={invitation.senderName}
-        titleStyle={styles.title}
-        left={(props) => (
-          <Avatar.Icon
-            {...props}
-            size={48}
-            icon="account"
-            color={color.white}
-            style={styles.avatar}
-          />
-        )}
-        style={styles.item}
-      />
-      <View style={styles.buttonContainer}>
-        <Button
-          mode="contained"
-          onPress={() =>
-            onStatusUpdate(
-              invitation.invitationId,
-              FRIEND_INVITATION_STATUS.ACCEPTED
-            )
-          }
-          disabled={isPending}
-          style={[styles.button, styles.acceptButton]}
-          labelStyle={styles.buttonLabel}
+    <Pressable onPressIn={handlePressIn} onPressOut={handlePressOut}>
+      <Animated.View style={[{ transform: [{ scale: scaleAnim }] }]}>
+        <Card
+          style={[
+            styles.card,
+            { borderLeftColor: color.secondary },
+          ]}
+          mode="elevated"
         >
-          수락
-        </Button>
-        <Button
-          mode="outlined"
-          onPress={() =>
-            onStatusUpdate(
-              invitation.invitationId,
-              FRIEND_INVITATION_STATUS.REJECTED
-            )
-          }
-          disabled={isPending}
-          style={[styles.button, styles.rejectButton]}
-          labelStyle={styles.buttonLabel}
-        >
-          거절
-        </Button>
-      </View>
-    </View>
+          <Card.Content style={styles.contentContainer}>
+            {/* Header Row */}
+            <View style={styles.headerRow}>
+              <Title style={styles.senderName}>{invitation.senderName}</Title>
+            </View>
+
+            {/* Info Row */}
+            <View style={styles.infoRow}>
+              <View style={styles.detailRow}>
+                <AntDesign
+                  name="user"
+                  size={width * 0.045}
+                  color={color.gray}
+                />
+                <Paragraph style={styles.detailText}>
+                  친구 요청을 보냈습니다
+                </Paragraph>
+              </View>
+            </View>
+          </Card.Content>
+
+          {/* Actions */}
+          <Card.Actions style={styles.actions}>
+            <Button
+              mode="outlined"
+              onPress={() =>
+                onStatusUpdate(
+                  invitation.invitationId,
+                  FRIEND_INVITATION_STATUS.REJECTED
+                )
+              }
+              style={[styles.button, styles.rejectButton]}
+              labelStyle={styles.buttonLabel}
+              textColor={theme.colors.error}
+              icon="close-circle-outline"
+              disabled={isPending}
+            >
+              거절
+            </Button>
+            <Button
+              mode="contained"
+              onPress={() =>
+                onStatusUpdate(
+                  invitation.invitationId,
+                  FRIEND_INVITATION_STATUS.ACCEPTED
+                )
+              }
+              style={[styles.button, styles.acceptButton]}
+              labelStyle={styles.buttonLabel}
+              icon="check-circle-outline"
+              disabled={isPending}
+            >
+              수락
+            </Button>
+          </Card.Actions>
+        </Card>
+      </Animated.View>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingVertical: 8,
+  card: {
+    backgroundColor: backgroundColor.white,
+    marginBottom: RFValue(16),
+    borderLeftWidth: RFValue(6),
+    elevation: 3,
   },
-  item: {
-    paddingVertical: 0,
+  contentContainer: {
+    gap: RFValue(10),
+    paddingBottom: RFValue(4),
   },
-  title: {
-    fontSize: 16,
-    fontWeight: "500",
-  },
-  avatar: {
-    backgroundColor: color.secondary,
-  },
-  buttonContainer: {
+  headerRow: {
     flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  senderName: {
+    fontSize: RFValue(17),
+    fontWeight: "bold",
+    flex: 1,
+    marginRight: RFValue(8),
+    lineHeight: RFValue(22),
+  },
+  infoRow: {
+    flexDirection: "column",
+    gap: RFValue(6),
+  },
+  detailRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: RFValue(6),
+  },
+  detailText: {
+    fontSize: RFValue(13),
+    color: color.gray,
+    lineHeight: RFValue(17),
+  },
+  actions: {
     justifyContent: "flex-end",
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    gap: 8,
+    paddingTop: RFValue(4),
+    paddingBottom: RFValue(10),
+    paddingHorizontal: RFValue(12),
   },
   button: {
-    minWidth: 80,
-  },
-  acceptButton: {
-    backgroundColor: color.primary,
+    marginLeft: RFValue(8),
+    minWidth: RFValue(80),
   },
   rejectButton: {
-    borderColor: color.gray,
+    borderColor: color.red,
+  },
+  acceptButton: {
+    // Default contained style
   },
   buttonLabel: {
-    fontSize: 14,
+    fontSize: RFValue(13),
+    lineHeight: RFValue(17),
   },
 });

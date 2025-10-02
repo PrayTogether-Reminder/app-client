@@ -56,6 +56,7 @@ export default function FriendsScreen() {
   };
 
   const handleDeleteRequest = () => {
+    setShowActionSheet(false);
     setShowDeleteModal(true);
   };
 
@@ -65,6 +66,9 @@ export default function FriendsScreen() {
         onSuccess: () => {
           setShowDeleteModal(false);
           setSelectedFriend(null);
+        },
+        onError: () => {
+          setShowDeleteModal(false);
         },
       });
     }
@@ -110,7 +114,10 @@ export default function FriendsScreen() {
       {/* 삭제 확인 다이얼로그 */}
       <ConfirmationModal
         visible={showDeleteModal}
-        onDismiss={() => setShowDeleteModal(false)}
+        onDismiss={() => {
+          setShowDeleteModal(false);
+          setSelectedFriend(null);
+        }}
         onConfirm={handleConfirmDelete}
         icon="account-remove"
         title="친구 삭제"

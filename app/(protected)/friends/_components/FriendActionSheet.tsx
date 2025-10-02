@@ -36,10 +36,7 @@ export default function FriendActionSheet({
 
           <TouchableOpacity
             style={styles.deleteButton}
-            onPress={() => {
-              onDismiss();
-              onDelete();
-            }}
+            onPress={onDelete}
           >
             <Text style={styles.deleteButtonText}>🗑️ 친구 삭제</Text>
           </TouchableOpacity>
