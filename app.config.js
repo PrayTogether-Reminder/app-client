@@ -6,8 +6,28 @@ console.log("Current working directory:", process.cwd());
 
 const API_URL = "https://praytogether.site/api/v1";
 
+// 환경별 설정
+const environment = process.env.EAS_BUILD_PROFILE || 'production';
+
+const config = {
+  production: {
+    name: '기도함께',
+    androidPackage: 'site.praytogether',
+  },
+  development: {
+    name: '기도함께Dev',
+    androidPackage: 'site.praytogether.dev',
+  },
+  preview: {
+    name: '기도함께Preview',
+    androidPackage: 'site.praytogether',
+  }
+};
+
+const currentConfig = config[environment] || config.production;
+
 module.exports = {
-  name: "기도함께",
+  name: currentConfig.name,
   slug: "app-client",
   version: "1.0.3",
   orientation: "portrait",
@@ -59,7 +79,7 @@ module.exports = {
       backgroundColor: "#ffffff",
     },
     softwareKeyboardLayoutMode: "pan",
-    package: "site.praytogether",
+    package: currentConfig.androidPackage,
     googleServicesFile:
       process.env.GOOGLE_SERVICES_JSON || "./google-services.json",
     permissions: ["RECEIVE_BOOT_COMPLETED", "VIBRATE"],
