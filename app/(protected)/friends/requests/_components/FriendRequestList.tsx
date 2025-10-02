@@ -2,41 +2,47 @@ import React from "react";
 import { FlatList, StyleSheet, View, RefreshControl } from "react-native";
 import { Text, ActivityIndicator } from "react-native-paper";
 import { color } from "@/common/styles/color";
-import { Friend } from "@/domain/friends/types/Friend";
-import FriendItem from "./FriendItem";
+import { FriendInvitation } from "@/domain/friends/types/FriendInvitation";
+import { FRIEND_INVITATION_STATUS } from "@/domain/friends/constants/friendInvitationStatus";
+import FriendRequestItem from "./FriendRequestItem";
 
-interface FriendListProps {
-  friends: Friend[];
+interface FriendRequestListProps {
+  invitations: FriendInvitation[];
   isLoading: boolean;
   isRefetching: boolean;
+  isPending: boolean;
   onRefresh: () => void;
-  onFriendLongPress: (friend: Friend) => void;
+  onStatusUpdate: (
+    invitationId: number,
+    status: FRIEND_INVITATION_STATUS
+  ) => void;
 }
 
-export default function FriendList({
-  friends,
+export default function FriendRequestList({
+  invitations,
   isLoading,
   isRefetching,
+  isPending,
   onRefresh,
-  onFriendLongPress,
-}: FriendListProps): React.ReactElement {
+  onStatusUpdate,
+}: FriendRequestListProps): React.ReactElement {
   if (isLoading) {
     return (
       <View style={styles.centerContainer}>
         <ActivityIndicator size="large" color={color.primary} />
-        <Text style={styles.loadingText}>친구 목록을 불러오는 중...</Text>
+        <Text style={styles.loadingText}>친구 요청을 불러오는 중...</Text>
       </View>
     );
   }
 
-  if (friends.length === 0) {
+  if (invitations.length === 0) {
     return (
       <View style={styles.centerContainer}>
         <Text variant="titleMedium" style={styles.emptyTitle}>
-          아직 친구가 없어요
+          친구 요청이 없어요
         </Text>
         <Text variant="bodyMedium" style={styles.emptyDescription}>
-          상단의 + 버튼을 눌러 친구를 추가해보세요!
+          새로운 친구 요청이 오면 여기에 표시됩니다.
         </Text>
       </View>
     );
@@ -44,10 +50,14 @@ export default function FriendList({
 
   return (
     <FlatList
-      data={friends}
-      keyExtractor={(item) => item.friendId.toString()}
+      data={invitations}
+      keyExtractor={(item) => item.invitationId.toString()}
       renderItem={({ item }) => (
-        <FriendItem friend={item} onLongPress={onFriendLongPress} />
+        <FriendRequestItem
+          invitation={item}
+          onStatusUpdate={onStatusUpdate}
+          isPending={isPending}
+        />
       )}
       style={styles.list}
       contentContainerStyle={styles.listContent}
@@ -69,6 +79,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingHorizontal: 16,
+    paddingVertical: 8,
   },
   centerContainer: {
     flex: 1,
@@ -92,6 +103,6 @@ const styles = StyleSheet.create({
   separator: {
     height: 1,
     backgroundColor: color.light,
-    marginVertical: 4,
+    marginVertical: 8,
   },
 });
