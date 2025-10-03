@@ -32,13 +32,13 @@ export const useInviteRoomMemberMutation = () => {
   });
 };
 
-// 방 초대 mutation (v2 - friendId 기반)
+// 방 초대 mutation (v2 - friendIds 배열 기반)
 export const useInviteRoomMemberV2Mutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ roomId, friendId }: InviteRoomMemberV2Request) => {
-      return invitationService.inviteRoomMemberV2(roomId, friendId);
+    mutationFn: ({ roomId, friendIds }: InviteRoomMemberV2Request) => {
+      return invitationService.inviteRoomMemberV2(roomId, friendIds);
     },
     onError: (error: ApiError, variables, context) => {
       showAlert({

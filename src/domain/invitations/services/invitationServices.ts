@@ -19,16 +19,16 @@ export const invitationService = {
     return response;
   },
 
-  // 멤버 초대 (v2 - friendId 기반)
+  // 멤버 초대 (v2 - friendIds 배열 기반)
   inviteRoomMemberV2: async (
     roomId: number,
-    friendId: number
+    friendIds: number[]
   ): Promise<MessageResponse> => {
     const response = await apiService.post<MessageResponse>(
       `/v2/invitations`,
       {
         roomId,
-        friendId,
+        friendIds,
       } as InviteRoomMemberV2Request
     );
     return response;

@@ -43,24 +43,13 @@ export default function InviteFriendsScreen(): React.ReactElement {
   const handleInvite = useCallback(() => {
     if (selectedFriendIds.length === 0) return;
 
-    // 순차적으로 초대 (첫 번째 친구만 초대)
-    const friendId = selectedFriendIds[0];
-
+    // 선택한 친구들 배열로 한 번에 초대
     inviteFriend(
-      { roomId, friendId },
+      { roomId, friendIds: selectedFriendIds },
       {
         onSuccess: () => {
-          // 첫 번째 친구 초대 성공 시
-          const remainingFriends = selectedFriendIds.slice(1);
-
-          if (remainingFriends.length > 0) {
-            // 다음 친구 초대
-            setSelectedFriendIds(remainingFriends);
-            handleInvite();
-          } else {
-            // 모든 초대 완료
-            router.back();
-          }
+          // 초대 완료 후 화면 닫기
+          router.back();
         },
       }
     );

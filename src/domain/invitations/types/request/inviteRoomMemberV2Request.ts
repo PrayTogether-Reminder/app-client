@@ -1,4 +1,4 @@
 export interface InviteRoomMemberV2Request {
   roomId: number;
-  friendId: number; // 친구의 memberId (Friend.friendId == RoomMember.id)
+  friendIds: number[]; // 친구들의 memberId 배열 (Friend.friendId == RoomMember.id)
 }
