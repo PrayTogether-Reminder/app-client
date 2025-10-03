@@ -1,0 +1,99 @@
+import React, { useState, useCallback } from "react";
+import { View, StyleSheet } from "react-native";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import Top1Body10 from "@/common/layout/Top1Body10";
+import InviteFriendsTop from "./_components/InviteFriendsTop";
+import InviteFriendsBody from "./_components/InviteFriendsBody";
+import BottomInviteButton from "./_components/BottomInviteButton";
+import { useFetchFriendsQuery } from "@/domain/friends/hooks/queries/useFriendQueries";
+import { useRoomMembersQuery } from "@/domain/rooms/hooks/queries/useRoomQueries";
+import { useInviteRoomMemberV2Mutation } from "@/domain/invitations/hooks/mutations/useInvitationMutations";
+
+export default function InviteFriendsScreen(): React.ReactElement {
+  const router = useRouter();
+  const params = useLocalSearchParams();
+  const roomId = Number(params.id);
+
+  const [selectedFriendIds, setSelectedFriendIds] = useState<number[]>([]);
+
+  // 친구 목록 조회
+  const { data: friends = [], isLoading: isFriendsLoading } =
+    useFetchFriendsQuery();
+
+  // 방 멤버 목록 조회
+  const { data: roomMembers = [], isLoading: isMembersLoading } =
+    useRoomMembersQuery(roomId);
+
+  // 방 초대 mutation (v2)
+  const { mutate: inviteFriend, isPending } = useInviteRoomMemberV2Mutation();
+
+  // 방 멤버들의 ID 추출
+  const roomMemberIds = roomMembers.map((member) => member.id).filter((id): id is number => id !== null);
+
+  // 친구 선택/해제
+  const handleToggleFriend = useCallback((friendId: number) => {
+    setSelectedFriendIds((prev) =>
+      prev.includes(friendId)
+        ? prev.filter((id) => id !== friendId)
+        : [...prev, friendId]
+    );
+  }, []);
+
+  // 초대하기
+  const handleInvite = useCallback(() => {
+    if (selectedFriendIds.length === 0) return;
+
+    // 순차적으로 초대 (첫 번째 친구만 초대)
+    const friendId = selectedFriendIds[0];
+
+    inviteFriend(
+      { roomId, friendId },
+      {
+        onSuccess: () => {
+          // 첫 번째 친구 초대 성공 시
+          const remainingFriends = selectedFriendIds.slice(1);
+
+          if (remainingFriends.length > 0) {
+            // 다음 친구 초대
+            setSelectedFriendIds(remainingFriends);
+            handleInvite();
+          } else {
+            // 모든 초대 완료
+            router.back();
+          }
+        },
+      }
+    );
+  }, [roomId, selectedFriendIds, inviteFriend, router]);
+
+  return (
+    <View style={styles.container}>
+      <Top1Body10
+        tops={[<InviteFriendsTop key="top" />]}
+        bodies={[
+          <InviteFriendsBody
+            key="body"
+            friends={friends}
+            roomMemberIds={roomMemberIds}
+            selectedFriendIds={selectedFriendIds}
+            onToggleFriend={handleToggleFriend}
+            isLoading={isFriendsLoading || isMembersLoading}
+          />,
+        ]}
+      />
+
+      {/* 하단 고정 버튼 */}
+      <BottomInviteButton
+        selectedCount={selectedFriendIds.length}
+        onPress={handleInvite}
+        isLoading={isPending}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

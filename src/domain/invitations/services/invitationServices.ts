@@ -4,9 +4,10 @@ import { Invitation } from "../types/Intivation";
 import { FetchInvitationsResponse } from "../types/response/fetchInvitationsResponse";
 import type { INVITATION_STATUS } from "../constants/invitationStatus";
 import { UpdateInvitationStatusRequest } from "../types/request/updateInvitationStatusRequest";
+import { InviteRoomMemberV2Request } from "../types/request/inviteRoomMemberV2Request";
 
 export const invitationService = {
-  // 멤버 초대
+  // 멤버 초대 (v1 - email 기반)
   inviteRoomMember: async (
     roomId: number | null,
     email: string
@@ -15,6 +16,21 @@ export const invitationService = {
       roomId,
       email,
     });
+    return response;
+  },
+
+  // 멤버 초대 (v2 - friendId 기반)
+  inviteRoomMemberV2: async (
+    roomId: number,
+    friendId: number
+  ): Promise<MessageResponse> => {
+    const response = await apiService.post<MessageResponse>(
+      `/v2/invitations`,
+      {
+        roomId,
+        friendId,
+      } as InviteRoomMemberV2Request
+    );
     return response;
   },
 

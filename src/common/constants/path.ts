@@ -3,6 +3,8 @@ import { Route } from "expo-router";
 const path = {
   showRoomList: () => "/(protected)/rooms" as Route,
   showRoomById: (id: number) => `/(protected)/rooms/${id}` as Route,
+  showInviteFriends: (roomId: number) =>
+    `/(protected)/rooms/${roomId}/invite-friends` as Route,
   showPrayersContentById: (id: number) => `/(protected)/prayers/${id}` as Route,
   showPrayersCreate: () => "/(protected)/prayers/creation" as Route,
   showInvitations: () => "/(protected)/my-page/invitations" as Route,

@@ -1,17 +1,19 @@
-import { Fragment, useState, useRef } from "react";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { Fragment, useState } from "react";
+import { StyleSheet } from "react-native";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import Top1Body10Bottom1 from "@/common/layout/Top1Body10Bottom1";
 import PrayerRoomTop from "./_components/PrayerRoomTop";
 import PrayerRoomBody from "./_components/PrayerRoomBody";
 import PrayerRoomBottom from "./_components/PrayerRoomBottom";
 import RoomMembersModal from "./_components/RoomMembersModal";
-import RoomInviteDialog from "./_components/RoomInviteDialog";
-import { backgroundColor } from "@/common/styles/color";
+import path from "@/common/constants/path";
 
 export default function PrayerRoomScreen(): React.ReactElement {
+  const router = useRouter();
+  const params = useLocalSearchParams();
+  const roomId = Number(params.id);
+
   const [rightMenueVisible, setRightMenueVisible] = useState(false);
-  const [inviteVisible, setInviteVisible] = useState(false);
-  const emailRef = useRef({ email: "" });
 
   // Right menu open/close functions
   const openRightMenu = () => {
@@ -24,16 +26,11 @@ export default function PrayerRoomScreen(): React.ReactElement {
     setRightMenueVisible(false);
   };
 
-  // Invite dialog open/close functions
+  // Invite - 새 화면으로 이동
   const openInvite = () => {
-    console.log("open Invite");
-    setInviteVisible(true);
-  };
-
-  const closeInvite = () => {
-    console.log("close Invite");
-    emailRef.current.email = "";
-    setInviteVisible(false);
+    console.log("open Invite Friends");
+    closeRightMenu(); // 메뉴 닫고
+    router.push(path.showInviteFriends(roomId)); // 친구 초대 화면으로 이동
   };
 
   return (
@@ -42,11 +39,6 @@ export default function PrayerRoomScreen(): React.ReactElement {
         visible={rightMenueVisible}
         closeRightMenu={closeRightMenu}
         openInvite={openInvite}
-      />
-      <RoomInviteDialog
-        visible={inviteVisible}
-        closeInvite={closeInvite}
-        emailRef={emailRef}
       />
       <Top1Body10Bottom1
         tops={[<PrayerRoomTop openRightMenu={openRightMenu} />]}
