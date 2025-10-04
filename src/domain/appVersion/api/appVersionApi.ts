@@ -5,7 +5,7 @@ export const appVersionApi = {
   // 앱 버전 정보 조회
   fetchVersionInfo: async (): Promise<AppVersionInfoResponse> => {
     try {
-      const response = await apiService.get<AppVersionInfoResponse>("/app-versions");
+      const response = await apiService.get<AppVersionInfoResponse>("/v1/app-versions");
       return response.data;
     } catch (error) {
       console.error('Error fetching version info:', error);

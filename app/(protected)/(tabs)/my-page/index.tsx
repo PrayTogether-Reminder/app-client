@@ -107,6 +107,11 @@ export default function MyPageScreen(props: MyPageScreenProps) {
     router.push(path.showInvitations());
   }
 
+  function handleGoToFriends() {
+    console.log("친구 관리 화면으로 이동");
+    router.push(path.showFriends());
+  }
+
   async function handleGoToNotifications() {
     console.log("알림 설정 처리 시작");
 
@@ -257,6 +262,7 @@ export default function MyPageScreen(props: MyPageScreenProps) {
         bodies={[
           <ListSection
             onGoToInvitations={handleGoToInvitations}
+            onGoToFriends={handleGoToFriends}
             onGoToNotifications={handleGoToNotifications}
             onLogout={handleLogout}
             onDeleteAccount={handleDeleteAccount}

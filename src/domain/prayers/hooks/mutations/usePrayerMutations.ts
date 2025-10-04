@@ -153,6 +153,38 @@ export const useUpdatePrayerContentMutation = () => {
   });
 };
 
+// 기도 제목 삭제
+export const useDeletePrayerTitleMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ prayerTitleId, roomId }: { prayerTitleId: number; roomId: number }) =>
+      prayerService.deleteTitle(prayerTitleId),
+    onSuccess: (data, variables) => {
+      // 기도 제목 관련 캐시 무효화
+      queryClient.invalidateQueries({
+        queryKey: [
+          QUERY_KEYS.rooms,
+          variables.roomId,
+          QUERY_KEYS.prayerTitles,
+          QUERY_KEYS.infinite,
+        ],
+      });
+      showAlert({
+        title: "기도 제목 삭제",
+        message: data.message,
+        icon: "check-circle",
+      });
+    },
+    onError: (error: ApiError) => {
+      showAlert({
+        title: "기도 제목 삭제 실패",
+        message: error.message,
+        icon: "alert-circle",
+      });
+    },
+  });
+};
+
 // 기도 내용 삭제
 export const useDeletePrayerContentMutation = () => {
   const queryClient = useQueryClient();

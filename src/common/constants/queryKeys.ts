@@ -8,6 +8,8 @@ const QUERY_KEYS = {
   profiles: "profiles",
   me: "me",
   invitations: "invitations",
+  friends: "friends",
+  friendInvitations: "friendInvitations",
 };
 
 export default QUERY_KEYS;

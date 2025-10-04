@@ -1,7 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import React, { type JSX } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View, Platform } from "react-native";
 import { Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
@@ -21,7 +21,9 @@ import OverlayLoading from "../../../../../src/common/components/loading/Overlay
 const EmptyPrayerTitleList = () => {
   return (
     <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>기도제목이 없습니다.</Text>
+      <View style={styles.emptyTextWrapper}>
+        <Text style={styles.emptyText}>기도제목이 없습니다.</Text>
+      </View>
     </View>
   );
 };
@@ -66,7 +68,7 @@ export default function PrayerTitleList(): JSX.Element {
   };
 
   const renderTitleItem = ({ item }: { item: PrayerTitle }) => {
-    return <PrayerTitleItem item={item} onPress={handlePrayerTitlePress} />;
+    return <PrayerTitleItem item={item} onPress={handlePrayerTitlePress} roomId={roomId as number} />;
   };
   const onRefresh = () => {
     queryClient.invalidateQueries({
@@ -129,7 +131,11 @@ const styles = StyleSheet.create({
   emptyContainer: {
     padding: 20,
     alignItems: "center",
-    transform: [{ scaleY: -1 }, { scaleX: -1 }],
+  },
+  emptyTextWrapper: {
+    transform: Platform.OS === 'ios'
+      ? [{ scaleY: -1 }]
+      : [{ scaleY: -1 }, { scaleX: -1 }],
   },
   emptyText: {
     fontSize: RFValue(16),

@@ -48,7 +48,7 @@ const createNetworkError = (): ApiError => ({
 // 토큰 갱신 함수
 const fetchNewTokensBySingletone = async (refreshToken: string) => {
   return await axios.post(
-    `${BASE_API_URL}/auth/reissue-token`,
+    `${BASE_API_URL}/v1/auth/reissue-token`,
     {
       refreshToken,
     },
@@ -83,11 +83,11 @@ api.interceptors.request.use(
   async (config) => {
     // 인증이 필요 없는 API 경로 목록
     const noAuthRequired = [
-      "/auth/login",
-      "/auth/signup",
-      "/auth/otp/email",
-      "/auth/otp/email/verification",
-      "/auth/reissue-token",
+      "/v1/auth/login",
+      "/v1/auth/signup",
+      "/v1/auth/otp/email",
+      "/v1/auth/otp/email/verification",
+      "/v1/auth/reissue-token",
     ];
 
     // 현재 요청 경로가 인증이 필요 없는지 확인

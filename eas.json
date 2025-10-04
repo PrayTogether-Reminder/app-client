@@ -16,7 +16,7 @@
       "environment": "development",
       "channel": "development",
       "env": {
-        "GOOGLE_SERVICES_JSON": "./google-services.json",
+        "GOOGLE_SERVICES_JSON": "./google-services-dev.json",
         "GOOGLE_SERVICES_FILE_IOS": "./GoogleService-Info.plist"
       }
     },
@@ -31,7 +31,7 @@
       "environment": "preview",
       "channel": "preview",
       "env": {
-        "GOOGLE_SERVICES_JSON": "./google-services.json",
+        "GOOGLE_SERVICES_JSON": "./google-services-preview.json",
         "GOOGLE_SERVICES_FILE_IOS": "./GoogleService-Info.plist"
       }
     },

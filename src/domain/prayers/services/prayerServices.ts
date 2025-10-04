@@ -18,7 +18,7 @@ export const prayerService = {
     title: string
   ): Promise<MessageResponse> => {
     const response: MessageResponse =
-      await apiService.post<CreatePrayerRequest>(`/prayers`, {
+      await apiService.post<CreatePrayerRequest>(`/v1/prayers`, {
         roomId,
         title,
         contents: [],
@@ -33,7 +33,7 @@ export const prayerService = {
     prayerList: PrayerCreationItem[]
   ): Promise<MessageResponse> => {
     const response: MessageResponse =
-      await apiService.post<CreatePrayerRequest>(`/prayers`, {
+      await apiService.post<CreatePrayerRequest>(`/v1/prayers`, {
         roomId,
         title,
         contents: prayerList,
@@ -44,7 +44,7 @@ export const prayerService = {
   // 기도 제목 무한 스크롤 조회
   fetchTitles: async (roomId: number | null, after: string = "0") => {
     const response = await apiService.get<FetchPrayerTitlesResponse>(
-      "/prayers",
+      "/v1/prayers",
       {
         roomId,
         after,
@@ -55,7 +55,7 @@ export const prayerService = {
   // 기도 내용 조회
   fetchContents: async (titleId: number) => {
     const response = await apiService.get<FetchPrayerContentsResponse>(
-      `/prayers/${titleId}/contents`
+      `/v1/prayers/${titleId}/contents`
     );
     return response.data.prayerContents ?? [];
   },
@@ -67,12 +67,12 @@ export const prayerService = {
   ): Promise<MessageResponse> => {
     const requestBody: UpdatePrayerTitleRequest = { changedTitle: title };
     const response: MessageResponse = await apiService.put(
-      `/prayers/${prayerTitleId}`,
+      `/v1/prayers/${prayerTitleId}`,
       requestBody
     );
     return response;
   },
-  
+
   // 기도 내용 추가
   createContent: async (
     prayerTitleId: number,
@@ -85,12 +85,12 @@ export const prayerService = {
       requestBody.memberId = memberId;
     }
     const response: MessageResponse = await apiService.post(
-      `/prayers/${prayerTitleId}/contents`,
+      `/v1/prayers/${prayerTitleId}/contents`,
       requestBody
     );
     return response;
   },
-  
+
   // 기도 내용 수정
   updateContent: async (
     prayerTitleId: number,
@@ -99,19 +99,19 @@ export const prayerService = {
   ): Promise<MessageResponse> => {
     const requestBody: UpdatePrayerContentRequest = { changedContent: content };
     const response: MessageResponse = await apiService.put(
-      `/prayers/${prayerTitleId}/contents/${contentId}`,
+      `/v1/prayers/${prayerTitleId}/contents/${contentId}`,
       requestBody
     );
     return response;
   },
-  
+
   // 기도 내용 삭제
   deleteContent: async (
     prayerTitleId: number,
     contentId: number
   ): Promise<MessageResponse> => {
     const response: MessageResponse = await apiService.delete(
-      `/prayers/${prayerTitleId}/contents/${contentId}`
+      `/v1/prayers/${prayerTitleId}/contents/${contentId}`
     );
     return response;
   },
@@ -119,11 +119,19 @@ export const prayerService = {
   // 기도 완료 알림
   completePrayer: async ({ prayerTitleId, roomId }: CreatePrayerCompletionRequest) => {
     const response = await apiService.post<MessageResponse>(
-      `/prayers/${prayerTitleId}/completion`,
+      `/v1/prayers/${prayerTitleId}/completion`,
       {
         roomId,
       }
     );
     return response.data;
+  },
+
+  // 기도 제목 삭제
+  deleteTitle: async (prayerTitleId: number): Promise<MessageResponse> => {
+    const response: MessageResponse = await apiService.delete(
+      `/v1/prayers/${prayerTitleId}`
+    );
+    return response;
   },
 };
