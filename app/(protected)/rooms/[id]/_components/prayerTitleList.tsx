@@ -1,7 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import React, { type JSX } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View, Platform } from "react-native";
 import { Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
@@ -133,7 +133,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   emptyTextWrapper: {
-    transform: [{ scaleY: -1 }],
+    transform: Platform.OS === 'ios'
+      ? [{ scaleY: -1 }]
+      : [{ scaleY: -1 }, { scaleX: -1 }],
   },
   emptyText: {
     fontSize: RFValue(16),
