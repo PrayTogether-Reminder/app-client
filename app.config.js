@@ -34,11 +34,11 @@ module.exports = {
   orientation: "portrait",
   icon: "./assets/main_logo.png",
   userInterfaceStyle: "light",
-  newArchEnabled: true,
+  newArchEnabled: false,
   experiments: {
     typedRoutes: true,
     tsconfigPaths: true,
-    newArch: true,
+    newArch: false,
   },
   updates: {
     enabled: true,
