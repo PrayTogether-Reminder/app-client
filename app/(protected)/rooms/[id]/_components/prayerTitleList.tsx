@@ -68,7 +68,7 @@ export default function PrayerTitleList(): JSX.Element {
   };
 
   const renderTitleItem = ({ item }: { item: PrayerTitle }) => {
-    return <PrayerTitleItem item={item} onPress={handlePrayerTitlePress} />;
+    return <PrayerTitleItem item={item} onPress={handlePrayerTitlePress} roomId={roomId as number} />;
   };
   const onRefresh = () => {
     queryClient.invalidateQueries({

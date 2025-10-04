@@ -126,4 +126,12 @@ export const prayerService = {
     );
     return response.data;
   },
+
+  // 기도 제목 삭제
+  deleteTitle: async (prayerTitleId: number): Promise<MessageResponse> => {
+    const response: MessageResponse = await apiService.delete(
+      `/v1/prayers/${prayerTitleId}`
+    );
+    return response;
+  },
 };
