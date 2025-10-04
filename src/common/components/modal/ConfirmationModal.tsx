@@ -80,8 +80,6 @@ function ConfirmationModal({
             style={styles.cancelButton}
             labelStyle={styles.cancelButtonLabel}
             contentStyle={styles.buttonContent}
-            numberOfLines={1}
-            ellipsizeMode="tail"
           >
             {cancelText}
           </Button>
@@ -91,8 +89,6 @@ function ConfirmationModal({
             style={styles.confirmButton}
             labelStyle={styles.confirmButtonLabel}
             contentStyle={styles.buttonContent}
-            numberOfLines={1}
-            ellipsizeMode="tail"
           >
             {confirmText}
           </Button>
