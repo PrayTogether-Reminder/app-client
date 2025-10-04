@@ -27,27 +27,23 @@ export default function FriendRequestList({
   onRefresh,
   onStatusUpdate,
 }: FriendRequestListProps): React.ReactElement {
-  if (isLoading) {
-    return (
-      <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color={color.primary} />
-        <Text style={styles.loadingText}>친구 요청을 불러오는 중...</Text>
-      </View>
-    );
-  }
+  const renderEmptyComponent = () => (
+    <View style={styles.centerContainer}>
+      <Text variant="titleMedium" style={styles.emptyTitle}>
+        친구 요청이 없어요
+      </Text>
+      <Text variant="bodyMedium" style={styles.emptyDescription}>
+        새로운 친구 요청이 오면 여기에 표시됩니다.
+      </Text>
+    </View>
+  );
 
-  if (invitations.length === 0) {
-    return (
-      <View style={styles.centerContainer}>
-        <Text variant="titleMedium" style={styles.emptyTitle}>
-          친구 요청이 없어요
-        </Text>
-        <Text variant="bodyMedium" style={styles.emptyDescription}>
-          새로운 친구 요청이 오면 여기에 표시됩니다.
-        </Text>
-      </View>
-    );
-  }
+  const renderLoadingComponent = () => (
+    <View style={styles.centerContainer}>
+      <ActivityIndicator size="large" color={color.primary} />
+      <Text style={styles.loadingText}>친구 요청을 불러오는 중...</Text>
+    </View>
+  );
 
   return (
     <FlatList
@@ -61,7 +57,7 @@ export default function FriendRequestList({
         />
       )}
       style={styles.list}
-      contentContainerStyle={styles.listContent}
+      contentContainerStyle={invitations.length === 0 ? styles.emptyListContent : styles.listContent}
       refreshControl={
         <RefreshControl
           refreshing={isRefetching}
@@ -69,6 +65,7 @@ export default function FriendRequestList({
           colors={[color.primary]}
         />
       }
+      ListEmptyComponent={isLoading ? renderLoadingComponent : renderEmptyComponent}
     />
   );
 }
@@ -81,6 +78,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: RFValue(16),
     paddingTop: RFValue(12),
     paddingBottom: RFValue(20),
+  },
+  emptyListContent: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   centerContainer: {
     flex: 1,

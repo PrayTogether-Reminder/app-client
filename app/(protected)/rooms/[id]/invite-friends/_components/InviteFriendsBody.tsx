@@ -9,6 +9,8 @@ interface InviteFriendsBodyProps {
   selectedFriendIds: number[];
   onToggleFriend: (friendId: number) => void;
   isLoading: boolean;
+  isRefetching: boolean;
+  onRefresh: () => void;
 }
 
 export default function InviteFriendsBody({
@@ -17,6 +19,8 @@ export default function InviteFriendsBody({
   selectedFriendIds,
   onToggleFriend,
   isLoading,
+  isRefetching,
+  onRefresh,
 }: InviteFriendsBodyProps): React.ReactElement {
   return (
     <SelectableFriendList
@@ -25,6 +29,8 @@ export default function InviteFriendsBody({
       selectedFriendIds={selectedFriendIds}
       onToggleFriend={onToggleFriend}
       isLoading={isLoading}
+      isRefetching={isRefetching}
+      onRefresh={onRefresh}
     />
   );
 }

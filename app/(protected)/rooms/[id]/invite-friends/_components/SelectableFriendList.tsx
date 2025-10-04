@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View, RefreshControl } from "react-native";
 import { Text, ActivityIndicator } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
@@ -12,6 +12,8 @@ interface SelectableFriendListProps {
   selectedFriendIds: number[];
   onToggleFriend: (friendId: number) => void;
   isLoading: boolean;
+  isRefetching: boolean;
+  onRefresh: () => void;
 }
 
 export default function SelectableFriendList({
@@ -20,28 +22,26 @@ export default function SelectableFriendList({
   selectedFriendIds,
   onToggleFriend,
   isLoading,
+  isRefetching,
+  onRefresh,
 }: SelectableFriendListProps): React.ReactElement {
-  if (isLoading) {
-    return (
-      <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color={color.primary} />
-        <Text style={styles.loadingText}>친구 목록을 불러오는 중...</Text>
-      </View>
-    );
-  }
+  const renderEmptyComponent = () => (
+    <View style={styles.centerContainer}>
+      <Text variant="titleMedium" style={styles.emptyTitle}>
+        아직 친구가 없어요
+      </Text>
+      <Text variant="bodyMedium" style={styles.emptyDescription}>
+        친구 추가 후 기도방에 초대해보세요!
+      </Text>
+    </View>
+  );
 
-  if (friends.length === 0) {
-    return (
-      <View style={styles.centerContainer}>
-        <Text variant="titleMedium" style={styles.emptyTitle}>
-          아직 친구가 없어요
-        </Text>
-        <Text variant="bodyMedium" style={styles.emptyDescription}>
-          친구 추가 후 기도방에 초대해보세요!
-        </Text>
-      </View>
-    );
-  }
+  const renderLoadingComponent = () => (
+    <View style={styles.centerContainer}>
+      <ActivityIndicator size="large" color={color.primary} />
+      <Text style={styles.loadingText}>친구 목록을 불러오는 중...</Text>
+    </View>
+  );
 
   return (
     <FlatList
@@ -56,7 +56,15 @@ export default function SelectableFriendList({
         />
       )}
       style={styles.list}
-      contentContainerStyle={styles.listContent}
+      contentContainerStyle={friends.length === 0 ? styles.emptyListContent : styles.listContent}
+      refreshControl={
+        <RefreshControl
+          refreshing={isRefetching}
+          onRefresh={onRefresh}
+          colors={[color.primary]}
+        />
+      }
+      ListEmptyComponent={isLoading ? renderLoadingComponent : renderEmptyComponent}
     />
   );
 }
@@ -69,6 +77,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: RFValue(16),
     paddingTop: RFValue(12),
     paddingBottom: RFValue(100), // 하단 버튼 공간 확보
+  },
+  emptyListContent: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   centerContainer: {
     flex: 1,

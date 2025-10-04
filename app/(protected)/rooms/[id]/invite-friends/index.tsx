@@ -17,12 +17,20 @@ export default function InviteFriendsScreen(): React.ReactElement {
   const [selectedFriendIds, setSelectedFriendIds] = useState<number[]>([]);
 
   // 친구 목록 조회
-  const { data: friends = [], isLoading: isFriendsLoading } =
-    useFetchFriendsQuery();
+  const {
+    data: friends = [],
+    isLoading: isFriendsLoading,
+    isRefetching: isFriendsRefetching,
+    refetch: refetchFriends
+  } = useFetchFriendsQuery();
 
   // 방 멤버 목록 조회
-  const { data: roomMembers = [], isLoading: isMembersLoading } =
-    useRoomMembersQuery(roomId);
+  const {
+    data: roomMembers = [],
+    isLoading: isMembersLoading,
+    isRefetching: isMembersRefetching,
+    refetch: refetchMembers
+  } = useRoomMembersQuery(roomId);
 
   // 방 초대 mutation (v2)
   const { mutate: inviteFriend, isPending } = useInviteRoomMemberV2Mutation();
@@ -38,6 +46,12 @@ export default function InviteFriendsScreen(): React.ReactElement {
         : [...prev, friendId]
     );
   }, []);
+
+  // 새로고침
+  const handleRefresh = useCallback(() => {
+    refetchFriends();
+    refetchMembers();
+  }, [refetchFriends, refetchMembers]);
 
   // 초대하기
   const handleInvite = useCallback(() => {
@@ -67,6 +81,8 @@ export default function InviteFriendsScreen(): React.ReactElement {
             selectedFriendIds={selectedFriendIds}
             onToggleFriend={handleToggleFriend}
             isLoading={isFriendsLoading || isMembersLoading}
+            isRefetching={isFriendsRefetching || isMembersRefetching}
+            onRefresh={handleRefresh}
           />,
         ]}
       />
