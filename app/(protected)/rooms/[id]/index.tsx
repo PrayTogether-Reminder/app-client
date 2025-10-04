@@ -30,7 +30,7 @@ export default function PrayerRoomScreen(): React.ReactElement {
   const openInvite = () => {
     console.log("open Invite Friends");
     closeRightMenu(); // 메뉴 닫고
-    router.push(path.showInviteFriends(roomId)); // 친구 초대 화면으로 이동
+    router.push(path.showInviteFriends(roomId)); // 기도방 초대 화면으로 이동
   };
 
   return (

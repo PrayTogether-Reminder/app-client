@@ -19,7 +19,7 @@ export default function InviteFriendsTop(): React.ReactElement {
         mode="medium"
         titleStyle={styles.content}
         color={color.white}
-        title="친구 초대"
+        title="기도방 초대"
       />
     </Appbar.Header>
   );

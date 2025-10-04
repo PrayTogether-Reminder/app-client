@@ -35,7 +35,7 @@ export default function BottomInviteButton({
         labelStyle={styles.buttonLabel}
         contentStyle={styles.buttonContent}
       >
-        친구 초대 ({selectedCount}명)
+        기도방 초대 ({selectedCount}명)
       </Button>
     </View>
   );
