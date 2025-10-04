@@ -21,7 +21,9 @@ import OverlayLoading from "../../../../../src/common/components/loading/Overlay
 const EmptyPrayerTitleList = () => {
   return (
     <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>기도제목이 없습니다.</Text>
+      <View style={styles.emptyTextWrapper}>
+        <Text style={styles.emptyText}>기도제목이 없습니다.</Text>
+      </View>
     </View>
   );
 };
@@ -129,7 +131,9 @@ const styles = StyleSheet.create({
   emptyContainer: {
     padding: 20,
     alignItems: "center",
-    transform: [{ scaleY: -1 }, { scaleX: -1 }],
+  },
+  emptyTextWrapper: {
+    transform: [{ scaleY: -1 }],
   },
   emptyText: {
     fontSize: RFValue(16),
