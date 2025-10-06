@@ -33,10 +33,9 @@ export const useSearchMembersQuery = (
       return memberService.searchMembers(name);
     },
 
-    enabled: name.length > 0, // 이름이 있을 때만 검색
-
-    staleTime: 0, // 항상 최신 데이터 가져오기
-    gcTime: 0, // 캐시 저장 안 함
+    enabled: name.length > 0,
+    staleTime: 0,
+    gcTime: 0,
 
     ...options,
   });

@@ -30,7 +30,7 @@ export default function InviteMembersScreen(): React.ReactElement {
     data: searchResults = [],
     isLoading: isSearching,
     refetch: refetchSearch,
-  } = useSearchMembersQuery(searchQuery, { enabled: searchQuery.length > 0 });
+  } = useSearchMembersQuery(searchQuery);
 
   // 방 멤버 목록 조회
   const {

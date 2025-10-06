@@ -29,7 +29,7 @@ export default function MemberSearchInput({
         value={searchQuery}
         style={styles.searchbar}
         inputStyle={styles.input}
-        disabled={disabled}
+        editable={!disabled}
         iconColor={color.secondary}
         placeholderTextColor="#999"
       />
