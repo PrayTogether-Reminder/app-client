@@ -2,6 +2,7 @@ import React from "react";
 import { FlatList, StyleSheet, View, RefreshControl } from "react-native";
 import { Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
+import { color } from "@/common/styles/color";
 import SelectableMemberItem from "./SelectableMemberItem";
 import type { MemberSearchResult } from "@/domain/members/types/response/searchMembersResponse";
 
@@ -54,17 +55,27 @@ export default function SelectableMemberList({
       ListEmptyComponent={renderEmpty}
       refreshControl={
         onRefresh ? (
-          <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={onRefresh}
+            colors={[color.secondary]}
+            tintColor={color.secondary}
+          />
         ) : undefined
       }
       contentContainerStyle={
-        availableMembers.length === 0 ? styles.emptyList : undefined
+        availableMembers.length === 0
+          ? styles.emptyList
+          : styles.listContent
       }
     />
   );
 }
 
 const styles = StyleSheet.create({
+  listContent: {
+    paddingVertical: RFValue(8),
+  },
   emptyList: {
     flex: 1,
   },
@@ -72,10 +83,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    paddingHorizontal: RFValue(32),
     paddingVertical: RFValue(40),
   },
   emptyText: {
-    fontSize: RFValue(16),
-    color: "#999",
+    fontSize: RFValue(15),
+    color: "#666",
+    textAlign: "center",
   },
 });

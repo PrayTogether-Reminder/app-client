@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Searchbar } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
+import { color } from "@/common/styles/color";
 
 type MemberSearchInputProps = {
   searchQuery: string;
@@ -29,6 +30,8 @@ export default function MemberSearchInput({
         style={styles.searchbar}
         inputStyle={styles.input}
         disabled={disabled}
+        iconColor={color.secondary}
+        placeholderTextColor="#999"
       />
     </View>
   );
@@ -36,12 +39,14 @@ export default function MemberSearchInput({
 
 const styles = StyleSheet.create({
   container: {
-    padding: RFValue(16),
+    paddingHorizontal: RFValue(16),
+    paddingVertical: RFValue(12),
   },
   searchbar: {
     elevation: 2,
+    borderRadius: RFValue(8),
   },
   input: {
-    fontSize: RFValue(16),
+    fontSize: RFValue(15),
   },
 });

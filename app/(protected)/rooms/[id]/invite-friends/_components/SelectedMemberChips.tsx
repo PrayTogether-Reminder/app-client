@@ -1,7 +1,9 @@
 import React from "react";
-import { StyleSheet, View, ScrollView } from "react-native";
-import { Chip, Text } from "react-native-paper";
+import { StyleSheet, View, ScrollView, TouchableOpacity } from "react-native";
+import { Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { color } from "@/common/styles/color";
 import type { MemberSearchResult } from "@/domain/members/types/response/searchMembersResponse";
 
 type SelectedMemberChipsProps = {
@@ -17,9 +19,7 @@ export default function SelectedMemberChips({
 }: SelectedMemberChipsProps) {
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>
-        선택된 회원 ({selectedMembers.length}명)
-      </Text>
+      <Text style={styles.label}>선택됨 ({selectedMembers.length})</Text>
       {selectedMembers.length > 0 ? (
         <ScrollView
           horizontal
@@ -27,22 +27,25 @@ export default function SelectedMemberChips({
           contentContainerStyle={styles.chipsContainer}
         >
           {selectedMembers.map((member) => (
-            <Chip
-              key={member.id}
-              mode="flat"
-              onClose={() => !disabled && onRemoveMember(member.id)}
-              style={styles.chip}
-              textStyle={styles.chipText}
-              disabled={disabled}
-            >
-              {member.name}
-            </Chip>
+            <View key={member.id} style={styles.chip}>
+              <Text style={styles.chipText}>{member.name}</Text>
+              <TouchableOpacity
+                onPress={() => !disabled && onRemoveMember(member.id)}
+                disabled={disabled}
+                style={styles.closeButton}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                <MaterialCommunityIcons
+                  name="close"
+                  size={RFValue(16)}
+                  color={color.white}
+                />
+              </TouchableOpacity>
+            </View>
           ))}
         </ScrollView>
       ) : (
-        <Text style={styles.emptyText}>
-          회원을 선택하면 여기에 표시됩니다
-        </Text>
+        <Text style={styles.emptyText}>회원을 선택해주세요</Text>
       )}
     </View>
   );
@@ -51,32 +54,46 @@ export default function SelectedMemberChips({
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: RFValue(16),
-    paddingVertical: RFValue(12),
-    backgroundColor: "#f5f5f5",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
-    minHeight: RFValue(70),
+    paddingTop: RFValue(12),
+    paddingBottom: RFValue(16),
+    minHeight: RFValue(90),
   },
   label: {
     fontSize: RFValue(13),
     fontWeight: "600",
     marginBottom: RFValue(8),
-    color: "#666",
+    color: color.secondary,
   },
   chipsContainer: {
     flexDirection: "row",
     gap: RFValue(8),
   },
   chip: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: color.secondary,
+    borderRadius: RFValue(16),
+    paddingLeft: RFValue(12),
+    paddingRight: RFValue(8),
+    paddingVertical: RFValue(6),
     marginRight: RFValue(4),
+    gap: RFValue(4),
   },
   chipText: {
-    fontSize: RFValue(14),
+    fontSize: RFValue(13),
+    color: color.white,
+    fontWeight: "500",
+  },
+  closeButton: {
+    width: RFValue(20),
+    height: RFValue(20),
+    borderRadius: RFValue(10),
+    justifyContent: "center",
+    alignItems: "center",
   },
   emptyText: {
     fontSize: RFValue(13),
     color: "#999",
     fontStyle: "italic",
-    paddingVertical: RFValue(8),
   },
 });

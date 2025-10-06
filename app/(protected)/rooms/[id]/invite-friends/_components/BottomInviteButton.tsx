@@ -3,7 +3,8 @@ import { StyleSheet, View } from "react-native";
 import { Button } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { color } from "@/common/styles/color";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { backgroundColor, color } from "@/common/styles/color";
 
 interface BottomInviteButtonProps {
   selectedCount: number;
@@ -16,26 +17,30 @@ export default function BottomInviteButton({
   onPress,
   isLoading,
 }: BottomInviteButtonProps): React.ReactElement {
-  const insets = useSafeAreaInsets();
+  const isDisabled = selectedCount === 0 || isLoading;
 
   return (
-    <View
-      style={[
-        styles.container,
-        { paddingBottom: Math.max(insets.bottom, RFValue(20)) },
-      ]}
-    >
+    <View style={styles.container}>
       <Button
         mode="contained"
         onPress={onPress}
-        disabled={selectedCount === 0 || isLoading}
+        disabled={isDisabled}
         loading={isLoading}
         buttonColor={color.secondary}
-        style={styles.button}
+        style={[styles.button, isDisabled && styles.buttonDisabled]}
         labelStyle={styles.buttonLabel}
-        contentStyle={styles.buttonContent}
+        uppercase={false}
+        icon={() =>
+          !isLoading && (
+            <MaterialCommunityIcons
+              name="account-multiple-plus"
+              size={RFValue(20)}
+              color={color.white}
+            />
+          )
+        }
       >
-        기도방 초대 ({selectedCount}명)
+        {isLoading ? "초대 중..." : `기도방 초대 (${selectedCount}명)`}
       </Button>
     </View>
   );
@@ -43,30 +48,24 @@ export default function BottomInviteButton({
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: color.white,
-    paddingHorizontal: RFValue(16),
-    paddingTop: RFValue(12),
-    borderTopWidth: 1,
-    borderTopColor: color.light,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 8,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: backgroundColor.white,
+    width: "100%",
+    height: "100%",
   },
   button: {
-    borderRadius: RFValue(8),
+    borderRadius: RFValue(30),
+    width: "70%",
+    paddingVertical: RFValue(5),
+  },
+  buttonDisabled: {
+    backgroundColor: "#CCCCCC",
   },
   buttonLabel: {
     fontSize: RFValue(16),
-    fontWeight: "bold",
+    fontWeight: "500",
     lineHeight: RFValue(22),
-  },
-  buttonContent: {
-    paddingVertical: RFValue(8),
   },
 });
