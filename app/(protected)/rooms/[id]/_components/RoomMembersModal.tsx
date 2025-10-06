@@ -61,11 +61,19 @@ const RoomMembersModal: React.FC<RoomMembersModalProps> = ({
 
         {/* 중간: 멤버 목록 */}
         <ScrollView style={styles.memberListSection}>
-          {members.map((member, index) => (
-            <View key={index} style={styles.memberItem}>
-              <Text style={styles.memberName}>{member.name}</Text>
-            </View>
-          ))}
+          {members.map((member, index) => {
+            const phoneDisplay = member.phoneNumberSuffix
+              ? `(${member.phoneNumberSuffix})`
+              : "(번호 미등록)";
+
+            return (
+              <View key={index} style={styles.memberItem}>
+                <Text style={styles.memberName}>
+                  {member.name} {phoneDisplay}
+                </Text>
+              </View>
+            );
+          })}
         </ScrollView>
 
         {/* 하단: 초대 버튼 */}
