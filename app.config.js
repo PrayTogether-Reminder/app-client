@@ -96,6 +96,11 @@ module.exports = {
       "expo-build-properties",
       {
         android: {
+          minSdkVersion: 24, // Android 5.0 이상 (더 넓은 범위)
+          targetSdkVersion: 35,
+          compileSdkVersion: 35,
+          enableProguardInReleaseBuilds: true,
+          enableShrinkResourcesInReleaseBuilds: true,
           // usesCleartextTraffic: true, // http 요청 허용
         },
         ios: {
@@ -105,8 +110,15 @@ module.exports = {
     ],
     "@react-native-firebase/app",
     "@react-native-firebase/messaging",
+    [
+      "@react-native-firebase/crashlytics",
+      {
+        enabled: true,
+      }
+    ],
     "expo-notifications",
     "expo-dev-client",
+    "./plugins/withAndroidMainActivityPatch.js", // Android 10 onWindowFocusChanged 크래시 수정
   ],
   extra: {
     router: {
