@@ -32,13 +32,13 @@ export const useInviteRoomMemberMutation = () => {
   });
 };
 
-// 방 초대 mutation (v2 - friendIds 배열 기반)
+// 방 초대 mutation (v2 - memberIds 배열 기반)
 export const useInviteRoomMemberV2Mutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ roomId, friendIds }: InviteRoomMemberV2Request) => {
-      return invitationService.inviteRoomMemberV2(roomId, friendIds);
+    mutationFn: ({ roomId, memberIds }: InviteRoomMemberV2Request) => {
+      return invitationService.inviteRoomMemberV2(roomId, memberIds);
     },
     onError: (error: ApiError, variables, context) => {
       showAlert({
@@ -77,6 +77,7 @@ export const useUpdateInvitationStatusMutation = () => {
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.invitations] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.rooms] });
       showAlert({
         title: "응답 완료",
         message: data.message,
