@@ -4,6 +4,7 @@ const QUERY_KEYS = {
   prayerTitles: "prayerTitles",
   infinite: "infinite",
   members: "members",
+  search: "search",
   prayerContents: "prayerContents",
   profiles: "profiles",
   me: "me",

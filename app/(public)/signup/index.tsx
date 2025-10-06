@@ -18,6 +18,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { useSignupMutation } from "@/domain/auth/hooks/mutations/useAuthMutation";
 import EmailStep from "./_components/EmailStep";
 import NameStep from "./_components/NameStep";
+import PhoneStep from "./_components/PhoneStep";
 import PasswordStep from "./_components/PasswordStep";
 
 const SignupScreen: React.FC = () => {
@@ -38,6 +39,10 @@ const SignupScreen: React.FC = () => {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [isSendingOtp, setIsSendingOtp] = useState(false);
   const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
+
+  // phone step
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneError, setPhoneError] = useState("");
 
   // password step
   const [password, setPassword] = useState("");
@@ -89,14 +94,18 @@ const SignupScreen: React.FC = () => {
       setIsVerifyingOtp(false);
     }
     if (pageIndex === 1) {
-      setPassword("");
-      setConfirmPassword("");
-      setPasswordError("");
+      setPhoneNumber("");
+      setPhoneError("");
       setOtp("");
       setOtpError("");
       setIsOtpSent(false);
       setIsSendingOtp(false);
       setIsVerifyingOtp(false);
+    }
+    if (pageIndex === 2) {
+      setPassword("");
+      setConfirmPassword("");
+      setPasswordError("");
     }
   };
 
@@ -154,7 +163,7 @@ const SignupScreen: React.FC = () => {
 
     try {
       singup(
-        { name, email, password },
+        { name, email, password, phoneNumber },
         {
           onSuccess: () => {
             router.replace(path.showLogin());
@@ -228,8 +237,20 @@ const SignupScreen: React.FC = () => {
           />
         </View>
 
-        {/* 3단계: 비밀번호 설정 */}
+        {/* 3단계: 전화번호 입력 */}
         <View key="3" style={styles.eachView}>
+          <PhoneStep
+            phoneNumber={phoneNumber}
+            setPhoneNumber={setPhoneNumber}
+            phoneError={phoneError}
+            setPhoneError={setPhoneError}
+            onNext={goToNextPage}
+            isSubmitting={isSubmitting}
+          />
+        </View>
+
+        {/* 4단계: 비밀번호 설정 */}
+        <View key="4" style={styles.eachView}>
           <PasswordStep
             password={password}
             setPassword={setPassword}

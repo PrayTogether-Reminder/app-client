@@ -4,7 +4,7 @@ import { List, Button } from "react-native-paper";
 
 type ListSectionProps = {
   onGoToInvitations: () => void;
-  onGoToFriends: () => void;
+  // onGoToFriends: () => void;
   onGoToNotifications: () => void;
   onLogout: () => void;
   onDeleteAccount: () => void;
@@ -12,7 +12,7 @@ type ListSectionProps = {
 
 export default function ListSection({
   onGoToInvitations,
-  onGoToFriends,
+  // onGoToFriends,
   onGoToNotifications,
   onLogout,
   onDeleteAccount,
@@ -30,13 +30,13 @@ export default function ListSection({
           right={(props) => <List.Icon {...props} icon="chevron-right" />}
           onPress={onGoToInvitations}
         />
-        <List.Item
+        {/* <List.Item
           title="친구 관리"
           description="친구 목록과 요청을 관리하세요."
           left={(props) => <List.Icon {...props} icon="account-group-outline" />}
           right={(props) => <List.Icon {...props} icon="chevron-right" />}
           onPress={onGoToFriends}
-        />
+        /> */}
         <List.Item
           title="알림 설정"
           description="알림 수신 여부를 설정하세요."

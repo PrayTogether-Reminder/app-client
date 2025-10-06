@@ -99,6 +99,9 @@ const EmailStep: React.FC<EmailStepProps> = ({
       <Text variant="titleLarge" style={styles.stepTitle}>
         이메일 인증
       </Text>
+      <Text style={styles.description}>
+        사용자 인증을 위해 이메일 인증이 필요해요 ✉️
+      </Text>
       <View style={styles.emailContainer}>
         <TextInput
           label="이메일 주소"
@@ -193,11 +196,18 @@ const styles = StyleSheet.create({
     padding: RFValue(20),
   },
   stepTitle: {
-    marginBottom: RFValue(16),
+    marginBottom: RFValue(12),
     textAlign: "center",
     fontWeight: "bold",
     fontSize: RFValue(22),
     lineHeight: RFValue(28),
+  },
+  description: {
+    marginBottom: RFValue(16),
+    textAlign: "center",
+    fontSize: RFValue(14),
+    color: "#666",
+    lineHeight: RFValue(20),
   },
   input: {
     fontSize: RFValue(16),
