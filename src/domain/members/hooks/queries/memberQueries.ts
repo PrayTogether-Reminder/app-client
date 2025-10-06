@@ -26,12 +26,17 @@ export const useSearchMembersQuery = (
   options?: UseQueryOptions<MemberSearchResult[], Error>
 ) => {
   return useQuery({
+    queryKey: [QUERY_KEYS.members, QUERY_KEYS.search, name],
+
     queryFn: async () => {
       console.log("회원 검색:", name);
       return memberService.searchMembers(name);
     },
 
     enabled: name.length > 0, // 이름이 있을 때만 검색
+
+    staleTime: 0, // 항상 최신 데이터 가져오기
+    gcTime: 0, // 캐시 저장 안 함
 
     ...options,
   });
