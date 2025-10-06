@@ -17,6 +17,7 @@ import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color, backgroundColor } from "@/common/styles/color";
 import { useUpdateProfileMutation } from "@/domain/members/hooks/mutations/memberMutations";
+import path from "@/common/constants/path";
 
 export default function PhoneRegistrationScreen() {
   const router = useRouter();
@@ -63,7 +64,8 @@ export default function PhoneRegistrationScreen() {
       { phoneNumber },
       {
         onSuccess: () => {
-          router.back();
+          // 전화번호 등록 완료 후 기도방 목록 화면으로 이동
+          router.replace(path.showRoomList());
         },
         onError: () => {
           setError("전화번호 등록 중 오류가 발생했어요. 다시 시도해주세요.");
