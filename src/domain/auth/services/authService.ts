@@ -42,12 +42,14 @@ export const authService = {
   signup: async (
     name: string,
     email: string,
-    password: string
+    password: string,
+    phoneNumber: string
   ): Promise<MessageResponse> => {
     const response = await apiService.post<MessageResponse>(`/v1/auth/signup`, {
       name,
       email,
       password,
+      phoneNumber,
     } as SignupRequest);
     return response;
   },

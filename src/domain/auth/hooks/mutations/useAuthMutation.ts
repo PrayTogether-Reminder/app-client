@@ -55,8 +55,8 @@ export const useSignupMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ name, email, password }: SignupRequest) =>
-      authService.signup(name, email, password),
+    mutationFn: ({ name, email, password, phoneNumber }: SignupRequest) =>
+      authService.signup(name, email, password, phoneNumber),
     onSuccess: (data) => {
       showAlert({
         title: "회원가입 성공",
