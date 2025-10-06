@@ -9,9 +9,13 @@ export const useUpdateProfileMutation = () => {
 
   return useMutation({
     mutationFn: (data: UpdateMemberRequest) => memberService.updateProfile(data),
-    onSuccess: () => {
+    onSuccess: async () => {
       // 프로필 쿼리 무효화하여 최신 데이터 다시 가져오기
-      queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.profiles, QUERY_KEYS.me],
+      });
+      // 쿼리가 refetch될 때까지 대기
+      await queryClient.refetchQueries({
         queryKey: [QUERY_KEYS.profiles, QUERY_KEYS.me],
       });
     },
