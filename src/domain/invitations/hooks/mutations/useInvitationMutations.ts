@@ -75,9 +75,9 @@ export const useUpdateInvitationStatusMutation = () => {
         icon: "alert-circle",
       });
     },
-    onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.invitations] });
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.rooms] });
+    onSuccess: async (data, variables) => {
+      await queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.invitations] });
+      await queryClient.refetchQueries({ queryKey: [QUERY_KEYS.rooms] });
       showAlert({
         title: "응답 완료",
         message: data.message,
@@ -85,4 +85,4 @@ export const useUpdateInvitationStatusMutation = () => {
       });
     },
   });
-};
+};;
