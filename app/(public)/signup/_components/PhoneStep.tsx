@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Keyboard, StyleSheet } from "react-native";
+import { View, Keyboard, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import { TextInput, Button, HelperText, Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 
@@ -59,48 +59,52 @@ const PhoneStep: React.FC<PhoneStepProps> = ({
   };
 
   return (
-    <View style={styles.page}>
-      <Text variant="titleLarge" style={styles.stepTitle}>
-        전화번호 입력
-      </Text>
-      <Text style={styles.description}>
-        동명이인을 구분하기 위해 전화번호가 필요해요.{"\n"}
-        전화번호 뒷자리 4자리만 다른 사용자에게 공개돼요 😊
-      </Text>
-      <TextInput
-        label="전화번호"
-        value={phoneNumber}
-        onChangeText={handlePhoneNumberChange}
-        placeholder="010-0000-0000"
-        keyboardType="phone-pad"
-        mode="outlined"
-        style={styles.input}
-        maxLength={13}
-        error={!!phoneError}
-        disabled={isSubmitting}
-        left={<TextInput.Icon icon="cellphone" />}
-        theme={{
-          fonts: {
-            bodyLarge: { fontSize: RFValue(16) },
-          },
-        }}
-      />
-      <HelperText type="error" visible={!!phoneError} style={styles.helperText}>
-        {phoneError}
-      </HelperText>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.page}>
+        <Text variant="titleLarge" style={styles.stepTitle}>
+          전화번호 입력
+        </Text>
+        <Text style={styles.description}>
+          동명이인을 구분하기 위해 전화번호가 필요해요.{"\n"}
+          전화번호 뒷자리 4자리만 다른 사용자에게 공개돼요 😊
+        </Text>
+        <TextInput
+          label="전화번호"
+          value={phoneNumber}
+          onChangeText={handlePhoneNumberChange}
+          placeholder="010-0000-0000"
+          keyboardType="phone-pad"
+          mode="outlined"
+          style={styles.input}
+          maxLength={13}
+          error={!!phoneError}
+          disabled={isSubmitting}
+          returnKeyType="done"
+          onSubmitEditing={handleNext}
+          left={<TextInput.Icon icon="cellphone" />}
+          theme={{
+            fonts: {
+              bodyLarge: { fontSize: RFValue(16) },
+            },
+          }}
+        />
+        <HelperText type="error" visible={!!phoneError} style={styles.helperText}>
+          {phoneError}
+        </HelperText>
 
-      <View style={styles.buttonContainer}>
-        <Button
-          mode="contained"
-          onPress={handleNext}
-          style={styles.button}
-          labelStyle={styles.buttonLabel}
-          disabled={!phoneNumber || isSubmitting}
-        >
-          다음
-        </Button>
+        <View style={styles.buttonContainer}>
+          <Button
+            mode="contained"
+            onPress={handleNext}
+            style={styles.button}
+            labelStyle={styles.buttonLabel}
+            disabled={!phoneNumber || isSubmitting}
+          >
+            다음
+          </Button>
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 

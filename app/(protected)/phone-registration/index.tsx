@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import {
   TextInput,
@@ -80,63 +81,67 @@ export default function PhoneRegistrationScreen() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
       >
-        <View style={styles.content}>
-          {/* 상단 헤더 */}
-          <View style={styles.headerContainer}>
-            <Text variant="headlineMedium" style={styles.title}>
-              안녕하세요 😃
-            </Text>
-            <Text style={styles.description}>
-              기도방 초대를 더욱 쉽게 하기 위해{"\n"}
-              기도자님의 전화번호가 필요해요.{"\n\n"}
-              <Text style={styles.highlight}>동명이인을 구분하기 위한 목적으로만 사용</Text>되며,{"\n"}
-              전화번호 뒷자리 4자리만{"\n"}
-              다른 사용자에게 공개돼요 😊{"\n\n"}
-              소중한 개인정보는 안전하게 보호됩니다.
-            </Text>
-          </View>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.content}>
+            {/* 상단 헤더 */}
+            <View style={styles.headerContainer}>
+              <Text variant="headlineMedium" style={styles.title}>
+                안녕하세요 😃
+              </Text>
+              <Text style={styles.description}>
+                기도방 초대를 더욱 쉽게 하기 위해{"\n"}
+                기도자님의 전화번호가 필요해요.{"\n\n"}
+                <Text style={styles.highlight}>동명이인을 구분하기 위한 목적으로만 사용</Text>되며,{"\n"}
+                전화번호 뒷자리 4자리만{"\n"}
+                다른 사용자에게 공개돼요 😊{"\n\n"}
+                소중한 개인정보는 안전하게 보호됩니다.
+              </Text>
+            </View>
 
-          {/* 입력 폼 영역 */}
-          <View style={styles.formContainer}>
-            <TextInput
-              label="전화번호"
-              value={phoneNumber}
-              onChangeText={handlePhoneNumberChange}
-              placeholder="010-0000-0000"
-              keyboardType="phone-pad"
-              mode="outlined"
-              style={styles.input}
-              maxLength={13}
-              error={!!error}
-              disabled={isPending}
-              left={<TextInput.Icon icon="cellphone" />}
-              theme={{
-                fonts: {
-                  bodyLarge: { fontSize: RFValue(16) },
-                },
-              }}
-            />
-            <HelperText type="error" visible={!!error} style={styles.errorText}>
-              {error}
-            </HelperText>
-          </View>
+            {/* 입력 폼 영역 */}
+            <View style={styles.formContainer}>
+              <TextInput
+                label="전화번호"
+                value={phoneNumber}
+                onChangeText={handlePhoneNumberChange}
+                placeholder="010-0000-0000"
+                keyboardType="phone-pad"
+                mode="outlined"
+                style={styles.input}
+                maxLength={13}
+                error={!!error}
+                disabled={isPending}
+                returnKeyType="done"
+                onSubmitEditing={handleSubmit}
+                left={<TextInput.Icon icon="cellphone" />}
+                theme={{
+                  fonts: {
+                    bodyLarge: { fontSize: RFValue(16) },
+                  },
+                }}
+              />
+              <HelperText type="error" visible={!!error} style={styles.errorText}>
+                {error}
+              </HelperText>
+            </View>
 
-          {/* 하단 액션 버튼 영역 */}
-          <View style={styles.actionContainer}>
-            <Button
-              mode="contained"
-              onPress={handleSubmit}
-              style={styles.button}
-              labelStyle={styles.buttonLabel}
-              disabled={isPending || phoneNumber.length === 0}
-              loading={isPending}
-              uppercase={false}
-              contentStyle={styles.buttonContent}
-            >
-              {isPending ? "등록 중..." : "다음"}
-            </Button>
+            {/* 하단 액션 버튼 영역 */}
+            <View style={styles.actionContainer}>
+              <Button
+                mode="contained"
+                onPress={handleSubmit}
+                style={styles.button}
+                labelStyle={styles.buttonLabel}
+                disabled={isPending || phoneNumber.length === 0}
+                loading={isPending}
+                uppercase={false}
+                contentStyle={styles.buttonContent}
+              >
+                {isPending ? "등록 중..." : "다음"}
+              </Button>
+            </View>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

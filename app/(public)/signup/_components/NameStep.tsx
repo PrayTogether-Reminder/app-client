@@ -12,7 +12,6 @@ import {
   Button,
   HelperText,
   Text,
-  Checkbox,
   IconButton,
 } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -200,13 +199,22 @@ const NameStep: React.FC<NameStepProps> = ({
           {/* 서비스 이용약관 */}
           <View style={styles.agreementItem}>
             <View style={styles.checkboxRow}>
-              <Checkbox
-                status={isTermsAgreed ? "checked" : "unchecked"}
+              <TouchableOpacity
                 onPress={handleTermsCheckbox}
                 disabled={isSubmitting}
-                color={color.secondary || "#FF6B6B"}
-                uncheckedColor="#757575"
-              />
+                activeOpacity={0.7}
+              >
+                <View
+                  style={[
+                    styles.customCheckbox,
+                    isTermsAgreed && styles.customCheckboxChecked,
+                  ]}
+                >
+                  {isTermsAgreed && (
+                    <Text style={styles.checkmark}>✓</Text>
+                  )}
+                </View>
+              </TouchableOpacity>
               <TouchableOpacity
                 style={styles.agreementTextContainer}
                 onPress={() => setShowModal("terms")}
@@ -231,13 +239,22 @@ const NameStep: React.FC<NameStepProps> = ({
           {/* 개인정보 처리방침 */}
           <View style={styles.agreementItem}>
             <View style={styles.checkboxRow}>
-              <Checkbox
-                status={isPrivacyAgreed ? "checked" : "unchecked"}
+              <TouchableOpacity
                 onPress={handlePrivacyCheckbox}
                 disabled={isSubmitting}
-                color={color.secondary || "#FF6B6B"}
-                uncheckedColor="#757575"
-              />
+                activeOpacity={0.7}
+              >
+                <View
+                  style={[
+                    styles.customCheckbox,
+                    isPrivacyAgreed && styles.customCheckboxChecked,
+                  ]}
+                >
+                  {isPrivacyAgreed && (
+                    <Text style={styles.checkmark}>✓</Text>
+                  )}
+                </View>
+              </TouchableOpacity>
               <TouchableOpacity
                 style={styles.agreementTextContainer}
                 onPress={() => setShowModal("privacy")}
@@ -360,9 +377,28 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  customCheckbox: {
+    width: RFValue(24),
+    height: RFValue(24),
+    borderWidth: 2,
+    borderColor: "#757575",
+    borderRadius: RFValue(4),
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+  },
+  customCheckboxChecked: {
+    backgroundColor: color.secondary || "#FF6B6B",
+    borderColor: color.secondary || "#FF6B6B",
+  },
+  checkmark: {
+    color: "#fff",
+    fontSize: RFValue(18),
+    fontWeight: "bold",
+  },
   agreementTextContainer: {
     flex: 1,
-    marginLeft: RFValue(8),
+    marginLeft: RFValue(12),
   },
   agreementText: {
     fontSize: RFValue(14),
