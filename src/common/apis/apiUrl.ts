@@ -18,7 +18,7 @@ const getApiUrl = (): string => {
           ".env 파일에 EXPO_PUBLIC_API_URL이 설정되어 있는지 확인하세요.",
       });
       // default
-      return "http://localhost:3000/api/v1";
+      return "http://localhost:3000/api";
     } else {
       throw new Error(
         "API URL이 설정되지 않았습니다. EAS Secret이 제대로 설정되었는지 확인하세요."
