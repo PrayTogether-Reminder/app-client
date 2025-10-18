@@ -1,10 +1,11 @@
 // PrayerCard.tsx
-import React, { useState } from "react";
+import React from "react";
 import { View, StyleSheet, Animated, ScrollView, TouchableOpacity, Platform } from "react-native";
-import { Card, Text, Snackbar } from "react-native-paper";
+import { Card, Text } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
 import * as Clipboard from "expo-clipboard";
+import Toast from "react-native-toast-message";
 import { color } from "../../../../../src/common/styles/color";
 import { PrayerContent } from "../../../../../src/domain/prayers/types/prayerContent";
 
@@ -24,12 +25,19 @@ export default function PrayerCard({
   cardHeight,
 }: PrayerCardProps) {
   const cardBorderStyle = { borderLeftColor: color.secondary };
-  const [snackbarVisible, setSnackbarVisible] = useState(false);
 
   const handleLongPress = () => {
     const fullContent = `${item.memberName}\n최근 작성자: ${item.writerName}\n\n${item.content}`;
     Clipboard.setString(fullContent);
-    setSnackbarVisible(true);
+    Toast.show({
+      type: "success",
+      text1: "복사 완료",
+      text2: "기도 내용이 복사되었습니다",
+      position: "top",
+      visibilityTime: 2000,
+      autoHide: true,
+      topOffset: 60,
+    });
   };
 
   return (
@@ -102,14 +110,6 @@ export default function PrayerCard({
         </Card.Content>
       </Card>
       </TouchableOpacity>
-      <Snackbar
-        visible={snackbarVisible}
-        onDismiss={() => setSnackbarVisible(false)}
-        duration={2000}
-        style={styles.snackbar}
-      >
-        기도 내용이 복사되었습니다
-      </Snackbar>
     </Animated.View>
   );
 }
@@ -190,12 +190,5 @@ const styles = StyleSheet.create({
     fontSize: RFValue(16),
     lineHeight: RFValue(24),
     color: "#333",
-  },
-  snackbar: {
-    position: "absolute",
-    bottom: RFValue(20),
-    alignSelf: "center",
-    minWidth: "80%",
-    maxWidth: "90%",
   },
 });

@@ -16,6 +16,8 @@ import CustomQueryClientProvider from "../src/common/hooks/queries/customQueryCl
 import AuthEventListener from "./../src/domain/auth/events/authEventListener";
 import { GlobalAlertModal } from "@/common/components/modal/GlobalAlertModal";
 import UpdateModalsManager from "@/common/components/UpdateModalsManager";
+import Toast from "react-native-toast-message";
+import { toastConfig } from "@/common/components/toast/ToastConfig";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -46,31 +48,34 @@ export default function RootLayout() {
   }
 
   return (
-    <SafeAreaProvider>
-      <PaperProvider theme={theme}>
-        {/* catch rendering error */}
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <CustomQueryClientProvider>
-            <StatusBar style="light" />
-            <AuthEventListener />
-            <AuthStateListener>
-              <GlobalAlertModal />
-              <UpdateModalsManager />
-              <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="index" />
+    <>
+      <SafeAreaProvider>
+        <PaperProvider theme={theme}>
+          {/* catch rendering error */}
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <CustomQueryClientProvider>
+              <StatusBar style="light" />
+              <AuthEventListener />
+              <AuthStateListener>
+                <GlobalAlertModal />
+                <UpdateModalsManager />
+                <Stack screenOptions={{ headerShown: false }}>
+                  <Stack.Screen name="index" />
 
-                <Stack.Screen
-                  name="(protected)/prayers/creation/index"
-                  options={{
-                    animation: "slide_from_bottom",
-                    presentation: "modal",
-                  }}
-                />
-              </Stack>
-            </AuthStateListener>
-          </CustomQueryClientProvider>
-        </ErrorBoundary>
-      </PaperProvider>
-    </SafeAreaProvider>
+                  <Stack.Screen
+                    name="(protected)/prayers/creation/index"
+                    options={{
+                      animation: "slide_from_bottom",
+                      presentation: "modal",
+                    }}
+                  />
+                </Stack>
+              </AuthStateListener>
+            </CustomQueryClientProvider>
+          </ErrorBoundary>
+        </PaperProvider>
+      </SafeAreaProvider>
+      <Toast config={toastConfig} />
+    </>
   );
 }
