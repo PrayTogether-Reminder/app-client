@@ -1,9 +1,10 @@
 // PrayerCard.tsx
-import React from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, Animated, ScrollView, TouchableOpacity, Platform } from "react-native";
-import { Card, Text } from "react-native-paper";
+import { Card, Text, Snackbar } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
+import * as Clipboard from "expo-clipboard";
 import { color } from "../../../../../src/common/styles/color";
 import { PrayerContent } from "../../../../../src/domain/prayers/types/prayerContent";
 
@@ -23,7 +24,13 @@ export default function PrayerCard({
   cardHeight,
 }: PrayerCardProps) {
   const cardBorderStyle = { borderLeftColor: color.secondary };
-  
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+
+  const handleLongPress = () => {
+    const fullContent = `${item.memberName}\n최근 작성자: ${item.writerName}\n\n${item.content}`;
+    Clipboard.setString(fullContent);
+    setSnackbarVisible(true);
+  };
 
   return (
     <Animated.View
@@ -35,13 +42,18 @@ export default function PrayerCard({
         },
       ]}
     >
-      <Card
-        style={[
-          styles.prayerCard,
-          cardBorderStyle,
-          { height: cardHeight * 0.9 },
-        ]}
+      <TouchableOpacity
+        onLongPress={handleLongPress}
+        activeOpacity={0.95}
+        style={{ width: "95%" }}
       >
+        <Card
+          style={[
+            styles.prayerCard,
+            cardBorderStyle,
+            { height: cardHeight * 0.9 },
+          ]}
+        >
         <Card.Content style={styles.cardContentContainer}>
           <View style={styles.cardHeader}>
             <View style={styles.titleSection}>
@@ -83,10 +95,21 @@ export default function PrayerCard({
             showsVerticalScrollIndicator={true}
             scrollEventThrottle={16}
           >
-            <Text style={styles.prayerContentText}>{item.content}</Text>
+            <Text style={styles.prayerContentText}>
+              {item.content}
+            </Text>
           </ScrollView>
         </Card.Content>
       </Card>
+      </TouchableOpacity>
+      <Snackbar
+        visible={snackbarVisible}
+        onDismiss={() => setSnackbarVisible(false)}
+        duration={2000}
+        style={styles.snackbar}
+      >
+        기도 내용이 복사되었습니다
+      </Snackbar>
     </Animated.View>
   );
 }
@@ -97,7 +120,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   prayerCard: {
-    width: "95%",
+    width: "100%",
     borderRadius: RFValue(16),
     elevation: 4,
     backgroundColor: color.white,
@@ -167,5 +190,12 @@ const styles = StyleSheet.create({
     fontSize: RFValue(16),
     lineHeight: RFValue(24),
     color: "#333",
+  },
+  snackbar: {
+    position: "absolute",
+    bottom: RFValue(20),
+    alignSelf: "center",
+    minWidth: "80%",
+    maxWidth: "90%",
   },
 });
