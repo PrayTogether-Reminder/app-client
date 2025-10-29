@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
+import { useLocalSearchParams } from "expo-router";
 
 import { backgroundColor } from "@/common/styles/color";
 import Top1Body10Bottom1 from "../../../../src/common/layout/Top1Body10Bottom1";
@@ -12,6 +13,11 @@ import { useCloseOnBack } from "@/common/services/back-handler/useCloseOnBack";
 import { Fragment } from "react";
 
 export default function PrayerReadScreen() {
+  const params = useLocalSearchParams();
+  const prayerTitleId = Number(params.id);
+  const roomId = params.roomId ? Number(params.roomId) : undefined;
+  console.log("PrayerReadScreen - prayerTitleId from URL:", prayerTitleId, "roomId:", roomId);
+
   const { mutate: notifyPrayerCompletion, isPending } = usePrayerCompletionMutation();
   const [isEditMode, setIsEditMode] = useState(false);
 
@@ -24,24 +30,27 @@ export default function PrayerReadScreen() {
     <Fragment>
       <Top1Body10Bottom1
         tops={[
-          <PrayerReadTop 
-            key="top" 
+          <PrayerReadTop
+            key="top"
             isEditMode={isEditMode}
             onToggleEditMode={() => setIsEditMode(!isEditMode)}
           />
         ]}
         bodies={[
-          <PrayerReadBody 
-            key="body" 
+          <PrayerReadBody
+            key="body"
+            prayerTitleId={prayerTitleId}
             isEditMode={isEditMode}
             onEditModeChange={setIsEditMode}
           />
         ]}
         bottoms={[
-          <PrayerReadBottom 
+          <PrayerReadBottom
             key="bottom"
             onPrayerComplete={notifyPrayerCompletion}
             isPending={isPending}
+            prayerTitleId={prayerTitleId}
+            roomId={roomId}
           />
         ]}
       />

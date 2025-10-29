@@ -1,10 +1,8 @@
 import { getApp } from "@react-native-firebase/app";
 import {
-  getInitialNotification,
   getMessaging,
   getToken,
   onMessage,
-  onNotificationOpenedApp,
   subscribeToTopic,
   unsubscribeFromTopic,
   requestPermission,
@@ -151,15 +149,21 @@ class FcmManager {
     const app = getApp();
     const messagingInstance = getMessaging(app);
 
-    // 포그라운드 메시지 핸들러
+    // 포그라운드 메시지 핸들러 - FCM 메시지를 expo-notifications로 전달
     const unsubscribeForeground = onMessage(
       messagingInstance,
       async (remoteMessage) => {
-        console.log("Foreground Message received:", remoteMessage);
+        console.log("========================================");
+        console.log("📬 FCM Foreground message received");
+        console.log("Data:", JSON.stringify(remoteMessage.data, null, 2));
+        console.log("========================================");
+
+        // FCM 메시지를 expo-notifications로 전달
+        // 백엔드에서 Title, Body를 대문자로 보냄
         await Notifications.scheduleNotificationAsync({
           content: {
-            title: remoteMessage.notification?.title || "새 알림",
-            body: remoteMessage.notification?.body || "메시지 오류",
+            title: (remoteMessage.data?.Title as string) || "새 알림",
+            body: (remoteMessage.data?.Body as string) || "메시지 오류",
             data: remoteMessage.data || {},
           },
           trigger: null, // null = 즉시 표시
@@ -167,26 +171,7 @@ class FcmManager {
       }
     );
 
-    // 백그라운드 클릭 핸들러
-    onNotificationOpenedApp(messagingInstance, (remoteMessage) => {
-      console.log(
-        "Notification caused app to open from background state:",
-        remoteMessage
-      );
-      // 알림으로 앱이 열렸을 때의 처리 (예: 특정 화면으로 이동)
-    });
-
-    // 종료 상태에서 열림 체크
-    getInitialNotification(messagingInstance).then((remoteMessage) => {
-      if (remoteMessage) {
-        console.log(
-          "Notification caused app to open from quit state:",
-          remoteMessage
-        );
-        // 알림으로 앱이 열렸을 때의 처리
-      }
-    });
-
+    // cleanup 함수 반환
     return unsubscribeForeground;
   }
 }

@@ -11,12 +11,19 @@ import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
 interface PrayerReadBottomProps {
   onPrayerComplete: (params: { prayerTitleId: number; roomId: number }) => void;
   isPending: boolean;
+  prayerTitleId?: number;
+  roomId?: number;
 }
 
-function PrayerReadBottom({ onPrayerComplete, isPending }: PrayerReadBottomProps) {
+function PrayerReadBottom({ onPrayerComplete, isPending, prayerTitleId: propPrayerTitleId, roomId: propRoomId }: PrayerReadBottomProps) {
   const router = useRouter();
-  const prayerTitleId = useSelectedPrayerTitleStore().selectedPrayerTitle?.id ?? 0;
-  const roomId = useSelectedRoomStore().selectedRoom?.id ?? 0;
+  const storePrayerTitleId = useSelectedPrayerTitleStore().selectedPrayerTitle?.id ?? 0;
+  const storeRoomId = useSelectedRoomStore().selectedRoom?.id ?? 0;
+
+  // props를 우선 사용하고, 없으면 store에서 가져옴
+  const prayerTitleId = propPrayerTitleId ?? storePrayerTitleId;
+  const roomId = propRoomId ?? storeRoomId;
+
   const [visible, setVisible] = useState(false);
 
   const showModal = () => setVisible(true);

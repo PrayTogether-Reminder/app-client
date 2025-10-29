@@ -42,7 +42,7 @@ export default function PrayerRoomScreen(): React.ReactElement {
       />
       <Top1Body10Bottom1
         tops={[<PrayerRoomTop openRightMenu={openRightMenu} />]}
-        bodies={[<PrayerRoomBody />]}
+        bodies={[<PrayerRoomBody roomId={roomId} />]}
         bottoms={[<PrayerRoomBottom />]}
       />
     </Fragment>

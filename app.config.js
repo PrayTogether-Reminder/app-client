@@ -30,7 +30,7 @@ const currentConfig = config[environment] || config.production;
 module.exports = {
   name: currentConfig.name,
   slug: "app-client",
-  version: "1.0.5",
+  version: "1.0.6",
   orientation: "portrait",
   icon: "./assets/main_logo.png",
   userInterfaceStyle: "light",
@@ -72,7 +72,7 @@ module.exports = {
     entitlements: {
       "aps-environment": "production", // 운영 환경에서 푸시 알림 사용
     },
-    buildNumber: "1.0.17",
+    buildNumber: "1.0.18",
   },
   android: {
     adaptiveIcon: {
@@ -84,7 +84,7 @@ module.exports = {
     googleServicesFile:
       process.env.GOOGLE_SERVICES_JSON || "./google-services.json",
     permissions: ["RECEIVE_BOOT_COMPLETED", "VIBRATE"],
-    versionCode: 14,
+    versionCode: 15,
   },
   web: {
     favicon: "./assets/main_logo.png",

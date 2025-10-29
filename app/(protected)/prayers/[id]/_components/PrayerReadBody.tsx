@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import { FAB } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
+import { useLocalSearchParams } from "expo-router";
 import { PrayerContent } from "../../../../../src/domain/prayers/types/prayerContent";
 import TitleCard from "./TitleCard";
 import PrayerCardList from "./PrayerCardList";
@@ -19,14 +20,25 @@ import PrayerTitleEditDialog from "./dialogs/PrayerTitleEditDialog";
 import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
 
 interface PrayerReadBodyProps {
+  prayerTitleId: number;
   isEditMode: boolean;
   onEditModeChange: (value: boolean) => void;
 }
 
-function PrayerReadBody({ isEditMode, onEditModeChange }: PrayerReadBodyProps) {
+function PrayerReadBody({ prayerTitleId, isEditMode, onEditModeChange }: PrayerReadBodyProps) {
+  const params = useLocalSearchParams();
+  const roomIdFromUrl = params.roomId ? Number(params.roomId) : null;
+  const titleFromUrl = params.title ? decodeURIComponent(params.title as string) : null;
+
   const { selectedPrayerTitle } = useSelectedPrayerTitleStore();
-  const titleText = selectedPrayerTitle?.title ?? "기도 제목을 알 수 없습니다.";
   const { selectedRoom } = useSelectedRoomStore();
+
+  // URL 파라미터를 우선 사용하고, 없으면 store에서 가져옴
+  const roomId = roomIdFromUrl ?? selectedRoom?.id ?? null;
+  const titleId = prayerTitleId ?? selectedPrayerTitle?.id ?? null;
+  const titleText = titleFromUrl ?? selectedPrayerTitle?.title ?? "기도 제목을 알 수 없습니다.";
+
+  console.log("PrayerReadBody - roomId:", roomId, "titleId:", titleId, "title:", titleText);
   
   // 상태 관리
   const [editingTitle, setEditingTitle] = useState(titleText);
@@ -35,7 +47,7 @@ function PrayerReadBody({ isEditMode, onEditModeChange }: PrayerReadBodyProps) {
   const [editingContent, setEditingContent] = useState<PrayerContent | null>(null);
   const [deletingContent, setDeletingContent] = useState<PrayerContent | null>(null);
 
-  // API 호출
+  // API 호출 - props/URL 파라미터를 우선 사용
   const {
     data: prayerContents,
     isLoading,
@@ -43,8 +55,8 @@ function PrayerReadBody({ isEditMode, onEditModeChange }: PrayerReadBodyProps) {
     error,
     refetch,
   } = usePrayerContentsQuery(
-    selectedRoom?.id ?? null,
-    selectedPrayerTitle?.id ?? null
+    roomId,
+    titleId
   );
 
   // Mutations
@@ -55,12 +67,12 @@ function PrayerReadBody({ isEditMode, onEditModeChange }: PrayerReadBodyProps) {
 
   // 제목 수정 핸들러
   const handleTitleSave = (newTitle: string) => {
-    if (!selectedPrayerTitle?.id) {
+    if (!titleId) {
       console.error('Prayer title ID is missing');
       return;
     }
     updateTitle({
-      prayerTitleId: selectedPrayerTitle.id,
+      prayerTitleId: titleId,
       title: newTitle
     });
     setEditingTitle(newTitle);
@@ -84,9 +96,9 @@ function PrayerReadBody({ isEditMode, onEditModeChange }: PrayerReadBodyProps) {
   };
 
   const confirmDeleteContent = () => {
-    if (deletingContent && selectedPrayerTitle?.id && deletingContent.id) {
+    if (deletingContent && titleId && deletingContent.id) {
       deleteContent({
-        prayerTitleId: selectedPrayerTitle.id,
+        prayerTitleId: titleId,
         contentId: deletingContent.id
       });
       setDeletingContent(null);
@@ -132,12 +144,12 @@ function PrayerReadBody({ isEditMode, onEditModeChange }: PrayerReadBodyProps) {
           onDismiss={() => setIsAddDialogOpen(false)}
           existingPrayerContents={prayerContents || []}
           onAdd={(memberName, content) => {
-            if (!selectedPrayerTitle?.id) {
+            if (!titleId) {
               console.error('Prayer title ID is missing');
               return;
             }
             createContent({
-              prayerTitleId: selectedPrayerTitle.id,
+              prayerTitleId: titleId,
               memberName,
               content
             });
@@ -189,12 +201,12 @@ function PrayerReadBody({ isEditMode, onEditModeChange }: PrayerReadBodyProps) {
         existingPrayerContents={prayerContents || []}
         onAdd={(memberName, content) => {
           console.log('PrayerReadBody - prayerContents:', prayerContents);
-          if (!selectedPrayerTitle?.id) {
+          if (!titleId) {
             console.error('Prayer title ID is missing');
             return;
           }
           createContent({
-            prayerTitleId: selectedPrayerTitle.id,
+            prayerTitleId: titleId,
             memberName,
             content
           });
@@ -209,12 +221,12 @@ function PrayerReadBody({ isEditMode, onEditModeChange }: PrayerReadBodyProps) {
           onDismiss={() => setEditingContent(null)}
           content={editingContent}
           onSave={(content) => {
-            if (!selectedPrayerTitle?.id || !editingContent.id) {
+            if (!titleId || !editingContent.id) {
               console.error('Required IDs are missing');
               return;
             }
             updateContent({
-              prayerTitleId: selectedPrayerTitle.id,
+              prayerTitleId: titleId,
               contentId: editingContent.id,
               content
             });

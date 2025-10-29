@@ -28,8 +28,14 @@ const EmptyPrayerTitleList = () => {
   );
 };
 
-export default function PrayerTitleList(): JSX.Element {
-  const roomId = useSelectedRoomStore().selectedRoom?.id ?? null;
+interface PrayerTitleListProps {
+  roomId?: number;
+}
+
+export default function PrayerTitleList({ roomId: propRoomId }: PrayerTitleListProps = {}): JSX.Element {
+  // props로 받은 roomId를 우선 사용하고, 없으면 store에서 가져옴
+  const storeRoomId = useSelectedRoomStore().selectedRoom?.id ?? null;
+  const roomId = propRoomId ?? storeRoomId;
   console.log("render room by id =", roomId);
   const router = useRouter();
   const { select: selectTitle } = useSelectedPrayerTitleStore();
