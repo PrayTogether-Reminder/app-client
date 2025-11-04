@@ -26,7 +26,7 @@ export default function PrayerCard({
 }: PrayerCardProps) {
   const cardBorderStyle = { borderLeftColor: color.secondary };
 
-  const handleLongPress = () => {
+  const handleCopy = () => {
     const fullContent = `${item.memberName}\n최근 작성자: ${item.writerName}\n\n${item.content}`;
     Clipboard.setString(fullContent);
     Toast.show({
@@ -50,50 +50,61 @@ export default function PrayerCard({
         },
       ]}
     >
-      <TouchableOpacity
-        onLongPress={handleLongPress}
-        activeOpacity={0.95}
-        style={{ width: "95%" }}
+      <Card
+        style={[
+          styles.prayerCard,
+          cardBorderStyle,
+          { height: cardHeight * 0.9, width: "95%" },
+        ]}
       >
-        <Card
-          style={[
-            styles.prayerCard,
-            cardBorderStyle,
-            { height: cardHeight * 0.9 },
-          ]}
-        >
         <Card.Content style={styles.cardContentContainer}>
           <View style={styles.cardHeader}>
             <View style={styles.titleSection}>
               <Text style={styles.nameText}>{item.memberName}</Text>
               <Text style={styles.writerText}>최근 작성자: {item.writerName}</Text>
             </View>
-            {/* 버튼 공간은 항상 확보, 편집 모드에 따라 표시/숨김만 처리 */}
-            <View style={[styles.buttonContainer, { opacity: (onEdit || onDelete) ? 1 : 0 }]}>
-              <TouchableOpacity
-                onPress={() => onEdit && onEdit(item)}
-                style={styles.iconButton}
-                activeOpacity={Platform.OS === 'ios' ? 0.8 : 0.2}
-                disabled={!onEdit}
-              >
-                <MaterialCommunityIcons
-                  name="pencil"
-                  size={RFValue(18)}
-                  color={color.secondary}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => onDelete && onDelete(item)}
-                style={[styles.iconButton, { marginLeft: RFValue(8) }]}
-                activeOpacity={Platform.OS === 'ios' ? 0.8 : 0.2}
-                disabled={!onDelete}
-              >
-                <MaterialCommunityIcons
-                  name="delete"
-                  size={RFValue(18)}
-                  color="#FF6B6B"
-                />
-              </TouchableOpacity>
+            {/* 편집 모드가 아닐 때는 복사 버튼, 편집 모드일 때는 수정/삭제 버튼 */}
+            <View style={styles.buttonContainer}>
+              {(onEdit || onDelete) ? (
+                <>
+                  <TouchableOpacity
+                    onPress={() => onEdit && onEdit(item)}
+                    style={styles.iconButton}
+                    activeOpacity={Platform.OS === 'ios' ? 0.8 : 0.2}
+                    disabled={!onEdit}
+                  >
+                    <MaterialCommunityIcons
+                      name="pencil"
+                      size={RFValue(18)}
+                      color={color.secondary}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => onDelete && onDelete(item)}
+                    style={[styles.iconButton, { marginLeft: RFValue(8) }]}
+                    activeOpacity={Platform.OS === 'ios' ? 0.8 : 0.2}
+                    disabled={!onDelete}
+                  >
+                    <MaterialCommunityIcons
+                      name="delete"
+                      size={RFValue(18)}
+                      color="#FF6B6B"
+                    />
+                  </TouchableOpacity>
+                </>
+              ) : (
+                <TouchableOpacity
+                  onPress={handleCopy}
+                  style={styles.iconButton}
+                  activeOpacity={Platform.OS === 'ios' ? 0.8 : 0.2}
+                >
+                  <MaterialCommunityIcons
+                    name="content-copy"
+                    size={RFValue(18)}
+                    color={color.secondary}
+                  />
+                </TouchableOpacity>
+              )}
             </View>
           </View>
           <View style={styles.divider} />
@@ -109,7 +120,6 @@ export default function PrayerCard({
           </ScrollView>
         </Card.Content>
       </Card>
-      </TouchableOpacity>
     </Animated.View>
   );
 }
