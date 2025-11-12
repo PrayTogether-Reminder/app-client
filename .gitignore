@@ -53,7 +53,8 @@ db.json
 *.apk
 *.app/**
 *.tar.gz
+*.aab
 
 # firebase
 GoogleService-Info.plist
-google-services.json
+google-services*.json
