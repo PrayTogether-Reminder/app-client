@@ -54,6 +54,7 @@ db.json
 *.app/**
 *.tar.gz
 *.aab
+*.ipa
 
 # firebase
 GoogleService-Info.plist
