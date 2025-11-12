@@ -178,14 +178,6 @@ export default function RootLayout() {
                 <UpdateModalsManager />
                 <Stack screenOptions={{ headerShown: false }}>
                   <Stack.Screen name="index" />
-
-                  <Stack.Screen
-                    name="(protected)/prayers/creation/index"
-                    options={{
-                      animation: "slide_from_bottom",
-                      presentation: "modal",
-                    }}
-                  />
                 </Stack>
               </AuthStateListener>
             </CustomQueryClientProvider>

@@ -1,5 +1,5 @@
 import { usePrayerCreationStore } from "@/domain/prayers/stores/usePrayerCreationStore";
-import { router } from "expo-router";
+import { router, Stack } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { BackHandler, SafeAreaView, StyleSheet, View } from "react-native";
 import Top1Body10Bottom1 from "../../../../src/common/layout/Top1Body10Bottom1";
@@ -52,8 +52,15 @@ export default function PrayerCreationScreen() {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Top1Body10Bottom1
+    <>
+      <Stack.Screen
+        options={{
+          animation: "slide_from_bottom",
+          presentation: "modal",
+        }}
+      />
+      <View style={styles.container}>
+        <Top1Body10Bottom1
         tops={[
           <PrayerCreationTop
             roomName={room?.name}
@@ -75,18 +82,19 @@ export default function PrayerCreationScreen() {
         ]}
       />
 
-      {/* 기도 제목 작성 취소 모달 */}
-      <ConfirmationModal
-        visible={prayerCancellationDialog}
-        onDismiss={cancelPrayerCancellation}
-        onConfirm={confirmPrayerCancellation}
-        icon="alert-circle"
-        title="작성 취소"
-        content="기도 제목 작성을 취소하시겠습니까?"
-        confirmText="확인"
-        cancelText="돌아가기"
-      />
-    </View>
+        {/* 기도 제목 작성 취소 모달 */}
+        <ConfirmationModal
+          visible={prayerCancellationDialog}
+          onDismiss={cancelPrayerCancellation}
+          onConfirm={confirmPrayerCancellation}
+          icon="alert-circle"
+          title="작성 취소"
+          content="기도 제목 작성을 취소하시겠습니까?"
+          confirmText="확인"
+          cancelText="돌아가기"
+        />
+      </View>
+    </>
   );
 }
 
