@@ -30,7 +30,7 @@ const currentConfig = config[environment] || config.production;
 module.exports = {
   name: currentConfig.name,
   slug: "app-client",
-  version: "1.0.7",
+  version: "1.0.8",
   orientation: "portrait",
   icon: "./assets/main_logo.png",
   userInterfaceStyle: "light",
@@ -46,9 +46,7 @@ module.exports = {
     fallbackToCacheTimeout: 30000,
     url: "https://u.expo.dev/193687a6-0b20-445e-8ecd-5b35de386246"
   },
-  runtimeVersion: {
-    policy: "appVersion"
-  },
+  runtimeVersion: "1.0.8",
   scheme: "pray-together-scheme",
   splash: {
     image: "./assets/main_logo.png",
@@ -72,7 +70,7 @@ module.exports = {
     entitlements: {
       "aps-environment": "production", // 운영 환경에서 푸시 알림 사용
     },
-    buildNumber: "1.0.19",
+    buildNumber: "1.0.20",
   },
   android: {
     adaptiveIcon: {
@@ -84,7 +82,7 @@ module.exports = {
     googleServicesFile:
       process.env.GOOGLE_SERVICES_JSON || "./google-services.json",
     permissions: ["RECEIVE_BOOT_COMPLETED", "VIBRATE"],
-    versionCode: 16,
+    versionCode: 17,
   },
   web: {
     favicon: "./assets/main_logo.png",
