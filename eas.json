@@ -52,26 +52,6 @@
     }
   },
  "submit": {
-    "production": {
-      "ios": {
-        "appleId": "email@example.com",
-        "ascAppId": "number",
-        "appleTeamId": "code"
-      }
-    },
-    "preview": {
-      "ios": {
-        "appleId": "email@example.com",
-        "ascAppId": "number",
-        "appleTeamId": "code"
-      }
-    },
-    "development": { 
-      "ios": {
-        "appleId": "email@example.com",
-        "ascAppId": "number",
-        "appleTeamId": "code"
-      }
-    }
-  }
+    "production": {}
+ }
 }
