@@ -96,7 +96,7 @@ export const useAppUpdateModal = () => {
   const openStore = () => {
     const storeUrl = Platform.select({
       ios: 'https://apps.apple.com/app/id6738428439',
-      android: 'https://play.google.com/apps/testing/site.praytogether',
+      android: 'https://play.google.com/store/apps/details?id=site.praytogether',
     });
 
     if (storeUrl) {
