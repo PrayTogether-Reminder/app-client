@@ -174,6 +174,43 @@ class FcmManager {
     // cleanup 함수 반환
     return unsubscribeForeground;
   }
+
+  setupTokenRefreshListener(
+    onTokenRefreshed: (token: string) => void | Promise<void>
+  ): () => void {
+    console.log("FCM 토큰 갱신 리스너 설정");
+    try {
+      const app = getApp();
+      const messaging = getMessaging(app);
+
+      // Firebase가 토큰을 갱신할 때 호출되는 리스너
+      // 앱이 실행 중일 때만 동작 (포그라운드/백그라운드)
+      const unsubscribe = messaging.onTokenRefresh(async () => {
+        console.log("========================================");
+        console.log("🔄 FCM 토큰이 자동 갱신되었습니다");
+        console.log("========================================");
+
+        try {
+          // 새로 생성된 토큰 가져오기
+          const newToken = await getToken(messaging);
+          if (newToken) {
+            console.log("새 토큰:", newToken.substring(0, 20) + "...");
+            await onTokenRefreshed(newToken);
+          } else {
+            console.error("토큰 갱신 후 새 토큰을 가져오지 못했습니다");
+          }
+        } catch (error) {
+          console.error("토큰 갱신 처리 중 오류:", error);
+        }
+      });
+
+      return unsubscribe;
+    } catch (error) {
+      console.error("토큰 갱신 리스너 설정 실패:", error);
+      // 에러가 발생해도 빈 cleanup 함수 반환
+      return () => {};
+    }
+  }
 }
 
 export default FcmManager;

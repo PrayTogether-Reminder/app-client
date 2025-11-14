@@ -63,30 +63,44 @@ const FcmInitializer: React.FC = () => {
             }
           }
         } else {
-          // 일반적인 로그인 시 토큰 체크
-          console.log("Checking FCM token consistency");
-          
+          // 일반적인 로그인 시 토큰 전송
+          console.log("Checking FCM token and sending to server");
+
           const hasPermission = await fcmManager.hasPermission();
           if (hasPermission) {
-            const savedToken = await fcmManager.getFCMTokenByStorage();
             const currentToken = await fcmManager.getFCMTokenByFB();
-            
-            console.log("Saved token:", savedToken?.substring(0, 20) + "...");
-            console.log("Current token:", currentToken?.substring(0, 20) + "...");
-            
-            // 토큰이 다르거나 저장된 토큰이 없는 경우
-            if (currentToken && (!savedToken || savedToken !== currentToken)) {
-              console.log("Token mismatch detected - updating token");
+
+            // 권한이 있고 토큰이 있으면 무조건 서버에 전송
+            // (네트워크 에러 등으로 이전에 서버 등록 실패했을 수 있음)
+            if (currentToken) {
+              console.log("Sending token to server:", currentToken.substring(0, 20) + "...");
               await fcmManager.saveFCMToken(currentToken);
               registerFcmTokenRequest({ fcmToken: currentToken });
-              console.log("FCM Token updated:", currentToken);
+              console.log("FCM Token sent to server");
             }
           }
         }
 
-        // 4. 리스너 설정하고 cleanup 함수 받기
-        const unsubscribe = fcmManager.setupNotificationListeners();
-        return unsubscribe;
+        // 4. 알림 메시지 리스너 설정
+        const unsubscribeNotifications = fcmManager.setupNotificationListeners();
+
+        // 5. 토큰 갱신 리스너 설정
+        const unsubscribeTokenRefresh = fcmManager.setupTokenRefreshListener(
+          async (newToken) => {
+            console.log("토큰 갱신 콜백 실행");
+            // 로컬 저장소에 새 토큰 저장
+            await fcmManager.saveFCMToken(newToken);
+            // 서버에 새 토큰 등록
+            registerFcmTokenRequest({ fcmToken: newToken });
+            console.log("새 토큰이 저장소와 서버에 업데이트되었습니다");
+          }
+        );
+
+        // 6. 두 리스너를 모두 정리하는 cleanup 함수 반환
+        return () => {
+          unsubscribeNotifications();
+          unsubscribeTokenRefresh();
+        };
       } catch (error) {
         console.error("Error initializing push notifications:", error);
         return undefined;

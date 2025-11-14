@@ -54,6 +54,25 @@ export default function MyPageScreen(props: MyPageScreenProps) {
           const token = (await fcmManager.getFCMTokenByFB()) ?? "";
           await fcmManager.saveFCMToken(token);
           registerFcmTokenRequest({ fcmToken: token });
+        } else {
+          // 알림 권한이 비활성화된 경우 서버와 로컬에서 FCM 토큰 삭제
+          console.log("알림 권한 비활성화 - FCM 토큰 삭제 시작");
+          const oldToken = await fcmManager.getFCMTokenByStorage();
+          if (oldToken) {
+            // 서버에서 토큰 삭제
+            deleteFcmTokenRequest(oldToken, {
+              onSuccess: async () => {
+                console.log("서버에서 FCM 토큰 삭제 완료");
+                // 로컬에서도 토큰 삭제
+                await fcmManager.deleteFCMToken();
+              },
+              onError: async (error) => {
+                console.error("서버에서 FCM 토큰 삭제 실패:", error);
+                // 서버 삭제 실패해도 로컬 토큰은 삭제
+                await fcmManager.deleteFCMToken();
+              },
+            });
+          }
         }
       }
 
