@@ -14,34 +14,39 @@ interface TitleCardProps {
 }
 
 export default function TitleCard({ title, isEditMode, onEdit, onCopy }: TitleCardProps) {
+  // 버튼이 있는지 확인
+  const hasButton = (!isEditMode && onCopy) || (isEditMode && onEdit);
+
   return (
     <Card style={styles.titleCard}>
       <Card.Content style={styles.titleCardContainer}>
         <Text style={styles.titleText}>{title}</Text>
-        <View style={styles.buttonContainer}>
-          {!isEditMode && onCopy && (
-            <TouchableOpacity
-              onPress={onCopy}
-              style={styles.copyButton}
-              activeOpacity={Platform.OS === 'ios' ? 0.8 : 0.2}
-            >
-              <MaterialCommunityIcons
-                name="content-copy"
-                size={RFValue(18)}
-                color={color.secondary}
-              />
-            </TouchableOpacity>
-          )}
-          {isEditMode && onEdit && (
-            <TouchableOpacity onPress={onEdit} style={styles.editButton}>
-              <MaterialCommunityIcons
-                name="pencil"
-                size={RFValue(18)}
-                color={color.secondary}
-              />
-            </TouchableOpacity>
-          )}
-        </View>
+        {hasButton && (
+          <View style={styles.buttonContainer}>
+            {!isEditMode && onCopy && (
+              <TouchableOpacity
+                onPress={onCopy}
+                style={styles.copyButton}
+                activeOpacity={Platform.OS === 'ios' ? 0.8 : 0.2}
+              >
+                <MaterialCommunityIcons
+                  name="content-copy"
+                  size={RFValue(18)}
+                  color={color.secondary}
+                />
+              </TouchableOpacity>
+            )}
+            {isEditMode && onEdit && (
+              <TouchableOpacity onPress={onEdit} style={styles.editButton}>
+                <MaterialCommunityIcons
+                  name="pencil"
+                  size={RFValue(18)}
+                  color={color.secondary}
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
       </Card.Content>
     </Card>
   );

@@ -27,7 +27,7 @@ export default function PrayerCard({
   const { copyToClipboard } = useCopyToClipboard();
 
   const handleCopy = () => {
-    const fullContent = `${item.memberName}\n최근 작성자: ${item.writerName}\n\n${item.content}`;
+    const fullContent = `${item.memberName}\n${item.content}`;
     copyToClipboard(fullContent, {
       successTitle: "복사 완료",
       successMessage: "기도 내용이 복사되었습니다",

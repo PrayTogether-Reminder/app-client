@@ -3,7 +3,6 @@ import { View, StyleSheet } from "react-native";
 import { FAB } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { useLocalSearchParams } from "expo-router";
-import Toast from "react-native-toast-message";
 import { PrayerContent } from "../../../../../src/domain/prayers/types/prayerContent";
 import TitleCard from "./TitleCard";
 import PrayerCardList from "./PrayerCardList";
@@ -83,15 +82,11 @@ function PrayerReadBody({ prayerTitleId, isEditMode, onEditModeChange }: PrayerR
 
   // 전체 내용 복사 핸들러
   const handleCopyAll = () => {
+    // 기도 내용이 없으면 기도 제목만 복사
     if (!prayerContents || prayerContents.length === 0) {
-      Toast.show({
-        type: "info",
-        text1: "복사할 내용이 없습니다",
-        text2: "기도 내용을 추가해주세요",
-        position: "top",
-        visibilityTime: 2000,
-        autoHide: true,
-        topOffset: 60,
+      copyToClipboard(`[${editingTitle}]`, {
+        successTitle: "복사 완료",
+        successMessage: "기도가 복사되었습니다",
       });
       return;
     }
@@ -114,7 +109,7 @@ function PrayerReadBody({ prayerTitleId, isEditMode, onEditModeChange }: PrayerR
 
     copyToClipboard(fullContent, {
       successTitle: "복사 완료",
-      successMessage: "기도 제목과 전체 내용이 복사되었습니다",
+      successMessage: "기도가 복사되었습니다",
     });
   };
 
