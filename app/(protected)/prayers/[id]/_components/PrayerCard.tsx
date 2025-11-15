@@ -4,10 +4,9 @@ import { View, StyleSheet, Animated, ScrollView, TouchableOpacity, Platform } fr
 import { Card, Text } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
-import * as Clipboard from "expo-clipboard";
-import Toast from "react-native-toast-message";
 import { color } from "../../../../../src/common/styles/color";
 import { PrayerContent } from "../../../../../src/domain/prayers/types/prayerContent";
+import { useCopyToClipboard } from "../../../../../src/hooks/useCopyToClipboard";
 
 interface PrayerCardProps {
   item: PrayerContent;
@@ -25,18 +24,13 @@ export default function PrayerCard({
   cardHeight,
 }: PrayerCardProps) {
   const cardBorderStyle = { borderLeftColor: color.secondary };
+  const { copyToClipboard } = useCopyToClipboard();
 
   const handleCopy = () => {
     const fullContent = `${item.memberName}\n최근 작성자: ${item.writerName}\n\n${item.content}`;
-    Clipboard.setString(fullContent);
-    Toast.show({
-      type: "success",
-      text1: "복사 완료",
-      text2: "기도 내용이 복사되었습니다",
-      position: "top",
-      visibilityTime: 2000,
-      autoHide: true,
-      topOffset: 60,
+    copyToClipboard(fullContent, {
+      successTitle: "복사 완료",
+      successMessage: "기도 내용이 복사되었습니다",
     });
   };
 

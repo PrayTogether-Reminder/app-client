@@ -1,6 +1,6 @@
 // TitleCard.tsx
 import React from "react";
-import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Platform } from "react-native";
 import { Card, Text } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -10,22 +10,38 @@ interface TitleCardProps {
   title: string;
   isEditMode?: boolean;
   onEdit?: () => void;
+  onCopy?: () => void;
 }
 
-export default function TitleCard({ title, isEditMode, onEdit }: TitleCardProps) {
+export default function TitleCard({ title, isEditMode, onEdit, onCopy }: TitleCardProps) {
   return (
     <Card style={styles.titleCard}>
       <Card.Content style={styles.titleCardContainer}>
         <Text style={styles.titleText}>{title}</Text>
-        {isEditMode && onEdit && (
-          <TouchableOpacity onPress={onEdit} style={styles.editButton}>
-            <MaterialCommunityIcons 
-              name="pencil" 
-              size={RFValue(18)} 
-              color={color.secondary}
-            />
-          </TouchableOpacity>
-        )}
+        <View style={styles.buttonContainer}>
+          {!isEditMode && onCopy && (
+            <TouchableOpacity
+              onPress={onCopy}
+              style={styles.copyButton}
+              activeOpacity={Platform.OS === 'ios' ? 0.8 : 0.2}
+            >
+              <MaterialCommunityIcons
+                name="content-copy"
+                size={RFValue(18)}
+                color={color.secondary}
+              />
+            </TouchableOpacity>
+          )}
+          {isEditMode && onEdit && (
+            <TouchableOpacity onPress={onEdit} style={styles.editButton}>
+              <MaterialCommunityIcons
+                name="pencil"
+                size={RFValue(18)}
+                color={color.secondary}
+              />
+            </TouchableOpacity>
+          )}
+        </View>
       </Card.Content>
     </Card>
   );
@@ -64,8 +80,20 @@ const styles = StyleSheet.create({
     lineHeight: RFValue(22),
     flex: 1,
   },
+  buttonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   editButton: {
-    padding: RFValue(4),
+    padding: RFValue(6),
     marginLeft: RFValue(8),
+    borderRadius: RFValue(20),
+    backgroundColor: "#F8F9FA",
+  },
+  copyButton: {
+    padding: RFValue(6),
+    marginLeft: RFValue(8),
+    borderRadius: RFValue(20),
+    backgroundColor: "#F8F9FA",
   },
 });

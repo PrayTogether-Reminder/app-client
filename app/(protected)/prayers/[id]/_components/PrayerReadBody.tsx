@@ -3,6 +3,7 @@ import { View, StyleSheet } from "react-native";
 import { FAB } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { useLocalSearchParams } from "expo-router";
+import Toast from "react-native-toast-message";
 import { PrayerContent } from "../../../../../src/domain/prayers/types/prayerContent";
 import TitleCard from "./TitleCard";
 import PrayerCardList from "./PrayerCardList";
@@ -18,6 +19,7 @@ import PrayerContentAddDialog from "./dialogs/PrayerContentAddDialog";
 import PrayerContentEditDialog from "./dialogs/PrayerContentEditDialog";
 import PrayerTitleEditDialog from "./dialogs/PrayerTitleEditDialog";
 import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
+import { useCopyToClipboard } from "../../../../../src/hooks/useCopyToClipboard";
 
 interface PrayerReadBodyProps {
   prayerTitleId: number;
@@ -32,6 +34,7 @@ function PrayerReadBody({ prayerTitleId, isEditMode, onEditModeChange }: PrayerR
 
   const { selectedPrayerTitle } = useSelectedPrayerTitleStore();
   const { selectedRoom } = useSelectedRoomStore();
+  const { copyToClipboard } = useCopyToClipboard();
 
   // URL 파라미터를 우선 사용하고, 없으면 store에서 가져옴
   const roomId = roomIdFromUrl ?? selectedRoom?.id ?? null;
@@ -78,6 +81,43 @@ function PrayerReadBody({ prayerTitleId, isEditMode, onEditModeChange }: PrayerR
     setEditingTitle(newTitle);
   };
 
+  // 전체 내용 복사 핸들러
+  const handleCopyAll = () => {
+    if (!prayerContents || prayerContents.length === 0) {
+      Toast.show({
+        type: "info",
+        text1: "복사할 내용이 없습니다",
+        text2: "기도 내용을 추가해주세요",
+        position: "top",
+        visibilityTime: 2000,
+        autoHide: true,
+        topOffset: 60,
+      });
+      return;
+    }
+
+    // 기도 제목과 각 기도 내용을 형식에 맞게 조합
+    const contentParts: string[] = [`[${editingTitle}]`, ""];
+
+    prayerContents.forEach((prayer) => {
+      contentParts.push(prayer.memberName);
+      contentParts.push(prayer.content);
+      contentParts.push("");
+    });
+
+    // 마지막 빈 줄 제거
+    if (contentParts[contentParts.length - 1] === "") {
+      contentParts.pop();
+    }
+
+    const fullContent = contentParts.join("\n");
+
+    copyToClipboard(fullContent, {
+      successTitle: "복사 완료",
+      successMessage: "기도 제목과 전체 내용이 복사되었습니다",
+    });
+  };
+
   // 제목 업데이트
   useEffect(() => {
     setEditingTitle(titleText);
@@ -120,12 +160,13 @@ function PrayerReadBody({ prayerTitleId, isEditMode, onEditModeChange }: PrayerR
     return (
       <View style={styles.container}>
         {/* 제목 카드 컴포넌트 */}
-        <TitleCard 
-          title={editingTitle} 
+        <TitleCard
+          title={editingTitle}
           isEditMode={isEditMode}
           onEdit={() => setIsTitleEditDialogOpen(true)}
+          onCopy={handleCopyAll}
         />
-        
+
         <EmptyState />
 
         {/* 플로팅 액션 버튼 - 기도 내용 추가 */}
@@ -171,10 +212,11 @@ function PrayerReadBody({ prayerTitleId, isEditMode, onEditModeChange }: PrayerR
   return (
     <View style={styles.container}>
       {/* 제목 카드 컴포넌트 */}
-      <TitleCard 
-        title={editingTitle} 
+      <TitleCard
+        title={editingTitle}
         isEditMode={isEditMode}
         onEdit={() => setIsTitleEditDialogOpen(true)}
+        onCopy={handleCopyAll}
       />
 
       {/* 기도문 목록 컴포넌트 */}
