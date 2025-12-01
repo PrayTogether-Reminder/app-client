@@ -1,6 +1,7 @@
 import React from "react";
-import { StyleSheet, View, ScrollView } from "react-native";
+import { StyleSheet, View, ScrollView, Alert, Linking } from "react-native";
 import { List, Button } from "react-native-paper";
+import { CONTACT_FORM_URL } from "@/common/constants/externalLinks";
 
 type ListSectionProps = {
   onGoToInvitations: () => void;
@@ -17,6 +18,23 @@ export default function ListSection({
   onLogout,
   onDeleteAccount,
 }: ListSectionProps): React.ReactElement {
+  const handleInquiryPress = async () => {
+    try {
+      const supported = await Linking.canOpenURL(CONTACT_FORM_URL);
+      if (supported) {
+        await Linking.openURL(CONTACT_FORM_URL);
+        return;
+      }
+    } catch (error) {
+      console.error("Failed to open contact form", error);
+    }
+
+    Alert.alert(
+      "링크를 열 수 없어요",
+      "잠시 후 다시 시도해 주세요. 문제가 계속되면 운영팀에 알려주세요."
+    );
+  };
+
   return (
     <ScrollView
       style={styles.container}
@@ -43,6 +61,13 @@ export default function ListSection({
           left={(props) => <List.Icon {...props} icon="bell-outline" />}
           right={(props) => <List.Icon {...props} icon="chevron-right" />}
           onPress={onGoToNotifications}
+        />
+        <List.Item
+          title="1:1 문의"
+          description="문의사항을 남겨주세요."
+          left={(props) => <List.Icon {...props} icon="help-circle-outline" />}
+          right={(props) => <List.Icon {...props} icon="open-in-new" />}
+          onPress={handleInquiryPress}
         />
         <List.Item
           title="회원 탈퇴"

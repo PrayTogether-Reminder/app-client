@@ -1,11 +1,18 @@
 // app/index.tsx (또는 앱의 가장 첫 진입점)
 import React from "react";
-import { View, StyleSheet, SafeAreaView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  SafeAreaView,
+  Alert,
+  Linking,
+} from "react-native";
 import { Text, Button, useTheme, Avatar } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
 import path from "@/common/constants/path";
+import { CONTACT_FORM_URL } from "@/common/constants/externalLinks";
 
 export default function WelcomeScreen() {
   const theme = useTheme();
@@ -17,6 +24,23 @@ export default function WelcomeScreen() {
 
   const handleSignupPress = () => {
     router.push(path.showSignup()); // 회원가입 화면으로 이동
+  };
+
+  const handleInquiryPress = async () => {
+    try {
+      const supported = await Linking.canOpenURL(CONTACT_FORM_URL);
+      if (supported) {
+        await Linking.openURL(CONTACT_FORM_URL);
+        return;
+      }
+    } catch (error) {
+      console.error("Failed to open contact form", error);
+    }
+
+    Alert.alert(
+      "링크를 열 수 없어요",
+      "잠시 후 다시 시도해 주세요. 문제가 계속되면 운영팀에 알려주세요."
+    );
   };
 
   return (
@@ -42,6 +66,16 @@ export default function WelcomeScreen() {
 
       {/* 버튼 영역 */}
       <View style={styles.buttonContainer}>
+        <Button
+          mode="text"
+          onPress={handleInquiryPress}
+          style={[styles.button, styles.inquiryButton]}
+          labelStyle={[styles.buttonLabel, styles.inquiryButtonLabel]}
+          uppercase={false}
+          contentStyle={styles.buttonContent}
+        >
+          1:1 문의
+        </Button>
         <Button
           mode="contained"
           onPress={handleLoginPress}
@@ -73,11 +107,10 @@ export default function WelcomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: "80%",
     width: "100%",
   },
   logoContainer: {
-    flex: 9, // 남은 공간 차지
+    flex: 7, // 로고 공간 줄임
     justifyContent: "center", // 수직 중앙 정렬
     alignItems: "center", // 수평 중앙 정렬
     paddingHorizontal: RFValue(30),
@@ -87,14 +120,15 @@ const styles = StyleSheet.create({
     elevation: 4, // 약간의 입체감
   },
   slogonContainer: {
-    flex: 3,
+    flex: 2,
+    paddingHorizontal: RFValue(30),
   },
   slogan: {
     textAlign: "center",
     lineHeight: RFValue(28),
   },
   buttonContainer: {
-    flex: 2, // 남은 공간 차지
+    flex: 3, // 버튼 영역 늘림
     paddingHorizontal: RFValue(30),
     paddingBottom: RFValue(20), // 하단 여백
     paddingTop: RFValue(20),
@@ -109,10 +143,17 @@ const styles = StyleSheet.create({
     // Optional: Add specific styles for signup button if needed
     // e.g., borderWidth: 1.5,
   },
+  inquiryButton: {
+    marginBottom: RFValue(25),
+    borderColor: "transparent",
+  },
   buttonLabel: {
     fontSize: RFValue(16),
     fontWeight: "600", // Medium-Bold
     lineHeight: RFValue(20),
+  },
+  inquiryButtonLabel: {
+    color: color.secondary,
   },
   buttonContent: {
     paddingVertical: RFValue(8), // 버튼 내부 높이 조절
