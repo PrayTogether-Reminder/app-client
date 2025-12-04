@@ -1,5 +1,6 @@
 import path from "@/common/constants/path";
 import { backgroundColor, color } from "@/common/styles/color";
+import { BackButtonHeader } from "@/common/components/header";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -12,7 +13,7 @@ import {
 } from "react-native";
 import type { PagerViewOnPageSelectedEventData } from "react-native-pager-view";
 import PagerView from "react-native-pager-view";
-import { IconButton, useTheme } from "react-native-paper";
+import { useTheme } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 
 import { useSignupMutation } from "@/domain/auth/hooks/mutations/useAuthMutation";
@@ -185,16 +186,11 @@ const SignupScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.top}>
-        <IconButton
-          icon="arrow-left"
-          size={RFValue(30)}
-          onPress={goToPrevPage}
-          style={styles.backButton}
-          disabled={isSubmitting}
-          iconColor={color.secondary}
-        />
-      </View>
+      <BackButtonHeader
+        onPress={goToPrevPage}
+        disabled={isSubmitting}
+        style={styles.header}
+      />
       <PagerView
         ref={pagerRef}
         style={styles.pagerView}
@@ -276,21 +272,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: backgroundColor.default,
   },
-  top: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    marginTop: RFValue(16),
-    paddingHorizontal: RFValue(4),
-    borderBottomWidth: 1,
-    borderBottomColor: "#EEEEEE",
+  header: {
+    marginTop: RFValue(8),
   },
-  backButton: {
-    marginLeft: 0,
-    paddingLeft: 0,
-  },
-  backButtonLabel: {},
   pagerView: {
     flex: 11,
   },

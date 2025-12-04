@@ -11,11 +11,11 @@ import {
 import {
   Text,
   Avatar,
-  IconButton,
   List,
 } from "react-native-paper";
 import { FormInput } from "@/common/components/form";
 import { PrimaryButton } from "@/common/components/button";
+import { BackButtonHeader } from "@/common/components/header";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
@@ -87,16 +87,7 @@ export default function ChangePasswordScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.top}>
-        <IconButton
-          icon="arrow-left"
-          size={RFValue(30)}
-          onPress={() => router.back()}
-          style={styles.backButton}
-          disabled={isLoading}
-          iconColor={color.secondary}
-        />
-      </View>
+      <BackButtonHeader disabled={isLoading} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
@@ -181,19 +172,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: color.white,
-  },
-  top: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    paddingHorizontal: RFValue(4),
-    paddingTop: RFValue(8),
-    borderBottomWidth: 1,
-    borderBottomColor: "#EEEEEE",
-  },
-  backButton: {
-    marginLeft: 0,
-    paddingLeft: 0,
   },
   container: {
     flex: 1,
