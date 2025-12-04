@@ -12,9 +12,8 @@ import {
   Button,
   Text,
   HelperText,
-  Avatar,
 } from "react-native-paper";
-import { BackButtonHeader } from "@/common/components/header";
+import { BackButtonHeader, AuthHeader } from "@/common/components/header";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
@@ -71,22 +70,12 @@ export default function ForgotPasswordScreen() {
       >
         {/* 전체 콘텐츠 영역 */}
         <View style={styles.content}>
-          {/* 상단 헤더 (아이콘 + 제목) */}
-          <View style={styles.headerContainer}>
-            <Avatar.Icon
-              size={RFValue(60)}
-              icon="lock-reset"
-              style={styles.headerIcon}
-              color={color.primary}
-            />
-            <Text variant="headlineMedium" style={styles.title}>
-              비밀번호 찾기
-            </Text>
-            <Text variant="bodyMedium" style={styles.description}>
-              가입하신 이메일 주소를 입력해주세요.{"\n"}
-              임시 비밀번호를 발급해드립니다.
-            </Text>
-          </View>
+          {/* 상단 헤더 */}
+          <AuthHeader
+            icon="lock-reset"
+            title="비밀번호 찾기"
+            description={`가입하신 이메일 주소를 입력해주세요.\n임시 비밀번호를 발급해드립니다.`}
+          />
 
           {/* 입력 폼 영역 */}
           <View style={styles.formContainer}>
@@ -141,28 +130,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: RFValue(24),
     justifyContent: "space-between",
-  },
-  headerContainer: {
-    alignItems: "center",
-    marginBottom: RFValue(10),
-  },
-  headerIcon: {
-    backgroundColor: "transparent",
-    marginBottom: RFValue(10),
-  },
-  title: {
-    fontSize: RFValue(26),
-    fontWeight: "bold",
-    textAlign: "center",
-    color: color.primary,
-    lineHeight: RFValue(32),
-    marginBottom: RFValue(10),
-  },
-  description: {
-    fontSize: RFValue(14),
-    textAlign: "center",
-    color: color.black,
-    lineHeight: RFValue(20),
   },
   formContainer: {
     flexGrow: 1,

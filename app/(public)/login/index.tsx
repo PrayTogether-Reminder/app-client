@@ -11,9 +11,8 @@ import {
   TextInput,
   Text,
   HelperText,
-  Avatar,
 } from "react-native-paper";
-import { BackButtonHeader } from "@/common/components/header";
+import { BackButtonHeader, AuthHeader } from "@/common/components/header";
 import { PrimaryButton, TextButton } from "@/common/components/button";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -70,18 +69,8 @@ export default function LoginScreen() {
       >
         {/* 전체 콘텐츠 영역 */}
         <View style={styles.content}>
-          {/* 상단 헤더 (아이콘 + 제목) <- 지우거나, 다른 컨텐츠로 대체가 필요함. */}
-          <View style={styles.headerContainer}>
-            <Avatar.Icon
-              size={RFValue(60)}
-              icon="login"
-              style={styles.headerIcon}
-              color={color.primary}
-            />
-            <Text variant="headlineMedium" style={styles.title}>
-              로그인
-            </Text>
-          </View>
+          {/* 상단 헤더 */}
+          <AuthHeader icon="login" title="로그인" />
 
           {/* 입력 폼 영역 (이 영역이 남는 공간을 채움) */}
           <View style={styles.formContainer}>
@@ -169,21 +158,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: RFValue(24),
     justifyContent: "space-between", // header, form, action 영역 분리
-  },
-  headerContainer: {
-    alignItems: "center", // 아이콘, 타이틀 중앙 정렬
-    marginBottom: RFValue(10),
-  },
-  headerIcon: {
-    backgroundColor: "transparent",
-    marginBottom: RFValue(10),
-  },
-  title: {
-    fontSize: RFValue(26),
-    fontWeight: "bold",
-    textAlign: "center",
-    color: color.primary,
-    lineHeight: RFValue(32),
   },
   // formContainer가 늘어나서 actionContainer를 아래로 밀어냄
   formContainer: {
