@@ -131,6 +131,11 @@ export default function MyPageScreen(props: MyPageScreenProps) {
   //   router.push(path.showFriends());
   // }
 
+  function handleChangePassword() {
+    console.log("비밀번호 변경 화면으로 이동");
+    router.push(path.showChangePassword());
+  }
+
   async function handleGoToNotifications() {
     console.log("알림 설정 처리 시작");
 
@@ -283,6 +288,7 @@ export default function MyPageScreen(props: MyPageScreenProps) {
             onGoToInvitations={handleGoToInvitations}
             // onGoToFriends={handleGoToFriends}
             onGoToNotifications={handleGoToNotifications}
+            onChangePassword={handleChangePassword}
             onLogout={handleLogout}
             onDeleteAccount={handleDeleteAccount}
           />,

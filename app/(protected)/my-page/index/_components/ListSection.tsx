@@ -7,6 +7,7 @@ type ListSectionProps = {
   onGoToInvitations: () => void;
   // onGoToFriends: () => void;
   onGoToNotifications: () => void;
+  onChangePassword: () => void;
   onLogout: () => void;
   onDeleteAccount: () => void;
 };
@@ -15,6 +16,7 @@ export default function ListSection({
   onGoToInvitations,
   // onGoToFriends,
   onGoToNotifications,
+  onChangePassword,
   onLogout,
   onDeleteAccount,
 }: ListSectionProps): React.ReactElement {
@@ -61,6 +63,13 @@ export default function ListSection({
           left={(props) => <List.Icon {...props} icon="bell-outline" />}
           right={(props) => <List.Icon {...props} icon="chevron-right" />}
           onPress={onGoToNotifications}
+        />
+        <List.Item
+          title="비밀번호 변경"
+          description="새로운 비밀번호로 변경하세요."
+          left={(props) => <List.Icon {...props} icon="lock-reset" />}
+          right={(props) => <List.Icon {...props} icon="chevron-right" />}
+          onPress={onChangePassword}
         />
         <List.Item
           title="1:1 문의"

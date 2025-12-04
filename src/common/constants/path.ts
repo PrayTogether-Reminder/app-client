@@ -14,6 +14,7 @@ const path = {
   showLogin: () => "/(public)/login" as Route,
   showSignup: () => "/(public)/signup" as Route,
   showForgotPassword: () => "/(public)/forgot-password" as Route,
+  showChangePassword: () => "/(protected)/my-page/change-password" as Route,
   showWelcome: () => "/" as Route,
 };
 

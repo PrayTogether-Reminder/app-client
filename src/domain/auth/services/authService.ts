@@ -8,6 +8,7 @@ import type { LoginResponse } from "../types/response/loginResponse";
 import type { LoginRequest } from "../types/request/loginRequest";
 import type { LogoutRequest } from "../types/request/logoutRequest";
 import type { ReissuePasswordRequest } from "../types/request/reissuePasswordRequest";
+import type { ChangePasswordRequest } from "../types/request/changePasswordRequest";
 
 export const authService = {
   // 이메일 OTP 요청 API
@@ -84,6 +85,17 @@ export const authService = {
       {
         email,
       } as ReissuePasswordRequest
+    );
+    return response;
+  },
+
+  // 비밀번호 변경
+  changePassword: async (newPassword: string): Promise<MessageResponse> => {
+    const response = await apiService.patch<MessageResponse>(
+      `/v1/auth/password`,
+      {
+        newPassword,
+      } as ChangePasswordRequest
     );
     return response;
   },

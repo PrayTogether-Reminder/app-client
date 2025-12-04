@@ -5,6 +5,7 @@ import type { LogoutRequest } from "../../types/request/logoutRequest";
 import type { SignupRequest } from "../../types/request/signupRequest";
 import type { VerifyOtpRequest } from "../../types/request/verifyOtpRequest";
 import type { ReissuePasswordRequest } from "../../types/request/reissuePasswordRequest";
+import type { ChangePasswordRequest } from "../../types/request/changePasswordRequest";
 import { showAlert } from "@/common/components/modal/stores/useAlertStore";
 
 export const useOtpEmailRequestMutation = () => {
@@ -134,6 +135,27 @@ export const useReissuePasswordMutation = () => {
         title: "임시 비밀번호 발급 실패",
         message: error.message,
         icon: "email-remove",
+      });
+    },
+  });
+};
+
+export const useChangePasswordMutation = () => {
+  return useMutation({
+    mutationFn: ({ newPassword }: ChangePasswordRequest) =>
+      authService.changePassword(newPassword),
+    onSuccess: (data) => {
+      showAlert({
+        title: "비밀번호 변경 완료",
+        message: data.message,
+        icon: "check-circle",
+      });
+    },
+    onError: (error, requests, context) => {
+      showAlert({
+        title: "비밀번호 변경 실패",
+        message: error.message,
+        icon: "alert-circle",
       });
     },
   });
