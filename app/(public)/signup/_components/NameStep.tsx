@@ -14,6 +14,7 @@ import {
   Text,
   IconButton,
 } from "react-native-paper";
+import { TextButton } from "@/common/components/button";
 import { RFValue } from "react-native-responsive-fontsize";
 import { backgroundColor, color } from "@/common/styles/color";
 
@@ -278,8 +279,7 @@ const NameStep: React.FC<NameStepProps> = ({
 
           {/* 전체 동의 옵션 (선택사항) */}
           <View style={styles.allAgreeContainer}>
-            <Button
-              mode="text"
+            <TextButton
               onPress={() => {
                 const newValue = !isTermsAgreed || !isPrivacyAgreed;
                 setIsTermsAgreed(newValue);
@@ -290,12 +290,12 @@ const NameStep: React.FC<NameStepProps> = ({
                 }
               }}
               disabled={isSubmitting}
-              compact
+              textColor={color.secondary}
               style={styles.allAgreeButton}
               labelStyle={styles.allAgreeText}
             >
               전체 동의하기
-            </Button>
+            </TextButton>
           </View>
         </View>
 

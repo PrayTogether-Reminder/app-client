@@ -9,13 +9,12 @@ import {
 } from "react-native";
 import {
   TextInput,
-  Button,
   Text,
   HelperText,
-  ActivityIndicator,
   Avatar,
 } from "react-native-paper";
 import { BackButtonHeader } from "@/common/components/header";
+import { PrimaryButton, TextButton } from "@/common/components/button";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
@@ -123,42 +122,33 @@ export default function LoginScreen() {
 
           {/* 하단 액션 버튼 영역 */}
           <View style={styles.actionContainer}>
-            <Button
-              mode="contained"
+            <PrimaryButton
               onPress={handleLogin}
-              style={styles.button}
-              labelStyle={styles.buttonLabel}
               disabled={isLoading}
               loading={isLoading}
               icon="arrow-right"
-              uppercase={false}
-              contentStyle={styles.buttonContent}
             >
               {isLoading ? "로그인 중..." : "로그인"}
-            </Button>
+            </PrimaryButton>
 
-            <Button
-              mode="text"
+            <TextButton
               onPress={() => router.push(path.showSignup())}
-              style={styles.switchButton}
               disabled={isLoading}
-              textColor={color.black}
-              labelStyle={styles.switchButtonLabel}
+              fullWidth
+              style={styles.switchButton}
             >
               계정이 없으신가요?{" "}
               <Text style={styles.switchButtonHighlight}>회원가입</Text>
-            </Button>
+            </TextButton>
 
-            <Button
-              mode="text"
+            <TextButton
               onPress={() => router.push(path.showForgotPassword())}
-              style={styles.forgotPasswordButton}
               disabled={isLoading}
-              textColor={color.black}
-              labelStyle={styles.forgotPasswordLabel}
+              fullWidth
+              size="small"
             >
               <Text style={styles.forgotPasswordText}>비밀번호를 잊으셨나요?</Text>
-            </Button>
+            </TextButton>
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -216,39 +206,12 @@ const styles = StyleSheet.create({
   actionContainer: {
     // paddingBottom: RFValue(5), // 화면 하단과의 여백
   },
-  button: {
-    borderRadius: RFValue(30),
-  },
-  buttonLabel: {
-    fontSize: RFValue(16),
-    fontWeight: "bold",
-    lineHeight: RFValue(20),
-  },
-  buttonContent: {
-    paddingVertical: RFValue(8),
-  },
   switchButton: {
-    marginTop: RFValue(15), // 로그인 버튼과의 간격
-    // alignSelf: "center", // 중앙 정렬
-    // justifyContent: "center", // 내부 텍스트 중앙 정렬
-    width: "100%", // 전체 너비를 사용하여 텍스트 중앙 정렬
-  },
-  switchButtonLabel: {
-    fontSize: RFValue(14),
-    textAlign: "center", // 텍스트 중앙 정렬
-    lineHeight: RFValue(18),
+    marginTop: RFValue(15),
   },
   switchButtonHighlight: {
     fontWeight: "bold",
     color: color.secondary,
-  },
-  forgotPasswordButton: {
-    width: "100%",
-  },
-  forgotPasswordLabel: {
-    fontSize: RFValue(13),
-    textAlign: "center",
-    lineHeight: RFValue(18),
   },
   forgotPasswordText: {
     color: color.secondary,

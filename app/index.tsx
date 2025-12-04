@@ -8,6 +8,7 @@ import {
   Linking,
 } from "react-native";
 import { Text, Button, useTheme, Avatar } from "react-native-paper";
+import { TextButton } from "@/common/components/button";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
@@ -66,16 +67,14 @@ export default function WelcomeScreen() {
 
       {/* 버튼 영역 */}
       <View style={styles.buttonContainer}>
-        <Button
-          mode="text"
+        <TextButton
           onPress={handleInquiryPress}
-          style={[styles.button, styles.inquiryButton]}
-          labelStyle={[styles.buttonLabel, styles.inquiryButtonLabel]}
-          uppercase={false}
-          contentStyle={styles.buttonContent}
+          textColor={color.secondary}
+          size="large"
+          style={styles.inquiryButton}
         >
           1:1 문의
-        </Button>
+        </TextButton>
         <Button
           mode="contained"
           onPress={handleLoginPress}
@@ -145,15 +144,11 @@ const styles = StyleSheet.create({
   },
   inquiryButton: {
     marginBottom: RFValue(25),
-    borderColor: "transparent",
   },
   buttonLabel: {
     fontSize: RFValue(16),
     fontWeight: "600", // Medium-Bold
     lineHeight: RFValue(20),
-  },
-  inquiryButtonLabel: {
-    color: color.secondary,
   },
   buttonContent: {
     paddingVertical: RFValue(8), // 버튼 내부 높이 조절
