@@ -3,10 +3,6 @@ import React, { useState } from "react";
 import {
   View,
   StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  ScrollView,
 } from "react-native";
 import {
   Text,
@@ -14,7 +10,8 @@ import {
 } from "react-native-paper";
 import { FormInput } from "@/common/components/form";
 import { PrimaryButton } from "@/common/components/button";
-import { BackButtonHeader, AuthHeader } from "@/common/components/header";
+import { AuthHeader } from "@/common/components/header";
+import { ScreenLayout } from "@/common/components/layout";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
@@ -85,27 +82,19 @@ export default function ChangePasswordScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <BackButtonHeader disabled={isLoading} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
-      >
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
-        >
-          {/* 전체 콘텐츠 영역 */}
-          <View style={styles.content}>
-            {/* 상단 헤더 */}
-            <AuthHeader
-              icon="lock-reset"
-              title="비밀번호 변경"
-              description="새로운 비밀번호를 입력해주세요."
-            />
+    <ScreenLayout
+      backButtonDisabled={isLoading}
+      scrollable
+    >
+      {/* 상단 헤더 */}
+      <AuthHeader
+        icon="lock-reset"
+        title="비밀번호 변경"
+        description="새로운 비밀번호를 입력해주세요."
+      />
 
-            {/* 비밀번호 규칙 안내 */}
-            <View style={styles.rulesContainer}>
+      {/* 비밀번호 규칙 안내 */}
+      <View style={styles.rulesContainer}>
               <Text variant="bodySmall" style={styles.rulesTitle}>
                 비밀번호 규칙
               </Text>
@@ -151,32 +140,11 @@ export default function ChangePasswordScreen() {
                 {isLoading ? "변경 중..." : "비밀번호 변경"}
               </PrimaryButton>
             </View>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+    </ScreenLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: color.white,
-  },
-  container: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-  },
-  content: {
-    flex: 1,
-    padding: RFValue(24),
-    justifyContent: "space-between",
-  },
   rulesContainer: {
     backgroundColor: "#F5F5F5",
     borderRadius: RFValue(12),

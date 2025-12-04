@@ -3,17 +3,15 @@ import React, { useState } from "react";
 import {
   View,
   StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
 } from "react-native";
 import {
   TextInput,
   Text,
   HelperText,
 } from "react-native-paper";
-import { BackButtonHeader, AuthHeader } from "@/common/components/header";
+import { AuthHeader } from "@/common/components/header";
 import { PrimaryButton, TextButton } from "@/common/components/button";
+import { ScreenLayout } from "@/common/components/layout";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
@@ -61,19 +59,12 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <BackButtonHeader disabled={isLoading} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
-      >
-        {/* 전체 콘텐츠 영역 */}
-        <View style={styles.content}>
-          {/* 상단 헤더 */}
-          <AuthHeader icon="login" title="로그인" />
+    <ScreenLayout backButtonDisabled={isLoading}>
+      {/* 상단 헤더 */}
+      <AuthHeader icon="login" title="로그인" />
 
-          {/* 입력 폼 영역 (이 영역이 남는 공간을 채움) */}
-          <View style={styles.formContainer}>
+      {/* 입력 폼 영역 (이 영역이 남는 공간을 채움) */}
+      <View style={styles.formContainer}>
             <TextInput
               label="이메일"
               value={email}
@@ -139,27 +130,11 @@ export default function LoginScreen() {
               <Text style={styles.forgotPasswordText}>비밀번호를 잊으셨나요?</Text>
             </TextButton>
           </View>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+    </ScreenLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: color.white,
-  },
-  container: {
-    flex: 1,
-  },
-  // content가 전체 영역을 차지하고 내부에서 flex 배분
-  content: {
-    flex: 1,
-    padding: RFValue(24),
-    justifyContent: "space-between", // header, form, action 영역 분리
-  },
-  // formContainer가 늘어나서 actionContainer를 아래로 밀어냄
   formContainer: {
     flexGrow: 1, // 사용 가능한 추가 공간 차지
     justifyContent: "flex-start", // 상단 정렬로 변경 (원래 center)

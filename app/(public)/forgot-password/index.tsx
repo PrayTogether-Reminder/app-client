@@ -3,22 +3,18 @@ import React, { useState } from "react";
 import {
   View,
   StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
 } from "react-native";
 import {
   TextInput,
   Button,
-  Text,
   HelperText,
 } from "react-native-paper";
-import { BackButtonHeader, AuthHeader } from "@/common/components/header";
+import { AuthHeader } from "@/common/components/header";
+import { ScreenLayout } from "@/common/components/layout";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
 import { useReissuePasswordMutation } from "@/domain/auth/hooks/mutations/useAuthMutation";
-import path from "@/common/constants/path";
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
@@ -45,7 +41,7 @@ export default function ForgotPasswordScreen() {
     reissuePassword(
       { email },
       {
-        onSuccess: (data) => {
+        onSuccess: () => {
           // 성공 시 로그인 화면으로 이동
           setTimeout(() => {
             router.back();
@@ -62,23 +58,16 @@ export default function ForgotPasswordScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <BackButtonHeader disabled={isLoading} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
-      >
-        {/* 전체 콘텐츠 영역 */}
-        <View style={styles.content}>
-          {/* 상단 헤더 */}
-          <AuthHeader
-            icon="lock-reset"
-            title="비밀번호 찾기"
-            description={`가입하신 이메일 주소를 입력해주세요.\n임시 비밀번호를 발급해드립니다.`}
-          />
+    <ScreenLayout backButtonDisabled={isLoading}>
+      {/* 상단 헤더 */}
+      <AuthHeader
+        icon="lock-reset"
+        title="비밀번호 찾기"
+        description={`가입하신 이메일 주소를 입력해주세요.\n임시 비밀번호를 발급해드립니다.`}
+      />
 
-          {/* 입력 폼 영역 */}
-          <View style={styles.formContainer}>
+      {/* 입력 폼 영역 */}
+      <View style={styles.formContainer}>
             <TextInput
               label="이메일"
               value={email}
@@ -112,25 +101,11 @@ export default function ForgotPasswordScreen() {
               {isLoading ? "전송 중..." : "임시 비밀번호 발급"}
             </Button>
           </View>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+    </ScreenLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: color.white,
-  },
-  container: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    padding: RFValue(24),
-    justifyContent: "space-between",
-  },
   formContainer: {
     flexGrow: 1,
     justifyContent: "flex-start",
