@@ -49,8 +49,6 @@ const SignupScreen: React.FC = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -254,10 +252,6 @@ const SignupScreen: React.FC = () => {
             setConfirmPassword={setConfirmPassword}
             passwordError={passwordError}
             setPasswordError={setPasswordError}
-            passwordVisible={passwordVisible}
-            setPasswordVisible={setPasswordVisible}
-            confirmPasswordVisible={confirmPasswordVisible}
-            setConfirmPasswordVisible={setConfirmPasswordVisible}
             onSubmit={handleSignup}
             isSubmitting={isSubmitting}
           />

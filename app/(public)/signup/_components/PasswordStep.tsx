@@ -1,12 +1,11 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import {
-  TextInput,
   Button,
-  HelperText,
   Text,
   ActivityIndicator,
 } from "react-native-paper";
+import { FormInput } from "@/common/components/form";
 import { RFValue } from "react-native-responsive-fontsize";
 import path from "@/common/constants/path";
 import { useRouter } from "expo-router";
@@ -18,10 +17,6 @@ export interface PasswordStepProps {
   setConfirmPassword: (confirmPassword: string) => void;
   passwordError: string;
   setPasswordError: (error: string) => void;
-  passwordVisible: boolean;
-  setPasswordVisible: (visible: boolean) => void;
-  confirmPasswordVisible: boolean;
-  setConfirmPasswordVisible: (visible: boolean) => void;
   onSubmit: () => Promise<Boolean>;
   isSubmitting: boolean;
 }
@@ -33,10 +28,6 @@ const PasswordStep: React.FC<PasswordStepProps> = ({
   setConfirmPassword,
   passwordError,
   setPasswordError,
-  passwordVisible,
-  setPasswordVisible,
-  confirmPasswordVisible,
-  setConfirmPasswordVisible,
   onSubmit,
   isSubmitting,
 }) => {
@@ -53,61 +44,29 @@ const PasswordStep: React.FC<PasswordStepProps> = ({
       <Text variant="titleLarge" style={styles.stepTitle}>
         비밀번호 설정
       </Text>
-      <TextInput
+      <FormInput
         label="비밀번호 (8자 이상, 15자 이하)"
         value={password}
         onChangeText={(text) => {
           setPassword(text);
           if (passwordError) setPasswordError("");
         }}
-        mode="outlined"
-        secureTextEntry={!passwordVisible}
-        style={styles.input}
-        error={!!passwordError}
+        type="password"
         disabled={isSubmitting}
-        theme={{
-          fonts: {
-            bodyLarge: { fontSize: RFValue(16) },
-          },
-        }}
-        right={
-          <TextInput.Icon
-            icon={passwordVisible ? "eye-off" : "eye"}
-            onPress={() => setPasswordVisible(!passwordVisible)}
-          />
-        }
+        icon="lock-outline"
       />
-      <TextInput
+      <FormInput
         label="비밀번호 확인"
         value={confirmPassword}
         onChangeText={(text) => {
           setConfirmPassword(text);
           if (passwordError) setPasswordError("");
         }}
-        mode="outlined"
-        secureTextEntry={!confirmPasswordVisible}
-        style={styles.input}
-        error={!!passwordError}
+        type="password"
         disabled={isSubmitting}
-        theme={{
-          fonts: {
-            bodyLarge: { fontSize: RFValue(16) },
-          },
-        }}
-        right={
-          <TextInput.Icon
-            icon={confirmPasswordVisible ? "eye-off" : "eye"}
-            onPress={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
-          />
-        }
+        icon="lock-check-outline"
+        error={passwordError || undefined}
       />
-      <HelperText
-        type="error"
-        visible={!!passwordError}
-        style={styles.helperText}
-      >
-        {passwordError}
-      </HelperText>
       <View style={styles.buttonContainer}>
         <Button
           mode="contained"
@@ -140,13 +99,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: RFValue(22),
     lineHeight: RFValue(28),
-  },
-  input: {
-    marginBottom: RFValue(8),
-    fontSize: RFValue(16),
-  },
-  helperText: {
-    fontSize: RFValue(14),
   },
   buttonContainer: {
     height: RFValue(50),
