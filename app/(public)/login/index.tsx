@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   },
   // actionContainer는 아래쪽에 위치
   actionContainer: {
-    paddingBottom: RFValue(10), // 화면 하단과의 여백
+    // paddingBottom: RFValue(5), // 화면 하단과의 여백
   },
   button: {
     borderRadius: RFValue(30),
@@ -265,7 +265,6 @@ const styles = StyleSheet.create({
     color: color.secondary,
   },
   forgotPasswordButton: {
-    marginTop: RFValue(10),
     width: "100%",
   },
   forgotPasswordLabel: {
