@@ -7,6 +7,7 @@ import { time } from "console";
 import type { LoginResponse } from "../types/response/loginResponse";
 import type { LoginRequest } from "../types/request/loginRequest";
 import type { LogoutRequest } from "../types/request/logoutRequest";
+import type { ReissuePasswordRequest } from "../types/request/reissuePasswordRequest";
 
 export const authService = {
   // 이메일 OTP 요청 API
@@ -73,6 +74,17 @@ export const authService = {
   // 회원 탈퇴
   deleteAccount: async (): Promise<MessageResponse> => {
     const response = await apiService.delete<MessageResponse>(`/v1/auth/withdraw`);
+    return response;
+  },
+
+  // 비밀번호 재발급
+  reissuePassword: async (email: string): Promise<MessageResponse> => {
+    const response = await apiService.post<MessageResponse>(
+      `/v1/auth/reissue-password`,
+      {
+        email,
+      } as ReissuePasswordRequest
+    );
     return response;
   },
 };

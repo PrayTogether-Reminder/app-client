@@ -13,6 +13,7 @@ const path = {
   showFriendAdd: () => "/(protected)/friends/add" as Route,
   showLogin: () => "/(public)/login" as Route,
   showSignup: () => "/(public)/signup" as Route,
+  showForgotPassword: () => "/(public)/forgot-password" as Route,
   showWelcome: () => "/" as Route,
 };
 

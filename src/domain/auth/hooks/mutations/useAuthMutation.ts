@@ -4,6 +4,7 @@ import type { LoginRequest } from "../../types/request/loginRequest";
 import type { LogoutRequest } from "../../types/request/logoutRequest";
 import type { SignupRequest } from "../../types/request/signupRequest";
 import type { VerifyOtpRequest } from "../../types/request/verifyOtpRequest";
+import type { ReissuePasswordRequest } from "../../types/request/reissuePasswordRequest";
 import { showAlert } from "@/common/components/modal/stores/useAlertStore";
 
 export const useOtpEmailRequestMutation = () => {
@@ -112,6 +113,27 @@ export const useDeleteAccountMutation = () => {
         title: "회원 탈퇴 실패",
         message: error.message,
         icon: "account-remove",
+      });
+    },
+  });
+};
+
+export const useReissuePasswordMutation = () => {
+  return useMutation({
+    mutationFn: ({ email }: ReissuePasswordRequest) =>
+      authService.reissuePassword(email),
+    onSuccess: (data) => {
+      showAlert({
+        title: "임시 비밀번호 발급 완료",
+        message: data.message,
+        icon: "email-check",
+      });
+    },
+    onError: (error, requests, context) => {
+      showAlert({
+        title: "임시 비밀번호 발급 실패",
+        message: error.message,
+        icon: "email-remove",
       });
     },
   });

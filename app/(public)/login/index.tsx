@@ -13,8 +13,8 @@ import {
   Text,
   HelperText,
   ActivityIndicator,
-  useTheme,
   Avatar,
+  IconButton,
 } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -22,11 +22,9 @@ import { color } from "@/common/styles/color";
 import { useLoginMutation } from "@/domain/auth/hooks/mutations/useAuthMutation";
 import path from "@/common/constants/path";
 import { useAuthStore } from "@/domain/auth/stores/useAuthStore";
-import { da } from "date-fns/locale";
 
 export default function LoginScreen() {
   const router = useRouter();
-  const theme = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -66,6 +64,16 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <View style={styles.top}>
+        <IconButton
+          icon="arrow-left"
+          size={RFValue(30)}
+          onPress={() => router.back()}
+          style={styles.backButton}
+          disabled={isLoading}
+          iconColor={color.secondary}
+        />
+      </View>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
@@ -149,7 +157,17 @@ export default function LoginScreen() {
               계정이 없으신가요?{" "}
               <Text style={styles.switchButtonHighlight}>회원가입</Text>
             </Button>
-            {/* 비밀번호 찾기 등 추가 링크 */}
+
+            <Button
+              mode="text"
+              onPress={() => router.push(path.showForgotPassword())}
+              style={styles.forgotPasswordButton}
+              disabled={isLoading}
+              textColor={color.black}
+              labelStyle={styles.forgotPasswordLabel}
+            >
+              <Text style={styles.forgotPasswordText}>비밀번호를 잊으셨나요?</Text>
+            </Button>
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -161,6 +179,19 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: color.white,
+  },
+  top: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    paddingHorizontal: RFValue(4),
+    paddingTop: RFValue(8),
+    borderBottomWidth: 1,
+    borderBottomColor: "#EEEEEE",
+  },
+  backButton: {
+    marginLeft: 0,
+    paddingLeft: 0,
   },
   container: {
     flex: 1,
@@ -232,5 +263,18 @@ const styles = StyleSheet.create({
   switchButtonHighlight: {
     fontWeight: "bold",
     color: color.secondary,
+  },
+  forgotPasswordButton: {
+    marginTop: RFValue(10),
+    width: "100%",
+  },
+  forgotPasswordLabel: {
+    fontSize: RFValue(13),
+    textAlign: "center",
+    lineHeight: RFValue(18),
+  },
+  forgotPasswordText: {
+    color: color.secondary,
+    textDecorationLine: "underline",
   },
 });
