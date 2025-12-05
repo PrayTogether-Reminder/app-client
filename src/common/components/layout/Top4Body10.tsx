@@ -1,8 +1,6 @@
 import React, { ReactNode } from "react";
 import { View, StyleSheet } from "react-native";
-import { RFValue } from "react-native-responsive-fontsize";
-import { backgroundColor, flexMarker, color } from "../../styles/color";
-import { Divider, Surface } from "react-native-paper";
+import { backgroundColor } from "../../styles/color";
 
 interface LayoutProps {
   tops: ReactNode[];
