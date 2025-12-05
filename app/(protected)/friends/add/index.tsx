@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { View, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
-import Top1Body10 from "@/common/layout/Top1Body10";
+import Top1Body10 from "@/common/components/layout/Top1Body10";
 import OverlayLoading from "@/common/components/loading/OverlayLoading";
 import FriendAddTop from "./_components/FriendAddTop";
 import FriendAddForm from "./_components/FriendAddForm";

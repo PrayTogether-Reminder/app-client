@@ -2,7 +2,7 @@ import { usePrayerCreationStore } from "@/domain/prayers/stores/usePrayerCreatio
 import { router, Stack } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { BackHandler, SafeAreaView, StyleSheet, View } from "react-native";
-import Top1Body10Bottom1 from "../../../../src/common/layout/Top1Body10Bottom1";
+import Top1Body10Bottom1 from "../../../../src/common/components/layout/Top1Body10Bottom1";
 import { color } from "../../../../src/common/styles/color";
 import { useSelectedRoomStore } from "../../../../src/domain/rooms/stores/useSelectedRoomStore";
 import ConfirmationModal from "@/common/components/modal/ConfirmationModal";

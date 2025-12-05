@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { View, StyleSheet } from "react-native";
-import Top1Body10 from "@/common/layout/Top1Body10";
+import Top1Body10 from "@/common/components/layout/Top1Body10";
 import OverlayLoading from "@/common/components/loading/OverlayLoading";
 import FriendRequestTop from "./_components/FriendRequestTop";
 import FriendRequestBody from "./_components/FriendRequestBody";

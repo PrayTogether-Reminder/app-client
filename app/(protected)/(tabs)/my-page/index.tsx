@@ -3,7 +3,7 @@ import { StyleSheet, View, Linking, Platform, AppState } from "react-native";
 import { useRouter } from "expo-router";
 import { backgroundColor } from "@/common/styles/color";
 
-import Top4Body10 from "@/common/layout/Top4Body10";
+import Top4Body10 from "@/common/components/layout/Top4Body10";
 import ProfileSection from "../../my-page/index/_components/ProfileSection";
 import ListSection from "../../my-page/index/_components/ListSection";
 import path from "@/common/constants/path";

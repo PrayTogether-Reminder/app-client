@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 
 import { backgroundColor } from "@/common/styles/color";
-import Top1Body10Bottom1 from "../../../../src/common/layout/Top1Body10Bottom1";
+import Top1Body10Bottom1 from "../../../../src/common/components/layout/Top1Body10Bottom1";
 import PrayerReadBody from "./_components/PrayerReadBody";
 import PrayerReadBottom from "./_components/PrayerReadBottom";
 import PrayerReadTop from "./_components/PrayerReadTop";

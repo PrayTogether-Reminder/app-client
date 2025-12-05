@@ -8,7 +8,7 @@ import { useInviationsQuery } from "@/domain/invitations/hooks/queries/useInvita
 import type { UpdateInvitationStatusRequest } from "@/domain/invitations/types/request/updateInvitationStatusRequest";
 
 import OverlayLoading from "@/common/components/loading/OverlayLoading";
-import Top1Body10 from "@/common/layout/Top1Body10";
+import Top1Body10 from "@/common/components/layout/Top1Body10";
 import InvitationBody from "./_components/InvitationBody";
 import InvitationTop from "./_components/InvitationTop";
 

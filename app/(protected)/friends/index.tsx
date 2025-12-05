@@ -3,7 +3,7 @@ import { View, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import path from "@/common/constants/path";
 import { color } from "@/common/styles/color";
-import Top1Body10 from "@/common/layout/Top1Body10";
+import Top1Body10 from "@/common/components/layout/Top1Body10";
 import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
 import FriendsTop from "./_components/FriendsTop";
 import FriendsBody from "./_components/FriendsBody";

@@ -4,7 +4,7 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import { Appbar } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { backgroundColor, color } from "@/common/styles/color";
-import Top1Body10Bottom1 from "@/common/layout/Top1Body10Bottom1";
+import Top1Body10Bottom1 from "@/common/components/layout/Top1Body10Bottom1";
 
 import MemberSearchInput from "./_components/MemberSearchInput";
 import SelectableMemberList from "./_components/SelectableMemberList";

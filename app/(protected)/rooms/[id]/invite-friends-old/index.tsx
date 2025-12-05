@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { View, StyleSheet } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import Top1Body10 from "@/common/layout/Top1Body10";
+import Top1Body10 from "@/common/components/layout/Top1Body10";
 import InviteFriendsTop from "./_components/InviteFriendsTop";
 import InviteFriendsBody from "./_components/InviteFriendsBody";
 import BottomInviteButton from "./_components/BottomInviteButton";

@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import { View, StyleSheet } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
-import { backgroundColor, flexMarker, color } from "../styles/color";
+import { backgroundColor, flexMarker, color } from "../../styles/color";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface LayoutProps {

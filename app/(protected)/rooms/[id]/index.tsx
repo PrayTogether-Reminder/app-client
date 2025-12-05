@@ -1,7 +1,7 @@
 import { Fragment, useState } from "react";
 import { StyleSheet } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import Top1Body10Bottom1 from "@/common/layout/Top1Body10Bottom1";
+import Top1Body10Bottom1 from "@/common/components/layout/Top1Body10Bottom1";
 import PrayerRoomTop from "./_components/PrayerRoomTop";
 import PrayerRoomBody from "./_components/PrayerRoomBody";
 import PrayerRoomBottom from "./_components/PrayerRoomBottom";
