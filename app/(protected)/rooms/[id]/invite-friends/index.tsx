@@ -8,8 +8,8 @@ import Top1Body10Bottom1 from "@/common/components/layout/Top1Body10Bottom1";
 
 import MemberSearchInput from "./_components/MemberSearchInput";
 import SelectableMemberList from "./_components/SelectableMemberList";
-import BottomInviteButton from "./_components/BottomInviteButton";
 import SelectedMemberChips from "./_components/SelectedMemberChips";
+import { BottomActionButton } from "@/common/components/button";
 
 import { useSearchMembersQuery } from "@/domain/members/hooks/queries/memberQueries";
 import { useRoomMembersQuery } from "@/domain/rooms/hooks/queries/useRoomQueries";
@@ -159,12 +159,15 @@ export default function InviteMembersScreen(): React.ReactElement {
         </View>,
       ]}
       bottoms={[
-        <BottomInviteButton
+        <BottomActionButton
           key="button"
-          selectedCount={selectedMembers.length}
           onPress={handleInvite}
-          isLoading={isPending}
-        />,
+          disabled={selectedMembers.length === 0 || isPending}
+          loading={isPending}
+          icon="account-multiple-plus"
+          text={`기도방 초대 (${selectedMembers.length}명)`}
+          loadingText="초대 중..."
+        />
       ]}
     />
   );

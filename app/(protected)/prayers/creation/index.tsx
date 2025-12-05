@@ -6,14 +6,19 @@ import Top1Body10Bottom1 from "../../../../src/common/components/layout/Top1Body
 import { color } from "../../../../src/common/styles/color";
 import { useSelectedRoomStore } from "../../../../src/domain/rooms/stores/useSelectedRoomStore";
 import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
+import { BottomActionButton } from "@/common/components/button";
 import PrayerCreationBody from "./_components/PrayerCreationBody";
-import PrayerCreationBottom from "./_components/PrayerCreationBottom";
 import PrayerCreationTop from "./_components/PrayerCreationTop";
+import { usePrayerCreationMutation } from "@/domain/prayers/hooks/mutations/usePrayerMutations";
+import { useQueryClient } from "@tanstack/react-query";
+import QUERY_KEYS from "@/common/constants/queryKeys";
 
 export default function PrayerCreationScreen() {
   const [prayerTitle, setPrayerTitle] = useState("");
   const room = useSelectedRoomStore().selectedRoom;
-  const { clear: clearPrayer } = usePrayerCreationStore();
+  const { prayerList, clear: clearPrayer } = usePrayerCreationStore();
+  const queryClient = useQueryClient();
+  const { mutate: createPrayerMutation, isPending: isCreating } = usePrayerCreationMutation();
 
   // [기도 작성 취소] Dialog 상태
   const [prayerCancellationDialog, setprayerCancellationDialog] =
@@ -34,6 +39,24 @@ export default function PrayerCreationScreen() {
   // [기도 작성 취소]의 취소
   const cancelPrayerCancellation = () => {
     setprayerCancellationDialog(false);
+  };
+
+  // 기도 내용 전체 저장
+  const handleCreatePrayer = () => {
+    if (!room?.id) return;
+
+    createPrayerMutation(
+      { roomId: room.id, title: prayerTitle, prayerList },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: [QUERY_KEYS.rooms, room.id, QUERY_KEYS.infinite],
+          });
+          clearPrayer();
+          router.back();
+        },
+      }
+    );
   };
 
   //  안드로이드 뒤로가기 버튼 처리
@@ -74,11 +97,15 @@ export default function PrayerCreationScreen() {
           />,
         ]}
         bottoms={[
-          <PrayerCreationBottom
-            disabled={!prayerTitle.trim()}
-            title={prayerTitle}
-            roomId={room?.id as number}
-          />,
+          <BottomActionButton
+            key="button"
+            onPress={handleCreatePrayer}
+            disabled={!prayerTitle.trim() || isCreating}
+            loading={isCreating}
+            icon="content-save-all"
+            text="모두 저장하기"
+            loadingText="저장 중..."
+          />
         ]}
       />
 

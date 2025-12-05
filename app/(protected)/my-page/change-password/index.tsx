@@ -7,11 +7,11 @@ import {
 import {
   Text,
   List,
+  Appbar,
 } from "react-native-paper";
 import { FormInput } from "@/common/components/form";
-import { PrimaryButton } from "@/common/components/button";
-import { AuthHeader } from "@/common/components/header";
-import { ScreenLayout } from "@/common/components/layout";
+import { BottomActionButton } from "@/common/components/button";
+import { Top1Body10Bottom1Layout } from "@/common/components/layout";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
@@ -66,7 +66,7 @@ export default function ChangePasswordScreen() {
     changePassword(
       { newPassword },
       {
-        onSuccess: (data) => {
+        onSuccess: () => {
           setTimeout(() => {
             router.back();
           }, 1500);
@@ -82,69 +82,114 @@ export default function ChangePasswordScreen() {
   };
 
   return (
-    <ScreenLayout
-      backButtonDisabled={isLoading}
+    <Top1Body10Bottom1Layout
+      showBackButton={false}
+      keyboardAvoiding
       scrollable
-    >
-      {/* 상단 헤더 */}
-      <AuthHeader
-        icon="lock-reset"
-        title="비밀번호 변경"
-        description="새로운 비밀번호를 입력해주세요."
-      />
+      contentPadding={false}
+      tops={[
+        <Appbar.Header key="header" style={styles.header}>
+          <Appbar.BackAction
+            onPress={() => router.back()}
+            color={color.primary}
+            style={styles.headerBackAction}
+            disabled={isLoading}
+          />
+          <Appbar.Content
+            title="비밀번호 변경"
+            titleStyle={styles.headerTitle}
+          />
+          <Appbar.Action
+            icon=""
+            disabled
+            style={styles.headerAction}
+          />
+        </Appbar.Header>,
+      ]}
+      bodies={[
+        <View key="body" style={styles.bodyContainer}>
+          {/* 비밀번호 규칙 안내 */}
+          <View style={styles.rulesContainer}>
+            <Text variant="bodySmall" style={styles.rulesTitle}>
+              비밀번호 규칙
+            </Text>
+            <List.Item
+              title="8자 이상"
+              left={(props) => <List.Icon {...props} icon="check-circle-outline" />}
+              titleStyle={styles.ruleText}
+              style={styles.ruleItem}
+            />
+          </View>
 
-      {/* 비밀번호 규칙 안내 */}
-      <View style={styles.rulesContainer}>
-              <Text variant="bodySmall" style={styles.rulesTitle}>
-                비밀번호 규칙
-              </Text>
-              <List.Item
-                title="8자 이상"
-                left={(props) => <List.Icon {...props} icon="check-circle-outline" />}
-                titleStyle={styles.ruleText}
-                style={styles.ruleItem}
-              />
-            </View>
+          {/* 입력 폼 영역 */}
+          <View style={styles.formContainer}>
+            <FormInput
+              label="새 비밀번호"
+              value={newPassword}
+              onChangeText={setNewPassword}
+              type="password"
+              disabled={isLoading}
+              icon="lock-outline"
+              error={newPasswordError || undefined}
+            />
 
-            {/* 입력 폼 영역 */}
-            <View style={styles.formContainer}>
-              <FormInput
-                label="새 비밀번호"
-                value={newPassword}
-                onChangeText={setNewPassword}
-                type="password"
-                disabled={isLoading}
-                icon="lock-outline"
-                error={newPasswordError || undefined}
-              />
-
-              <FormInput
-                label="새 비밀번호 확인"
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-                type="password"
-                disabled={isLoading}
-                icon="lock-check-outline"
-                error={confirmPasswordError || undefined}
-              />
-            </View>
-
-            {/* 하단 액션 버튼 영역 */}
-            <View style={styles.actionContainer}>
-              <PrimaryButton
-                onPress={handleChangePassword}
-                disabled={isLoading}
-                loading={isLoading}
-                icon="check"
-              >
-                {isLoading ? "변경 중..." : "비밀번호 변경"}
-              </PrimaryButton>
-            </View>
-    </ScreenLayout>
+            <FormInput
+              label="새 비밀번호 확인"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              type="password"
+              disabled={isLoading}
+              icon="lock-check-outline"
+              error={confirmPasswordError || undefined}
+            />
+          </View>
+        </View>
+      ]}
+      bottoms={[
+        <BottomActionButton
+          key="button"
+          onPress={handleChangePassword}
+          disabled={isLoading}
+          loading={isLoading}
+          icon="check"
+          text="비밀번호 변경"
+          loadingText="변경 중..."
+        />
+      ]}
+    />
   );
 }
 
 const styles = StyleSheet.create({
+  header: {
+    backgroundColor: color.third,
+    height: "100%",
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingTop: 0,
+    elevation: 0,
+  },
+  headerTitle: {
+    color: color.primary,
+    fontSize: RFValue(20),
+    fontWeight: "bold",
+    textAlign: "center",
+    alignSelf: "center",
+    lineHeight: RFValue(26),
+  },
+  headerBackAction: {
+    alignSelf: "center",
+    marginLeft: 0,
+  },
+  headerAction: {
+    alignSelf: "center",
+    marginRight: 0,
+  },
+  bodyContainer: {
+    flex: 1,
+    paddingHorizontal: RFValue(24),
+  },
   rulesContainer: {
     backgroundColor: "#F5F5F5",
     borderRadius: RFValue(12),
@@ -155,11 +200,12 @@ const styles = StyleSheet.create({
     fontSize: RFValue(14),
     fontWeight: "bold",
     color: color.secondary,
+    paddingBottom: RFValue(12),
     marginBottom: RFValue(8),
   },
   ruleItem: {
     paddingVertical: 0,
-    minHeight: RFValue(36),
+    // minHeight: RFValue(36),
   },
   ruleText: {
     fontSize: RFValue(13),
@@ -170,8 +216,5 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     paddingTop: RFValue(10),
     paddingBottom: RFValue(20),
-  },
-  actionContainer: {
-    paddingBottom: RFValue(10),
   },
 });
