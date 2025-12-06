@@ -8,7 +8,7 @@ import { useInviationsQuery } from "@/domain/invitations/hooks/queries/useInvita
 import type { UpdateInvitationStatusRequest } from "@/domain/invitations/types/request/updateInvitationStatusRequest";
 
 import OverlayLoading from "@/common/components/loading/OverlayLoading";
-import Top1Body10 from "@/common/components/layout/Top1Body10";
+import { Top1Body10Layout } from "@/common/components/layout";
 import InvitationBody from "./_components/InvitationBody";
 import InvitationTop from "./_components/InvitationTop";
 
@@ -44,32 +44,32 @@ export default function InvitationsScreen(): React.ReactElement {
   }, [isLoading, isRefetching, isPendingUpdate, refetch]);
 
   return (
-    <View style={styles.outerContainer}>
-      <Top1Body10
-        tops={[<InvitationTop />]} // 분리된 AppBar 컴포넌트 사용
+    <>
+      <Top1Body10Layout
+        showBackButton={false}
+        keyboardAvoiding={false}
+        scrollable={false}
+        contentPadding={false}
+        tops={[<InvitationTop />]}
         bodies={[
           <InvitationBody
             invitations={invitations}
             isLoading={isLoading}
             isRefetching={isRefetching}
             isError={isError}
-            error={error as Error | null} // 타입 단언 또는 타입 가드 필요 시 사용
+            error={error as Error | null}
             isPending={isPendingUpdate}
             onRefresh={handleRefresh}
             onStatusUpdate={handleUpdateStatus}
-            onRetry={refetch} // 에러 시 재시도 함수로 refetch 전달
+            onRetry={refetch}
           />,
         ]}
       />
 
       {/* Mutation 로딩 오버레이 */}
       {isPendingUpdate && <OverlayLoading />}
-    </View>
+    </>
   );
 }
 
-const styles = StyleSheet.create({
-  outerContainer: {
-    flex: 1,
-  },
-});
+const styles = StyleSheet.create({});

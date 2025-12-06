@@ -1,10 +1,10 @@
 import React, { useState, useCallback } from "react";
 import { View, StyleSheet } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import { Appbar } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { backgroundColor, color } from "@/common/styles/color";
 import { Top1Body10Bottom1Layout } from "@/common/components/layout";
+import { TopHeader } from "@/common/components/header/TopHeader";
 
 import MemberSearchInput from "./_components/MemberSearchInput";
 import SelectableMemberList from "./_components/SelectableMemberList";
@@ -111,23 +111,11 @@ export default function InviteMembersScreen(): React.ReactElement {
       scrollable={false}
       contentPadding={false}
       tops={[
-        <Appbar.Header key="header" style={styles.header}>
-          <Appbar.BackAction
-            onPress={() => router.back()}
-            color={color.primary}
-            style={styles.headerBackAction}
-          />
-          <Appbar.Content
-            title="기도방 초대"
-            titleStyle={styles.headerTitle}
-            style={styles.headerContent}
-          />
-          <Appbar.Action
-            icon=""
-            disabled
-            style={styles.headerAction}
-          />
-        </Appbar.Header>,
+        <TopHeader
+          key="header"
+          title="기도방 초대"
+          onBackPress={() => router.back()}
+        />,
       ]}
       bodies={[
         <View key="body" style={styles.bodyContainer}>
@@ -179,39 +167,6 @@ export default function InviteMembersScreen(): React.ReactElement {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    backgroundColor: color.third,
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingTop: 0,
-    paddingBottom: 0,
-    paddingVertical: 0,
-    elevation: 0,
-    minHeight: 0,
-    height: "100%",
-  },
-  headerContent: {
-    marginTop: -RFValue(20),
-  },
-  headerTitle: {
-    color: color.primary,
-    fontSize: RFValue(20),
-    fontWeight: "bold",
-    textAlign: "center",
-    alignSelf: "center",
-    lineHeight: RFValue(22),
-  },
-  headerBackAction: {
-    alignSelf: "center",
-    marginLeft: 0,
-    marginTop: -RFValue(20),
-  },
-  headerAction: {
-    alignSelf: "center",
-    marginRight: 0,
-    marginTop: -RFValue(20),
-  },
   bodyContainer: {
     flex: 1,
     width: "100%",

@@ -7,11 +7,11 @@ import {
 import {
   Text,
   List,
-  Appbar,
 } from "react-native-paper";
 import { FormInput } from "@/common/components/form";
 import { BottomActionButton } from "@/common/components/button";
 import { Top1Body10Bottom1Layout } from "@/common/components/layout";
+import { TopHeader } from "@/common/components/header/TopHeader";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
@@ -88,24 +88,11 @@ export default function ChangePasswordScreen() {
       scrollable
       contentPadding={false}
       tops={[
-        <Appbar.Header key="header" style={styles.header}>
-          <Appbar.BackAction
-            onPress={() => router.back()}
-            color={color.primary}
-            style={styles.headerBackAction}
-            disabled={isLoading}
-          />
-          <Appbar.Content
-            title="비밀번호 변경"
-            titleStyle={styles.headerTitle}
-            style={styles.headerContent}
-          />
-          <Appbar.Action
-            icon=""
-            disabled
-            style={styles.headerAction}
-          />
-        </Appbar.Header>,
+        <TopHeader
+          key="header"
+          title="비밀번호 변경"
+          onBackPress={() => router.back()}
+        />,
       ]}
       bodies={[
         <View key="body" style={styles.bodyContainer}>
@@ -162,39 +149,6 @@ export default function ChangePasswordScreen() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    backgroundColor: color.third,
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingTop: 0,
-    paddingBottom: 0,
-    paddingVertical: 0,
-    elevation: 0,
-    minHeight: 0,
-    height: "100%",
-  },
-  headerContent: {
-    marginTop: -RFValue(20),
-  },
-  headerTitle: {
-    color: color.primary,
-    fontSize: RFValue(20),
-    fontWeight: "bold",
-    textAlign: "center",
-    alignSelf: "center",
-    lineHeight: RFValue(22),
-  },
-  headerBackAction: {
-    alignSelf: "center",
-    marginLeft: 0,
-    marginTop: -RFValue(20),
-  },
-  headerAction: {
-    alignSelf: "center",
-    marginRight: 0,
-    marginTop: -RFValue(20),
-  },
   bodyContainer: {
     flex: 1,
     paddingHorizontal: RFValue(24),
