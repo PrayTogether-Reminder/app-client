@@ -36,22 +36,27 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center", // 수직 중앙 정렬 추가
+    alignItems: "center",
     paddingLeft: RFValue(22),
     backgroundColor: color.third,
-    height: "100%", // 헤더 높이 고정
-    paddingTop: 0, // 상단 패딩 제거
-    elevation: 0, // 그림자 제거 (Android)
+    height: "100%",
+    paddingTop: 0,
+    paddingBottom: 0,
+    paddingVertical: 0,
+    elevation: 0,
+    minHeight: 0,
   },
   title: {
     fontSize: RFValue(18),
     fontWeight: "bold",
     color: color.primary,
-    alignSelf: "center", // 자체적으로도 중앙 정렬
-    lineHeight: RFValue(24),
+    alignSelf: "center",
+    lineHeight: RFValue(22),
+    marginTop: -RFValue(20),
   },
   close: {
-    alignSelf: "center", // X 버튼 중앙 정렬
-    marginRight: 0, // 기본 마진 제거
+    alignSelf: "center",
+    marginRight: 0,
+    marginTop: -RFValue(20),
   },
 });

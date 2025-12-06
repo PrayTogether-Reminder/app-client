@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 
 import { backgroundColor, color } from "@/common/styles/color";
-import Top1Body10Bottom1 from "../../../../src/common/components/layout/Top1Body10Bottom1";
+import { Top1Body10Bottom1Layout } from "@/common/components/layout";
 import PrayerReadBody from "./_components/PrayerReadBody";
 import PrayerReadTop from "./_components/PrayerReadTop";
 import OverlayLoading from "@/common/components/loading/OverlayLoading";
@@ -35,7 +35,11 @@ export default function PrayerReadScreen() {
 
   return (
     <Fragment>
-      <Top1Body10Bottom1
+      <Top1Body10Bottom1Layout
+        showBackButton={false}
+        keyboardAvoiding
+        scrollable={false}
+        contentPadding={false}
         tops={[
           <PrayerReadTop
             key="top"

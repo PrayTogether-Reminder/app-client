@@ -47,6 +47,7 @@ export const Top1Body10Bottom1Layout: React.FC<
       scrollable={scrollable}
       contentPadding={contentPadding}
       backgroundColor={backgroundColor}
+      justifyContent="flex-start"
     >
       <Top1Body10Bottom1 tops={tops} bodies={bodies} bottoms={bottoms} />
     </ScreenLayout>

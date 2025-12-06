@@ -1,7 +1,7 @@
 import { Fragment, useState } from "react";
 import { StyleSheet } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import Top1Body10Bottom1 from "@/common/components/layout/Top1Body10Bottom1";
+import { Top1Body10Bottom1Layout } from "@/common/components/layout";
 import PrayerRoomTop from "./_components/PrayerRoomTop";
 import PrayerRoomBody from "./_components/PrayerRoomBody";
 import PrayerRoomBottom from "./_components/PrayerRoomBottom";
@@ -40,7 +40,11 @@ export default function PrayerRoomScreen(): React.ReactElement {
         closeRightMenu={closeRightMenu}
         openInvite={openInvite}
       />
-      <Top1Body10Bottom1
+      <Top1Body10Bottom1Layout
+        showBackButton={false}
+        keyboardAvoiding
+        scrollable={false}
+        contentPadding={false}
         tops={[<PrayerRoomTop openRightMenu={openRightMenu} />]}
         bodies={[<PrayerRoomBody roomId={roomId} />]}
         bottoms={[<PrayerRoomBottom />]}

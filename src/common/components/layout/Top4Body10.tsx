@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import { View, StyleSheet } from "react-native";
 import { backgroundColor } from "../../styles/color";
+import { RFValue } from "react-native-responsive-fontsize";
 
 interface LayoutProps {
   tops: ReactNode[];
@@ -33,15 +34,13 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   topSection: {
-    flex: 4,
+    height: RFValue(170),
     backgroundColor: backgroundColor.white,
     width: "100%",
-    height: "100%",
   },
   bodySection: {
-    flex: 10,
+    flex: 1,
     backgroundColor: backgroundColor.default,
     width: "100%",
-    height: "100%",
   },
 });

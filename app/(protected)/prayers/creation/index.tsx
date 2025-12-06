@@ -2,7 +2,7 @@ import { usePrayerCreationStore } from "@/domain/prayers/stores/usePrayerCreatio
 import { router, Stack } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { BackHandler, SafeAreaView, StyleSheet, View } from "react-native";
-import Top1Body10Bottom1 from "../../../../src/common/components/layout/Top1Body10Bottom1";
+import { Top1Body10Bottom1Layout } from "@/common/components/layout";
 import { color } from "../../../../src/common/styles/color";
 import { useSelectedRoomStore } from "../../../../src/domain/rooms/stores/useSelectedRoomStore";
 import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
@@ -83,31 +83,35 @@ export default function PrayerCreationScreen() {
         }}
       />
       <View style={styles.container}>
-        <Top1Body10Bottom1
-        tops={[
-          <PrayerCreationTop
-            roomName={room?.name}
-            onCancel={handlePrayeCancellation}
-          />,
-        ]}
-        bodies={[
-          <PrayerCreationBody
-            prayerTitle={prayerTitle}
-            setPrayerTitle={setPrayerTitle}
-          />,
-        ]}
-        bottoms={[
-          <BottomActionButton
-            key="button"
-            onPress={handleCreatePrayer}
-            disabled={!prayerTitle.trim() || isCreating}
-            loading={isCreating}
-            icon="content-save-all"
-            text="모두 저장하기"
-            loadingText="저장 중..."
-          />
-        ]}
-      />
+        <Top1Body10Bottom1Layout
+          showBackButton={false}
+          keyboardAvoiding
+          scrollable={false}
+          contentPadding={false}
+          tops={[
+            <PrayerCreationTop
+              roomName={room?.name}
+              onCancel={handlePrayeCancellation}
+            />,
+          ]}
+          bodies={[
+            <PrayerCreationBody
+              prayerTitle={prayerTitle}
+              setPrayerTitle={setPrayerTitle}
+            />,
+          ]}
+          bottoms={[
+            <BottomActionButton
+              key="button"
+              onPress={handleCreatePrayer}
+              disabled={!prayerTitle.trim() || isCreating}
+              loading={isCreating}
+              icon="content-save-all"
+              text="모두 저장하기"
+              loadingText="저장 중..."
+            />
+          ]}
+        />
 
         {/* 기도 제목 작성 취소 모달 */}
         <ConfirmationModal

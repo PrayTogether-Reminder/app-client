@@ -20,6 +20,7 @@ export interface ScreenLayoutProps {
   scrollable?: boolean;
   contentPadding?: boolean;
   backgroundColor?: string;
+  justifyContent?: 'flex-start' | 'space-between' | 'center' | 'flex-end';
 }
 
 export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
@@ -31,9 +32,14 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
   scrollable = false,
   contentPadding = true,
   backgroundColor = color.white,
+  justifyContent = 'space-between',
 }) => {
   const content = (
-    <View style={[styles.content, contentPadding && styles.contentPadding]}>
+    <View style={[
+      styles.content,
+      contentPadding && styles.contentPadding,
+      { justifyContent }
+    ]}>
       {children}
     </View>
   );
@@ -93,7 +99,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: 'space-between',
   },
   contentPadding: {
     padding: RFValue(24),

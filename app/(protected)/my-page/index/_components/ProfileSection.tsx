@@ -47,7 +47,7 @@ export default function ProfileSection() {
 const styles = StyleSheet.create({
   profileSection: {
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-end",
     height: "95%",
     paddingTop: RFValue(12),
   },

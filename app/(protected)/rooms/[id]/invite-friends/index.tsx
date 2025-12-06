@@ -4,7 +4,7 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import { Appbar } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { backgroundColor, color } from "@/common/styles/color";
-import Top1Body10Bottom1 from "@/common/components/layout/Top1Body10Bottom1";
+import { Top1Body10Bottom1Layout } from "@/common/components/layout";
 
 import MemberSearchInput from "./_components/MemberSearchInput";
 import SelectableMemberList from "./_components/SelectableMemberList";
@@ -105,7 +105,11 @@ export default function InviteMembersScreen(): React.ReactElement {
   }, [roomId, selectedMembers, inviteMembers, router]);
 
   return (
-    <Top1Body10Bottom1
+    <Top1Body10Bottom1Layout
+      showBackButton={false}
+      keyboardAvoiding
+      scrollable={false}
+      contentPadding={false}
       tops={[
         <Appbar.Header key="header" style={styles.header}>
           <Appbar.BackAction
@@ -116,6 +120,7 @@ export default function InviteMembersScreen(): React.ReactElement {
           <Appbar.Content
             title="기도방 초대"
             titleStyle={styles.headerTitle}
+            style={styles.headerContent}
           />
           <Appbar.Action
             icon=""
@@ -176,12 +181,18 @@ export default function InviteMembersScreen(): React.ReactElement {
 const styles = StyleSheet.create({
   header: {
     backgroundColor: color.third,
-    height: "100%",
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
     paddingTop: 0,
+    paddingBottom: 0,
+    paddingVertical: 0,
     elevation: 0,
+    minHeight: 0,
+    height: "100%",
+  },
+  headerContent: {
+    marginTop: -RFValue(20),
   },
   headerTitle: {
     color: color.primary,
@@ -189,15 +200,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     alignSelf: "center",
-    lineHeight: RFValue(26),
+    lineHeight: RFValue(22),
   },
   headerBackAction: {
     alignSelf: "center",
     marginLeft: 0,
+    marginTop: -RFValue(20),
   },
   headerAction: {
     alignSelf: "center",
     marginRight: 0,
+    marginTop: -RFValue(20),
   },
   bodyContainer: {
     flex: 1,

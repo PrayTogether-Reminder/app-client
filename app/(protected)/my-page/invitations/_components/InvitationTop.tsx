@@ -17,12 +17,14 @@ export default function InvitationAppBar({}: InvitationAppBarProps): React.React
         size={RFValue(24)}
         color={color.white}
         onPress={() => router.navigate("/(protected)/(tabs)/my-page" as any)}
+        style={styles.backAction}
       />
       <Appbar.Content
         mode="medium"
         titleStyle={styles.content}
         color={color.white}
         title="기도방 초대 목록"
+        style={styles.headerContent}
       />
     </Appbar.Header>
   );
@@ -30,12 +32,24 @@ export default function InvitationAppBar({}: InvitationAppBarProps): React.React
 
 const styles = StyleSheet.create({
   header: {
-    height: RFValue(36),
+    height: "100%",
     backgroundColor: color.third,
+    paddingTop: 0,
+    paddingBottom: 0,
+    paddingVertical: 0,
+    elevation: 0,
+    minHeight: 0,
   },
-  backAction: {},
+  backAction: {
+    alignSelf: "center",
+    marginLeft: 0,
+    marginTop: -RFValue(20),
+  },
+  headerContent: {
+    marginTop: -RFValue(20),
+  },
   content: {
     fontWeight: "bold",
-    lineHeight: RFValue(24),
+    lineHeight: RFValue(22),
   },
 });

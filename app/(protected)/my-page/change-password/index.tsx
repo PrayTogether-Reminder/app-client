@@ -98,6 +98,7 @@ export default function ChangePasswordScreen() {
           <Appbar.Content
             title="비밀번호 변경"
             titleStyle={styles.headerTitle}
+            style={styles.headerContent}
           />
           <Appbar.Action
             icon=""
@@ -163,12 +164,18 @@ export default function ChangePasswordScreen() {
 const styles = StyleSheet.create({
   header: {
     backgroundColor: color.third,
-    height: "100%",
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
     paddingTop: 0,
+    paddingBottom: 0,
+    paddingVertical: 0,
     elevation: 0,
+    minHeight: 0,
+    height: "100%",
+  },
+  headerContent: {
+    marginTop: -RFValue(20),
   },
   headerTitle: {
     color: color.primary,
@@ -176,15 +183,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     alignSelf: "center",
-    lineHeight: RFValue(26),
+    lineHeight: RFValue(22),
   },
   headerBackAction: {
     alignSelf: "center",
     marginLeft: 0,
+    marginTop: -RFValue(20),
   },
   headerAction: {
     alignSelf: "center",
     marginRight: 0,
+    marginTop: -RFValue(20),
   },
   bodyContainer: {
     flex: 1,
@@ -199,6 +208,7 @@ const styles = StyleSheet.create({
   rulesTitle: {
     fontSize: RFValue(14),
     fontWeight: "bold",
+    paddingTop: RFValue(2),
     color: color.secondary,
     paddingBottom: RFValue(12),
     marginBottom: RFValue(8),
