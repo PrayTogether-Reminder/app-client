@@ -16,6 +16,8 @@ import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
 import { useChangePasswordMutation } from "@/domain/auth/hooks/mutations/useAuthMutation";
+import { Platform } from "react-native";
+import { platform } from "os";
 
 export default function ChangePasswordScreen() {
   const router = useRouter();
@@ -162,14 +164,12 @@ const styles = StyleSheet.create({
   rulesTitle: {
     fontSize: RFValue(14),
     fontWeight: "bold",
-    paddingTop: RFValue(2),
     color: color.secondary,
-    paddingBottom: RFValue(12),
-    marginBottom: RFValue(8),
+    paddingTop: Platform.OS === "ios" ? RFValue(2) : 0,
+    paddingBottom:RFValue(4),
   },
   ruleItem: {
     paddingVertical: 0,
-    // minHeight: RFValue(36),
   },
   ruleText: {
     fontSize: RFValue(13),
