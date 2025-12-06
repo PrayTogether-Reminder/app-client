@@ -12,11 +12,16 @@ import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
 import { usePrayerCompletionMutation } from "../../../../src/domain/prayers/hooks/mutations/usePrayerMutations";
 import { useCloseOnBack } from "@/common/services/back-handler/useCloseOnBack";
 import { Fragment } from "react";
+import { useSelectedRoomStore } from "../../../../src/domain/rooms/stores/useSelectedRoomStore";
 
 export default function PrayerReadScreen() {
   const params = useLocalSearchParams();
   const prayerTitleId = Number(params.id);
-  const roomId = params.roomId ? Number(params.roomId) : undefined;
+  const roomIdFromUrl = params.roomId ? Number(params.roomId) : undefined;
+  const { selectedRoom } = useSelectedRoomStore();
+
+  // URL 파라미터를 우선 사용하고, 없으면 store에서 가져옴
+  const roomId = roomIdFromUrl ?? selectedRoom?.id;
   console.log("PrayerReadScreen - prayerTitleId from URL:", prayerTitleId, "roomId:", roomId);
 
   const { mutate: notifyPrayerCompletion, isPending } = usePrayerCompletionMutation();
@@ -29,7 +34,11 @@ export default function PrayerReadScreen() {
   }, isPending);
 
   const handlePrayerComplete = () => {
-    notifyPrayerCompletion({ prayerTitleId, roomId: roomId! });
+    if (!roomId) {
+      console.error("roomId is missing");
+      return;
+    }
+    notifyPrayerCompletion({ prayerTitleId, roomId });
     setConfirmModalVisible(false);
   };
 
