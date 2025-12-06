@@ -1,13 +1,12 @@
 import path from "@/common/constants/path";
 import { backgroundColor, color } from "@/common/styles/color";
-import { BackButtonHeader } from "@/common/components/header";
+import { ScreenLayout } from "@/common/components/layout";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
   BackHandler,
   Keyboard,
   Platform,
-  SafeAreaView,
   StyleSheet,
   View,
 } from "react-native";
@@ -183,12 +182,15 @@ const SignupScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <BackButtonHeader
-        onPress={goToPrevPage}
-        disabled={isSubmitting}
-        style={styles.header}
-      />
+    <ScreenLayout
+      showBackButton={true}
+      onBackPress={goToPrevPage}
+      backButtonDisabled={isSubmitting}
+      keyboardAvoiding={true}
+      scrollable={false}
+      contentPadding={false}
+      backgroundColor={backgroundColor.default}
+    >
       <PagerView
         ref={pagerRef}
         style={styles.pagerView}
@@ -257,20 +259,13 @@ const SignupScreen: React.FC = () => {
           />
         </View>
       </PagerView>
-    </SafeAreaView>
+    </ScreenLayout>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: backgroundColor.default,
-  },
-  header: {
-    marginTop: RFValue(8),
-  },
   pagerView: {
-    flex: 11,
+    flex: 1,
   },
   eachView: {
     justifyContent: "flex-start",

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { Appbar } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     minHeight: 0,
   },
   headerContent: {
-    marginTop: -RFValue(40),
+    marginTop: Platform.OS === "ios" ? -RFValue(40) : -RFValue(10),
   },
   headerTitle: {
     color: color.primary,
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   headerAction: {
     alignSelf: "center",
     marginRight: 0,
-    marginTop: -RFValue(40),
+    marginTop: Platform.OS === "ios" ? -RFValue(40) : -RFValue(0),
   },
   headerActionActive: {
     backgroundColor: color.primary + "20",
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   headerBackAction: {
     alignSelf: "center",
     marginLeft: 0,
-    marginTop: -RFValue(40),
+    marginTop: Platform.OS === "ios" ? -RFValue(40) : -RFValue(0),
   },
 });
 
