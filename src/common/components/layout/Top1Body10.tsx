@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   topSection: {
-    height: RFValue(50),
+    height: RFValue(70),
     backgroundColor: color.third,
     width: "100%",
   },
