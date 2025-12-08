@@ -20,6 +20,12 @@ interface ApiError {
   status: number;
 }
 
+const logDebug = (...args: unknown[]) => {
+  if (__DEV__) {
+    console.log(...args);
+  }
+};
+
 const REQUEST_TIMEOUT = 5000; // 5s
 
 const api = axios.create({
@@ -59,7 +65,7 @@ const fetchNewTokensBySingletone = async (refreshToken: string) => {
 // 로그아웃 처리 후 인증 에러 반환 함수
 const handleLogoutFromInvalidAuthToken = async (): Promise<never> => {
   await tokenUtils.clearTokens();
-  useAuthStore.getState().logout();
+  await useAuthStore.getState().logout();
   useAuthStore.getState().emitAuthRequired();
   return Promise.reject(createAuthRequiredError());
 };
@@ -104,11 +110,11 @@ api.interceptors.request.use(
       }
     }
 
-    console.log("request url=" + config.baseURL + config.url);
+    logDebug("request url=", `${config.baseURL ?? ""}${config.url ?? ""}`);
     return config;
   },
   (error) => {
-    console.log("request error=" + error);
+    logDebug("request error=", error);
     return Promise.reject(error);
   }
 );
@@ -123,8 +129,8 @@ api.interceptors.response.use(
       _retry?: boolean;
     };
 
-    console.log("response error status=", error.response?.status);
-    console.log("response error data=", error.response?.data);
+    logDebug("response error status=", error.response?.status);
+    logDebug("response error data=", error.response?.data);
 
     // 네트워크 에러 처리
     if (!error.response) {
@@ -144,7 +150,7 @@ api.interceptors.response.use(
         }
 
         const response = await fetchNewTokens(refreshToken);
-        console.log("success fetch NewTokens");
+        logDebug("success fetch NewTokens");
 
         if (
           response.data &&
@@ -155,7 +161,7 @@ api.interceptors.response.use(
           const newRefreshToken = response.data.refreshToken;
           await tokenUtils.saveTokens(newAccessToken, newRefreshToken);
 
-          console.log("Retrying original request with new token:");
+          logDebug("Retrying original request with new token");
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return api(originalRequest); // 원래 요청 재시도
         }
@@ -163,7 +169,7 @@ api.interceptors.response.use(
         // 토큰 응답이 올바르지 않은 경우
         return handleLogoutFromInvalidAuthToken();
       } catch (refreshError) {
-        console.log("refresh token error=", refreshError);
+        logDebug("refresh token error=", refreshError);
         return handleLogoutFromInvalidAuthToken();
       }
     }
@@ -175,7 +181,7 @@ api.interceptors.response.use(
       status: errorData?.status || 400,
     } as ApiError;
 
-    console.log("apiError=", apiError);
+    logDebug("apiError=", apiError);
     return Promise.reject(apiError);
   }
 );

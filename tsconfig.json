@@ -12,6 +12,6 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "app/(protected)/rooms/[id]/indextsx"
+    "app/(protected)/rooms/[id]/index.tsx"
   ]
 }
