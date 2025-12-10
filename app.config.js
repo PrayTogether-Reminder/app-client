@@ -27,9 +27,9 @@ const config = {
 
 const currentConfig = config[environment] || config.production;
 
-const expoVersion = '1.0.8';
-const androidVersion = 17;
-const iosVersion = '1.0.20';
+const expoVersion = '1.0.9';
+const androidVersion = 18;
+const iosVersion = '1.0.21';
 
 module.exports = {
   name: currentConfig.name,
@@ -85,7 +85,13 @@ module.exports = {
     package: currentConfig.androidPackage,
     googleServicesFile:
       process.env.GOOGLE_SERVICES_JSON || "./google-services.json",
-    permissions: ["RECEIVE_BOOT_COMPLETED", "VIBRATE"],
+    permissions: [
+      "RECEIVE_BOOT_COMPLETED",
+      "VIBRATE",
+      "SCHEDULE_EXACT_ALARM",
+      "USE_EXACT_ALARM",
+      "POST_NOTIFICATIONS"
+    ],
     versionCode: androidVersion,
   },
   web: {
