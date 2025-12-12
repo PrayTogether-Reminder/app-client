@@ -33,10 +33,7 @@ const PasswordStep: React.FC<PasswordStepProps> = ({
 }) => {
   const router = useRouter();
 
-  console.log('[PasswordStep] 렌더링 - password:', password, 'confirmPassword:', confirmPassword, 'isSubmitting:', isSubmitting);
-
   const handleSignupComplete = async () => {
-    console.log('[PasswordStep] handleSignupComplete 호출');
     const isSuccess = await onSubmit();
 
     if (isSuccess) {
