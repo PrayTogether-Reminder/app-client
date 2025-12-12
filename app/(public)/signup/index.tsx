@@ -136,7 +136,7 @@ const SignupScreen: React.FC = () => {
   };
 
   // --- 회원가입 제출 핸들러 ---
-  const { mutate: singup } = useSignupMutation();
+  const { mutate: signup } = useSignupMutation();
   const handleSignup = async () => {
     Keyboard.dismiss();
     let hasError = false;
@@ -162,7 +162,7 @@ const SignupScreen: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      singup(
+      signup(
         { name, email, password, phoneNumber },
         {
           onSuccess: () => {
