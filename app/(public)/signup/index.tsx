@@ -82,7 +82,13 @@ const SignupScreen: React.FC = () => {
 
   // --- 페이지 이동 시 상태 초기화 로직 ---
   const resetStateForPage = (pageIndex: number) => {
-    if (pageIndex === 0) {
+    console.log('[resetStateForPage] pageIndex:', pageIndex);
+
+    // pageIndex 0: 이름 단계 - 초기화 불필요
+
+    // pageIndex 1: 이메일 단계로 돌아갈 때
+    if (pageIndex === 1) {
+      console.log('[resetStateForPage] 이메일 상태 초기화');
       setEmail("");
       setEmailError("");
       setOtp("");
@@ -91,16 +97,17 @@ const SignupScreen: React.FC = () => {
       setIsSendingOtp(false);
       setIsVerifyingOtp(false);
     }
-    if (pageIndex === 1) {
+
+    // pageIndex 2: 전화번호 단계로 돌아갈 때
+    if (pageIndex === 2) {
+      console.log('[resetStateForPage] 전화번호 상태 초기화');
       setPhoneNumber("");
       setPhoneError("");
-      setOtp("");
-      setOtpError("");
-      setIsOtpSent(false);
-      setIsSendingOtp(false);
-      setIsVerifyingOtp(false);
     }
-    if (pageIndex === 2) {
+
+    // pageIndex 3: 비밀번호 단계로 돌아갈 때
+    if (pageIndex === 3) {
+      console.log('[resetStateForPage] 비밀번호 상태 초기화');
       setPassword("");
       setConfirmPassword("");
       setPasswordError("");
@@ -112,23 +119,29 @@ const SignupScreen: React.FC = () => {
     nativeEvent: PagerViewOnPageSelectedEventData;
   }) => {
     const newPage = event.nativeEvent.position;
+    console.log('[onPageSelected] 페이지 변경:', currentPage, '->', newPage);
     setCurrentPage(newPage);
     // 페이지 전환 시 키보드 숨김
     Keyboard.dismiss();
   };
 
   const goToNextPage = () => {
-    pagerRef.current?.setPage(currentPage + 1);
+    console.log('[goToNextPage] 다음 페이지로 이동:', currentPage + 1);
+    pagerRef.current?.setPageWithoutAnimation(currentPage + 1);
   };
 
   const goToPrevPage = () => {
+    console.log('[goToPrevPage] 현재 페이지:', currentPage);
+
     if (currentPage > 0) {
-      pagerRef.current?.setPage(currentPage - 1);
+      console.log('[goToPrevPage] 이전 페이지로 이동:', currentPage - 1);
+      pagerRef.current?.setPageWithoutAnimation(currentPage - 1);
       resetStateForPage(currentPage - 1);
       return;
     }
 
     if (currentPage === 0) {
+      console.log('[goToPrevPage] 첫 페이지 - router.back() 호출');
       router.back();
     }
   };

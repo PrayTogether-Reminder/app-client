@@ -32,7 +32,11 @@ const PasswordStep: React.FC<PasswordStepProps> = ({
   isSubmitting,
 }) => {
   const router = useRouter();
+
+  console.log('[PasswordStep] 렌더링 - password:', password, 'confirmPassword:', confirmPassword, 'isSubmitting:', isSubmitting);
+
   const handleSignupComplete = async () => {
+    console.log('[PasswordStep] handleSignupComplete 호출');
     const isSuccess = await onSubmit();
 
     if (isSuccess) {
@@ -103,6 +107,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     height: RFValue(50),
     justifyContent: "center",
+    marginTop: RFValue(24),
   },
   button: {
     height: "100%",
