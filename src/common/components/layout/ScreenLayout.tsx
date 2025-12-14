@@ -16,7 +16,7 @@ export interface ScreenLayoutProps {
   showBackButton?: boolean;
   onBackPress?: () => void;
   backButtonDisabled?: boolean;
-  keyboardAvoiding?: boolean;
+  keyboardAvoiding?: boolean; // PagerView를 감싸면 버그가 발생합니다. (IOS)
   scrollable?: boolean;
   contentPadding?: boolean;
   backgroundColor?: string;

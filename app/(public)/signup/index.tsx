@@ -1,18 +1,16 @@
 import path from "@/common/constants/path";
 import { backgroundColor, color } from "@/common/styles/color";
-import { ScreenLayout } from "@/common/components/layout";
+import { BackButtonHeader } from "@/common/components/header";
 import { useRouter } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BackHandler,
   Keyboard,
   Platform,
+  SafeAreaView,
   StyleSheet,
   View,
 } from "react-native";
-import type { PagerViewOnPageSelectedEventData } from "react-native-pager-view";
-import PagerView from "react-native-pager-view";
-import { useTheme } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 
 import { useSignupMutation } from "@/domain/auth/hooks/mutations/useAuthMutation";
@@ -22,8 +20,6 @@ import PhoneStep from "./_components/PhoneStep";
 import PasswordStep from "./_components/PasswordStep";
 
 const SignupScreen: React.FC = () => {
-  const theme = useTheme();
-  const pagerRef = useRef<PagerView>(null);
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -56,9 +52,10 @@ const SignupScreen: React.FC = () => {
     const backAction = () => {
       if (currentPage > 0) {
         // 이전 페이지로 이동
-        pagerRef.current?.setPage(currentPage - 1);
+        const prevPage = currentPage - 1;
+        setCurrentPage(prevPage);
         // 상태 초기화
-        resetStateForPage(currentPage - 1);
+        resetStateForPage(prevPage);
         return true; // 이벤트를 소비했음을 알림 (앱 종료 방지)
       }
       // 첫 페이지거나 PagerView가 없으면 기본 동작 수행
@@ -109,24 +106,17 @@ const SignupScreen: React.FC = () => {
     }
   };
 
-  // --- 페이지 변경 이벤트 핸들러 ---
-  const onPageSelected = (event: {
-    nativeEvent: PagerViewOnPageSelectedEventData;
-  }) => {
-    const newPage = event.nativeEvent.position;
-    setCurrentPage(newPage);
-    // 페이지 전환 시 키보드 숨김
-    Keyboard.dismiss();
-  };
-
   const goToNextPage = () => {
-    pagerRef.current?.setPageWithoutAnimation(currentPage + 1);
+    Keyboard.dismiss();
+    setCurrentPage((prev) => Math.min(prev + 1, 3));
   };
 
   const goToPrevPage = () => {
     if (currentPage > 0) {
-      pagerRef.current?.setPageWithoutAnimation(currentPage - 1);
-      resetStateForPage(currentPage - 1);
+      const prevPage = currentPage - 1;
+      Keyboard.dismiss();
+      setCurrentPage(prevPage);
+      resetStateForPage(prevPage);
       return;
     }
 
@@ -183,25 +173,10 @@ const SignupScreen: React.FC = () => {
     }
   };
 
-  return (
-    <ScreenLayout
-      showBackButton={true}
-      onBackPress={goToPrevPage}
-      backButtonDisabled={isSubmitting}
-      keyboardAvoiding={true}
-      scrollable={false}
-      contentPadding={false}
-      backgroundColor={backgroundColor.default}
-    >
-      <PagerView
-        ref={pagerRef}
-        style={styles.pagerView}
-        initialPage={0}
-        scrollEnabled={false}
-        onPageSelected={onPageSelected}
-      >
-        {/* 1단계: 이름 입력 */}
-        <View key="1" style={styles.eachView}>
+  const renderCurrentStep = () => {
+    switch (currentPage) {
+      case 0:
+        return (
           <NameStep
             name={name}
             setName={setName}
@@ -210,10 +185,9 @@ const SignupScreen: React.FC = () => {
             onNext={goToNextPage}
             isSubmitting={isSubmitting}
           />
-        </View>
-
-        {/* 2단계: 이메일 + OTP 인증 */}
-        <View key="2" style={styles.eachView}>
+        );
+      case 1:
+        return (
           <EmailStep
             email={email}
             setEmail={setEmail}
@@ -233,10 +207,9 @@ const SignupScreen: React.FC = () => {
             onBack={goToPrevPage}
             isSubmitting={isSubmitting}
           />
-        </View>
-
-        {/* 3단계: 전화번호 입력 */}
-        <View key="3" style={styles.eachView}>
+        );
+      case 2:
+        return (
           <PhoneStep
             phoneNumber={phoneNumber}
             setPhoneNumber={setPhoneNumber}
@@ -245,10 +218,10 @@ const SignupScreen: React.FC = () => {
             onNext={goToNextPage}
             isSubmitting={isSubmitting}
           />
-        </View>
-
-        {/* 4단계: 비밀번호 설정 */}
-        <View key="4" style={styles.eachView}>
+        );
+      case 3:
+      default:
+        return (
           <PasswordStep
             password={password}
             setPassword={setPassword}
@@ -259,17 +232,37 @@ const SignupScreen: React.FC = () => {
             onSubmit={handleSignup}
             isSubmitting={isSubmitting}
           />
-        </View>
-      </PagerView>
-    </ScreenLayout>
+        );
+    }
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <BackButtonHeader
+        onPress={goToPrevPage}
+        disabled={isSubmitting}
+        style={styles.header}
+      />
+      <View style={styles.content}>
+        <View style={styles.eachView}>{renderCurrentStep()}</View>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  pagerView: {
+  container: {
+    flex: 1,
+    backgroundColor: backgroundColor.default,
+  },
+  header: {
+    marginTop: RFValue(8),
+  },
+  content: {
     flex: 1,
   },
   eachView: {
+    flex: 1,
     justifyContent: "flex-start",
   },
 });
