@@ -1314,6 +1314,97 @@ const [modalVisible, setModalVisible] = useState(false);
 </Modal>
 ```
 
+### 11. PagerView 사용 시 주의사항
+
+#### ⚠️ CRITICAL: PagerView는 wrapper와 충돌
+
+**문제**: PagerView를 SafeAreaView, KeyboardAvoidingView 등의 wrapper로 감싸면 iOS 실제 기기에서 터치 이벤트가 차단됩니다.
+
+**증상**:
+- 시뮬레이터에서는 정상 작동
+- 실제 iOS 기기에서 입력 필드가 터치되지 않음
+- 키보드가 올라오지 않음
+- `scrollEnabled={false}` 사용 시 더 심각
+
+**관련 이슈**: [react-native-pager-view#51](https://github.com/callstack/react-native-pager-view/issues/51), [#382](https://github.com/callstack/react-native-pager-view/issues/382)
+
+#### ✅ DO
+
+```typescript
+// PagerView는 SafeAreaView 바로 아래에 직접 배치
+<SafeAreaView style={styles.container}>
+  <BackButtonHeader style={styles.header} />
+  <PagerView
+    style={styles.pagerView}
+    scrollEnabled={false}
+  >
+    {/* 페이지 내용 */}
+  </PagerView>
+</SafeAreaView>
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: backgroundColor.default,
+  },
+  header: {
+    marginTop: RFValue(8),
+  },
+  pagerView: {
+    flex: 11, // 또는 flex: 1
+  },
+});
+```
+
+#### ❌ DON'T
+
+```typescript
+// ScreenLayout으로 감싸지 말 것 (내부에 KeyboardAvoidingView + wrapper View 있음)
+<ScreenLayout keyboardAvoiding={false}>  // ❌
+  <PagerView>
+    {/* 페이지 내용 */}
+  </PagerView>
+</ScreenLayout>
+
+// SafeAreaView + 중간 wrapper View로 감싸지 말 것
+<SafeAreaView>
+  <View style={{ flex: 1, justifyContent: 'space-between' }}>  // ❌
+    <PagerView />
+  </View>
+</SafeAreaView>
+
+// KeyboardAvoidingView로 감싸지 말 것
+<KeyboardAvoidingView behavior="padding">  // ❌
+  <PagerView />
+</KeyboardAvoidingView>
+```
+
+#### 주요 원칙
+
+1. **최소한의 wrapper만 사용**: SafeAreaView + BackButtonHeader + PagerView 구조
+2. **ScreenLayout 사용 금지**: PagerView는 특수 케이스로 직접 구현
+3. **중간 View 최소화**: PagerView를 가능한 한 얕은 레벨에 배치
+4. **실제 기기에서 테스트**: 시뮬레이터에서는 문제가 안 보일 수 있음
+
+#### 배포 시 주의사항
+
+**중요**: EAS Update 시 올바른 브랜치로 배포하는지 확인하세요!
+
+```bash
+# 프로덕션 배포
+eas update --branch production
+
+# 현재 브랜치 확인
+eas branch:list
+
+# 잘못된 브랜치로 배포하면 실제 사용자에게 변경사항이 적용되지 않음
+```
+
+**체크리스트**:
+- [ ] `eas.json`에서 production 빌드의 채널 확인
+- [ ] App Store/Play Store 앱이 어떤 채널을 구독하는지 확인
+- [ ] 배포 후 실제 기기에서 변경사항 확인
+
 ---
 
 ## 추가 참고 사항
@@ -1389,5 +1480,8 @@ const [modalVisible, setModalVisible] = useState(false);
 
 ---
 
-**문서 버전**: 1.0
-**최종 업데이트**: 2025-12-06
+**문서 버전**: 1.1
+**최종 업데이트**: 2025-12-14
+**변경 이력**:
+- v1.1 (2025-12-14): PagerView 사용 시 주의사항 및 배포 체크리스트 추가
+- v1.0 (2025-12-06): 초기 버전

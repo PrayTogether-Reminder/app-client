@@ -60,5 +60,10 @@ db.json
 GoogleService-Info.plist
 google-services*.json
 
-# serena mcp
+# mcp
 .serena/
+.serena*
+.usecontext7*
+
+# ide
+.idea/**
