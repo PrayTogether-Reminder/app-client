@@ -1631,11 +1631,660 @@ Phase 3 (4주):
 
 ---
 
-## 8. 변경 이력
+## 5. 재참여 유도 알림
+
+### 5.1 기능 개요
+
+**목적**: 일정 기간 동안 앱에 접속하지 않거나 기도하지 않은 사용자에게 알림을 보내어 다시 기도 생활에 참여하도록 유도합니다.
+
+**핵심 가치**: 지속적인 참여, 습관 형성, 공동체 유지
+
+### 5.2 사용자 스토리
+
+```
+As a 사용자
+I want to 한동안 기도하지 않았을 때 알림을 받고 싶다
+So that 기도 습관을 잃지 않고 지속할 수 있다
+
+As a 기도방 운영자
+I want to 비활성 멤버들이 다시 참여하도록 유도하고 싶다
+So that 기도방이 활성화되고 공동체가 유지될 수 있다
+```
+
+### 5.3 상세 요구사항
+
+#### 5.3.1 재참여 조건
+
+**트리거 조건**:
+```
+조건 A: 마지막 접속 후 2주 경과
+조건 B: 마지막 기도 완료 후 2주 경과
+
+→ 둘 중 하나라도 만족 시 알림 발송
+```
+
+**제외 조건**:
+- 앱을 삭제한 사용자 (FCM 토큰 무효화)
+- 알림을 끈 사용자
+- 이미 재참여 알림을 받은 후 7일 이내인 사용자 (중복 방지)
+
+#### 5.3.2 알림 내용
+
+**메시지 종류**:
+
+```
+Option A (단순):
+제목: "기도 시간이에요 🙏"
+내용: "오랜만이에요! 함께 기도해요"
+
+Option B (통계 포함):
+제목: "기도 시간이에요 🙏"
+내용: "2주간 기도방에서 15개의 새 기도 제목이 올라왔어요"
+
+Option C (개인화):
+제목: "기도 시간이에요 🙏"
+내용: "철수님, 가족 기도방에서 기다리고 있어요"
+
+Option D (연속 기록):
+제목: "7일 연속 기록이 끊어질 뻔했어요 😢"
+내용: "다시 시작해볼까요?"
+```
+
+**권장**: Option B (통계 포함) - 구체적인 정보로 참여 동기 부여
+
+#### 5.3.3 알림 발송 시점
+
+**발송 시각**:
+- 매일 오전 8시 (사용자 로컬 시간대 기준)
+- 또는: 사용자가 가장 활발했던 시간대 (개인화)
+
+**발송 주기**:
+```
+1차: 마지막 활동 후 14일
+2차: 1차 알림 후 7일 (여전히 비활성 시)
+3차: 2차 알림 후 7일 (여전히 비활성 시)
+→ 이후 발송 중단 (스팸 방지)
+```
+
+#### 5.3.4 사용자 활동 추적
+
+**추적 데이터**:
+```typescript
+interface UserActivity {
+  userId: string;
+  lastLoginAt: Date;           // 마지막 접속 시각
+  lastPrayerAt: Date;          // 마지막 기도 완료 시각
+  lastNotificationSentAt: Date; // 마지막 재참여 알림 발송 시각
+  notificationCount: number;   // 재참여 알림 발송 횟수 (최대 3회)
+  isActive: boolean;           // 활성 상태
+}
+```
+
+**활동 업데이트**:
+- 앱 접속 시 `lastLoginAt` 업데이트
+- 기도 완료 시 `lastPrayerAt` 업데이트
+- 알림 발송 시 `lastNotificationSentAt`, `notificationCount` 업데이트
+
+#### 5.3.5 알림 클릭 시 동작
+
+**딥링크 설정**:
+```
+pray-together://reengagement
+
+→ 앱 실행 후 기도방 목록 화면으로 이동
+→ (선택) 웰컴백 메시지 표시
+```
+
+**웰컴백 메시지**:
+```
+┌─────────────────────────────────┐
+│                                 │
+│         🙏                      │
+│    다시 오신 것을 환영해요!      │
+│                                 │
+│  2주간 기도방에서 일어난 일:     │
+│  • 15개의 새 기도 제목           │
+│  • 38번의 기도 완료              │
+│  • 3명의 새 멤버                 │
+│                                 │
+│         [시작하기]               │
+│                                 │
+└─────────────────────────────────┘
+```
+
+### 5.4 UI/UX 설계
+
+#### 5.4.1 푸시 알림
+
+```
+┌─────────────────────────────────┐
+│ 🙏 기도함께                     │
+├─────────────────────────────────┤
+│ 기도 시간이에요 🙏               │
+│                                 │
+│ 2주간 기도방에서 15개의 새      │
+│ 기도 제목이 올라왔어요           │
+│                                 │
+│ 5분 전                          │
+└─────────────────────────────────┘
+```
+
+#### 5.4.2 웰컴백 화면 (선택사항)
+
+```
+┌─────────────────────────────────┐
+│                                 │
+│         🙏                      │
+│    다시 오신 것을 환영해요!      │
+│                                 │
+├─────────────────────────────────┤
+│                                 │
+│ 📊 지난 2주간 활동               │
+│                                 │
+│ 가족 기도방                      │
+│ • 8개의 새 기도 제목             │
+│ • 철수님, 영희님이 기도했어요    │
+│                                 │
+│ 친구 기도방                      │
+│ • 5개의 새 기도 제목             │
+│ • 민수님이 새로 참여했어요       │
+│                                 │
+│ 교회 기도방                      │
+│ • 2개의 새 기도 제목             │
+│                                 │
+├─────────────────────────────────┤
+│                                 │
+│ 🔥 연속 기도 기록이              │
+│    초기화되었어요                │
+│                                 │
+│    다시 시작해볼까요?            │
+│                                 │
+│         [기도하러 가기]          │
+│                                 │
+└─────────────────────────────────┘
+```
+
+#### 5.4.3 알림 설정
+
+**마이페이지 > 알림 설정**:
+```
+┌─────────────────────────────────┐
+│       알림 설정                  │
+├─────────────────────────────────┤
+│                                 │
+│ 기도 알림              [ON ]    │
+│ 새 기도 제목           [ON ]    │
+│                                 │
+│ 재참여 알림            [ON ]    │
+│ 한동안 기도하지 않을 때          │
+│ 알림을 받습니다                  │
+│                                 │
+│ 기도방 활동 알림       [ON ]    │
+│ ...                             │
+│                                 │
+└─────────────────────────────────┘
+```
+
+### 5.5 API 요구사항
+
+#### 5.5.1 사용자 활동 업데이트
+
+```
+POST /v1/users/me/activity
+
+Request Body:
+{
+  "activityType": "LOGIN" | "PRAYER_COMPLETE"
+}
+
+Response:
+{
+  "success": true,
+  "data": {
+    "userId": "user_123",
+    "lastLoginAt": "2025-12-14T08:00:00Z",
+    "lastPrayerAt": "2025-12-14T08:05:00Z"
+  }
+}
+```
+
+#### 5.5.2 재참여 대상 사용자 조회 (배치 작업용)
+
+```
+GET /v1/admin/users/inactive?days=14
+
+Request Parameters:
+- days: 비활성 기준 일수 (기본 14일)
+
+Response:
+{
+  "success": true,
+  "data": {
+    "total": 50,
+    "users": [
+      {
+        "userId": "user_123",
+        "fcmToken": "fcm_token_xxx",
+        "lastLoginAt": "2025-11-30T10:00:00Z",
+        "lastPrayerAt": "2025-11-30T10:05:00Z",
+        "lastNotificationSentAt": null,
+        "notificationCount": 0,
+        "preferredLanguage": "ko",
+        "timezone": "Asia/Seoul"
+      }
+    ]
+  }
+}
+```
+
+#### 5.5.3 재참여 알림 발송 기록
+
+```
+POST /v1/users/{userId}/reengagement-notifications
+
+Request Body:
+{
+  "sentAt": "2025-12-14T08:00:00Z",
+  "messageType": "FIRST_REMINDER" | "SECOND_REMINDER" | "THIRD_REMINDER"
+}
+
+Response:
+{
+  "success": true,
+  "data": {
+    "notificationId": "notif_123",
+    "userId": "user_123",
+    "sentAt": "2025-12-14T08:00:00Z",
+    "notificationCount": 1
+  }
+}
+```
+
+#### 5.5.4 웰컴백 통계 조회
+
+```
+GET /v1/users/me/welcome-back-stats?since=2025-11-30
+
+Request Parameters:
+- since: 통계 시작 날짜
+
+Response:
+{
+  "success": true,
+  "data": {
+    "period": {
+      "from": "2025-11-30T00:00:00Z",
+      "to": "2025-12-14T00:00:00Z",
+      "days": 14
+    },
+    "rooms": [
+      {
+        "roomId": "room_1",
+        "roomName": "가족 기도방",
+        "newPrayersCount": 8,
+        "totalPrayersCount": 38,
+        "newMembersCount": 0,
+        "activeMembersNames": ["철수", "영희"]
+      }
+    ],
+    "totalNewPrayers": 15,
+    "totalNewMembers": 1
+  }
+}
+```
+
+### 5.6 데이터베이스 스키마
+
+```sql
+-- users 테이블에 컬럼 추가
+ALTER TABLE users ADD COLUMN last_login_at TIMESTAMP NULL;
+ALTER TABLE users ADD COLUMN last_prayer_at TIMESTAMP NULL;
+
+-- 인덱스 추가
+CREATE INDEX idx_last_login_at ON users(last_login_at);
+CREATE INDEX idx_last_prayer_at ON users(last_prayer_at);
+
+-- 재참여 알림 발송 기록 테이블
+CREATE TABLE reengagement_notifications (
+  id VARCHAR(36) PRIMARY KEY,
+  user_id VARCHAR(36) NOT NULL,
+  message_type ENUM('FIRST_REMINDER', 'SECOND_REMINDER', 'THIRD_REMINDER') NOT NULL,
+  sent_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  clicked_at TIMESTAMP NULL,
+
+  INDEX idx_user_id (user_id),
+  INDEX idx_sent_at (sent_at),
+
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- FCM 토큰 테이블 (기존에 없다면)
+CREATE TABLE fcm_tokens (
+  id VARCHAR(36) PRIMARY KEY,
+  user_id VARCHAR(36) NOT NULL,
+  token VARCHAR(255) NOT NULL,
+  device_type ENUM('IOS', 'ANDROID') NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+
+  UNIQUE KEY unique_token (token),
+  INDEX idx_user_id (user_id),
+  INDEX idx_is_active (is_active),
+
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+```
+
+### 5.7 비즈니스 규칙
+
+1. **활동 추적**:
+   - 앱 실행 시 `last_login_at` 자동 업데이트
+   - 기도 완료 버튼 클릭 시 `last_prayer_at` 자동 업데이트
+   - 두 시각 중 더 최근 것을 기준으로 비활성 판단
+
+2. **알림 발송 조건**:
+   - 마지막 활동 후 정확히 14일째 되는 날 발송
+   - 이미 3회 발송했다면 더 이상 발송 안 함
+   - 마지막 알림 발송 후 7일 이내면 발송 안 함
+   - FCM 토큰이 유효한 사용자만 발송
+
+3. **알림 설정 존중**:
+   - 사용자가 재참여 알림을 꺼놨다면 발송 안 함
+   - 전체 알림을 꺼놨다면 발송 안 함
+   - 방해 금지 시간대에는 발송 안 함
+
+4. **FCM 토큰 관리**:
+   - NotRegistered 에러 발생 시 토큰 비활성화
+   - InvalidRegistration 에러 발생 시 토큰 삭제
+   - 사용자 재로그인 시 토큰 갱신
+
+5. **재활성화 처리**:
+   - 알림 클릭 후 앱 접속 시 `notificationCount` 초기화
+   - 스스로 돌아온 경우도 `notificationCount` 초기화
+
+### 5.8 배치 작업
+
+#### 5.8.1 재참여 알림 발송 스케줄러
+
+```javascript
+// 매일 오전 8시 실행 (Cron: 0 8 * * *)
+async function sendReengagementNotifications() {
+  const fourteenDaysAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+  // 비활성 사용자 조회
+  const inactiveUsers = await db.query(`
+    SELECT u.id, u.last_login_at, u.last_prayer_at, f.token as fcm_token
+    FROM users u
+    INNER JOIN fcm_tokens f ON u.id = f.user_id AND f.is_active = TRUE
+    LEFT JOIN reengagement_notifications rn ON u.id = rn.user_id
+    WHERE (u.last_login_at < ? OR u.last_prayer_at < ?)
+      AND (rn.sent_at IS NULL OR rn.sent_at < ?)
+      AND (
+        SELECT COUNT(*)
+        FROM reengagement_notifications
+        WHERE user_id = u.id
+      ) < 3
+  `, [fourteenDaysAgo, fourteenDaysAgo, sevenDaysAgo]);
+
+  // 사용자별로 통계 조회 및 푸시 발송
+  for (const user of inactiveUsers) {
+    try {
+      // 웰컴백 통계 조회
+      const stats = await getWelcomeBackStats(user.id);
+
+      // FCM 푸시 발송
+      await admin.messaging().send({
+        token: user.fcm_token,
+        notification: {
+          title: "기도 시간이에요 🙏",
+          body: `2주간 기도방에서 ${stats.totalNewPrayers}개의 새 기도 제목이 올라왔어요`
+        },
+        data: {
+          type: "REENGAGEMENT",
+          deeplink: "pray-together://reengagement"
+        }
+      });
+
+      // 알림 발송 기록
+      await recordNotification(user.id);
+
+    } catch (error) {
+      if (error.code === 'messaging/registration-token-not-registered') {
+        // FCM 토큰 비활성화
+        await deactivateFcmToken(user.fcm_token);
+      }
+      console.error(`Failed to send notification to user ${user.id}:`, error);
+    }
+  }
+}
+```
+
+#### 5.8.2 활동 업데이트 트리거
+
+```javascript
+// 앱 실행 시 (App.tsx)
+useEffect(() => {
+  updateUserActivity('LOGIN');
+}, []);
+
+// 기도 완료 시
+const handlePrayerComplete = async () => {
+  await updateUserActivity('PRAYER_COMPLETE');
+  // ... 기존 로직
+};
+```
+
+### 5.9 예외 처리
+
+1. **FCM 토큰 관련**:
+   - 토큰이 없는 사용자: 알림 발송 건너뜀
+   - 토큰 무효화: 자동으로 비활성화 후 다음 로그인 시 재등록
+   - 여러 기기: 모든 활성 토큰에 발송
+
+2. **시간대 처리**:
+   - 사용자의 로컬 시간대 기준으로 오전 8시 계산
+   - 시간대 정보 없으면 서버 시간대 사용
+
+3. **통계 조회 실패**:
+   - 통계 조회 실패 시 기본 메시지로 발송
+   - "오랜만이에요! 함께 기도해요"
+
+4. **네트워크 오류**:
+   - 발송 실패 시 재시도 (최대 3번)
+   - 계속 실패 시 로그 기록 후 건너뜀
+
+5. **사용자 탈퇴**:
+   - 탈퇴한 사용자는 자동으로 제외
+   - FCM 토큰도 함께 삭제
+
+### 5.10 분석 및 모니터링
+
+#### 5.10.1 추적 지표
+
+```
+- 알림 발송 수 (일별)
+- 알림 클릭율
+- 재활성화율 (알림 후 7일 내 활동)
+- 발송 실패 수 (토큰 무효화 등)
+```
+
+#### 5.10.2 대시보드 (어드민용)
+
+```
+┌─────────────────────────────────┐
+│   재참여 알림 현황               │
+├─────────────────────────────────┤
+│                                 │
+│ 📊 이번 주 통계                 │
+│                                 │
+│ 발송 수: 150건                  │
+│ 클릭율: 35% (53건)               │
+│ 재활성화율: 28% (42건)           │
+│ 실패율: 5% (8건)                │
+│                                 │
+├─────────────────────────────────┤
+│                                 │
+│ 📈 주간 트렌드                  │
+│ [그래프]                        │
+│                                 │
+└─────────────────────────────────┘
+```
+
+### 5.11 개발 우선순위
+
+- **Phase 1** (MVP):
+  - 사용자 활동 추적 (`last_login_at`, `last_prayer_at`)
+  - 재참여 알림 배치 작업
+  - 기본 푸시 알림 발송
+
+- **Phase 2**:
+  - 웰컴백 통계 API
+  - 개인화된 메시지
+  - 알림 클릭 딥링크
+
+- **Phase 3**:
+  - 웰컴백 화면 UI
+  - 분석 및 모니터링 대시보드
+  - A/B 테스트 (메시지 최적화)
+
+### 5.12 A/B 테스트 제안
+
+**테스트 항목**:
+1. 메시지 톤앤매너 (친근함 vs 격식)
+2. 통계 포함 여부
+3. 발송 시각 (아침 vs 저녁)
+4. 발송 주기 (2주 vs 1주)
+
+**측정 지표**:
+- 클릭율 (CTR)
+- 재활성화율
+- 7일 리텐션
+
+---
+
+## 6. 개발 일정 제안 (업데이트)
+
+### 6.1 전체 일정 (예상)
+
+```
+Phase 1 (5주):
+- Week 1-2: 함께 기도한 사람 표시
+- Week 3-4: 기도 제목 자동 만료
+- Week 5: 재참여 유도 알림 (MVP)
+
+Phase 2 (6주):
+- Week 6-8: 기도 연속 기록
+- Week 9-11: 개인 기도 대시보드
+
+Phase 3 (4주):
+- Week 12-13: 통합 테스트 및 버그 수정
+- Week 14-15: 배포 및 모니터링
+```
+
+### 6.2 우선순위 (업데이트)
+
+**높음**:
+1. 함께 기도한 사람 표시 (Phase 1)
+2. 기도 제목 자동 만료 (Phase 1)
+3. 재참여 유도 알림 (Phase 1) ⭐ NEW
+
+**중간**:
+4. 기도 연속 기록 (Phase 1-2)
+
+**낮음**:
+5. 개인 기도 대시보드 (Phase 2-3)
+
+### 6.3 의존성 (업데이트)
+
+```
+함께 기도한 사람 표시
+  └─> 기도 연속 기록 (기도 로그 활용)
+      └─> 개인 기도 대시보드 (연속 기록 표시)
+
+기도 제목 자동 만료
+  └─> 독립적
+
+재참여 유도 알림
+  └─> 기도 로그 활용 (last_prayer_at)
+  └─> FCM 토큰 관리 (기존)
+```
+
+---
+
+## 7. 기술 스택 및 고려사항 (업데이트)
+
+### 7.1 프론트엔드
+
+- **UI 라이브러리**: React Native 기존 컴포넌트 활용
+- **차트**: `react-native-chart-kit` 또는 `victory-native` (대시보드용)
+- **캘린더**: `react-native-calendars` (만료일 선택용)
+- **날짜 처리**: `date-fns` (이미 사용 중)
+- **딥링크**: `expo-linking` (재참여 알림용) ⭐ NEW
+
+### 7.2 백엔드
+
+- **배치 작업**: Cron 또는 Node.js 스케줄러
+  - 만료 처리: 매일 00:00
+  - 통계 집계: 매일 00:30
+  - 재참여 알림: 매일 08:00 ⭐ NEW
+
+- **캐싱**: Redis (대시보드 데이터 캐싱)
+
+### 7.3 알림
+
+- **푸시 알림**: Firebase Cloud Messaging (FCM)
+  - 만료 알림
+  - 재참여 알림 ⭐ NEW
+  - 배지 획득 알림 (선택)
+
+- **딥링크**: Custom URL Scheme ⭐ NEW
+  - `pray-together://reengagement`
+  - `pray-together://room/{roomId}`
+
+### 7.4 성능 최적화
+
+- **데이터 집계**: 일일/월간 통계 테이블 활용
+- **페이지네이션**: 목록 조회 시 필수
+- **캐싱**: 대시보드 데이터 1시간 캐시
+- **인덱스**: 날짜, 사용자ID 등 자주 조회하는 컬럼에 인덱스 추가
+- **배치 크기**: 재참여 알림 발송 시 100명씩 처리 ⭐ NEW
+
+---
+
+## 8. 테스트 계획 (업데이트)
+
+### 8.1 단위 테스트
+
+- 연속 기록 계산 로직
+- 만료일 처리 로직
+- 통계 집계 로직
+- 재참여 조건 판단 로직 ⭐ NEW
+- FCM 토큰 무효화 처리 ⭐ NEW
+
+### 8.2 통합 테스트
+
+- API 엔드포인트
+- 배치 작업
+- 알림 발송
+- 딥링크 동작 ⭐ NEW
+
+### 8.3 E2E 테스트
+
+- 기도 작성 → 기도 완료 → 기록 확인
+- 만료일 설정 → 만료 처리 → 응답 기록
+- 대시보드 조회
+- 14일 비활성 → 알림 수신 → 앱 재접속 ⭐ NEW
+
+---
+
+## 9. 변경 이력
 
 | 버전 | 날짜       | 작성자 | 변경 내용 |
 | ---- | ---------- | ------ | --------- |
 | 1.0  | 2025-12-06 | AI     | 초안 작성 |
+| 1.1  | 2025-12-14 | AI     | 재참여 유도 알림 기능 추가 |
 
 ---
 
