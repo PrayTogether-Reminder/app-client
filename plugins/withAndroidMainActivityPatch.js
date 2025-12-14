@@ -69,11 +69,19 @@ const withAndroidMainActivityPatch = (config) => {
   // NULL_CHECK_PATCH: Fix for onNewIntent crash
   @Override
   public void onNewIntent(Intent intent) {
+    // Prevent crash when intent is null or React Native bridge is not ready
+    if (intent == null) {
+      android.util.Log.w("MainActivity", "onNewIntent called with null intent, ignoring");
+      return;
+    }
+
     try {
       super.onNewIntent(intent);
-    } catch (NullPointerException e) {
-      // Safely handle null pointer exceptions in onNewIntent
-      android.util.Log.w("MainActivity", "onNewIntent error: " + e.getMessage());
+    } catch (Exception e) {
+      // Catch all exceptions including NullPointerException wrapped in RuntimeException
+      android.util.Log.e("MainActivity", "onNewIntent error: " + e.getClass().getSimpleName() + " - " + e.getMessage(), e);
+      // Set the intent anyway to prevent further issues
+      setIntent(intent);
     }
   }
 `;
@@ -146,11 +154,19 @@ const withAndroidMainActivityPatch = (config) => {
       const onNewIntentPatch = `
   // NULL_CHECK_PATCH: Fix for onNewIntent crash
   override fun onNewIntent(intent: Intent?) {
+    // Prevent crash when intent is null or React Native bridge is not ready
+    if (intent == null) {
+      android.util.Log.w("MainActivity", "onNewIntent called with null intent, ignoring")
+      return
+    }
+
     try {
       super.onNewIntent(intent)
-    } catch (e: NullPointerException) {
-      // Safely handle null pointer exceptions in onNewIntent
-      android.util.Log.w("MainActivity", "onNewIntent error: \${e.message}")
+    } catch (e: Exception) {
+      // Catch all exceptions including NullPointerException wrapped in RuntimeException
+      android.util.Log.e("MainActivity", "onNewIntent error: \${e.javaClass.simpleName} - \${e.message}", e)
+      // Set the intent anyway to prevent further issues
+      setIntent(intent)
     }
   }
 `;
