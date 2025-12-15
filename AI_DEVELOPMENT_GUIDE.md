@@ -682,6 +682,59 @@ import { BackButtonHeader } from "@/common/components/header";
 <BackButtonHeader title="기도 상세" onBack={() => router.back()} />
 ```
 
+### 카드 컴포넌트 (`src/common/components/card/`)
+
+#### **`AccentCard.tsx`**
+
+왼쪽 보더 액센트가 있는 공통 카드 컴포넌트입니다. 프로젝트 전체에서 일관된 카드 디자인을 유지하기 위해 사용됩니다.
+
+**주요 특징**:
+- 왼쪽 보더로 시각적 액센트
+- 흰색 배경 + elevation 그림자
+- 선택적 Press 애니메이션
+- 내부 컨텐츠는 children으로 자유롭게 구성
+
+**Props**:
+- `children`: 카드 내부에 표시할 컨텐츠
+- `onPress?`: 카드 클릭 이벤트 핸들러
+- `onLongPress?`: 카드 길게 누르기 이벤트 핸들러
+- `borderWidth?`: 왼쪽 보더 두께 (기본값: 6)
+- `borderColor?`: 왼쪽 보더 색상 (기본값: color.secondary)
+- `animated?`: Press 애니메이션 활성화 여부 (기본값: true)
+- `style?`: 카드에 적용할 추가 스타일
+- `contentStyle?`: Card.Content에 적용할 추가 스타일
+- `contentPadding?`: Card.Content의 padding (기본값: 16)
+
+**사용 예시**:
+
+```typescript
+import { AccentCard } from "@/common/components/card";
+
+// 기본 사용 (애니메이션 O, borderWidth 6)
+<AccentCard onPress={handlePress}>
+  <Text>기도 제목</Text>
+  <Text>작성 날짜</Text>
+</AccentCard>
+
+// 애니메이션 없는 정적 카드
+<AccentCard animated={false}>
+  <Text>고정 카드</Text>
+</AccentCard>
+
+// borderWidth 커스터마이징
+<AccentCard
+  onPress={handlePress}
+  borderWidth={8}
+>
+  <Text>기도방 이름</Text>
+</AccentCard>
+```
+
+**적용된 컴포넌트**:
+- `RoomItem`: 기도방 카드 (borderWidth: 8)
+- `PrayerTitleItem`: 기도 제목 카드 (borderWidth: 6)
+- `TitleCard`: 기도 내용 조회 페이지 상단 (borderWidth: 8, animated: false)
+
 ### 모달 컴포넌트 (`src/common/components/modal/`)
 
 1. **`GlobalAlertModal.tsx`**
@@ -1480,8 +1533,9 @@ eas branch:list
 
 ---
 
-**문서 버전**: 1.1
-**최종 업데이트**: 2025-12-14
+**문서 버전**: 1.2
+**최종 업데이트**: 2025-12-16
 **변경 이력**:
+- v1.2 (2025-12-16): AccentCard 공통 컴포넌트 추가
 - v1.1 (2025-12-14): PagerView 사용 시 주의사항 및 배포 체크리스트 추가
 - v1.0 (2025-12-06): 초기 버전
