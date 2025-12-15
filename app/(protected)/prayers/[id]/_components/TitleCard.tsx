@@ -1,10 +1,11 @@
 // TitleCard.tsx
 import React from "react";
 import { StyleSheet, View, TouchableOpacity, Platform } from "react-native";
-import { Card, Text } from "react-native-paper";
+import { Text } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../../../src/common/styles/color";
+import { AccentCard } from "@/common/components/card";
 
 interface TitleCardProps {
   title: string;
@@ -14,56 +15,50 @@ interface TitleCardProps {
 }
 
 export default function TitleCard({ title, isEditMode, onEdit, onCopy }: TitleCardProps) {
-  // 버튼이 있는지 확인
   const hasButton = (!isEditMode && onCopy) || (isEditMode && onEdit);
 
   return (
-    <Card style={styles.titleCard}>
-      <Card.Content style={styles.titleCardContainer}>
-        <Text style={styles.titleText}>{title}</Text>
-        {hasButton && (
-          <View style={styles.buttonContainer}>
-            {!isEditMode && onCopy && (
-              <TouchableOpacity
-                onPress={onCopy}
-                style={styles.copyButton}
-                activeOpacity={Platform.OS === 'ios' ? 0.8 : 0.2}
-              >
-                <MaterialCommunityIcons
-                  name="content-copy"
-                  size={RFValue(18)}
-                  color={color.secondary}
-                />
-              </TouchableOpacity>
-            )}
-            {isEditMode && onEdit && (
-              <TouchableOpacity onPress={onEdit} style={styles.editButton}>
-                <MaterialCommunityIcons
-                  name="pencil"
-                  size={RFValue(18)}
-                  color={color.secondary}
-                />
-              </TouchableOpacity>
-            )}
-          </View>
-        )}
-      </Card.Content>
-    </Card>
+    <AccentCard
+      borderWidth={8}
+      animated={false}
+      style={styles.titleCard}
+      contentStyle={styles.titleCardContainer}
+      contentPadding={0}
+    >
+      <Text style={styles.titleText}>{title}</Text>
+      {hasButton && (
+        <View style={styles.buttonContainer}>
+          {!isEditMode && onCopy && (
+            <TouchableOpacity
+              onPress={onCopy}
+              style={styles.copyButton}
+              activeOpacity={Platform.OS === 'ios' ? 0.8 : 0.2}
+            >
+              <MaterialCommunityIcons
+                name="content-copy"
+                size={RFValue(18)}
+                color={color.secondary}
+              />
+            </TouchableOpacity>
+          )}
+          {isEditMode && onEdit && (
+            <TouchableOpacity onPress={onEdit} style={styles.editButton}>
+              <MaterialCommunityIcons
+                name="pencil"
+                size={RFValue(18)}
+                color={color.secondary}
+              />
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
+    </AccentCard>
   );
 }
 
 const styles = StyleSheet.create({
   titleCard: {
-    borderRadius: RFValue(10),
-    elevation: 4,
-    backgroundColor: color.white,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.12,
-    shadowRadius: 5,
     height: RFValue(50),
-    borderLeftWidth: RFValue(8),
-    borderLeftColor: color.secondary,
   },
   titleCardContainer: {
     height: "100%",
