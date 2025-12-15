@@ -39,96 +39,27 @@
 
 ### 주요 기능
 
-#### 1. 인증 (Auth)
-- 이메일/비밀번호 기반 로그인
-- 회원가입 (OTP 이메일 인증)
-- JWT 토큰 기반 인증 (Access Token + Refresh Token)
-- 자동 토큰 갱신
-- 전화번호 등록 (필수)
-
-#### 2. 기도방 (Rooms)
-- 기도방 생성/삭제
-- 기도방 멤버 관리
-- 기도방 알림 설정
-- 기도방 멤버 초대
-
-#### 3. 기도 (Prayers)
-- 기도 제목 생성/수정/삭제
-- 기도 내용 생성/수정/삭제
-- 기도 완료 처리
-- 특정 멤버를 위한 기도 지정
-
-#### 4. 친구 (Friends)
-- 친구 검색 및 추가
-- 친구 초대 관리 (수락/거절)
-- 친구 목록 조회
-
-#### 5. 초대 (Invitations)
-- 기도방 멤버 초대
-- 초대 수락/거절
-- 초대 목록 조회
-
-#### 6. 알림 (Notifications)
-- Firebase Cloud Messaging (FCM) 기반 푸시 알림
-- FCM 토큰 등록/삭제
-- 기도방별 알림 설정
-
-#### 7. 앱 업데이트
-- EAS Update를 통한 OTA 업데이트
-- 강제 업데이트 모달
-- 유지보수 모드
+- **인증 (Auth)**: JWT 토큰 기반 로그인/회원가입, 자동 토큰 갱신
+- **기도방 (Rooms)**: 기도방 생성/관리, 멤버 초대
+- **기도 (Prayers)**: 기도 제목 및 내용 CRUD, 완료 처리
+- **친구 (Friends)**: 친구 추가 및 관리
+- **초대 (Invitations)**: 기도방 초대 수락/거절
+- **알림 (Notifications)**: FCM 기반 푸시 알림
+- **앱 업데이트**: EAS Update OTA, 강제 업데이트/유지보수 모드
 
 ---
 
 ## 2. 기술 스택
 
-### 코어 프레임워크
-- **React Native**: 0.79.5
-- **Expo SDK**: 53.0.16
-- **TypeScript**: 5.7.3 (strict mode 활성화)
-- **Node.js**: Darwin 환경
-
-### 라우팅
-- **Expo Router**: 5.1.2
-  - 파일 기반 라우팅 시스템
-  - Typed Routes 실험적 기능 활성화
-  - (public), (protected) 그룹 라우팅
-
-### 상태 관리
-- **Zustand**: 5.0.3 - 전역 상태 관리
-- **@tanstack/react-query**: 5.66.9 - 서버 상태 관리
-
-### 서버 통신
-- **Axios**: 1.7.9 - HTTP 클라이언트
-
-### UI 라이브러리
-- **React Native Paper**: 5.13.1 - Material Design 컴포넌트
-- **@expo/vector-icons**: 14.0.2
-- **React Native Reanimated**: 3.17.4 - 애니메이션
-- **expo-linear-gradient**: 14.1.5
-
-### Firebase
-- **@react-native-firebase/app**: 23.4.0
-- **@react-native-firebase/messaging**: 23.4.0 - 푸시 알림 (FCM)
-- **@react-native-firebase/crashlytics**: 23.4.0 - 크래시 리포팅
-
-### 네비게이션
-- **@react-navigation/native**: 7.0.14
-- **@react-navigation/native-stack**: 7.2.0
-- **@react-navigation/bottom-tabs**: 7.2.0
-
-### 유틸리티
-- **date-fns**: 4.1.0 - 날짜 처리
-- **expo-secure-store**: 14.0.1 - 보안 저장소 (토큰 저장)
-- **expo-notifications**: 0.31.3 - 로컬 알림
-- **react-native-keyboard-aware-scroll-view**: 0.9.5
-- **react-error-boundary**: 4.0.10 - 에러 핸들링
-
-### 빌드 & 배포
-- **EAS (Expo Application Services)**
-  - Build: 로컬 및 클라우드 빌드
-  - Update: OTA 업데이트
-  - Submit: 스토어 제출
+- **코어**: React Native, Expo, TypeScript (strict mode)
+- **라우팅**: Expo Router (파일 기반, (public)/(protected) 그룹)
+- **상태 관리**: Zustand (전역), React Query (서버)
+- **서버 통신**: Axios
+- **UI**: React Native Paper, Reanimated, expo-linear-gradient
+- **Firebase**: FCM 푸시 알림, Crashlytics
+- **네비게이션**: React Navigation (native-stack, bottom-tabs)
+- **유틸리티**: date-fns, expo-secure-store, expo-notifications
+- **빌드/배포**: EAS (Build, Update, Submit)
 
 ---
 
@@ -310,55 +241,18 @@ const fetchNewTokens = async (refreshToken: string) => {
 
 ### API 엔드포인트 패턴
 
-#### Base URL
-- Production: `https://praytogether.site/api`
-
-#### API 버전
-- 모든 엔드포인트: `/v1/...`
-
-#### 주요 엔드포인트 예시
-
-**인증 (Auth)**
-- `POST /v1/auth/login` - 로그인
-- `POST /v1/auth/signup` - 회원가입
-- `POST /v1/auth/reissue-token` - 토큰 재발급
-- `POST /v1/auth/logout` - 로그아웃
-
-**기도방 (Rooms)**
-- `GET /v1/rooms` - 기도방 목록 조회
-- `POST /v1/rooms` - 기도방 생성
-- `DELETE /v1/rooms/:id` - 기도방 삭제
-
-**기도 (Prayers)**
-- `GET /v1/prayer-rooms/:roomId/prayer-titles` - 기도 제목 목록 (무한 스크롤)
-- `POST /v1/prayer-rooms/:roomId/prayer-titles` - 기도 제목 생성
-- `POST /v1/prayer-contents/:contentId/completion` - 기도 완료 처리
+- **Base URL**: `https://praytogether.site/api`
+- **버전**: 모든 엔드포인트 `/v1/...`
+- **예시**:
+  - `POST /v1/auth/login` - 로그인
+  - `GET /v1/rooms` - 기도방 목록
+  - `GET /v1/prayer-rooms/:roomId/prayer-titles` - 기도 제목 (무한 스크롤)
 
 ### React Query 설정
 
-#### Query Keys 패턴 (`src/common/constants/queryKeys.ts`)
-
-```typescript
-export const QueryKeys = {
-  ROOMS: "rooms",
-  PRAYER_TITLES: "prayerTitles",
-  PRAYER_CONTENTS: "prayerContents",
-  FRIENDS: "friends",
-  PROFILE: "profile",
-  // ...
-};
-```
-
-#### Cache 정책
-- **staleTime**: 기본값 0 (즉시 stale 상태)
-- **cacheTime**: 기본값 5분
-- **refetchOnWindowFocus**: true
-- **retry**: 3회
-
-#### Infinite Query
-- 기도 제목 목록에서 사용
-- `pageParam`으로 `after` (커서) 전달
-- `getNextPageParam`으로 다음 페이지 커서 계산
+- **Query Keys**: `src/common/constants/queryKeys.ts`에 도메인별로 정의
+- **Cache 정책**: staleTime 0, cacheTime 5분, refetchOnWindowFocus true, retry 3회
+- **Infinite Query**: `pageParam`으로 커서 전달, `getNextPageParam`으로 다음 페이지 계산
 
 ---
 
@@ -390,112 +284,41 @@ export const QueryKeys = {
 
 ```typescript
 // src/domain/[domain]/stores/use[Domain]Store.ts
-
-import { create } from "zustand";
-
-// 1. State 타입 정의
-interface MyState {
-  data: string | null;
-  isLoading: boolean;
-}
-
-// 2. Actions 타입 정의
-interface MyActions {
-  setData: (data: string) => void;
-  clear: () => void;
-}
-
-// 3. Store 타입 = State + Actions
+interface MyState { data: string | null; }
+interface MyActions { setData: (data: string) => void; clear: () => void; }
 type MyStore = MyState & MyActions;
 
-// 4. 초기 상태 정의
-const initialState: MyState = {
-  data: null,
-  isLoading: false,
-};
-
-// 5. Store 생성
 export const useMyStore = create<MyStore>((set) => ({
-  ...initialState,
-
-  // Actions
+  data: null,
   setData: (data) => set({ data }),
-  clear: () => set(initialState),
+  clear: () => set({ data: null }),
 }));
 ```
 
-#### 주요 스토어 목록
-
-- **`useAuthStore`** (`src/domain/auth/stores/useAuthStore.ts`)
-  - 인증 상태 관리 (`isAuthenticated`, `isLoading`)
-  - 로그인/로그아웃 처리
-  - 토큰 관리
-  - 인증 이벤트 리스너 (pub/sub 패턴)
-
-- **`usePrayerCreationStore`** (`src/domain/prayers/stores/usePrayerCreationStore.ts`)
-  - 기도 생성 폼 데이터 임시 저장
-  - 멤버별 기도 목록 관리
-
-- **`useSelectedRoomStore`** (`src/domain/rooms/stores/useSelectedRoomStore.ts`)
-  - 현재 선택된 기도방 정보 저장
-
-- **`useBottomNaviStatusStore`** (`src/domain/navigation/stores/useBottomNaviStatusStore.ts`)
-  - 하단 탭 네비게이션 상태 관리
+**주요 스토어**: `useAuthStore` (인증), `usePrayerCreationStore` (기도 생성 폼), `useSelectedRoomStore` (선택된 기도방), `useBottomNaviStatusStore` (탭 네비게이션)
 
 ### React Query 패턴
 
-#### Query Hook 패턴
-
+**Query Hook** (`hooks/queries/`):
 ```typescript
-// src/domain/[domain]/hooks/queries/use[Domain]Queries.ts
-
-import { useQuery } from "@tanstack/react-query";
-import { QueryKeys } from "@/common/constants/queryKeys";
-import { myService } from "../../services/myService";
-
-export const useMyDataQuery = () => {
-  return useQuery({
-    queryKey: [QueryKeys.MY_DATA],
-    queryFn: () => myService.fetchData(),
-  });
-};
+export const useMyDataQuery = () => useQuery({
+  queryKey: [QueryKeys.MY_DATA],
+  queryFn: () => myService.fetchData(),
+});
 ```
 
-#### Mutation Hook 패턴
-
+**Mutation Hook** (`hooks/mutations/`):
 ```typescript
-// src/domain/[domain]/hooks/mutations/use[Domain]Mutations.ts
-
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { QueryKeys } from "@/common/constants/queryKeys";
-import { myService } from "../../services/myService";
-
-export const useCreateDataMutation = () => {
+export const useCreateMutation = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: myService.create,
-    onSuccess: () => {
-      // 캐시 무효화 (자동 재조회)
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.MY_DATA] });
-    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: [QueryKeys.MY_DATA] }),
   });
 };
 ```
 
-#### Infinite Query 패턴
-
-```typescript
-export const usePrayerTitlesInfiniteQuery = (roomId: string) => {
-  return useInfiniteQuery({
-    queryKey: [QueryKeys.PRAYER_TITLES, roomId],
-    queryFn: ({ pageParam }) =>
-      prayerService.fetchPrayerTitles(roomId, pageParam),
-    initialPageParam: undefined,
-    getNextPageParam: (lastPage) => lastPage.after ?? undefined,
-  });
-};
-```
+**Infinite Query**: `useInfiniteQuery` + `pageParam` + `getNextPageParam`으로 커서 기반 페이지네이션
 
 ---
 
@@ -612,165 +435,36 @@ if (data && data.roomId && data.prayerTitleId) {
 
 ## 7. 공통 컴포넌트 및 레이아웃
 
-### 레이아웃 시스템
+### 레이아웃 시스템 (`src/common/components/layout/`)
 
 프로젝트는 **비율 기반 레이아웃 시스템**을 사용합니다.
 
-#### 레이아웃 컴포넌트 (`src/common/components/layout/`)
-
-1. **`Top1Body10Bottom1.tsx`**
-   - 상단 (height: 70 RFValue)
-   - 본문 (flex: 1)
-   - 하단 (height: 50 RFValue)
-   - 사용처: 탭 네비게이션이 있는 화면
-
-2. **`Top4Body10.tsx`**
-   - 상단 (4배 높이)
-   - 본문 (10배 높이)
-   - 사용처: 헤더가 큰 화면
-
-3. **`Top1Body10.tsx`**
-   - 상단 (1배 높이)
-   - 본문 (10배 높이)
-   - 사용처: 일반 화면
-
-4. **`ScreenLayout.tsx`**
-   - SafeAreaView + KeyboardAvoidingView 조합
-   - 전체 화면 레이아웃의 베이스
-
-#### 레이아웃 사용 예시
-
-```typescript
-import { Top1Body10 } from "@/common/components/layout";
-import { TopHeader } from "@/common/components/header";
-
-export default function MyScreen() {
-  return (
-    <Top1Body10
-      tops={[
-        <TopHeader key="header" title="제목" />,
-      ]}
-      bodies={[
-        <View key="body">
-          {/* 본문 내용 */}
-        </View>,
-      ]}
-    />
-  );
-}
-```
+- **`Top1Body10Bottom1.tsx`**: 탭 네비게이션이 있는 화면 (상단 70, 본문 flex:1, 하단 50)
+- **`Top4Body10.tsx`**: 헤더가 큰 화면 (상단 4배, 본문 10배)
+- **`Top1Body10.tsx`**: 일반 화면 (상단 1배, 본문 10배)
+- **`ScreenLayout.tsx`**: 전체 화면 레이아웃 베이스 (SafeAreaView + KeyboardAvoidingView 조합)
 
 ### 헤더 컴포넌트 (`src/common/components/header/`)
 
-1. **`TopHeader.tsx`**
-   - 일반 상단 헤더
-   - 제목 표시
-
-2. **`BackButtonHeader.tsx`**
-   - 뒤로 가기 버튼 포함 헤더
-   - 제목 표시
-
-3. **`AuthHeader.tsx`**
-   - 인증 화면용 헤더
-   - 로고 및 앱 이름 표시
-
-**사용 예시**:
-
-```typescript
-import { BackButtonHeader } from "@/common/components/header";
-
-<BackButtonHeader title="기도 상세" onBack={() => router.back()} />
-```
+- **`TopHeader.tsx`**: 일반 상단 헤더 (제목 표시)
+- **`BackButtonHeader.tsx`**: 뒤로 가기 버튼 포함 헤더
+- **`AuthHeader.tsx`**: 인증 화면용 헤더 (로고 및 앱 이름)
 
 ### 카드 컴포넌트 (`src/common/components/card/`)
 
-#### **`AccentCard.tsx`**
-
-왼쪽 보더 액센트가 있는 공통 카드 컴포넌트입니다. 프로젝트 전체에서 일관된 카드 디자인을 유지하기 위해 사용됩니다.
-
-**주요 특징**:
-- 왼쪽 보더로 시각적 액센트
-- 흰색 배경 + elevation 그림자
-- 선택적 Press 애니메이션
-- 내부 컨텐츠는 children으로 자유롭게 구성
-
-**Props**:
-- `children`: 카드 내부에 표시할 컨텐츠
-- `onPress?`: 카드 클릭 이벤트 핸들러
-- `onLongPress?`: 카드 길게 누르기 이벤트 핸들러
-- `borderWidth?`: 왼쪽 보더 두께 (기본값: 6)
-- `borderColor?`: 왼쪽 보더 색상 (기본값: color.secondary)
-- `animated?`: Press 애니메이션 활성화 여부 (기본값: true)
-- `style?`: 카드에 적용할 추가 스타일
-- `contentStyle?`: Card.Content에 적용할 추가 스타일
-- `contentPadding?`: Card.Content의 padding (기본값: 16)
-
-**사용 예시**:
-
-```typescript
-import { AccentCard } from "@/common/components/card";
-
-// 기본 사용 (애니메이션 O, borderWidth 6)
-<AccentCard onPress={handlePress}>
-  <Text>기도 제목</Text>
-  <Text>작성 날짜</Text>
-</AccentCard>
-
-// 애니메이션 없는 정적 카드
-<AccentCard animated={false}>
-  <Text>고정 카드</Text>
-</AccentCard>
-
-// borderWidth 커스터마이징
-<AccentCard
-  onPress={handlePress}
-  borderWidth={8}
->
-  <Text>기도방 이름</Text>
-</AccentCard>
-```
-
-**적용된 컴포넌트**:
-- `RoomItem`: 기도방 카드 (borderWidth: 8)
-- `PrayerTitleItem`: 기도 제목 카드 (borderWidth: 6)
-- `TitleCard`: 기도 내용 조회 페이지 상단 (borderWidth: 8, animated: false)
+- **`AccentCard.tsx`**: 왼쪽 보더 액센트 카드 컴포넌트
+  - 프로젝트 전체에서 일관된 카드 디자인 유지
+  - 왼쪽 보더 + 흰색 배경 + elevation 그림자
+  - 선택적 Press 애니메이션
+  - 적용된 컴포넌트: `RoomItem`, `PrayerTitleItem`, `TitleCard`
 
 ### 모달 컴포넌트 (`src/common/components/modal/`)
 
-1. **`GlobalAlertModal.tsx`**
-   - 전역 알림 모달
-   - Zustand store로 관리 (`useGlobalAlertModalStore`)
-   - 어디서든 호출 가능
-
-2. **`AlertModal.tsx`**
-   - 로컬 알림 모달
-   - 단일 확인 버튼
-
-3. **`ConfirmationModal.tsx`**
-   - 확인/취소 모달
-   - 위험한 작업 전 확인용
-
-4. **`ForceUpdateModal.tsx`**
-   - 강제 업데이트 모달
-   - 앱 버전이 낮을 때 표시
-
-5. **`MaintenanceModal.tsx`**
-   - 유지보수 모달
-   - 서버 점검 시 표시
-
-**GlobalAlertModal 사용 예시**:
-
-```typescript
-import { useGlobalAlertModalStore } from "@/common/components/modal/stores/useGlobalAlertModalStore";
-
-const { open } = useGlobalAlertModalStore();
-
-open({
-  title: "알림",
-  message: "작업이 완료되었습니다.",
-  confirmText: "확인",
-});
-```
+- **`GlobalAlertModal.tsx`**: 전역 알림 모달 (Zustand store로 관리)
+- **`AlertModal.tsx`**: 로컬 알림 모달 (단일 확인 버튼)
+- **`ConfirmationModal.tsx`**: 확인/취소 모달 (위험한 작업 전 확인용)
+- **`ForceUpdateModal.tsx`**: 강제 업데이트 모달
+- **`MaintenanceModal.tsx`**: 유지보수 모달
 
 ### 로딩 컴포넌트 (`src/common/components/loading/`)
 
@@ -779,25 +473,12 @@ open({
 
 ### Empty State 컴포넌트 (`src/common/components/empty/`)
 
-- 데이터가 없을 때 표시
-- 아이콘 + 메시지
+- 데이터가 없을 때 표시 (아이콘 + 메시지)
 
 ### 토스트 컴포넌트 (`src/common/components/toast/`)
 
-- **`react-native-toast-message` 사용**
+- `react-native-toast-message` 사용
 - 설정: `toastConfig.ts`
-
-**사용 예시**:
-
-```typescript
-import Toast from "react-native-toast-message";
-
-Toast.show({
-  type: "success",
-  text1: "성공",
-  text2: "기도방이 생성되었습니다.",
-});
-```
 
 ---
 
@@ -829,147 +510,27 @@ domain/[domain-name]/
 
 ### 도메인별 책임 분리
 
-#### 1. Types (`types/`)
+**1. Types** (`types/`): 타입 안전성 보장
+- `request/`: API 요청 타입
+- `response/`: API 응답 타입
+- `[domain]Store.ts`: State + Actions 타입
 
-**목적**: 타입 안전성 보장
-
+**2. Services** (`services/`): API 호출 로직 캡슐화
 ```typescript
-// types/request/createRoomRequest.ts
-export interface CreateRoomRequest {
-  name: string;
-  description?: string;
-}
-
-// types/response/roomResponse.ts
-export interface RoomResponse {
-  id: string;
-  name: string;
-  description: string | null;
-  createdAt: string;
-}
-
-// types/roomStore.ts
-export interface RoomState {
-  selectedRoom: RoomResponse | null;
-}
-
-export interface RoomActions {
-  setSelectedRoom: (room: RoomResponse) => void;
-  clear: () => void;
-}
-
-export type RoomStore = RoomState & RoomActions;
-```
-
-#### 2. Services (`services/`)
-
-**목적**: API 호출 로직 캡슐화
-
-```typescript
-// services/roomService.ts
-import apiService from "@/common/apis/apiService";
-import { RoomResponse } from "../types/response/roomResponse";
-import { CreateRoomRequest } from "../types/request/createRoomRequest";
-
 export const roomService = {
-  fetchRooms: async (): Promise<RoomResponse[]> => {
-    const response = await apiService.get<{ data: RoomResponse[] }>(
-      "/v1/rooms"
-    );
-    return response.data.data;
-  },
-
-  createRoom: async (data: CreateRoomRequest): Promise<void> => {
-    await apiService.post("/v1/rooms", data);
-  },
-
-  deleteRoom: async (roomId: string): Promise<void> => {
-    await apiService.delete(`/v1/rooms/${roomId}`);
+  fetchRooms: async () => {
+    const res = await apiService.get<{ data: RoomResponse[] }>("/v1/rooms");
+    return res.data.data;
   },
 };
 ```
 
-#### 3. Hooks (`hooks/`)
+**3. Hooks** (`hooks/`): 컴포넌트와 비즈니스 로직 연결
+- `queries/`: React Query의 useQuery 훅 (섹션 5 패턴 참고)
+- `mutations/`: React Query의 useMutation 훅 (섹션 5 패턴 참고)
 
-**목적**: React 컴포넌트와 비즈니스 로직 연결
-
-```typescript
-// hooks/queries/useRoomQueries.ts
-import { useQuery } from "@tanstack/react-query";
-import { QueryKeys } from "@/common/constants/queryKeys";
-import { roomService } from "../../services/roomService";
-
-export const useRoomsQuery = () => {
-  return useQuery({
-    queryKey: [QueryKeys.ROOMS],
-    queryFn: roomService.fetchRooms,
-  });
-};
-
-// hooks/mutations/useRoomMutations.ts
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { QueryKeys } from "@/common/constants/queryKeys";
-import { roomService } from "../../services/roomService";
-
-export const useCreateRoomMutation = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: roomService.createRoom,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.ROOMS] });
-    },
-  });
-};
-```
-
-#### 4. Stores (`stores/`)
-
-**목적**: 클라이언트 상태 관리
-
-```typescript
-// stores/useSelectedRoomStore.ts
-import { create } from "zustand";
-import { RoomStore, RoomState } from "../types/roomStore";
-
-const initialState: RoomState = {
-  selectedRoom: null,
-};
-
-export const useSelectedRoomStore = create<RoomStore>((set) => ({
-  ...initialState,
-
-  setSelectedRoom: (room) => set({ selectedRoom: room }),
-  clear: () => set(initialState),
-}));
-```
-
-### 도메인 사용 예시
-
-```typescript
-// app/(protected)/rooms/index.tsx
-import { useRoomsQuery } from "@/domain/rooms/hooks/queries/useRoomQueries";
-import { useCreateRoomMutation } from "@/domain/rooms/hooks/mutations/useRoomMutations";
-import { useSelectedRoomStore } from "@/domain/rooms/stores/useSelectedRoomStore";
-
-export default function RoomsScreen() {
-  // 서버 상태 (React Query)
-  const { data: rooms, isLoading } = useRoomsQuery();
-  const createRoomMutation = useCreateRoomMutation();
-
-  // 클라이언트 상태 (Zustand)
-  const { selectedRoom, setSelectedRoom } = useSelectedRoomStore();
-
-  const handleCreateRoom = () => {
-    createRoomMutation.mutate({
-      name: "새 기도방",
-      description: "설명",
-    });
-  };
-
-  // ...
-}
-```
+**4. Stores** (`stores/`): 클라이언트 상태 관리
+- Zustand로 구현 (섹션 5 패턴 참고)
 
 ---
 
@@ -996,85 +557,25 @@ export default function RoomsScreen() {
 
 ### 컴포넌트 작성
 
-#### 기본 구조
-
-```typescript
-import React from "react";
-import { View, StyleSheet } from "react-native";
-
-interface MyComponentProps {
-  title: string;
-  onPress?: () => void;
-}
-
-export default function MyComponent({ title, onPress }: MyComponentProps) {
-  return (
-    <View style={styles.container}>
-      {/* 컴포넌트 내용 */}
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    // 스타일
-  },
-});
-```
-
-#### 규칙
-1. **함수형 컴포넌트** 사용
-2. **default export** 사용
-3. Props는 **인터페이스로 정의**
-4. **StyleSheet.create()** 사용하여 스타일 정의
-5. 스타일은 컴포넌트 하단에 위치
+- 함수형 컴포넌트 사용, default export
+- Props는 인터페이스로 정의
+- `StyleSheet.create()` 사용, 스타일은 컴포넌트 하단 위치
 
 ### 경로 별칭
 
-- **`@/`**: `src/` 디렉토리를 가리킴
-- 예: `import { color } from "@/common/styles/color";`
+- **`@/`**: `src/` 디렉토리 (예: `import { color } from "@/common/styles/color";`)
 
 ### Import 순서
 
-1. React 및 React Native 관련
+1. React/React Native
 2. 서드파티 라이브러리
-3. 프로젝트 내부 모듈 (`@/` 경로)
-4. 타입 import (필요시)
+3. 내부 모듈 (`@/` 경로)
+4. 타입 import
 
-```typescript
-// 1. React
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+### 주석 및 포맷팅
 
-// 2. 서드파티
-import { useQuery } from "@tanstack/react-query";
-import { router } from "expo-router";
-
-// 3. 내부 모듈
-import { color } from "@/common/styles/color";
-import { useRoomsQuery } from "@/domain/rooms/hooks/queries/useRoomQueries";
-
-// 4. 타입
-import type { RoomResponse } from "@/domain/rooms/types/response/roomResponse";
-```
-
-### 주석
-
-- **한국어** 주석 사용
-- 복잡한 로직에는 설명 주석 추가
-- TODO, FIXME, NOTE 등의 태그 활용
-
-```typescript
-// TODO: 이 부분은 추후 리팩토링 필요
-// FIXME: 에러 처리 로직 개선
-// NOTE: 이 함수는 토큰 갱신 시에만 호출됨
-```
-
-### 코드 포맷팅
-
-- **들여쓰기**: 2 spaces
-- **세미콜론**: 사용
-- **따옴표**: 큰따옴표(") 우선, 작은따옴표(') 혼용 가능
+- 한국어 주석, TODO/FIXME/NOTE 태그 활용
+- 들여쓰기 2 spaces, 세미콜론 사용, 큰따옴표 우선
 
 ---
 
