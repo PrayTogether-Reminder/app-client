@@ -3,16 +3,19 @@ const { withMainActivity } = require('@expo/config-plugins');
 /**
  * Android MainActivity null check 패치를 적용하는 Config Plugin
  *
- * 문제 1: React Native 0.79.5에서 Android 10 기기에서 onWindowFocusChanged 시
- * null pointer exception 발생
- *
- * 문제 2: onCreate에서 super.onCreate(null) 호출로 인해 Activity resume 시
- * ReactActivityDelegate.onNewIntent에서 NullPointerException 발생
+ * 문제들:
+ * 1. React Native 0.79.5 + ProGuard 활성화 시 다양한 lifecycle 메서드에서
+ *    NullPointerException 발생 (ReactActivityDelegate가 null)
+ * 2. onCreate에서 super.onCreate(null) 호출로 인한 문제
+ * 3. Pixel 4a: onConfigurationChanged에서 crash
+ * 4. Galaxy S24 Ultra: onNewIntent, onResume에서 crash
+ * 5. Nexus 5X: NoClassDefFoundError, Notification 관련 crash (ProGuard)
  *
  * 해결:
- * 1. MainActivity에서 onWindowFocusChanged를 override하여 null 체크 추가
- * 2. super.onCreate(null)을 super.onCreate(savedInstanceState)로 수정
- * 3. onNewIntent를 override하여 null 체크 추가
+ * 1. super.onCreate(null) → super.onCreate(savedInstanceState) 수정
+ * 2. onWindowFocusChanged, onNewIntent, onConfigurationChanged, onResume, onPause에
+ *    try-catch 및 null 체크 추가
+ * 3. ProGuard 규칙 강화 (proguard-rules.pro)
  */
 const withAndroidMainActivityPatch = (config) => {
   return withMainActivity(config, (config) => {
@@ -86,6 +89,47 @@ const withAndroidMainActivityPatch = (config) => {
   }
 `;
 
+      // onConfigurationChanged override 추가 (Java)
+      const onConfigurationChangedPatchJava = `
+  // NULL_CHECK_PATCH: Fix for onConfigurationChanged crash (Pixel 4a issue)
+  @Override
+  public void onConfigurationChanged(android.content.res.Configuration newConfig) {
+    try {
+      super.onConfigurationChanged(newConfig);
+    } catch (Exception e) {
+      // Catch NullPointerException when ReactActivityDelegate is null
+      android.util.Log.e("MainActivity", "onConfigurationChanged error: " + e.getClass().getSimpleName() + " - " + e.getMessage(), e);
+    }
+  }
+`;
+
+      // onResume override 추가 (Java)
+      const onResumePatchJava = `
+  // NULL_CHECK_PATCH: Fix for onResume crash (Galaxy S24 Ultra issue)
+  @Override
+  public void onResume() {
+    try {
+      super.onResume();
+    } catch (Exception e) {
+      // Catch NullPointerException when React Native bridge is not ready
+      android.util.Log.e("MainActivity", "onResume error: " + e.getClass().getSimpleName() + " - " + e.getMessage(), e);
+    }
+  }
+`;
+
+      // onPause override 추가 (Java)
+      const onPausePatchJava = `
+  // NULL_CHECK_PATCH: Fix for onPause crash
+  @Override
+  public void onPause() {
+    try {
+      super.onPause();
+    } catch (Exception e) {
+      android.util.Log.e("MainActivity", "onPause error: " + e.getClass().getSimpleName() + " - " + e.getMessage(), e);
+    }
+  }
+`;
+
       // 클래스의 끝 부분(마지막 }) 앞에 메서드 추가
       if (!content.includes('onWindowFocusChanged')) {
         content = content.replace(
@@ -98,6 +142,27 @@ const withAndroidMainActivityPatch = (config) => {
         content = content.replace(
           /(\n}\s*$)/,
           `${onNewIntentPatch}$1`
+        );
+      }
+
+      if (!content.includes('onConfigurationChanged')) {
+        content = content.replace(
+          /(\n}\s*$)/,
+          `${onConfigurationChangedPatchJava}$1`
+        );
+      }
+
+      if (!content.includes('onResume')) {
+        content = content.replace(
+          /(\n}\s*$)/,
+          `${onResumePatchJava}$1`
+        );
+      }
+
+      if (!content.includes('onPause')) {
+        content = content.replace(
+          /(\n}\s*$)/,
+          `${onPausePatchJava}$1`
         );
       }
     }
@@ -171,6 +236,44 @@ const withAndroidMainActivityPatch = (config) => {
   }
 `;
 
+      // onConfigurationChanged override 추가
+      const onConfigurationChangedPatch = `
+  // NULL_CHECK_PATCH: Fix for onConfigurationChanged crash (Pixel 4a issue)
+  override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+    try {
+      super.onConfigurationChanged(newConfig)
+    } catch (e: Exception) {
+      // Catch NullPointerException when ReactActivityDelegate is null
+      android.util.Log.e("MainActivity", "onConfigurationChanged error: \${e.javaClass.simpleName} - \${e.message}", e)
+    }
+  }
+`;
+
+      // onResume override 추가
+      const onResumePatch = `
+  // NULL_CHECK_PATCH: Fix for onResume crash (Galaxy S24 Ultra issue)
+  override fun onResume() {
+    try {
+      super.onResume()
+    } catch (e: Exception) {
+      // Catch NullPointerException when React Native bridge is not ready
+      android.util.Log.e("MainActivity", "onResume error: \${e.javaClass.simpleName} - \${e.message}", e)
+    }
+  }
+`;
+
+      // onPause override 추가
+      const onPausePatch = `
+  // NULL_CHECK_PATCH: Fix for onPause crash
+  override fun onPause() {
+    try {
+      super.onPause()
+    } catch (e: Exception) {
+      android.util.Log.e("MainActivity", "onPause error: \${e.javaClass.simpleName} - \${e.message}", e)
+    }
+  }
+`;
+
       // 클래스의 끝 부분 앞에 메서드 추가
       if (!content.includes('onWindowFocusChanged')) {
         content = content.replace(
@@ -183,6 +286,27 @@ const withAndroidMainActivityPatch = (config) => {
         content = content.replace(
           /(\n}\s*$)/,
           `${onNewIntentPatch}$1`
+        );
+      }
+
+      if (!content.includes('onConfigurationChanged')) {
+        content = content.replace(
+          /(\n}\s*$)/,
+          `${onConfigurationChangedPatch}$1`
+        );
+      }
+
+      if (!content.includes('override fun onResume')) {
+        content = content.replace(
+          /(\n}\s*$)/,
+          `${onResumePatch}$1`
+        );
+      }
+
+      if (!content.includes('override fun onPause')) {
+        content = content.replace(
+          /(\n}\s*$)/,
+          `${onPausePatch}$1`
         );
       }
     }

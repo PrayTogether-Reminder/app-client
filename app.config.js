@@ -126,7 +126,8 @@ module.exports = {
     ],
     "expo-notifications",
     "expo-dev-client",
-    "./plugins/withAndroidMainActivityPatch.js", // Android 10 onWindowFocusChanged 크래시 수정
+    "./plugins/withAndroidMainActivityPatch.js", // MainActivity lifecycle 패치
+    "./plugins/withProguardRules.js", // ProGuard 규칙 자동 추가
   ],
   extra: {
     router: {
