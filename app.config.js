@@ -27,9 +27,9 @@ const config = {
 
 const currentConfig = config[environment] || config.production;
 
-const expoVersion = '1.0.9';
-const androidVersion = 18;
-const iosVersion = '1.0.21';
+const expoVersion = '1.0.10';
+const androidVersion = 19;
+const iosVersion = '1.0.22';
 
 module.exports = {
   name: currentConfig.name,
