@@ -1,18 +1,14 @@
+import React, { useState } from "react";
+import { StyleSheet, View, useWindowDimensions } from "react-native";
+import { Text } from "react-native-paper";
+import { RFValue } from "react-native-responsive-fontsize";
+import Entypo from "@expo/vector-icons/Entypo";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { AccentCard } from "@/common/components/card";
 import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
 import { color } from "@/common/styles/color";
 import { Room } from "@/domain/rooms/types/room";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import Entypo from "@expo/vector-icons/Entypo";
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  useWindowDimensions,
-  View,
-} from "react-native";
-import { Text } from "react-native-paper";
-import { RFValue } from "react-native-responsive-fontsize";
 import RoomInfoSheet from "./sheets/RoomOptionSheet";
-import { AccentCard } from "@/common/components/card";
 
 interface RoomItemProps {
   room: Room;
@@ -73,16 +69,16 @@ const RoomItem = ({
               name="chevron-right"
               size={width * 0.07}
               color={color.black}
-            />
+          />
           </View>
 
           <View style={styles.infoRow}>
             <View style={styles.memberRow}>
-              <AntDesign
-                name="user"
-                size={width * 0.08}
-                color={color.black}
-              />
+            <MaterialCommunityIcons
+              name="hand-heart"
+              size={RFValue(18)}
+              color={color.grayLight}
+            />
               <Text style={styles.memberText}>
                 현재 {room.memberCnt}명
               </Text>
