@@ -13,7 +13,9 @@ export default function AuthStateListener({
 }: AuthStateListenerProps) {
   const router = useRouter();
   const segments = useSegments();
-  const { initAuth, isAuthenticated, isLoading } = useAuthStore();
+  const initAuth = useAuthStore((state) => state.initAuth);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isLoading = useAuthStore((state) => state.isLoading);
   const initialCheckRef = useRef(false);
 
   // 초기 인증 체크

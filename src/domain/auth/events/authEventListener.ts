@@ -13,9 +13,8 @@ export default function AuthEventListener() {
   }, [router]);
 
   useEffect(() => {
-    const unsubscribe = useAuthStore
-      .getState()
-      .onAuthRequired(handleAuthRequired);
+    const onAuthRequired = useAuthStore.getState().onAuthRequired;
+    const unsubscribe = onAuthRequired(handleAuthRequired);
 
     return () => {
       unsubscribe();

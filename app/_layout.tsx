@@ -25,12 +25,11 @@ SplashScreen.preventAutoHideAsync().catch(() => {});
 
 // Expo Router 공식 방법: 알림 처리 hook
 function useNotificationObserver() {
-  console.log("🚀 useNotificationObserver hook called!");
-  const { isAuthenticated, isLoading } = useAuthStore();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isLoading = useAuthStore((state) => state.isLoading);
   const pendingNotificationRef = useRef<Notifications.Notification | null>(null);
 
   useEffect(() => {
-    console.log("🚀 useNotificationObserver useEffect running!");
     let isMounted = true;
 
     function redirect(notification: Notifications.Notification) {

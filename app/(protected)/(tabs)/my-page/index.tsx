@@ -22,7 +22,8 @@ export default function MyPageScreen(props: MyPageScreenProps) {
   const router = useRouter();
   const { mutate: logoutRequest } = useLogoutMutation();
   const { mutate: deleteAccountRequest } = useDeleteAccountMutation();
-  const { getRefreshToken, logout: setLogoutState } = useAuthStore();
+  const getRefreshToken = useAuthStore((state) => state.getRefreshToken);
+  const setLogoutState = useAuthStore((state) => state.logout);
   const fcmManager = FcmManager.getInstance();
   const prevPermissionStatus = useRef<boolean | null>(null);
   const { mutate: registerFcmTokenRequest } = useRegisterFcmTokenMutation();

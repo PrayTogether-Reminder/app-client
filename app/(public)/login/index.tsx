@@ -27,7 +27,7 @@ export default function LoginScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { mutate: loginRequest } = useLoginMutation();
-  const { login: setLoginState } = useAuthStore();
+  const setLoginState = useAuthStore((state) => state.login);
 
   const handleLogin = async () => {
     if (email.trim() === "" || password.trim() === "") {
