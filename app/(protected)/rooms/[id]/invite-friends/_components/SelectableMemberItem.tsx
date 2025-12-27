@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { StyleSheet, Animated, Pressable, View } from "react-native";
 import { Card, Text, Checkbox } from "react-native-paper";
+import MaterialCommunityIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { RFValue } from "react-native-responsive-fontsize";
 import { backgroundColor, color } from "@/common/styles/color";
 import type { MemberSearchResult } from "@/domain/members/types/response/searchMembersResponse";
@@ -18,9 +19,7 @@ export default function SelectableMemberItem({
   onToggle,
   disabled = false,
 }: SelectableMemberItemProps) {
-  const phoneDisplay = member.phoneNumberSuffix
-    ? `(${member.phoneNumberSuffix})`
-    : "(번호 미등록)";
+  const hasPhoneNumber = !!member.phoneNumberSuffix;
 
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
@@ -60,7 +59,22 @@ export default function SelectableMemberItem({
           <Card.Content style={styles.contentContainer}>
             <View style={styles.textContainer}>
               <Text style={styles.name}>{member.name}</Text>
-              <Text style={styles.phone}>{phoneDisplay}</Text>
+              {hasPhoneNumber && (
+                <View style={styles.phoneContainer}>
+                  <MaterialCommunityIcon
+                    name="phone"
+                    size={RFValue(12)}
+                    color={color.gray}
+                    style={styles.phoneIcon}
+                  />
+                  <Text style={styles.phone}>{member.phoneNumberSuffix}</Text>
+                </View>
+              )}
+              {!hasPhoneNumber && (
+                <Text style={[styles.phone, styles.noPhoneText]}>
+                  번호 미등록
+                </Text>
+              )}
             </View>
             <Checkbox
               status={isSelected ? "checked" : "unchecked"}
@@ -107,5 +121,16 @@ const styles = StyleSheet.create({
   phone: {
     fontSize: RFValue(13),
     color: color.gray,
+  },
+  phoneContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: RFValue(4),
+  },
+  phoneIcon: {
+    marginTop: RFValue(1),
+  },
+  noPhoneText: {
+    fontStyle: "italic",
   },
 });
