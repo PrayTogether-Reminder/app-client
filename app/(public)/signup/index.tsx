@@ -2,7 +2,8 @@ import path from "@/common/constants/path";
 import { backgroundColor, color } from "@/common/styles/color";
 import { BackButtonHeader } from "@/common/components/header";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { Analytics } from "@/common/services/analytics";
 import {
   BackHandler,
   Keyboard,
@@ -22,6 +23,15 @@ import PasswordStep from "./_components/PasswordStep";
 const SignupScreen: React.FC = () => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
+  const hasLoggedSignUpStarted = useRef(false);
+
+  // 회원가입 화면 진입 시 이벤트 전송 (한 번만)
+  useEffect(() => {
+    if (!hasLoggedSignUpStarted.current) {
+      Analytics.logSignUpStarted();
+      hasLoggedSignUpStarted.current = true;
+    }
+  }, []);
 
   // name setp
   const [name, setName] = useState("");
@@ -156,6 +166,7 @@ const SignupScreen: React.FC = () => {
         { name, email, password, phoneNumber },
         {
           onSuccess: () => {
+            Analytics.logSignUp("email"); // 회원가입 완료 이벤트
             router.replace(path.showLogin());
             setIsSubmitting(false);
           },

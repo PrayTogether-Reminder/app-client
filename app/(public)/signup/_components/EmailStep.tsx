@@ -13,6 +13,7 @@ import {
   useOtpEmailRequestMutation,
   useOtpVerifyMutation,
 } from "@/domain/auth/hooks/mutations/useAuthMutation";
+import { Analytics } from "@/common/services/analytics";
 export interface EmailStepProps {
   email: string;
   setEmail: (email: string) => void;
@@ -63,6 +64,7 @@ const EmailStep: React.FC<EmailStepProps> = ({
     setIsSendingOtp(true);
     requestEmailOtp(email, {
       onSuccess: () => {
+        Analytics.logSignUpEmailSent(); // 이메일 인증번호 발송 이벤트
         setIsOtpSent(true);
         setIsSendingOtp(false);
       },
@@ -84,6 +86,7 @@ const EmailStep: React.FC<EmailStepProps> = ({
       { email, otp },
       {
         onSuccess: () => {
+          Analytics.logSignUpEmailVerified(); // 이메일 인증 완료 이벤트
           onNext();
           setIsVerifyingOtp(false);
         },

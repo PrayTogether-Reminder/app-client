@@ -18,6 +18,7 @@ import { color } from "@/common/styles/color";
 import { useLoginMutation } from "@/domain/auth/hooks/mutations/useAuthMutation";
 import path from "@/common/constants/path";
 import { useAuthStore } from "@/domain/auth/stores/useAuthStore";
+import { Analytics } from "@/common/services/analytics";
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -45,6 +46,7 @@ export default function LoginScreen() {
             setError("로그인에 실패했습니다.");
             return;
           }
+          Analytics.logLogin("email"); // 로그인 완료 이벤트
           setLoginState(data.accessToken, data.refreshToken);
           router.replace(path.showRoomList()); // 로그인 성공 시 홈 화면으로 이동
         },

@@ -144,24 +144,33 @@ class AnalyticsManager {
   }
 
   // ============================================================
-  // 커스텀 이벤트 (앱 특화 이벤트)
-  // 이벤트가 결정되면 여기에 메서드 추가
+  // 퍼널 이벤트 (회원가입/로그인)
   // ============================================================
 
-  // 예시:
-  // async logPrayerCreated(roomId: string, isPublic?: boolean): Promise<void> {
-  //   await this.logEvent("prayer_created", {
-  //     room_id: roomId,
-  //     is_public: isPublic,
-  //   });
-  // }
+  /** 회원가입 화면 진입 */
+  async logSignUpStarted(): Promise<void> {
+    await this.logEvent("sign_up_started");
+  }
 
-  // async logRoomJoined(roomId: string, inviteMethod: string): Promise<void> {
-  //   await this.logEvent("room_joined", {
-  //     room_id: roomId,
-  //     invite_method: inviteMethod,
-  //   });
-  // }
+  /** 이름 입력 완료 (다음 버튼 클릭) */
+  async logSignUpNameCompleted(): Promise<void> {
+    await this.logEvent("sign_up_name_completed");
+  }
+
+  /** 이메일 인증번호 발송 */
+  async logSignUpEmailSent(): Promise<void> {
+    await this.logEvent("sign_up_email_sent");
+  }
+
+  /** 이메일 인증 완료 */
+  async logSignUpEmailVerified(): Promise<void> {
+    await this.logEvent("sign_up_email_verified");
+  }
+
+  /** 전화번호 입력 완료 */
+  async logSignUpPhoneCompleted(): Promise<void> {
+    await this.logEvent("sign_up_phone_completed");
+  }
 }
 
 export default AnalyticsManager;

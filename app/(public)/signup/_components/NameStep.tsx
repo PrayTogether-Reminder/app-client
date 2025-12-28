@@ -17,6 +17,7 @@ import {
 import { TextButton } from "@/common/components/button";
 import { RFValue } from "react-native-responsive-fontsize";
 import { backgroundColor, color } from "@/common/styles/color";
+import { Analytics } from "@/common/services/analytics";
 
 export interface NameStepProps {
   name: string;
@@ -70,6 +71,7 @@ const NameStep: React.FC<NameStepProps> = ({
     }
 
     if (!hasError) {
+      Analytics.logSignUpNameCompleted(); // 이름 입력 완료 이벤트
       onNext();
     }
   };

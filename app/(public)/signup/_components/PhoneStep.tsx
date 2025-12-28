@@ -2,6 +2,7 @@ import React from "react";
 import { View, Keyboard, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import { TextInput, Button, HelperText, Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
+import { Analytics } from "@/common/services/analytics";
 
 export interface PhoneStepProps {
   phoneNumber: string;
@@ -55,6 +56,7 @@ const PhoneStep: React.FC<PhoneStepProps> = ({
       return;
     }
 
+    Analytics.logSignUpPhoneCompleted(); // 전화번호 입력 완료 이벤트
     onNext();
   };
 
