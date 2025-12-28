@@ -1,5 +1,6 @@
 import { showAlert } from "@/common/components/modal/stores/useAlertStore";
 import { useRoomCreationMutation } from "@/domain/rooms/hooks/mutations/useRoomMutations";
+import { Analytics } from "@/common/services/analytics";
 import Feather from "@expo/vector-icons/Feather";
 import React, { useEffect, useRef } from "react";
 import {
@@ -64,6 +65,7 @@ export default function RoomCreationDialog({
     const description = inputValues.current.description;
 
     createRoom({ name, description });
+    Analytics.logRoomCreated(); // 기도방 생성 이벤트
     console.log("방 생성 title: ", name, ", description: ", description);
   };
 

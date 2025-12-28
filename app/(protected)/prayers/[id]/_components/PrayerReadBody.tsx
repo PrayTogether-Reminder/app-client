@@ -19,6 +19,7 @@ import PrayerContentEditDialog from "./dialogs/PrayerContentEditDialog";
 import PrayerTitleEditDialog from "./dialogs/PrayerTitleEditDialog";
 import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
 import { useCopyToClipboard } from "../../../../../src/hooks/useCopyToClipboard";
+import { Analytics } from "@/common/services/analytics";
 
 interface PrayerReadBodyProps {
   prayerTitleId: number;
@@ -189,6 +190,7 @@ function PrayerReadBody({ prayerTitleId, isEditMode, onEditModeChange }: PrayerR
               memberName,
               content
             });
+            Analytics.logPrayerContentCreated(); // 기도 내용 생성 이벤트
             setIsAddDialogOpen(false);
           }}
         />
@@ -247,6 +249,7 @@ function PrayerReadBody({ prayerTitleId, isEditMode, onEditModeChange }: PrayerR
             memberName,
             content
           });
+          Analytics.logPrayerContentCreated(); // 기도 내용 생성 이벤트
           setIsAddDialogOpen(false);
         }}
       />

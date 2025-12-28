@@ -1,6 +1,7 @@
 import { showAlert } from "@/common/components/modal/stores/useAlertStore";
 import { useCreatePrayerTitleMutation } from "@/domain/prayers/hooks/mutations/usePrayerMutations";
 import { useSelectedRoomStore } from "@/domain/rooms/stores/useSelectedRoomStore";
+import { Analytics } from "@/common/services/analytics";
 import Feather from "@expo/vector-icons/Feather";
 import React, { useEffect, useRef } from "react";
 import {
@@ -78,7 +79,8 @@ export default function PrayerTitleCreationDialog({
       roomId: room.id,
       title: title.trim(),
     });
-    
+    Analytics.logPrayerTitleCreated(); // 기도 제목 생성 이벤트
+
     closeModal();
   };
 

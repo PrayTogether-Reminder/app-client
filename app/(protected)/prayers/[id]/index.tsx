@@ -13,6 +13,7 @@ import { usePrayerCompletionMutation } from "../../../../src/domain/prayers/hook
 import { useCloseOnBack } from "@/common/services/back-handler/useCloseOnBack";
 import { Fragment } from "react";
 import { useSelectedRoomStore } from "../../../../src/domain/rooms/stores/useSelectedRoomStore";
+import { Analytics } from "@/common/services/analytics";
 
 export default function PrayerReadScreen() {
   const params = useLocalSearchParams();
@@ -39,6 +40,7 @@ export default function PrayerReadScreen() {
       return;
     }
     notifyPrayerCompletion({ prayerTitleId, roomId });
+    Analytics.logPrayerCompleted(); // 기도 완료 이벤트
     setConfirmModalVisible(false);
   };
 

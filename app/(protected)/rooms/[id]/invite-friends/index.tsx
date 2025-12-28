@@ -15,6 +15,7 @@ import { useSearchMembersQuery } from "@/domain/members/hooks/queries/memberQuer
 import { useRoomMembersQuery } from "@/domain/rooms/hooks/queries/useRoomQueries";
 import { useInviteRoomMemberV2Mutation } from "@/domain/invitations/hooks/mutations/useInvitationMutations";
 import type { MemberSearchResult } from "@/domain/members/types/response/searchMembersResponse";
+import { Analytics } from "@/common/services/analytics";
 
 export default function InviteMembersScreen(): React.ReactElement {
   const router = useRouter();
@@ -97,6 +98,7 @@ export default function InviteMembersScreen(): React.ReactElement {
       { roomId, memberIds },
       {
         onSuccess: () => {
+          Analytics.logRoomInvited(); // 기도방 초대 이벤트
           // 초대 완료 후 화면 닫기
           router.back();
         },

@@ -171,6 +171,35 @@ class AnalyticsManager {
   async logSignUpPhoneCompleted(): Promise<void> {
     await this.logEvent("sign_up_phone_completed");
   }
+
+  // ============================================================
+  // 리텐션 이벤트 (핵심 기능 사용)
+  // ============================================================
+
+  /** 기도방 생성 */
+  async logRoomCreated(): Promise<void> {
+    await this.logEvent("room_created");
+  }
+
+  /** 기도 제목 생성 */
+  async logPrayerTitleCreated(): Promise<void> {
+    await this.logEvent("prayer_title_created");
+  }
+
+  /** 기도 내용 생성 */
+  async logPrayerContentCreated(): Promise<void> {
+    await this.logEvent("prayer_content_created");
+  }
+
+  /** 기도 완료 */
+  async logPrayerCompleted(): Promise<void> {
+    await this.logEvent("prayer_completed");
+  }
+
+  /** 기도방 초대 */
+  async logRoomInvited(): Promise<void> {
+    await this.logEvent("room_invited");
+  }
 }
 
 export default AnalyticsManager;
