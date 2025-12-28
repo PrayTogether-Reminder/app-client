@@ -12,6 +12,7 @@ import { useInfiniteRoomsQuery } from "@/domain/rooms/hooks/queries/useRoomQueri
 import { useSelectedRoomStore } from "@/domain/rooms/stores/useSelectedRoomStore";
 import { Room } from "@/domain/rooms/types/room";
 import { useRouter } from "expo-router";
+import { Analytics } from "@/common/services/analytics";
 import React from "react";
 import {
   FlatList,
@@ -73,6 +74,7 @@ const RoomList = () => {
   const { mutate: deleteRoom } = useRoomDeletionMutation();
   const handleLeaveRoom = (room: Room) => {
     deleteRoom({ roomId: room.id });
+    Analytics.logRoomLeft(); // 기도방 나가기 이벤트
     console.log("delete room=", room.id);
   };
 

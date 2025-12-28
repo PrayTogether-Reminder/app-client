@@ -200,6 +200,25 @@ class AnalyticsManager {
   async logRoomInvited(): Promise<void> {
     await this.logEvent("room_invited");
   }
+
+  // ============================================================
+  // 부가 이벤트
+  // ============================================================
+
+  /** 초대 수락 */
+  async logInviteAccepted(): Promise<void> {
+    await this.logEvent("invite_accepted");
+  }
+
+  /** 초대 거절 */
+  async logInviteRejected(): Promise<void> {
+    await this.logEvent("invite_rejected");
+  }
+
+  /** 기도방 나가기 */
+  async logRoomLeft(): Promise<void> {
+    await this.logEvent("room_left");
+  }
 }
 
 export default AnalyticsManager;
