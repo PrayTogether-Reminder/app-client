@@ -20,6 +20,7 @@ import Toast from "react-native-toast-message";
 import { toastConfig } from "@/common/components/toast/ToastConfig";
 import * as Notifications from "expo-notifications";
 import { useAuthStore } from "@/domain/auth/stores/useAuthStore";
+import { useScreenTracking } from "@/common/services/analytics";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -138,6 +139,8 @@ function useNotificationObserver() {
 export default function RootLayout() {
   // 알림 처리 hook 호출
   useNotificationObserver();
+  // 화면 추적
+  useScreenTracking();
   const [fontsLoaded, fontsError] = useFonts({
     CookieRun_Bold: require("../assets/CookieRunFont_TTF/CookieRun_Black.ttf"),
     ...FontAwesome.font,
