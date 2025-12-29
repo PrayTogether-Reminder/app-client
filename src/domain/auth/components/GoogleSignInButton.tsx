@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity, Text } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
-import { useGoogleSignIn } from "@/domain/auth/hooks/useGoogleSignIn";
+import { useGoogleSignIn } from "@/domain/auth/hooks/mutations/useGoogleSignIn";
 import { AntDesign } from "@expo/vector-icons";
 
 interface GoogleSignInButtonProps {

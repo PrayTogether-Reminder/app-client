@@ -1,8 +1,8 @@
 import { useState, useCallback } from "react";
 import { useRouter } from "expo-router";
-import { googleAuthService } from "../services/googleAuthService";
-import { useGoogleAuthMutation } from "./mutations/useAuthMutation";
-import { useAuthStore } from "../stores/useAuthStore";
+import { googleAuthService } from "../../services/googleAuthService";
+import { useGoogleAuthMutation } from "./useAuthMutation";
+import { useAuthStore } from "../../stores/useAuthStore";
 import { Analytics } from "@/common/services/analytics";
 import { showAlert } from "@/common/components/modal/stores/useAlertStore";
 import path from "@/common/constants/path";

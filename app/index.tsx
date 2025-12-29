@@ -8,7 +8,8 @@ import {
   Linking,
 } from "react-native";
 import { Text, Button, useTheme, Avatar } from "react-native-paper";
-import { TextButton, GoogleSignInButton } from "@/common/components/button";
+import { TextButton } from "@/common/components/button";
+import { GoogleSignInButton } from "@/domain/auth/components/GoogleSignInButton";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
