@@ -6,6 +6,8 @@ import type { SignupRequest } from "../../types/request/signupRequest";
 import type { VerifyOtpRequest } from "../../types/request/verifyOtpRequest";
 import type { ReissuePasswordRequest } from "../../types/request/reissuePasswordRequest";
 import type { ChangePasswordRequest } from "../../types/request/changePasswordRequest";
+import type { GoogleAuthRequest } from "../../types/request/googleAuthRequest";
+import type { GoogleSignupRequest } from "../../types/request/googleSignupRequest";
 import { showAlert } from "@/common/components/modal/stores/useAlertStore";
 
 export const useOtpEmailRequestMutation = () => {
@@ -156,6 +158,34 @@ export const useChangePasswordMutation = () => {
         title: "비밀번호 변경 실패",
         message: error.message,
         icon: "alert-circle",
+      });
+    },
+  });
+};
+
+export const useGoogleAuthMutation = () => {
+  return useMutation({
+    mutationFn: ({ idToken, email, name }: GoogleAuthRequest) =>
+      authService.googleAuth(idToken, email, name),
+    onError: (error) => {
+      showAlert({
+        title: "Google 로그인 실패",
+        message: error.message,
+        icon: "google",
+      });
+    },
+  });
+};
+
+export const useGoogleSignupMutation = () => {
+  return useMutation({
+    mutationFn: ({ idToken, email, name, phoneNumber }: GoogleSignupRequest) =>
+      authService.googleSignup(idToken, email, name, phoneNumber),
+    onError: (error) => {
+      showAlert({
+        title: "Google 회원가입 실패",
+        message: error.message,
+        icon: "google",
       });
     },
   });

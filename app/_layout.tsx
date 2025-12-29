@@ -21,6 +21,10 @@ import { toastConfig } from "@/common/components/toast/ToastConfig";
 import * as Notifications from "expo-notifications";
 import { useAuthStore } from "@/domain/auth/stores/useAuthStore";
 import { useScreenTracking } from "@/common/services/analytics";
+import { configureGoogleSignIn } from "@/config/googleSignIn";
+
+// Google Sign-In 초기화
+configureGoogleSignIn();
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 

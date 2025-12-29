@@ -153,9 +153,8 @@ const styles = StyleSheet.create({
     marginBottom: RFValue(5),
     paddingHorizontal: RFValue(5),
   },
-  // actionContainer는 아래쪽에 위치
   actionContainer: {
-    // paddingBottom: RFValue(5), // 화면 하단과의 여백
+    // paddingBottom: RFValue(5),
   },
   switchButton: {
     marginTop: RFValue(15),

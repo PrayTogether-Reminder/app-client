@@ -73,7 +73,14 @@ module.exports = {
       NSAppTransportSecurity: {
         // NSAllowsArbitraryLoads: true, // http 요청 허용
       },
-      ITSAppUsesNonExemptEncryption: false, // 암호화 관련 설정 추가
+      ITSAppUsesNonExemptEncryption: false,
+      CFBundleURLTypes: [
+        {
+          CFBundleURLSchemes: [
+            "com.googleusercontent.apps.124350525745-4gap8sbgh7kg5gg7n0cgibd3pb10s7jg",
+          ],
+        },
+      ],
     },
     entitlements: {
       "aps-environment": "production", // 운영 환경에서 푸시 알림 사용
@@ -130,6 +137,7 @@ module.exports = {
     ],
     "expo-notifications",
     "expo-dev-client",
+    "@react-native-google-signin/google-signin",
     "./plugins/withAndroidMainActivityPatch.js", // MainActivity lifecycle 패치
     "./plugins/withProguardRules.js", // ProGuard 규칙 자동 추가
   ],

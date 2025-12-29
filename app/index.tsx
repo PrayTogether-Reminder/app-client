@@ -8,7 +8,7 @@ import {
   Linking,
 } from "react-native";
 import { Text, Button, useTheme, Avatar } from "react-native-paper";
-import { TextButton } from "@/common/components/button";
+import { TextButton, GoogleSignInButton } from "@/common/components/button";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
@@ -21,10 +21,6 @@ export default function WelcomeScreen() {
 
   const handleLoginPress = () => {
     router.push(path.showLogin()); // 로그인 화면으로 이동
-  };
-
-  const handleSignupPress = () => {
-    router.push(path.showSignup()); // 회원가입 화면으로 이동
   };
 
   const handleInquiryPress = async () => {
@@ -86,18 +82,15 @@ export default function WelcomeScreen() {
         >
           로그인
         </Button>
-        <Button
-          mode="outlined"
-          onPress={handleSignupPress}
-          style={[styles.button, styles.signupButton]}
-          labelStyle={[styles.buttonLabel, { color: theme.colors.primary }]}
-          textColor={theme.colors.secondary}
-          icon="account-plus-outline"
-          uppercase={false}
-          contentStyle={styles.buttonContent}
-        >
-          회원가입
-        </Button>
+
+        {/* 구분선 */}
+        <View style={styles.dividerContainer}>
+          <View style={styles.divider} />
+          <Text style={styles.dividerText}>또는</Text>
+          <View style={styles.divider} />
+        </View>
+
+        <GoogleSignInButton />
       </View>
     </SafeAreaView>
   );
@@ -109,9 +102,9 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   logoContainer: {
-    flex: 7, // 로고 공간 줄임
-    justifyContent: "center", // 수직 중앙 정렬
-    alignItems: "center", // 수평 중앙 정렬
+    flex: 5,
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: RFValue(30),
   },
   logo: {
@@ -127,20 +120,30 @@ const styles = StyleSheet.create({
     lineHeight: RFValue(28),
   },
   buttonContainer: {
-    flex: 3, // 버튼 영역 늘림
+    flex: 4,
     paddingHorizontal: RFValue(30),
-    paddingBottom: RFValue(20), // 하단 여백
-    paddingTop: RFValue(20),
-    justifyContent: "center",
+    paddingBottom: RFValue(30),
+    justifyContent: "flex-end",
   },
   button: {
     borderRadius: RFValue(30),
-    marginBottom: RFValue(15),
-    borderColor: color.secondary, // Outlined 버튼 테두리 색상
+    marginBottom: RFValue(8),
+    borderColor: color.secondary,
   },
-  signupButton: {
-    // Optional: Add specific styles for signup button if needed
-    // e.g., borderWidth: 1.5,
+  dividerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: RFValue(8),
+  },
+  divider: {
+    flex: 1,
+    height: 1,
+    backgroundColor: color.grayDark,
+  },
+  dividerText: {
+    marginHorizontal: RFValue(12),
+    color: color.gray,
+    fontSize: RFValue(12),
   },
   inquiryButton: {
     marginBottom: RFValue(25),

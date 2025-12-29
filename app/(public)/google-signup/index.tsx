@@ -1,59 +1,86 @@
 import React, { useState } from "react";
 import {
   View,
-  Keyboard,
   StyleSheet,
+  TouchableOpacity,
   ScrollView,
   Modal,
-  TouchableOpacity,
+  Keyboard,
+  Platform,
 } from "react-native";
 import {
   TextInput,
-  Button,
-  HelperText,
   Text,
+  HelperText,
+  Button,
   IconButton,
 } from "react-native-paper";
-import { TextButton } from "@/common/components/button";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { backgroundColor, color } from "@/common/styles/color";
+import { BackButtonHeader } from "@/common/components/header";
+import { useGoogleSignupMutation } from "@/domain/auth/hooks/mutations/useAuthMutation";
+import { useAuthStore } from "@/domain/auth/stores/useAuthStore";
+import path from "@/common/constants/path";
 import { Analytics } from "@/common/services/analytics";
-
-export interface NameStepProps {
-  name: string;
-  setName: (name: string) => void;
-  nameError: string;
-  setNameError: (error: string) => void;
-  onNext: () => void;
-  isSubmitting: boolean;
-}
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type ModalType = "terms" | "privacy" | null;
 
-const NameStep: React.FC<NameStepProps> = ({
-  name,
-  setName,
-  nameError,
-  setNameError,
-  onNext,
-  isSubmitting,
-}) => {
+export default function GoogleSignupScreen() {
+  const router = useRouter();
+  const params = useLocalSearchParams<{
+    idToken: string;
+    email: string;
+    name: string;
+  }>();
+
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneError, setPhoneError] = useState("");
   const [isTermsAgreed, setIsTermsAgreed] = useState(false);
   const [isPrivacyAgreed, setIsPrivacyAgreed] = useState(false);
-  const [showModal, setShowModal] = useState<ModalType>(null);
   const [termsError, setTermsError] = useState("");
   const [privacyError, setPrivacyError] = useState("");
+  const [showModal, setShowModal] = useState<ModalType>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleGoToEmail = () => {
+  const { mutate: googleSignup } = useGoogleSignupMutation();
+  const setLoginState = useAuthStore((state) => state.login);
+
+  // 전화번호 포맷팅 (010-0000-0000)
+  const formatPhoneNumber = (value: string) => {
+    const numbers = value.replace(/[^\d]/g, "");
+
+    if (numbers.length <= 3) {
+      return numbers;
+    } else if (numbers.length <= 7) {
+      return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
+    } else {
+      return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7, 11)}`;
+    }
+  };
+
+  const handlePhoneNumberChange = (value: string) => {
+    const formatted = formatPhoneNumber(value);
+    setPhoneNumber(formatted);
+    if (phoneError) setPhoneError("");
+  };
+
+  const validatePhoneNumber = () => {
+    const phoneRegex = /^010-\d{4}-\d{4}$/;
+    if (!phoneRegex.test(phoneNumber)) {
+      setPhoneError("올바른 전화번호 형식이 아니에요 (010-0000-0000)");
+      return false;
+    }
+    return true;
+  };
+
+  const handleSignup = () => {
     Keyboard.dismiss();
-
     let hasError = false;
 
-    if (!name.trim()) {
-      setNameError("이름을 입력해주세요.");
+    if (!validatePhoneNumber()) {
       hasError = true;
-    } else {
-      setNameError("");
     }
 
     if (!isTermsAgreed) {
@@ -70,20 +97,35 @@ const NameStep: React.FC<NameStepProps> = ({
       setPrivacyError("");
     }
 
-    if (!hasError) {
-      Analytics.logSignUpNameCompleted(); // 이름 입력 완료 이벤트
-      onNext();
-    }
-  };
+    if (hasError) return;
 
-  const handleTermsCheckbox = () => {
-    setIsTermsAgreed(!isTermsAgreed);
-    if (termsError) setTermsError("");
-  };
+    setIsSubmitting(true);
 
-  const handlePrivacyCheckbox = () => {
-    setIsPrivacyAgreed(!isPrivacyAgreed);
-    if (privacyError) setPrivacyError("");
+    googleSignup(
+      {
+        idToken: params.idToken,
+        email: params.email,
+        name: params.name || null,
+        phoneNumber: phoneNumber.replace(/-/g, ""),
+      },
+      {
+        onSuccess: (data) => {
+          if (!data) {
+            setPhoneError("회원가입에 실패했습니다.");
+            return;
+          }
+          Analytics.logSignUp("google");
+          setLoginState(data.accessToken, data.refreshToken);
+          router.replace(path.showRoomList());
+        },
+        onError: (error) => {
+          setPhoneError(error.message || "회원가입에 실패했습니다.");
+        },
+        onSettled: () => {
+          setIsSubmitting(false);
+        },
+      }
+    );
   };
 
   const termsOfService = `기도함께 서비스 이용약관
@@ -154,74 +196,80 @@ const NameStep: React.FC<NameStepProps> = ({
 
   const getModalContent = () => {
     if (showModal === "terms") {
-      return {
-        title: "서비스 이용약관",
-        content: termsOfService,
-      };
+      return { title: "서비스 이용약관", content: termsOfService };
     } else if (showModal === "privacy") {
-      return {
-        title: "개인정보 처리방침",
-        content: privacyPolicy,
-      };
+      return { title: "개인정보 처리방침", content: privacyPolicy };
     }
     return { title: "", content: "" };
   };
 
   return (
-    <>
-      <View style={styles.page}>
-        <Text variant="titleLarge" style={styles.stepTitle}>
-          이름을 입력해주세요
+    <SafeAreaView style={styles.container}>
+      <BackButtonHeader
+        onPress={() => router.back()}
+        disabled={isSubmitting}
+        style={styles.header}
+      />
+
+      <View style={styles.content}>
+        <Text variant="titleLarge" style={styles.title}>
+          전화번호 입력
         </Text>
+        <Text style={styles.description}>
+          동명이인을 구분하기 위해 전화번호가 필요해요.{"\n"}
+          전화번호 뒷자리 4자리만 다른 사용자에게 공개돼요 😊
+        </Text>
+        <Text style={styles.subtitle}>
+          Google 계정: {params.email}
+        </Text>
+
         <TextInput
-          label="이름"
-          value={name}
-          onChangeText={(text) => {
-            setName(text);
-            if (nameError) setNameError("");
-          }}
+          label="전화번호"
+          value={phoneNumber}
+          onChangeText={handlePhoneNumberChange}
+          placeholder="010-0000-0000"
+          keyboardType="phone-pad"
           mode="outlined"
           style={styles.input}
-          error={!!nameError}
+          maxLength={13}
+          error={!!phoneError}
           disabled={isSubmitting}
+          returnKeyType="done"
+          left={<TextInput.Icon icon="cellphone" />}
           theme={{
             fonts: {
               bodyLarge: { fontSize: RFValue(16) },
             },
           }}
         />
-        <HelperText
-          type="error"
-          visible={!!nameError}
-          style={styles.helperText}
-        >
-          {nameError}
+        <HelperText type="error" visible={!!phoneError}>
+          {phoneError}
         </HelperText>
 
+        {/* 약관 동의 */}
         <View style={styles.agreementContainer}>
           {/* 서비스 이용약관 */}
           <View style={styles.agreementItem}>
             <View style={styles.checkboxRow}>
               <TouchableOpacity
-                onPress={handleTermsCheckbox}
+                onPress={() => {
+                  setIsTermsAgreed(!isTermsAgreed);
+                  if (termsError) setTermsError("");
+                }}
                 disabled={isSubmitting}
-                activeOpacity={0.7}
               >
                 <View
                   style={[
-                    styles.customCheckbox,
-                    isTermsAgreed && styles.customCheckboxChecked,
+                    styles.checkbox,
+                    isTermsAgreed && styles.checkboxChecked,
                   ]}
                 >
-                  {isTermsAgreed && (
-                    <Text style={styles.checkmark}>✓</Text>
-                  )}
+                  {isTermsAgreed && <Text style={styles.checkmark}>✓</Text>}
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.agreementTextContainer}
                 onPress={() => setShowModal("terms")}
-                activeOpacity={0.7}
               >
                 <Text style={styles.agreementText}>
                   <Text style={styles.requiredMark}>[필수] </Text>
@@ -230,11 +278,7 @@ const NameStep: React.FC<NameStepProps> = ({
                 </Text>
               </TouchableOpacity>
             </View>
-            <HelperText
-              type="error"
-              visible={!!termsError}
-              style={styles.agreementError}
-            >
+            <HelperText type="error" visible={!!termsError}>
               {termsError}
             </HelperText>
           </View>
@@ -243,25 +287,24 @@ const NameStep: React.FC<NameStepProps> = ({
           <View style={styles.agreementItem}>
             <View style={styles.checkboxRow}>
               <TouchableOpacity
-                onPress={handlePrivacyCheckbox}
+                onPress={() => {
+                  setIsPrivacyAgreed(!isPrivacyAgreed);
+                  if (privacyError) setPrivacyError("");
+                }}
                 disabled={isSubmitting}
-                activeOpacity={0.7}
               >
                 <View
                   style={[
-                    styles.customCheckbox,
-                    isPrivacyAgreed && styles.customCheckboxChecked,
+                    styles.checkbox,
+                    isPrivacyAgreed && styles.checkboxChecked,
                   ]}
                 >
-                  {isPrivacyAgreed && (
-                    <Text style={styles.checkmark}>✓</Text>
-                  )}
+                  {isPrivacyAgreed && <Text style={styles.checkmark}>✓</Text>}
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.agreementTextContainer}
                 onPress={() => setShowModal("privacy")}
-                activeOpacity={0.7}
               >
                 <Text style={styles.agreementText}>
                   <Text style={styles.requiredMark}>[필수] </Text>
@@ -270,50 +313,44 @@ const NameStep: React.FC<NameStepProps> = ({
                 </Text>
               </TouchableOpacity>
             </View>
-            <HelperText
-              type="error"
-              visible={!!privacyError}
-              style={styles.agreementError}
-            >
+            <HelperText type="error" visible={!!privacyError}>
               {privacyError}
             </HelperText>
           </View>
 
-          {/* 전체 동의 옵션 (선택사항) */}
-          <View style={styles.allAgreeContainer}>
-            <TextButton
-              onPress={() => {
-                const newValue = !isTermsAgreed || !isPrivacyAgreed;
-                setIsTermsAgreed(newValue);
-                setIsPrivacyAgreed(newValue);
-                if (newValue) {
-                  setTermsError("");
-                  setPrivacyError("");
-                }
-              }}
-              disabled={isSubmitting}
-              textColor={color.secondary}
-              style={styles.allAgreeButton}
-              labelStyle={styles.allAgreeText}
-            >
-              전체 동의하기
-            </TextButton>
-          </View>
+          {/* 전체 동의 */}
+          <TouchableOpacity
+            style={styles.allAgreeButton}
+            onPress={() => {
+              const newValue = !isTermsAgreed || !isPrivacyAgreed;
+              setIsTermsAgreed(newValue);
+              setIsPrivacyAgreed(newValue);
+              if (newValue) {
+                setTermsError("");
+                setPrivacyError("");
+              }
+            }}
+            disabled={isSubmitting}
+          >
+            <Text style={styles.allAgreeText}>전체 동의하기</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.buttonContainer}>
           <Button
             mode="contained"
-            onPress={handleGoToEmail}
+            onPress={handleSignup}
             style={styles.button}
             labelStyle={styles.buttonLabel}
             disabled={isSubmitting}
+            loading={isSubmitting}
           >
-            다음
+            {isSubmitting ? "가입 중..." : "가입 완료"}
           </Button>
         </View>
       </View>
 
+      {/* 약관 모달 */}
       <Modal
         visible={showModal !== null}
         onRequestClose={() => setShowModal(null)}
@@ -339,47 +376,63 @@ const NameStep: React.FC<NameStepProps> = ({
               mode="contained"
               onPress={() => setShowModal(null)}
               style={styles.modalButton}
-              labelStyle={styles.modalButtonLabel}
             >
               확인
             </Button>
           </View>
         </View>
       </Modal>
-    </>
+    </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  page: {
+  container: {
+    flex: 1,
+    backgroundColor: backgroundColor.default,
+  },
+  header: {
+    // marginTop 제거하여 상단 잘림 방지
+  },
+  content: {
     flex: 1,
     padding: RFValue(20),
   },
-  stepTitle: {
-    marginBottom: RFValue(16),
-    textAlign: "center",
-    fontWeight: "bold",
+  title: {
     fontSize: RFValue(22),
-    lineHeight: RFValue(28),
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: RFValue(12),
+    marginTop: RFValue(10),
+    paddingVertical: RFValue(1),
+  },
+  description: {
+    fontSize: RFValue(14),
+    color: "#666",
+    textAlign: "center",
+    lineHeight: RFValue(20),
+    marginBottom: RFValue(16),
+  },
+  subtitle: {
+    fontSize: RFValue(13),
+    color: color.gray,
+    textAlign: "center",
+    marginBottom: RFValue(20),
   },
   input: {
-    fontSize: RFValue(16),
-  },
-  helperText: {
-    fontSize: RFValue(14),
+    backgroundColor: color.white,
   },
   agreementContainer: {
-    marginTop: RFValue(20),
-    marginBottom: RFValue(10),
+    marginTop: RFValue(16),
   },
   agreementItem: {
-    marginBottom: RFValue(2),
+    marginBottom: RFValue(4),
   },
   checkboxRow: {
     flexDirection: "row",
     alignItems: "center",
   },
-  customCheckbox: {
+  checkbox: {
     width: RFValue(24),
     height: RFValue(24),
     borderWidth: 2,
@@ -389,13 +442,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#fff",
   },
-  customCheckboxChecked: {
-    backgroundColor: color.secondary || "#FF6B6B",
-    borderColor: color.secondary || "#FF6B6B",
+  checkboxChecked: {
+    backgroundColor: color.secondary,
+    borderColor: color.secondary,
   },
   checkmark: {
     color: "#fff",
-    fontSize: RFValue(18),
+    fontSize: RFValue(16),
     fontWeight: "bold",
   },
   agreementTextContainer: {
@@ -405,49 +458,40 @@ const styles = StyleSheet.create({
   agreementText: {
     fontSize: RFValue(14),
     color: "#333",
-    lineHeight: RFValue(18),
   },
   requiredMark: {
-    color: color.error || "#d32f2f",
+    color: color.error,
     fontWeight: "500",
   },
   viewTerms: {
-    color: color.primary || "#1976d2",
+    color: color.primary,
     textDecorationLine: "underline",
   },
-  agreementError: {
-    fontSize: RFValue(12),
-    marginTop: RFValue(4),
-  },
-  allAgreeContainer: {
-    marginTop: RFValue(6),
-    paddingTop: RFValue(6),
+  allAgreeButton: {
+    marginTop: RFValue(12),
+    paddingVertical: RFValue(8),
+    alignItems: "center",
     borderTopWidth: 1,
     borderTopColor: "#e0e0e0",
-    alignItems: "center",
-  },
-  allAgreeButton: {
-    paddingHorizontal: RFValue(16),
   },
   allAgreeText: {
+    color: color.secondary,
     fontSize: RFValue(14),
     fontWeight: "600",
-    lineHeight: RFValue(18),
   },
   buttonContainer: {
-    justifyContent: "center",
     marginTop: "auto",
   },
   button: {
     paddingVertical: RFValue(4),
   },
   buttonLabel: {
-    fontSize: RFValue(22),
-    lineHeight: RFValue(28),
+    paddingVertical: Platform.OS === "ios" ? RFValue(2) : RFValue(4),
+    fontSize: RFValue(18),
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: backgroundColor.white || "#ffffff",
+    backgroundColor: backgroundColor.white,
   },
   modalHeader: {
     flexDirection: "row",
@@ -475,18 +519,9 @@ const styles = StyleSheet.create({
     padding: RFValue(16),
     borderTopWidth: 1,
     borderTopColor: "#e0e0e0",
-    justifyContent: "center",
     alignItems: "center",
   },
   modalButton: {
-    height: RFValue(48),
     width: RFValue(120),
-    justifyContent: "center",
-  },
-  modalButtonLabel: {
-    fontSize: RFValue(16),
-    lineHeight: RFValue(20),
   },
 });
-
-export default NameStep;
