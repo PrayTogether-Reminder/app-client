@@ -10,6 +10,7 @@ type ListSectionProps = {
   onChangePassword: () => void;
   onLogout: () => void;
   onDeleteAccount: () => void;
+  showPasswordChange?: boolean;
 };
 
 export default function ListSection({
@@ -19,6 +20,7 @@ export default function ListSection({
   onChangePassword,
   onLogout,
   onDeleteAccount,
+  showPasswordChange = true,
 }: ListSectionProps): React.ReactElement {
   const handleInquiryPress = async () => {
     try {
@@ -64,13 +66,15 @@ export default function ListSection({
           right={(props) => <List.Icon {...props} icon="chevron-right" />}
           onPress={onGoToNotifications}
         />
-        <List.Item
-          title="비밀번호 변경"
-          description="새로운 비밀번호로 변경하세요."
-          left={(props) => <List.Icon {...props} icon="lock-reset" />}
-          right={(props) => <List.Icon {...props} icon="chevron-right" />}
-          onPress={onChangePassword}
-        />
+        {showPasswordChange && (
+          <List.Item
+            title="비밀번호 변경"
+            description="새로운 비밀번호로 변경하세요."
+            left={(props) => <List.Icon {...props} icon="lock-reset" />}
+            right={(props) => <List.Icon {...props} icon="chevron-right" />}
+            onPress={onChangePassword}
+          />
+        )}
         <List.Item
           title="1:1 문의"
           description="문의사항을 남겨주세요."

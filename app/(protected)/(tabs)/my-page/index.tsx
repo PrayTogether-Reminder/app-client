@@ -7,6 +7,7 @@ import Top4Body10 from "@/common/components/layout/Top4Body10";
 import ProfileSection from "../../my-page/index/_components/ProfileSection";
 import ListSection from "../../my-page/index/_components/ListSection";
 import path from "@/common/constants/path";
+import { useProfileQuery } from "@/domain/members/hooks/queries/memberQueries";
 import { useLogoutMutation, useDeleteAccountMutation } from "@/domain/auth/hooks/mutations/useAuthMutation";
 import { useAuthStore } from "@/domain/auth/stores/useAuthStore";
 import FcmManager from "@/common/services/fcm/fcmManager";
@@ -29,6 +30,7 @@ export default function MyPageScreen(props: MyPageScreenProps) {
   const { mutate: registerFcmTokenRequest } = useRegisterFcmTokenMutation();
   const { mutate: deleteFcmTokenRequest } = useDeleteFcmTokenMutation();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const { data: profile } = useProfileQuery();
 
   // 알림 권한 확인 및 변경 처리 함수
   const checkAndUpdatePermission = async () => {
@@ -292,6 +294,7 @@ export default function MyPageScreen(props: MyPageScreenProps) {
             onChangePassword={handleChangePassword}
             onLogout={handleLogout}
             onDeleteAccount={handleDeleteAccount}
+            showPasswordChange={profile?.provider !== "GOOGLE"}
           />,
         ]}
       />

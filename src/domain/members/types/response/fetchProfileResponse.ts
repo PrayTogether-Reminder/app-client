@@ -3,4 +3,5 @@ export interface FetchProfileResponse {
   name: string;
   email: string;
   phoneNumber?: string | null;
+  provider: "LOCAL" | "GOOGLE";
 }
