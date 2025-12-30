@@ -104,6 +104,9 @@ module.exports = {
       "USE_EXACT_ALARM",
       "POST_NOTIFICATIONS"
     ],
+    blockedPermissions: [
+      "com.google.android.gms.permission.AD_ID"
+    ],  
     versionCode: androidVersion,
   },
   web: {
