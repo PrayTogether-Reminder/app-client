@@ -9,7 +9,8 @@ console.log("Current working directory:", process.cwd());
 console.log("EXPO_PUBLIC_API_URL from env:", process.env.EXPO_PUBLIC_API_URL);
 
 const API_URL ="https://praytogether.site/api";
-// const API_URL ="http://172.30.1.87:8080/api";
+// const API_URL ="http://172.30.1.24:8080/api";
+// const API_URL ="https://420691fee64f.ngrok-free.app/api";
 
 // 환경별 설정
 const environment = process.env.EAS_BUILD_PROFILE || 'production';
@@ -31,9 +32,9 @@ const config = {
 
 const currentConfig = config[environment] || config.production;
 
-const expoVersion = '1.0.10';
-const androidVersion = 19;
-const iosVersion = '1.0.22';
+const expoVersion = '1.0.11';
+const androidVersion = 20;
+const iosVersion = '1.0.23';
 
 module.exports = {
   name: currentConfig.name,
