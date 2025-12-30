@@ -5,6 +5,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
 import { useGoogleSignIn } from "@/domain/auth/hooks/mutations/useGoogleSignIn";
 import { AntDesign } from "@expo/vector-icons";
+import { Analytics } from "@/common/services/analytics";
 
 interface GoogleSignInButtonProps {
   disabled?: boolean;
@@ -19,10 +20,15 @@ export const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({
 }) => {
   const { isLoading, handleGoogleSignIn } = useGoogleSignIn({ disabled });
 
+  const handlePress = () => {
+    Analytics.logGoogleSignInClicked();
+    handleGoogleSignIn();
+  };
+
   return (
     <TouchableOpacity
       style={[styles.button, (disabled || isLoading) && styles.buttonDisabled]}
-      onPress={handleGoogleSignIn}
+      onPress={handlePress}
       disabled={disabled || isLoading}
       activeOpacity={0.7}
     >

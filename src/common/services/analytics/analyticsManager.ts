@@ -172,6 +172,16 @@ class AnalyticsManager {
     await this.logEvent("sign_up_phone_completed");
   }
 
+  /** 구글 로그인 버튼 클릭 */
+  async logGoogleSignInClicked(): Promise<void> {
+    await this.logEvent("google_sign_in_clicked");
+  }
+
+  /** 구글 회원가입 완료 버튼 클릭 */
+  async logGoogleSignUpSubmit(): Promise<void> {
+    await this.logEvent("google_sign_up_submit");
+  }
+
   // ============================================================
   // 리텐션 이벤트 (핵심 기능 사용)
   // ============================================================
