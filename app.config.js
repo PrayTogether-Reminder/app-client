@@ -33,7 +33,7 @@ const config = {
 const currentConfig = config[environment] || config.production;
 
 const expoVersion = '1.0.12';
-const androidVersion = 23;
+const androidVersion = 24;
 const iosVersion = '1.0.24';
 
 module.exports = {
