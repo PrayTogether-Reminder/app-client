@@ -78,6 +78,7 @@ export default function GoogleSignupScreen() {
 
   const handleSignup = () => {
     Keyboard.dismiss();
+    Analytics.logGoogleSignUpSubmit(); // 가입 완료 버튼 클릭 이벤트
     let hasError = false;
 
     if (!validatePhoneNumber()) {
