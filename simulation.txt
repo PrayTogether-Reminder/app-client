@@ -1,0 +1,2 @@
+npx expo run:ios --device "iPhone 16 Pro Max"
+npx expo run:ios --device "iPad Pro 13-inch (M4)"

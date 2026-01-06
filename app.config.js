@@ -85,6 +85,7 @@ module.exports = {
     },
     entitlements: {
       "aps-environment": "production", // 운영 환경에서 푸시 알림 사용
+      "com.apple.developer.applesignin": ["Default"], // Sign in with Apple
     },
     buildNumber: iosVersion,
   },
@@ -142,6 +143,7 @@ module.exports = {
     "expo-notifications",
     "expo-dev-client",
     "@react-native-google-signin/google-signin",
+    "expo-apple-authentication",
     "./plugins/withAndroidMainActivityPatch.js", // MainActivity lifecycle 패치
     "./plugins/withProguardRules.js", // ProGuard 규칙 자동 추가
   ],

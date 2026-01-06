@@ -10,6 +10,7 @@ import {
 import { Text, Button, useTheme, Avatar } from "react-native-paper";
 import { TextButton } from "@/common/components/button";
 import { GoogleSignInButton } from "@/domain/auth/components/GoogleSignInButton";
+import { AppleSignInButton } from "@/domain/auth/components/AppleSignInButton";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
@@ -91,7 +92,11 @@ export default function WelcomeScreen() {
           <View style={styles.divider} />
         </View>
 
-        <GoogleSignInButton />
+        {/* 소셜 로그인 버튼 */}
+        <View style={styles.socialButtonsContainer}>
+          <GoogleSignInButton />
+          <AppleSignInButton />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -145,6 +150,13 @@ const styles = StyleSheet.create({
     marginHorizontal: RFValue(12),
     color: color.gray,
     fontSize: RFValue(12),
+  },
+  socialButtonsContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: RFValue(16),
+    marginTop: RFValue(8),
   },
   inquiryButton: {
     marginBottom: RFValue(25),

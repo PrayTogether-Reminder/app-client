@@ -8,6 +8,7 @@ import type { ReissuePasswordRequest } from "../../types/request/reissuePassword
 import type { ChangePasswordRequest } from "../../types/request/changePasswordRequest";
 import type { GoogleAuthRequest } from "../../types/request/googleAuthRequest";
 import type { GoogleSignupRequest } from "../../types/request/googleSignupRequest";
+import type { AppleAuthRequest } from "../../types/request/appleAuthRequest";
 import { showAlert } from "@/common/components/modal/stores/useAlertStore";
 
 export const useOtpEmailRequestMutation = () => {
@@ -186,6 +187,20 @@ export const useGoogleSignupMutation = () => {
         title: "Google 회원가입 실패",
         message: error.message,
         icon: "google",
+      });
+    },
+  });
+};
+
+export const useAppleAuthMutation = () => {
+  return useMutation({
+    mutationFn: ({ identityToken, authorizationCode, name }: AppleAuthRequest) =>
+      authService.appleAuth(identityToken, authorizationCode, name),
+    onError: (error) => {
+      showAlert({
+        title: "Apple 로그인 실패",
+        message: error.message,
+        icon: "apple",
       });
     },
   });

@@ -11,6 +11,8 @@ import type { ChangePasswordRequest } from "../types/request/changePasswordReque
 import type { GoogleAuthRequest } from "../types/request/googleAuthRequest";
 import type { GoogleAuthResponse } from "../types/response/googleAuthResponse";
 import type { GoogleSignupRequest } from "../types/request/googleSignupRequest";
+import type { AppleAuthRequest } from "../types/request/appleAuthRequest";
+import type { AppleAuthResponse } from "../types/response/appleAuthResponse";
 
 export const authService = {
   // 이메일 OTP 요청 API
@@ -130,6 +132,30 @@ export const authService = {
       name,
       phoneNumber,
     } as GoogleSignupRequest);
+    return response.data;
+  },
+
+  // Apple OAuth 인증 확인
+  // 기존 회원이면 JWT 발급, 신규 회원이면 회원 생성 후 JWT 발급
+  appleAuth: async (
+    identityToken: string,
+    authorizationCode: string,
+    name: string | null
+  ): Promise<AppleAuthResponse> => {
+    const requestBody = {
+      identityToken,
+      authorizationCode,
+      name,
+    };
+    console.log("=== Apple Auth Request Body ===");
+    console.log("identityToken exists:", !!identityToken);
+    console.log("identityToken length:", identityToken?.length);
+    console.log("authorizationCode exists:", !!authorizationCode);
+    console.log("name:", name);
+    console.log("Full body:", JSON.stringify(requestBody, null, 2).substring(0, 200));
+    console.log("===============================");
+
+    const response = await apiService.post<AppleAuthResponse>(`/v1/auth/apple`, requestBody);
     return response.data;
   },
 };
