@@ -4,6 +4,19 @@
 AAB로 배포 시 Google Play App Signing이 앱을 재서명하지만,
 새로운 SHA-1 인증서가 Firebase Console에 등록되지 않아 DEVELOPER_ERROR 발생
 
+## SHA-1 등록이 필요한 곳
+
+### Firebase Console (필수 ⭐)
+- **목적:** Firebase 서비스 인증 (FCM, Analytics, Crashlytics)
+- **위치:** Firebase Console > 프로젝트 설정 > Android 앱 > SHA 인증서 지문
+- **필수 이유:** 현재 프로젝트에서 Firebase 사용 중
+
+### Google Cloud Console (구글 로그인 사용 시만 필수)
+- **목적:** Google Sign-In OAuth 2.0 인증
+- **위치:** Google Cloud Console > APIs & Services > Credentials > OAuth 2.0 클라이언트 ID
+- **필수 조건:** 구글 로그인을 구현한 경우에만
+- **참고:** 현재 코드베이스에는 구글 로그인 구현 없음 (이메일/비밀번호 로그인만 사용)
+
 ## 해결 단계
 
 ### 1. Google Play Console에서 App Signing 인증서 확인
@@ -56,11 +69,17 @@ eas build --platform android --profile production
 - ✅ 로컬 릴리스 키 SHA-1 (로컬 APK 빌드용)
 - ✅ 디버그 키 SHA-1 (개발용)
 
-### Google OAuth Client ID 확인 (구글 로그인 사용 시)
+### Google OAuth Client ID 확인 (구글 로그인 사용 시만 필요)
+**현재 프로젝트는 구글 로그인을 사용하지 않으므로 이 단계는 필요 없습니다.**
+
+구글 로그인을 추가할 경우에만:
 1. https://console.cloud.google.com/apis/credentials 접속
-2. OAuth 2.0 클라이언트 ID 확인
+2. OAuth 2.0 클라이언트 ID 생성/확인
 3. 패키지 이름: `site.praytogether`
-4. SHA-1 인증서 지문 확인 (Firebase와 동일해야 함)
+4. SHA-1 인증서 지문 추가 (Firebase에 등록한 것과 동일)
+   - 로컬 디버그 키 SHA-1
+   - 로컬 릴리스 키 SHA-1
+   - Google Play App Signing 키 SHA-1 ⭐
 
 ## 트러블슈팅
 
