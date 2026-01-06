@@ -10,9 +10,9 @@ console.log("EXPO_PUBLIC_API_URL from env:", process.env.EXPO_PUBLIC_API_URL);
 
 const API_URL ="https://praytogether.site/api";
 // const API_URL ="http://172.30.1.24:8080/api";
-// const API_URL =" https://a614e74aba66.ngrok-free.app/api";
+// const API_URL ="https://138d6dd62393.ngrok-free.app/api";
 
-// 환경별 설정
+// 환경별 설정 ㅇ
 const environment = process.env.EAS_BUILD_PROFILE || 'production';
 
 const config = {
@@ -32,9 +32,9 @@ const config = {
 
 const currentConfig = config[environment] || config.production;
 
-const expoVersion = '1.0.15';
-const androidVersion = 27;
-const iosVersion = '1.0.27';
+const expoVersion = '1.0.16';
+const androidVersion = 28;
+const iosVersion = '1.0.28';
 
 module.exports = {
   name: currentConfig.name,
