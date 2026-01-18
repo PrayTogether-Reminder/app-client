@@ -6,6 +6,7 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
   withSequence,
+  withDelay,
 } from "react-native-reanimated";
 import { RFValue } from "react-native-responsive-fontsize";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -28,7 +29,8 @@ type AnimationStep =
   | "tap-bell"
   | "show-modal"
   | "tap-confirm"
-  | "show-success";
+  | "show-success"
+  | "show-notification";
 
 export const PrayerCompletionSlide: React.FC<PrayerCompletionSlideProps> = ({
   isActive,
@@ -36,6 +38,7 @@ export const PrayerCompletionSlide: React.FC<PrayerCompletionSlideProps> = ({
   const [step, setStep] = useState<AnimationStep>("tap-bell");
   const [showModal, setShowModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
 
   // 하이라이트 상태들
   const [highlightBell, setHighlightBell] = useState(false);
@@ -53,8 +56,10 @@ export const PrayerCompletionSlide: React.FC<PrayerCompletionSlideProps> = ({
   const modalOpacity = useSharedValue(0);
   const successOpacity = useSharedValue(0);
   const successScale = useSharedValue(0.5);
+  const notificationTranslateY = useSharedValue(-100);
+  const notificationOpacity = useSharedValue(0);
 
-  const CYCLE_DURATION = 10000;
+  const CYCLE_DURATION = 11000;
 
   // 화살표 타이밍 상수
   const ARROW_PAUSE = 400;
@@ -112,11 +117,14 @@ export const PrayerCompletionSlide: React.FC<PrayerCompletionSlideProps> = ({
       setStep("tap-bell");
       setShowModal(false);
       setShowSuccess(false);
+      setShowNotification(false);
       setHighlightBell(false);
       setHighlightConfirm(false);
       modalOpacity.value = 0;
       successOpacity.value = 0;
       successScale.value = 0.5;
+      notificationTranslateY.value = -100;
+      notificationOpacity.value = 0;
 
       // ===== Step 1: 기도 알림 버튼 탭 =====
       timeouts.push(
@@ -166,6 +174,34 @@ export const PrayerCompletionSlide: React.FC<PrayerCompletionSlideProps> = ({
         }, showSuccessStart)
       );
 
+      // ===== Step 4: 푸시 알림 표시 (받는 사람 시점) =====
+      const showNotificationStart = showSuccessStart + 1500;
+      timeouts.push(
+        setTimeout(() => {
+          setShowSuccess(false);
+          successOpacity.value = withTiming(0, { duration: 200 });
+          setShowNotification(true);
+          setStep("show-notification");
+          notificationOpacity.value = withTiming(1, { duration: 200 });
+          notificationTranslateY.value = withTiming(0, { duration: 400 });
+        }, showNotificationStart)
+      );
+
+      // 알림 사라짐
+      const hideNotificationStart = showNotificationStart + 2500;
+      timeouts.push(
+        setTimeout(() => {
+          notificationTranslateY.value = withTiming(-100, { duration: 300 });
+          notificationOpacity.value = withTiming(0, { duration: 300 });
+        }, hideNotificationStart)
+      );
+
+      timeouts.push(
+        setTimeout(() => {
+          setShowNotification(false);
+        }, hideNotificationStart + 400)
+      );
+
       // 사이클 반복
       timeouts.push(
         setTimeout(() => {
@@ -188,6 +224,11 @@ export const PrayerCompletionSlide: React.FC<PrayerCompletionSlideProps> = ({
   const successStyle = useAnimatedStyle(() => ({
     opacity: successOpacity.value,
     transform: [{ scale: successScale.value }],
+  }));
+
+  const notificationStyle = useAnimatedStyle(() => ({
+    opacity: notificationOpacity.value,
+    transform: [{ translateY: notificationTranslateY.value }],
   }));
 
   const getTargetPosition = () => {
@@ -303,6 +344,29 @@ export const PrayerCompletionSlide: React.FC<PrayerCompletionSlideProps> = ({
                 <Text style={styles.successText}>
                   기도 알림을 보냈습니다!
                 </Text>
+              </View>
+            </Animated.View>
+          )}
+
+          {/* 푸시 알림 (받는 사람 시점) */}
+          {showNotification && (
+            <Animated.View style={[styles.notificationContainer, notificationStyle]}>
+              <View style={styles.notification}>
+                <View style={styles.notificationIcon}>
+                  <MaterialCommunityIcons
+                    name="hands-pray"
+                    size={ICON_SIZE_MEDIUM}
+                    color={color.secondary}
+                  />
+                </View>
+                <View style={styles.notificationContent}>
+                  <Text style={styles.notificationApp}>기도함께</Text>
+                  <Text style={styles.notificationTitle}>기도 완료 알림</Text>
+                  <Text style={styles.notificationBody} numberOfLines={1}>
+                    OOO님이 우리 가족 기도방에서 기도를 마쳤습니다
+                  </Text>
+                </View>
+                <Text style={styles.notificationTime}>지금</Text>
               </View>
             </Animated.View>
           )}
@@ -493,6 +557,56 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: color.secondary,
     marginTop: RFValue(8),
+  },
+  notificationContainer: {
+    position: "absolute",
+    top: RFValue(4),
+    left: RFValue(6),
+    right: RFValue(6),
+    zIndex: 1000,
+  },
+  notification: {
+    backgroundColor: "#fff",
+    borderRadius: RFValue(12),
+    padding: RFValue(10),
+    flexDirection: "row",
+    alignItems: "flex-start",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 8,
+    gap: RFValue(8),
+  },
+  notificationIcon: {
+    width: RFValue(32),
+    height: RFValue(32),
+    borderRadius: RFValue(8),
+    backgroundColor: color.secondary + "15",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  notificationContent: {
+    flex: 1,
+  },
+  notificationApp: {
+    fontSize: RFValue(8),
+    color: color.gray,
+    marginBottom: RFValue(1),
+  },
+  notificationTitle: {
+    fontSize: RFValue(10),
+    fontWeight: "bold",
+    color: color.secondary,
+    marginBottom: RFValue(2),
+  },
+  notificationBody: {
+    fontSize: RFValue(9),
+    color: color.gray,
+  },
+  notificationTime: {
+    fontSize: RFValue(8),
+    color: color.gray,
   },
   textContainer: {
     alignItems: "center",
