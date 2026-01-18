@@ -16,6 +16,7 @@ import CustomQueryClientProvider from "../src/common/hooks/queries/customQueryCl
 import AuthEventListener from "./../src/domain/auth/events/authEventListener";
 import { GlobalAlertModal } from "@/common/components/modal/GlobalAlertModal";
 import UpdateModalsManager from "@/common/components/UpdateModalsManager";
+import { TutorialModal } from "@/common/components/tutorial";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "@/common/components/toast/ToastConfig";
 import * as Notifications from "expo-notifications";
@@ -182,6 +183,7 @@ export default function RootLayout() {
               <AuthStateListener>
                 <GlobalAlertModal />
                 <UpdateModalsManager />
+                <TutorialModal />
                 <Stack screenOptions={{ headerShown: false }}>
                   <Stack.Screen name="index" />
                 </Stack>
