@@ -353,7 +353,8 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingTop: RFValue(10),
+    justifyContent: "flex-end",
+    paddingBottom: RFValue(10),
   },
   dialogContent: {
     marginVertical: RFValue(8),

@@ -46,21 +46,37 @@ export const FingerAnimation: React.FC<FingerAnimationProps> = ({
   const prevVisibleRef = useRef(visible);
   // 현재 애니메이션 중인지 추적
   const isAnimatingRef = useRef(false);
+  // 이전 resetKey 추적 (resetKey가 변경될 때만 애니메이션 재시작)
+  const prevResetKeyRef = useRef(resetKey);
+  // 고정된 타겟 위치 (resetKey가 바뀔 때만 업데이트)
+  const lockedPositionRef = useRef({ x: 0, y: 0 });
+
+  // resetKey가 변경되면 위치 잠금 업데이트
+  if (resetKey !== prevResetKeyRef.current) {
+    lockedPositionRef.current = { x: targetPosition.x, y: targetPosition.y };
+    prevResetKeyRef.current = resetKey;
+  }
+
+  // 초기 위치 설정 (처음 유효한 위치가 들어올 때)
+  if (lockedPositionRef.current.x === 0 && targetPosition.x > 0) {
+    lockedPositionRef.current = { x: targetPosition.x, y: targetPosition.y };
+  }
+
+  // 고정된 위치 사용
+  const lockedPosition = lockedPositionRef.current;
 
   // 화살표 끝(상단 중앙)이 타겟 중앙을 가리키도록 조정
-  const endX = targetPosition.x - FINGER_SIZE / 2;
-  const endY = targetPosition.y;
+  const endX = lockedPosition.x - FINGER_SIZE / 2;
+  const endY = lockedPosition.y;
   const startX = endX + startOffset.x;
   const startY = endY + startOffset.y;
 
-  // visible이 false가 되면 즉시 fade out
+  // visible이 false가 되면 즉시 숨김
   useEffect(() => {
     if (!visible && prevVisibleRef.current) {
-      // visible이 true에서 false로 변경됨 - 즉시 fade out
-      cancelAnimation(translateX);
-      cancelAnimation(translateY);
-      cancelAnimation(scale);
-      opacity.value = withTiming(0, { duration: 100 });
+      // visible이 true에서 false로 변경됨
+      // 위치 애니메이션은 취소하지 않고 opacity만 즉시 0으로 (점프 방지)
+      opacity.value = 0;
       isAnimatingRef.current = false;
     }
     prevVisibleRef.current = visible;
@@ -72,7 +88,7 @@ export const FingerAnimation: React.FC<FingerAnimationProps> = ({
       return;
     }
 
-    if (targetPosition.x === 0 && targetPosition.y === 0) {
+    if (lockedPosition.x === 0 && lockedPosition.y === 0) {
       opacity.value = 0;
       return;
     }
@@ -82,11 +98,13 @@ export const FingerAnimation: React.FC<FingerAnimationProps> = ({
     cancelAnimation(translateY);
     cancelAnimation(scale);
 
-    // 애니메이션 초기화
+    // 애니메이션 초기화 - 먼저 opacity 0 확인 후 위치 설정
+    opacity.value = 0;
     translateX.value = startX;
     translateY.value = startY;
     scale.value = 1;
-    opacity.value = withTiming(1, { duration: 200 });
+    // 위치가 설정된 후 fade in (약간의 딜레이)
+    opacity.value = withDelay(50, withTiming(1, { duration: 150 }));
     isAnimatingRef.current = true;
 
     // 애니메이션 시퀀스: 이동 → 탭 → 대기(길게) → 반복
@@ -149,7 +167,7 @@ export const FingerAnimation: React.FC<FingerAnimationProps> = ({
       cancelAnimation(scale);
       isAnimatingRef.current = false;
     };
-  }, [visible, resetKey, targetPosition.x, targetPosition.y]);
+  }, [visible, resetKey]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
@@ -164,12 +182,7 @@ export const FingerAnimation: React.FC<FingerAnimationProps> = ({
   return (
     <Animated.View style={[styles.fingerContainer, animatedStyle]}>
       <View style={styles.fingerShadow}>
-        {/* 흰색 테두리 효과를 위한 뒷 레이어 */}
-        <View style={styles.fingerOutline}>
-          <Feather name="arrow-up" size={FINGER_SIZE + 6} color="#FFFFFF" />
-        </View>
-        {/* 메인 화살표 아이콘 (연한 초록색) */}
-        <Feather name="arrow-up" size={FINGER_SIZE} color="#4ADE80" />
+        <Feather name="arrow-up" size={FINGER_SIZE} color="#22C55E" />
       </View>
     </Animated.View>
   );
@@ -189,11 +202,6 @@ const styles = StyleSheet.create({
     elevation: 15,
     alignItems: "center",
     justifyContent: "center",
-  },
-  fingerOutline: {
-    position: "absolute",
-    top: -3,
-    left: -3,
   },
 });
 

@@ -477,12 +477,16 @@ export const CreatePrayerContentSlide: React.FC<CreatePrayerContentSlideProps> =
           {/* 기도제목 타이틀 카드 */}
           <View style={styles.content}>
             <View style={styles.titleCard}>
+              <View style={styles.titleCardAccent} />
               <Text style={styles.titleCardText}>3월 2주차</Text>
             </View>
 
             {/* 기존 기도 내용 카드 */}
             <View style={styles.prayerCard}>
-              <Text style={styles.prayerCardName}>아빠</Text>
+              <View style={styles.prayerCardHeader}>
+                <Text style={styles.prayerCardName}>아빠</Text>
+              </View>
+              <View style={styles.prayerCardDivider} />
               <Text style={styles.prayerCardContent}>
                 하나님을 더 사랑하게 해주세요
               </Text>
@@ -491,7 +495,10 @@ export const CreatePrayerContentSlide: React.FC<CreatePrayerContentSlideProps> =
             {/* 새로 추가되는 카드 */}
             {showNewCard && (
               <Animated.View style={[styles.prayerCardNew, newCardStyle]}>
-                <Text style={styles.prayerCardName}>엄마</Text>
+                <View style={styles.prayerCardHeader}>
+                  <Text style={styles.prayerCardName}>엄마</Text>
+                </View>
+                <View style={styles.prayerCardDivider} />
                 <Text style={styles.prayerCardContent}>{CONTENT_TEXT}</Text>
               </Animated.View>
             )}
@@ -532,27 +539,31 @@ export const CreatePrayerContentSlide: React.FC<CreatePrayerContentSlideProps> =
               >
                 <View style={styles.dialogContent}>
                   <Text style={styles.dialogLabel}>기도 대상</Text>
-                  <View
-                    ref={memberSelectRef}
-                    style={[
-                      styles.memberSelectButton,
-                      highlightMemberSelect && styles.memberSelectHighlight,
-                    ]}
-                    onLayout={measureMemberSelect}
-                  >
-                    <Text
+                  <View style={styles.memberSelectRow}>
+                    <View
+                      ref={memberSelectRef}
                       style={[
-                        styles.memberSelectText,
-                        !selectedMember && styles.memberSelectPlaceholder,
+                        styles.memberSelectButton,
+                        highlightMemberSelect && styles.memberSelectHighlight,
                       ]}
+                      onLayout={measureMemberSelect}
                     >
-                      {selectedMember || "선택하세요"}
-                    </Text>
-                    <MaterialCommunityIcons
-                      name="chevron-down"
-                      size={ICON_SIZE_SMALL}
-                      color={color.gray}
-                    />
+                      <Text
+                        style={[
+                          styles.memberSelectText,
+                          !selectedMember && styles.memberSelectPlaceholder,
+                        ]}
+                      >
+                        {selectedMember || "선택하세요"}
+                      </Text>
+                    </View>
+                    <View style={styles.pencilIconButton}>
+                      <MaterialCommunityIcons
+                        name="pencil"
+                        size={ICON_SIZE_SMALL}
+                        color={color.primary}
+                      />
+                    </View>
                   </View>
 
                   <Text style={[styles.dialogLabel, { marginTop: MARGIN_TOP_8 }]}>
@@ -661,43 +672,75 @@ const styles = StyleSheet.create({
     paddingHorizontal: RFValue(10),
   },
   titleCard: {
-    backgroundColor: color.secondary + "20",
-    borderRadius: RFValue(6),
-    paddingVertical: RFValue(6),
-    paddingHorizontal: RFValue(10),
+    backgroundColor: "#fff",
+    borderRadius: RFValue(8),
+    height: RFValue(36),
     marginBottom: RFValue(8),
+    flexDirection: "row",
     alignItems: "center",
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  titleCardAccent: {
+    width: RFValue(6),
+    height: "100%",
+    backgroundColor: color.secondary,
   },
   titleCardText: {
-    fontSize: RFValue(13),
+    fontSize: RFValue(12),
     fontWeight: "bold",
-    color: color.primary,
+    color: color.secondary,
+    paddingHorizontal: RFValue(10),
+    textShadowColor: "rgba(0, 0, 0, 0.1)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 1,
   },
   prayerCard: {
     backgroundColor: "#fff",
-    borderRadius: RFValue(8),
+    borderRadius: RFValue(10),
     padding: RFValue(10),
     marginBottom: RFValue(6),
-    borderWidth: 1,
-    borderColor: color.gray + "30",
+    borderLeftWidth: RFValue(4),
+    borderLeftColor: color.secondary,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   prayerCardNew: {
     backgroundColor: "#fff",
-    borderRadius: RFValue(8),
+    borderRadius: RFValue(10),
     padding: RFValue(10),
     marginBottom: RFValue(6),
-    borderWidth: 2,
-    borderColor: color.secondary,
+    borderLeftWidth: RFValue(4),
+    borderLeftColor: color.secondary,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  prayerCardHeader: {
+    marginBottom: RFValue(6),
   },
   prayerCardName: {
-    fontSize: RFValue(11),
+    fontSize: RFValue(13),
     fontWeight: "bold",
     color: color.secondary,
-    marginBottom: RFValue(4),
+  },
+  prayerCardDivider: {
+    height: 1,
+    backgroundColor: color.secondary + "30",
+    marginBottom: RFValue(6),
   },
   prayerCardContent: {
     fontSize: RFValue(10),
-    color: color.gray,
+    color: "#333",
     lineHeight: RFValue(14),
   },
   fabContainer: {
@@ -727,7 +770,14 @@ const styles = StyleSheet.create({
     color: color.gray,
     marginBottom: RFValue(2),
   },
+  memberSelectRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: RFValue(6),
+    marginVertical: RFValue(4),
+  },
   memberSelectButton: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -735,7 +785,14 @@ const styles = StyleSheet.create({
     borderColor: color.gray + "60",
     borderRadius: RFValue(4),
     padding: RFValue(8),
-    marginVertical: RFValue(4),
+  },
+  pencilIconButton: {
+    width: RFValue(32),
+    height: RFValue(32),
+    borderRadius: RFValue(4),
+    backgroundColor: color.secondary + "20",
+    alignItems: "center",
+    justifyContent: "center",
   },
   memberSelectHighlight: {
     borderColor: color.secondary,

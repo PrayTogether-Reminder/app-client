@@ -169,6 +169,7 @@ function PrayerReadBody({ prayerTitleId, isEditMode, onEditModeChange }: PrayerR
         {isEditMode && (
           <FAB
             icon="plus"
+            color="#fff"
             style={styles.fab}
             onPress={handleAddContent}
             label="기도 내용 추가"
@@ -227,6 +228,7 @@ function PrayerReadBody({ prayerTitleId, isEditMode, onEditModeChange }: PrayerR
       {isEditMode && (
         <FAB
           icon="plus"
+          color="#fff"
           style={styles.fab}
           onPress={handleAddContent}
           label="기도 내용 추가"
@@ -317,7 +319,7 @@ const styles = StyleSheet.create({
     margin: RFValue(16),
     right: 0,
     bottom: 0,
-    backgroundColor: color.primary,
+    backgroundColor: color.secondary,
   },
 });
 

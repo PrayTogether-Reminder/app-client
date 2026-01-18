@@ -276,15 +276,14 @@ export const CreateRoomSlide: React.FC<CreateRoomSlideProps> = ({ isActive }) =>
 
           {/* 기도방 목록 */}
           <View style={styles.content}>
-            <MockCard title="우리 가족 기도방" subtitle="4명" />
-            <MockCard title="셀 모임" subtitle="6명" />
-
-            {/* 새로 추가되는 카드 */}
+            {/* 새로 추가되는 카드 - 맨 위에 */}
             {showNewCard && (
               <Animated.View style={newCardStyle}>
                 <MockCard title="새 기도방" subtitle="1명" highlight />
               </Animated.View>
             )}
+            <MockCard title="우리 가족 기도방" subtitle="4명" />
+            <MockCard title="셀 모임" subtitle="6명" />
           </View>
 
           {/* FAB */}
