@@ -3,7 +3,13 @@
 export interface TutorialSlideData {
   id: string;
   // 슬라이드 컴포넌트 타입
-  type: "create-room" | "create-prayer-title" | "create-prayer-content" | "invite-friends";
+  type:
+    | "create-room"
+    | "create-prayer-title"
+    | "create-prayer-content"
+    | "invite-friends"
+    | "direct-input"
+    | "prayer-completion";
 }
 
 export const tutorialSlides: TutorialSlideData[] = [
@@ -18,6 +24,14 @@ export const tutorialSlides: TutorialSlideData[] = [
   {
     id: "create-prayer-content",
     type: "create-prayer-content",
+  },
+  {
+    id: "direct-input",
+    type: "direct-input",
+  },
+  {
+    id: "prayer-completion",
+    type: "prayer-completion",
   },
   {
     id: "invite-friends",

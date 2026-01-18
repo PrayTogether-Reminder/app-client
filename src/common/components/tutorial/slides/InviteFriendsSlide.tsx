@@ -38,6 +38,10 @@ type AnimationStep =
   | "type-search"
   | "tap-member"
   | "tap-invite-button"
+  | "show-settings"
+  | "tap-invite-list"
+  | "show-accept-screen"
+  | "tap-accept"
   | "done";
 
 export const InviteFriendsSlide: React.FC<InviteFriendsSlideProps> = ({
@@ -46,6 +50,8 @@ export const InviteFriendsSlide: React.FC<InviteFriendsSlideProps> = ({
   const [step, setStep] = useState<AnimationStep>("tap-menu");
   const [showSideMenu, setShowSideMenu] = useState(false);
   const [showInviteScreen, setShowInviteScreen] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [showAcceptScreen, setShowAcceptScreen] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [selectedMember, setSelectedMember] = useState(false);
 
@@ -54,6 +60,8 @@ export const InviteFriendsSlide: React.FC<InviteFriendsSlideProps> = ({
   const [highlightInviteButton, setHighlightInviteButton] = useState(false);
   const [highlightMemberItem, setHighlightMemberItem] = useState(false);
   const [highlightBottomButton, setHighlightBottomButton] = useState(false);
+  const [highlightInviteList, setHighlightInviteList] = useState(false);
+  const [highlightAcceptButton, setHighlightAcceptButton] = useState(false);
 
   // 요소 위치 측정을 위한 refs
   const containerRef = useRef<View>(null);
@@ -61,17 +69,21 @@ export const InviteFriendsSlide: React.FC<InviteFriendsSlideProps> = ({
   const inviteButtonRef = useRef<View>(null);
   const memberItemRef = useRef<View>(null);
   const bottomButtonRef = useRef<View>(null);
+  const inviteListRef = useRef<View>(null);
+  const acceptButtonRef = useRef<View>(null);
 
   // 측정된 위치 저장
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const [inviteButtonPosition, setInviteButtonPosition] = useState({ x: 0, y: 0 });
   const [memberItemPosition, setMemberItemPosition] = useState({ x: 0, y: 0 });
   const [bottomButtonPosition, setBottomButtonPosition] = useState({ x: 0, y: 0 });
+  const [inviteListPosition, setInviteListPosition] = useState({ x: 0, y: 0 });
+  const [acceptButtonPosition, setAcceptButtonPosition] = useState({ x: 0, y: 0 });
 
   const menuHighlight = useSharedValue(0);
   const sideMenuOpacity = useSharedValue(0);
 
-  const CYCLE_DURATION = 12000;
+  const CYCLE_DURATION = 22000;
   const SEARCH_TEXT = "김철수";
 
   // 화살표 타이밍 상수 (FingerAnimation과 동기화)
@@ -129,6 +141,30 @@ export const InviteFriendsSlide: React.FC<InviteFriendsSlideProps> = ({
     }
   }, []);
 
+  const measureInviteList = useCallback(() => {
+    if (inviteListRef.current && containerRef.current) {
+      inviteListRef.current.measureLayout(
+        containerRef.current as any,
+        (x, y, width, height) => {
+          setInviteListPosition({ x: x + width / 2, y: y + height / 2 });
+        },
+        () => {}
+      );
+    }
+  }, []);
+
+  const measureAcceptButton = useCallback(() => {
+    if (acceptButtonRef.current && containerRef.current) {
+      acceptButtonRef.current.measureLayout(
+        containerRef.current as any,
+        (x, y, width, height) => {
+          setAcceptButtonPosition({ x: x + width / 2, y: y + height / 2 });
+        },
+        () => {}
+      );
+    }
+  }, []);
+
   // 사이드 메뉴가 열리면 초대 버튼 위치 측정
   useEffect(() => {
     if (showSideMenu) {
@@ -148,17 +184,37 @@ export const InviteFriendsSlide: React.FC<InviteFriendsSlideProps> = ({
     }
   }, [showInviteScreen, searchText, measureMemberItem, measureBottomButton]);
 
+  // 설정 화면이 열리면 초대 목록 버튼 위치 측정
+  useEffect(() => {
+    if (showSettings) {
+      const timer = setTimeout(measureInviteList, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [showSettings, measureInviteList]);
+
+  // 수락 화면이 열리면 수락 버튼 위치 측정
+  useEffect(() => {
+    if (showAcceptScreen) {
+      const timer = setTimeout(measureAcceptButton, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [showAcceptScreen, measureAcceptButton]);
+
   useEffect(() => {
     if (!isActive) {
       setStep("tap-menu");
       setShowSideMenu(false);
       setShowInviteScreen(false);
+      setShowSettings(false);
+      setShowAcceptScreen(false);
       setSearchText("");
       setSelectedMember(false);
       setHighlightMenu(false);
       setHighlightInviteButton(false);
       setHighlightMemberItem(false);
       setHighlightBottomButton(false);
+      setHighlightInviteList(false);
+      setHighlightAcceptButton(false);
       return;
     }
 
@@ -169,12 +225,16 @@ export const InviteFriendsSlide: React.FC<InviteFriendsSlideProps> = ({
       setStep("tap-menu");
       setShowSideMenu(false);
       setShowInviteScreen(false);
+      setShowSettings(false);
+      setShowAcceptScreen(false);
       setSearchText("");
       setSelectedMember(false);
       setHighlightMenu(false);
       setHighlightInviteButton(false);
       setHighlightMemberItem(false);
       setHighlightBottomButton(false);
+      setHighlightInviteList(false);
+      setHighlightAcceptButton(false);
       menuHighlight.value = 0;
       sideMenuOpacity.value = 0;
 
@@ -283,18 +343,69 @@ export const InviteFriendsSlide: React.FC<InviteFriendsSlideProps> = ({
         }, tapBottomStart + ARROW_ARRIVAL)
       );
 
-      // ===== Step 6: 완료 =====
+      // ===== Step 6: 설정 화면 전환 (받는 사람 시점) =====
+      const showSettingsStart = tapBottomStart + ARROW_ARRIVAL + ARROW_TAP + 800;
       timeouts.push(
         setTimeout(() => {
-          setStep("done");
           setHighlightBottomButton(false);
-        }, tapBottomStart + ARROW_ARRIVAL + ARROW_TAP + 300)
+          setShowInviteScreen(false);
+          setShowSettings(true);
+          setStep("show-settings");
+        }, showSettingsStart)
+      );
+
+      // ===== Step 7: 기도방 초대 목록 탭 =====
+      const tapInviteListStart = showSettingsStart + 1200;
+      timeouts.push(
+        setTimeout(() => {
+          setStep("tap-invite-list");
+        }, tapInviteListStart)
       );
 
       timeouts.push(
         setTimeout(() => {
-          setShowInviteScreen(false);
-        }, tapBottomStart + ARROW_ARRIVAL + ARROW_TAP + 400)
+          setHighlightInviteList(true);
+        }, tapInviteListStart + ARROW_ARRIVAL)
+      );
+
+      // ===== Step 8: 수락 화면 표시 =====
+      const showAcceptStart = tapInviteListStart + ARROW_ARRIVAL + ARROW_TAP + 600;
+      timeouts.push(
+        setTimeout(() => {
+          setHighlightInviteList(false);
+          setShowSettings(false);
+          setShowAcceptScreen(true);
+          setStep("show-accept-screen");
+        }, showAcceptStart)
+      );
+
+      // ===== Step 9: 수락 버튼 탭 =====
+      const tapAcceptStart = showAcceptStart + 1200;
+      timeouts.push(
+        setTimeout(() => {
+          setStep("tap-accept");
+        }, tapAcceptStart)
+      );
+
+      timeouts.push(
+        setTimeout(() => {
+          setHighlightAcceptButton(true);
+        }, tapAcceptStart + ARROW_ARRIVAL)
+      );
+
+      // ===== Step 10: 완료 =====
+      const doneStart = tapAcceptStart + ARROW_ARRIVAL + ARROW_TAP + 300;
+      timeouts.push(
+        setTimeout(() => {
+          setStep("done");
+          setHighlightAcceptButton(false);
+        }, doneStart)
+      );
+
+      timeouts.push(
+        setTimeout(() => {
+          setShowAcceptScreen(false);
+        }, doneStart + 2000)
       );
 
       // 사이클 반복
@@ -334,6 +445,10 @@ export const InviteFriendsSlide: React.FC<InviteFriendsSlideProps> = ({
         return memberItemPosition;
       case "tap-invite-button":
         return bottomButtonPosition;
+      case "tap-invite-list":
+        return inviteListPosition;
+      case "tap-accept":
+        return acceptButtonPosition;
       default:
         return { x: 0, y: 0 };
     }
@@ -341,7 +456,7 @@ export const InviteFriendsSlide: React.FC<InviteFriendsSlideProps> = ({
 
   // 손가락 애니메이션을 보여줄 단계인지 확인 (실제 탭 단계에서만 표시)
   const shouldShowFinger = () => {
-    const fingerSteps = ["tap-menu", "tap-invite", "tap-member", "tap-invite-button"];
+    const fingerSteps = ["tap-menu", "tap-invite", "tap-member", "tap-invite-button", "tap-invite-list", "tap-accept"];
     return fingerSteps.includes(step);
   };
 
@@ -350,7 +465,9 @@ export const InviteFriendsSlide: React.FC<InviteFriendsSlideProps> = ({
     step === "tap-menu" ? 1 :
     step === "tap-invite" ? 2 :
     step === "tap-member" ? 3 :
-    step === "tap-invite-button" ? 4 : 5;
+    step === "tap-invite-button" ? 4 :
+    step === "tap-invite-list" ? 5 :
+    step === "tap-accept" ? 6 : 7;
 
   // 기도방 화면 렌더링
   const renderRoomScreen = () => (
@@ -464,6 +581,136 @@ export const InviteFriendsSlide: React.FC<InviteFriendsSlideProps> = ({
     </>
   );
 
+  // 설정 화면 렌더링 (받는 사람 시점)
+  const renderSettingsScreen = () => (
+    <>
+      <MockHeader title="마이페이지" />
+      <View style={styles.settingsContent}>
+        <View
+          ref={inviteListRef}
+          style={[
+            styles.settingsItem,
+            highlightInviteList && styles.settingsItemHighlight,
+          ]}
+          onLayout={measureInviteList}
+        >
+          <MaterialCommunityIcons
+            name="email-outline"
+            size={ICON_SIZE_MEDIUM}
+            color={color.gray}
+          />
+          <View style={styles.settingsItemContent}>
+            <View style={styles.settingsItemWithBadge}>
+              <Text style={styles.settingsItemText}>기도방 초대 목록</Text>
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>1</Text>
+              </View>
+            </View>
+            <Text style={styles.settingsItemDesc}>받은 초대를 확인하세요</Text>
+          </View>
+          <MaterialCommunityIcons
+            name="chevron-right"
+            size={ICON_SIZE_MEDIUM}
+            color={color.gray}
+          />
+        </View>
+        <View style={styles.settingsItem}>
+          <MaterialCommunityIcons
+            name="bell-outline"
+            size={ICON_SIZE_MEDIUM}
+            color={color.gray}
+          />
+          <View style={styles.settingsItemContent}>
+            <Text style={styles.settingsItemText}>알림 설정</Text>
+            <Text style={styles.settingsItemDesc}>알림 수신 여부를 설정하세요</Text>
+          </View>
+          <MaterialCommunityIcons
+            name="chevron-right"
+            size={ICON_SIZE_MEDIUM}
+            color={color.gray}
+          />
+        </View>
+        <View style={styles.settingsItem}>
+          <MaterialCommunityIcons
+            name="lock-reset"
+            size={ICON_SIZE_MEDIUM}
+            color={color.gray}
+          />
+          <View style={styles.settingsItemContent}>
+            <Text style={styles.settingsItemText}>비밀번호 변경</Text>
+            <Text style={styles.settingsItemDesc}>새로운 비밀번호로 변경하세요</Text>
+          </View>
+          <MaterialCommunityIcons
+            name="chevron-right"
+            size={ICON_SIZE_MEDIUM}
+            color={color.gray}
+          />
+        </View>
+        <View style={styles.settingsItem}>
+          <MaterialCommunityIcons
+            name="help-circle-outline"
+            size={ICON_SIZE_MEDIUM}
+            color={color.gray}
+          />
+          <View style={styles.settingsItemContent}>
+            <Text style={styles.settingsItemText}>1:1 문의</Text>
+            <Text style={styles.settingsItemDesc}>문의사항을 남겨주세요</Text>
+          </View>
+          <MaterialCommunityIcons
+            name="open-in-new"
+            size={ICON_SIZE_MEDIUM}
+            color={color.gray}
+          />
+        </View>
+      </View>
+    </>
+  );
+
+  // 초대 수락 화면 렌더링
+  const renderAcceptScreen = () => (
+    <>
+      <MockHeader title="기도방 초대 목록" showBack />
+      <View style={styles.acceptContent}>
+        <View style={styles.inviteCard}>
+          <View style={styles.inviteCardHeader}>
+            <MaterialCommunityIcons
+              name="account-group"
+              size={ICON_SIZE_MEDIUM}
+              color={color.secondary}
+            />
+            <Text style={styles.inviteCardTitle}>우리 가족 기도방</Text>
+          </View>
+          <Text style={styles.inviteCardSubtitle}>
+            아빠님이 초대했습니다
+          </Text>
+          <View style={styles.inviteCardButtons}>
+            <View style={styles.rejectButton}>
+              <Text style={styles.rejectButtonText}>거절</Text>
+            </View>
+            <View
+              ref={acceptButtonRef}
+              style={[
+                styles.acceptButton,
+                highlightAcceptButton && styles.acceptButtonHighlight,
+              ]}
+              onLayout={measureAcceptButton}
+            >
+              <Text style={styles.acceptButtonText}>수락</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </>
+  );
+
+  // 현재 보여줄 화면 결정
+  const getCurrentScreen = () => {
+    if (showAcceptScreen) return renderAcceptScreen();
+    if (showSettings) return renderSettingsScreen();
+    if (showInviteScreen) return renderInviteScreen();
+    return renderRoomScreen();
+  };
+
   return (
     <View style={styles.container}>
       <View
@@ -472,7 +719,7 @@ export const InviteFriendsSlide: React.FC<InviteFriendsSlideProps> = ({
         onLayout={measureMenu}
       >
         <MockPhone>
-          {showInviteScreen ? renderInviteScreen() : renderRoomScreen()}
+          {getCurrentScreen()}
         </MockPhone>
 
         {/* 손가락 애니메이션 - 항상 렌더링하고 visible로 제어 */}
@@ -491,8 +738,9 @@ export const InviteFriendsSlide: React.FC<InviteFriendsSlideProps> = ({
       <View style={styles.textContainer}>
         <Text style={styles.title}>방 초대</Text>
         <Text style={styles.description}>
-          <Text style={styles.highlight}>메뉴 아이콘</Text>을 눌러 멤버 목록을 열고{"\n"}
-          <Text style={styles.highlight}>방 초대</Text> 버튼으로 친구를 초대해보세요
+          <Text style={styles.highlight}>메뉴</Text>에서 친구를 초대하고{"\n"}
+          받는 분은 <Text style={styles.highlight}>설정 → 기도방 초대 목록</Text>에서{"\n"}
+          초대를 수락할 수 있어요
         </Text>
       </View>
     </View>
@@ -532,7 +780,8 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingTop: RFValue(10),
+    justifyContent: "flex-end",
+    paddingBottom: RFValue(10),
   },
   sideMenuContainer: {
     position: "absolute",
@@ -587,6 +836,117 @@ const styles = StyleSheet.create({
   },
   bottomButtonHighlight: {
     transform: [{ scale: 1.02 }],
+  },
+  settingsContent: {
+    flex: 1,
+    paddingTop: RFValue(8),
+  },
+  settingsItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: RFValue(10),
+    paddingHorizontal: RFValue(12),
+    borderBottomWidth: 0.5,
+    borderBottomColor: color.gray + "30",
+    gap: RFValue(10),
+  },
+  settingsItemHighlight: {
+    backgroundColor: color.secondary + "20",
+    transform: [{ scale: 1.02 }],
+  },
+  settingsItemContent: {
+    flex: 1,
+  },
+  settingsItemText: {
+    fontSize: RFValue(11),
+    color: color.secondary,
+    fontWeight: "500",
+  },
+  settingsItemDesc: {
+    fontSize: RFValue(8),
+    color: color.gray,
+    marginTop: RFValue(2),
+  },
+  settingsItemWithBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: RFValue(6),
+  },
+  badge: {
+    backgroundColor: color.secondary,
+    borderRadius: RFValue(10),
+    minWidth: RFValue(18),
+    height: RFValue(18),
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: RFValue(5),
+  },
+  badgeText: {
+    fontSize: RFValue(9),
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  acceptContent: {
+    flex: 1,
+    padding: RFValue(10),
+  },
+  inviteCard: {
+    backgroundColor: "#fff",
+    borderRadius: RFValue(10),
+    padding: RFValue(12),
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  inviteCardHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: RFValue(8),
+    marginBottom: RFValue(6),
+  },
+  inviteCardTitle: {
+    fontSize: RFValue(12),
+    fontWeight: "bold",
+    color: color.secondary,
+  },
+  inviteCardSubtitle: {
+    fontSize: RFValue(9),
+    color: color.gray,
+    marginBottom: RFValue(10),
+  },
+  inviteCardButtons: {
+    flexDirection: "row",
+    gap: RFValue(8),
+  },
+  rejectButton: {
+    flex: 1,
+    paddingVertical: RFValue(8),
+    borderRadius: RFValue(6),
+    borderWidth: 1,
+    borderColor: color.gray + "60",
+    alignItems: "center",
+  },
+  rejectButtonText: {
+    fontSize: RFValue(10),
+    color: color.gray,
+    fontWeight: "bold",
+  },
+  acceptButton: {
+    flex: 1,
+    paddingVertical: RFValue(8),
+    borderRadius: RFValue(6),
+    backgroundColor: color.secondary,
+    alignItems: "center",
+  },
+  acceptButtonHighlight: {
+    transform: [{ scale: 1.05 }],
+  },
+  acceptButtonText: {
+    fontSize: RFValue(10),
+    color: "#fff",
+    fontWeight: "bold",
   },
   textContainer: {
     alignItems: "center",

@@ -21,6 +21,8 @@ import {
   CreatePrayerTitleSlide,
   CreatePrayerContentSlide,
   InviteFriendsSlide,
+  DirectInputSlide,
+  PrayerCompletionSlide,
 } from "./slides";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
@@ -39,6 +41,10 @@ const renderSlideContent = (
       return <CreatePrayerContentSlide isActive={isActive} />;
     case "invite-friends":
       return <InviteFriendsSlide isActive={isActive} />;
+    case "direct-input":
+      return <DirectInputSlide isActive={isActive} />;
+    case "prayer-completion":
+      return <PrayerCompletionSlide isActive={isActive} />;
     default:
       return null;
   }

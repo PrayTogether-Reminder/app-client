@@ -790,7 +790,7 @@ const styles = StyleSheet.create({
     width: RFValue(32),
     height: RFValue(32),
     borderRadius: RFValue(4),
-    backgroundColor: color.secondary + "20",
+    backgroundColor: color.secondary,
     alignItems: "center",
     justifyContent: "center",
   },
