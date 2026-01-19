@@ -268,7 +268,7 @@ export const PrayerCompletionSlide: React.FC<PrayerCompletionSlideProps> = ({
 
             <View style={styles.prayerCard}>
               <View style={styles.prayerCardHeader}>
-                <Text style={styles.prayerCardName}>엄마</Text>
+                <Text style={styles.prayerCardName}>이요셉</Text>
               </View>
               <View style={styles.prayerCardDivider} />
               <Text style={styles.prayerCardContent}>
@@ -278,7 +278,7 @@ export const PrayerCompletionSlide: React.FC<PrayerCompletionSlideProps> = ({
 
             <View style={styles.prayerCard}>
               <View style={styles.prayerCardHeader}>
-                <Text style={styles.prayerCardName}>아빠</Text>
+                <Text style={styles.prayerCardName}>김요한</Text>
               </View>
               <View style={styles.prayerCardDivider} />
               <Text style={styles.prayerCardContent}>

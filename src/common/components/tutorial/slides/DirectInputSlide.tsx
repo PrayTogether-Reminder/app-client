@@ -57,7 +57,7 @@ export const DirectInputSlide: React.FC<DirectInputSlideProps> = ({
   const dialogOpacity = useSharedValue(1);
 
   const CYCLE_DURATION = 12000;
-  const NAME_TEXT = "할머니";
+  const NAME_TEXT = "박모세";
   const CONTENT_TEXT = "건강하게 해주세요";
 
   // 화살표 타이밍 상수

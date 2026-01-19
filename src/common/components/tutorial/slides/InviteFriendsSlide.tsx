@@ -510,7 +510,7 @@ export const InviteFriendsSlide: React.FC<InviteFriendsSlideProps> = ({
         <Animated.View style={[styles.sideMenuContainer, sideMenuStyle]}>
           <View style={styles.sideMenu}>
             <Text style={styles.sideMenuHeader}>현재 인원: 4명</Text>
-            {["나", "아빠", "엄마", "동생"].map((name, idx) => (
+            {["나", "김요한", "이요셉", "김노아"].map((name, idx) => (
               <Text key={idx} style={styles.sideMenuMember}>
                 {name}
               </Text>
@@ -681,7 +681,7 @@ export const InviteFriendsSlide: React.FC<InviteFriendsSlideProps> = ({
             <Text style={styles.inviteCardTitle}>우리 가족 기도방</Text>
           </View>
           <Text style={styles.inviteCardSubtitle}>
-            아빠님이 초대했습니다
+            김요한님이 초대했습니다
           </Text>
           <View style={styles.inviteCardButtons}>
             <View style={styles.rejectButton}>

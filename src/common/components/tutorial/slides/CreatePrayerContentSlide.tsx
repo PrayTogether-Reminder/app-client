@@ -294,7 +294,7 @@ export const CreatePrayerContentSlide: React.FC<CreatePrayerContentSlideProps> =
         }, memberModalStart)
       );
 
-      // ===== Step 4: 엄마 선택 =====
+      // ===== Step 4: 이요셉 선택 =====
       const selectMemberStart = memberModalStart + 500;
       timeouts.push(
         setTimeout(() => {
@@ -314,7 +314,7 @@ export const CreatePrayerContentSlide: React.FC<CreatePrayerContentSlideProps> =
       timeouts.push(
         setTimeout(() => {
           setHighlightMemberItem(false);
-          setSelectedMember("엄마");
+          setSelectedMember("이요셉");
           setShowMemberModal(false);
           setStep("type-content");
         }, memberSelectedTime)
@@ -484,7 +484,7 @@ export const CreatePrayerContentSlide: React.FC<CreatePrayerContentSlideProps> =
             {/* 기존 기도문 카드 */}
             <View style={styles.prayerCard}>
               <View style={styles.prayerCardHeader}>
-                <Text style={styles.prayerCardName}>아빠</Text>
+                <Text style={styles.prayerCardName}>김요한</Text>
               </View>
               <View style={styles.prayerCardDivider} />
               <Text style={styles.prayerCardContent}>
@@ -496,7 +496,7 @@ export const CreatePrayerContentSlide: React.FC<CreatePrayerContentSlideProps> =
             {showNewCard && (
               <Animated.View style={[styles.prayerCardNew, newCardStyle]}>
                 <View style={styles.prayerCardHeader}>
-                  <Text style={styles.prayerCardName}>엄마</Text>
+                  <Text style={styles.prayerCardName}>이요셉</Text>
                 </View>
                 <View style={styles.prayerCardDivider} />
                 <Text style={styles.prayerCardContent}>{CONTENT_TEXT}</Text>
@@ -586,15 +586,15 @@ export const CreatePrayerContentSlide: React.FC<CreatePrayerContentSlideProps> =
                   <View style={styles.memberModal}>
                     <Text style={styles.memberModalTitle}>기도 대상 선택</Text>
                     <View style={styles.memberList}>
-                      {["엄마", "동생"].map((name, idx) => (
+                      {["이요셉", "김노아"].map((name, idx) => (
                         <View
                           key={idx}
-                          ref={name === "엄마" ? memberItemRef : undefined}
+                          ref={name === "이요셉" ? memberItemRef : undefined}
                           style={[
                             styles.memberItem,
-                            highlightMemberItem && name === "엄마" && styles.memberItemHighlight,
+                            highlightMemberItem && name === "이요셉" && styles.memberItemHighlight,
                           ]}
-                          onLayout={name === "엄마" ? measureMemberItem : undefined}
+                          onLayout={name === "이요셉" ? measureMemberItem : undefined}
                         >
                           <View style={styles.memberAvatar}>
                             <MaterialCommunityIcons
