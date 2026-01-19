@@ -45,7 +45,7 @@ export default function PrayerContentAddDialog({
   const room = useSelectedRoomStore().selectedRoom;
   const { data: roomMembers } = useRoomMembersQuery(room?.id ?? null);
 
-  // 기도 내용용 훅
+  // 기도문용 훅
   const {
     textInputRef,
     handleChange,
@@ -104,7 +104,7 @@ export default function PrayerContentAddDialog({
     if (isDuplicate) {
       showAlert({
         title: "중복 확인",
-        message: `${finalMemberName}님은 이미 기도 내용이 작성되어 있습니다.`,
+        message: `${finalMemberName}님은 이미 기도문이 작성되어 있습니다.`,
         icon: "alert-circle",
       });
       return;
@@ -114,7 +114,7 @@ export default function PrayerContentAddDialog({
     if (!trimmedContent) {
       showAlert({
         title: "입력 확인",
-        message: "기도 내용을 입력해주세요.",
+        message: "기도문을 입력해주세요.",
       });
       return;
     }
@@ -142,7 +142,7 @@ export default function PrayerContentAddDialog({
             accessibilityRole="none"
             accessibilityLabel="다이얼로그 배경">
             <View style={dialogStyles.content}>
-              <Text style={dialogStyles.title}>기도 내용 추가</Text>
+              <Text style={dialogStyles.title}>기도문 추가</Text>
 
               <View style={dialogStyles.fieldset}>
                 <Text style={dialogStyles.label}>기도 대상</Text>
@@ -201,18 +201,18 @@ export default function PrayerContentAddDialog({
               </View>
 
               <View style={dialogStyles.fieldset}>
-                <Text style={dialogStyles.label}>기도 내용</Text>
+                <Text style={dialogStyles.label}>기도문</Text>
                 <TextInput
                   ref={textInputRef}
-                  placeholder="기도 내용을 입력하세요"
+                  placeholder="기도문을 입력하세요"
                   defaultValue=""
                   onChangeText={handleChange}
                   style={dialogStyles.inputMultilineSmall}
                   mode="outlined"
                   multiline
                   numberOfLines={6}
-                  accessibilityLabel="기도 내용 입력"
-                  accessibilityHint="기도 내용을 입력하세요"
+                  accessibilityLabel="기도문 입력"
+                  accessibilityHint="기도문을 입력하세요"
                   accessibilityMultiline={true}
                 />
               </View>
@@ -251,7 +251,7 @@ export default function PrayerContentAddDialog({
         visible={memberSelectionModal}
         onDismiss={() => setMemberSelectionModal(false)}
         members={
-          // 이미 기도 내용이 작성된 멤버 제외
+          // 이미 기도문이 작성된 멤버 제외
           (roomMembers || []).filter(
             member => !existingPrayerContents.some(
               content => content.memberName === member.name

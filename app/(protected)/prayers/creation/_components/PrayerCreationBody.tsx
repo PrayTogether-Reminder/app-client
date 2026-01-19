@@ -216,7 +216,7 @@ export default function PrayerCreationBody({
         selectedMember={selectedMember}
         openMemberSelectionModal={openMemberSelectionModal}
       />
-      {/* 기도 내용 입력 */}
+      {/* 기도문 입력 */}
       <PrayerContentInput
         selectedMember={selectedMember}
         prayerContent={prayerContent}

@@ -30,7 +30,7 @@ export default function PrayerCard({
     const fullContent = `${item.memberName}\n${item.content}`;
     copyToClipboard(fullContent, {
       successTitle: "복사 완료",
-      successMessage: "기도 내용이 복사되었습니다",
+      successMessage: "기도문이 복사되었습니다",
     });
   };
 

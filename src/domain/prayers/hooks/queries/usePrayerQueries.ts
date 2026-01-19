@@ -55,7 +55,7 @@ export const useInfinitePrayerTitlesQuery = (
   });
 };
 
-// 기도 내용 조회 쿼리
+// 기도문 조회 쿼리
 export const usePrayerContentsQuery = (
   roomId: number | null,
   titleId: number | null,
@@ -71,7 +71,7 @@ export const usePrayerContentsQuery = (
     ],
 
     queryFn: async () => {
-      console.log("fetch 기도 내용: prayer title Id=", titleId);
+      console.log("fetch 기도문: prayer title Id=", titleId);
       if (!titleId) {
         return [];
       }

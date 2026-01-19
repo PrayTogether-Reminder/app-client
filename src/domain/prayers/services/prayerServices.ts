@@ -52,7 +52,7 @@ export const prayerService = {
     );
     return response.data.prayerTitles;
   },
-  // 기도 내용 조회
+  // 기도문 조회
   fetchContents: async (titleId: number) => {
     const response = await apiService.get<FetchPrayerContentsResponse>(
       `/v1/prayers/${titleId}/contents`
@@ -73,7 +73,7 @@ export const prayerService = {
     return response;
   },
 
-  // 기도 내용 추가
+  // 기도문 추가
   createContent: async (
     prayerTitleId: number,
     memberName: string,
@@ -91,7 +91,7 @@ export const prayerService = {
     return response;
   },
 
-  // 기도 내용 수정
+  // 기도문 수정
   updateContent: async (
     prayerTitleId: number,
     contentId: number,
@@ -105,7 +105,7 @@ export const prayerService = {
     return response;
   },
 
-  // 기도 내용 삭제
+  // 기도문 삭제
   deleteContent: async (
     prayerTitleId: number,
     contentId: number

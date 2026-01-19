@@ -1,4 +1,4 @@
-// 기도 내용 작성 튜토리얼 슬라이드
+// 기도문 작성 튜토리얼 슬라이드
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Animated, {
@@ -481,7 +481,7 @@ export const CreatePrayerContentSlide: React.FC<CreatePrayerContentSlideProps> =
               <Text style={styles.titleCardText}>3월 2주차</Text>
             </View>
 
-            {/* 기존 기도 내용 카드 */}
+            {/* 기존 기도문 카드 */}
             <View style={styles.prayerCard}>
               <View style={styles.prayerCardHeader}>
                 <Text style={styles.prayerCardName}>아빠</Text>
@@ -517,7 +517,7 @@ export const CreatePrayerContentSlide: React.FC<CreatePrayerContentSlideProps> =
                   size={ICON_SIZE_SMALL}
                   color="#fff"
                 />
-                <Text style={styles.fabLabel}>기도 내용 추가</Text>
+                <Text style={styles.fabLabel}>기도문 추가</Text>
               </View>
             </Animated.View>
           )}
@@ -529,7 +529,7 @@ export const CreatePrayerContentSlide: React.FC<CreatePrayerContentSlideProps> =
           {showDialog && (
             <Animated.View style={[StyleSheet.absoluteFill, dialogStyle]}>
               <MockDialog
-                title="기도 내용 추가"
+                title="기도문 추가"
                 buttons={[
                   { text: "취소" },
                   { text: "추가", primary: true },
@@ -567,7 +567,7 @@ export const CreatePrayerContentSlide: React.FC<CreatePrayerContentSlideProps> =
                   </View>
 
                   <Text style={[styles.dialogLabel, { marginTop: MARGIN_TOP_8 }]}>
-                    기도 내용
+                    기도문
                   </Text>
                   <View style={styles.inputContainer}>
                     <Text style={styles.inputText}>
@@ -628,10 +628,10 @@ export const CreatePrayerContentSlide: React.FC<CreatePrayerContentSlideProps> =
 
       {/* 설명 */}
       <View style={styles.textContainer}>
-        <Text style={styles.title}>기도 내용 작성</Text>
+        <Text style={styles.title}>기도문 작성</Text>
         <Text style={styles.description}>
           <Text style={styles.highlight}>펜 아이콘</Text>을 눌러 편집 모드로 전환 후{"\n"}
-          <Text style={styles.highlight}>기도 내용 추가</Text> 버튼을 눌러 작성해보세요
+          <Text style={styles.highlight}>기도문 추가</Text> 버튼을 눌러 작성해보세요
         </Text>
       </View>
     </View>

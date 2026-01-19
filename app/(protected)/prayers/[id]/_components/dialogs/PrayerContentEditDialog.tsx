@@ -75,7 +75,7 @@ export default function PrayerContentEditDialog({
     if (!trimmedValue) {
       showAlert({
         title: "입력 확인",
-        message: "기도 내용을 입력해주세요.",
+        message: "기도문을 입력해주세요.",
       });
       return;
     }
@@ -100,7 +100,7 @@ export default function PrayerContentEditDialog({
           accessibilityRole="none"
           accessibilityLabel="다이얼로그 배경">
           <View style={dialogStyles.content}>
-            <Text style={dialogStyles.title}>기도 내용 수정</Text>
+            <Text style={dialogStyles.title}>기도문 수정</Text>
 
             <View style={dialogStyles.fieldset}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: RFValue(8) }}>
@@ -109,7 +109,7 @@ export default function PrayerContentEditDialog({
               </View>
               <TextInput
                 ref={textInputRef}
-                placeholder="기도 내용을 입력하세요"
+                placeholder="기도문을 입력하세요"
                 defaultValue={content.content}
                 onChangeText={handleChange}
                 style={dialogStyles.inputMultiline}
@@ -119,8 +119,8 @@ export default function PrayerContentEditDialog({
                 scrollEnabled={true}
                 textAlignVertical="top"
                 autoFocus={false}
-                accessibilityLabel="기도 내용 입력"
-                accessibilityHint="수정할 기도 내용을 입력하세요"
+                accessibilityLabel="기도문 입력"
+                accessibilityHint="수정할 기도문을 입력하세요"
               />
             </View>
 

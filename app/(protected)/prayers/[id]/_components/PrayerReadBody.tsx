@@ -83,7 +83,7 @@ function PrayerReadBody({ prayerTitleId, isEditMode, onEditModeChange }: PrayerR
 
   // 전체 내용 복사 핸들러
   const handleCopyAll = () => {
-    // 기도 내용이 없으면 기도 제목만 복사
+    // 기도문이 없으면 기도 제목만 복사
     if (!prayerContents || prayerContents.length === 0) {
       copyToClipboard(`[${editingTitle}]`, {
         successTitle: "복사 완료",
@@ -92,7 +92,7 @@ function PrayerReadBody({ prayerTitleId, isEditMode, onEditModeChange }: PrayerR
       return;
     }
 
-    // 기도 제목과 각 기도 내용을 형식에 맞게 조합
+    // 기도 제목과 각 기도문을 형식에 맞게 조합
     const contentParts: string[] = [`[${editingTitle}]`, ""];
 
     prayerContents.forEach((prayer) => {
@@ -165,18 +165,18 @@ function PrayerReadBody({ prayerTitleId, isEditMode, onEditModeChange }: PrayerR
 
         <EmptyState />
 
-        {/* 플로팅 액션 버튼 - 기도 내용 추가 */}
+        {/* 플로팅 액션 버튼 - 기도문 추가 */}
         {isEditMode && (
           <FAB
             icon="plus"
             color="#fff"
             style={styles.fab}
             onPress={handleAddContent}
-            label="기도 내용 추가"
+            label="기도문 추가"
           />
         )}
 
-        {/* 기도 내용 추가 다이얼로그 */}
+        {/* 기도문 추가 다이얼로그 */}
         <PrayerContentAddDialog
           visible={isAddDialogOpen}
           onDismiss={() => setIsAddDialogOpen(false)}
@@ -191,7 +191,7 @@ function PrayerReadBody({ prayerTitleId, isEditMode, onEditModeChange }: PrayerR
               memberName,
               content
             });
-            Analytics.logPrayerContentCreated(); // 기도 내용 생성 이벤트
+            Analytics.logPrayerContentCreated(); // 기도문 생성 이벤트
             setIsAddDialogOpen(false);
           }}
         />
@@ -224,18 +224,18 @@ function PrayerReadBody({ prayerTitleId, isEditMode, onEditModeChange }: PrayerR
         onDelete={isEditMode ? handleDeleteContent : undefined}
       />
 
-      {/* 플로팅 액션 버튼 - 기도 내용 추가 */}
+      {/* 플로팅 액션 버튼 - 기도문 추가 */}
       {isEditMode && (
         <FAB
           icon="plus"
           color="#fff"
           style={styles.fab}
           onPress={handleAddContent}
-          label="기도 내용 추가"
+          label="기도문 추가"
         />
       )}
 
-      {/* 기도 내용 추가 다이얼로그 */}
+      {/* 기도문 추가 다이얼로그 */}
       <PrayerContentAddDialog
         visible={isAddDialogOpen}
         onDismiss={() => setIsAddDialogOpen(false)}
@@ -251,12 +251,12 @@ function PrayerReadBody({ prayerTitleId, isEditMode, onEditModeChange }: PrayerR
             memberName,
             content
           });
-          Analytics.logPrayerContentCreated(); // 기도 내용 생성 이벤트
+          Analytics.logPrayerContentCreated(); // 기도문 생성 이벤트
           setIsAddDialogOpen(false);
         }}
       />
 
-      {/* 기도 내용 수정 다이얼로그 */}
+      {/* 기도문 수정 다이얼로그 */}
       {editingContent && (
         <PrayerContentEditDialog
           visible={!!editingContent}
@@ -283,8 +283,8 @@ function PrayerReadBody({ prayerTitleId, isEditMode, onEditModeChange }: PrayerR
         onDismiss={() => setDeletingContent(null)}
         onConfirm={confirmDeleteContent}
         icon="alert-circle"
-        title="기도 내용 삭제"
-        content={`${deletingContent?.memberName}님의 기도 내용을 삭제하시겠습니까?`}
+        title="기도문 삭제"
+        content={`${deletingContent?.memberName}님의 기도문을 삭제하시겠습니까?`}
         confirmText="삭제"
         cancelText="취소"
       />

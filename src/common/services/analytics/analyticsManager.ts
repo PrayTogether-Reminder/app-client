@@ -206,7 +206,7 @@ class AnalyticsManager {
     await this.logEvent("prayer_title_created");
   }
 
-  /** 기도 내용 생성 */
+  /** 기도문 생성 */
   async logPrayerContentCreated(): Promise<void> {
     await this.logEvent("prayer_content_created");
   }

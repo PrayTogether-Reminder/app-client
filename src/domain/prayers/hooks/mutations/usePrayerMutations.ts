@@ -99,26 +99,26 @@ export const useUpdatePrayerTitleMutation = () => {
   });
 };
 
-// 기도 내용 추가
+// 기도문 추가
 export const useCreatePrayerContentMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ prayerTitleId, memberName, content, memberId }: { prayerTitleId: number; memberName: string; content: string; memberId?: number | null }) =>
       prayerService.createContent(prayerTitleId, memberName, content, memberId),
     onSuccess: (data, variables) => {
-      // 기도 내용 관련 캐시 무효화
+      // 기도문 관련 캐시 무효화
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.rooms],
       });
       showAlert({
-        title: "기도 내용 추가",
-        message: "기도 내용이 추가되었습니다.",
+        title: "기도문 추가",
+        message: "기도문이 추가되었습니다.",
         icon: "check-circle",
       });
     },
     onError: (error: ApiError) => {
       showAlert({
-        title: "기도 내용 추가 실패",
+        title: "기도문 추가 실패",
         message: error.message,
         icon: "alert-circle",
       });
@@ -126,26 +126,26 @@ export const useCreatePrayerContentMutation = () => {
   });
 };
 
-// 기도 내용 수정
+// 기도문 수정
 export const useUpdatePrayerContentMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ prayerTitleId, contentId, content }: { prayerTitleId: number; contentId: number; content: string }) =>
       prayerService.updateContent(prayerTitleId, contentId, content),
     onSuccess: (data, variables) => {
-      // 기도 내용 관련 캐시 무효화
+      // 기도문 관련 캐시 무효화
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.rooms],
       });
       showAlert({
-        title: "기도 내용 수정",
-        message: "기도 내용이 수정되었습니다.",
+        title: "기도문 수정",
+        message: "기도문이 수정되었습니다.",
         icon: "check-circle",
       });
     },
     onError: (error: ApiError) => {
       showAlert({
-        title: "기도 내용 수정 실패",
+        title: "기도문 수정 실패",
         message: error.message,
         icon: "alert-circle",
       });
@@ -185,26 +185,26 @@ export const useDeletePrayerTitleMutation = () => {
   });
 };
 
-// 기도 내용 삭제
+// 기도문 삭제
 export const useDeletePrayerContentMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ prayerTitleId, contentId }: { prayerTitleId: number; contentId: number }) =>
       prayerService.deleteContent(prayerTitleId, contentId),
     onSuccess: (data, variables) => {
-      // 기도 내용 관련 캐시 무효화
+      // 기도문 관련 캐시 무효화
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.rooms],
       });
       showAlert({
-        title: "기도 내용 삭제",
-        message: "기도 내용이 삭제되었습니다.",
+        title: "기도문 삭제",
+        message: "기도문이 삭제되었습니다.",
         icon: "check-circle",
       });
     },
     onError: (error: ApiError) => {
       showAlert({
-        title: "기도 내용 삭제 실패",
+        title: "기도문 삭제 실패",
         message: error.message,
         icon: "alert-circle",
       });

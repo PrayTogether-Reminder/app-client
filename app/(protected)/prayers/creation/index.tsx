@@ -41,7 +41,7 @@ export default function PrayerCreationScreen() {
     setprayerCancellationDialog(false);
   };
 
-  // 기도 내용 전체 저장
+  // 기도문 전체 저장
   const handleCreatePrayer = () => {
     if (!room?.id) return;
 

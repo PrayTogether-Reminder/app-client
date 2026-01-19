@@ -1,4 +1,4 @@
-// 직접 입력으로 기도 내용 추가 튜토리얼 슬라이드
+// 직접 입력으로 기도문 추가 튜토리얼 슬라이드
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Animated, {
@@ -245,7 +245,7 @@ export const DirectInputSlide: React.FC<DirectInputSlideProps> = ({
           {/* 다이얼로그 */}
           <Animated.View style={[StyleSheet.absoluteFill, dialogStyle]}>
             <MockDialog
-              title="기도 내용 추가"
+              title="기도문 추가"
               buttons={[
                 { text: "취소" },
                 { text: "추가", primary: true },
@@ -291,7 +291,7 @@ export const DirectInputSlide: React.FC<DirectInputSlideProps> = ({
                 </View>
 
                 <Text style={[styles.dialogLabel, { marginTop: MARGIN_TOP_8 }]}>
-                  기도 내용
+                  기도문
                 </Text>
                 <View style={styles.inputContainer}>
                   <Text style={styles.inputText}>
@@ -324,7 +324,7 @@ export const DirectInputSlide: React.FC<DirectInputSlideProps> = ({
         <Text style={styles.description}>
           <Text style={styles.highlight}>펜 아이콘</Text>을 눌러{"\n"}
           <Text style={styles.highlight}>방에 없는 사람도</Text> 직접 이름을 입력해{"\n"}
-          기도 내용을 추가할 수 있어요
+          기도문을 추가할 수 있어요
         </Text>
       </View>
     </View>
