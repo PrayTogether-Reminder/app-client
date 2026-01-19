@@ -5,6 +5,7 @@ import {
   Dimensions,
   FlatList,
   ViewToken,
+  Platform,
 } from "react-native";
 import { Modal, Portal, IconButton, Button } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -114,8 +115,9 @@ export const TutorialModal: React.FC = () => {
             icon="close"
             size={CLOSE_ICON_SIZE}
             onPress={closeTutorial}
-            iconColor={color.primary}
+            iconColor="#333"
             style={styles.closeButton}
+            containerColor="rgba(0, 0, 0, 0.08)"
           />
         </View>
 
