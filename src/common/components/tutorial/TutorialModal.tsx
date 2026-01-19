@@ -102,7 +102,10 @@ export const TutorialModal: React.FC = () => {
         onDismiss={closeTutorial}
         contentContainerStyle={[
           styles.modalContainer,
-          { paddingTop: insets.top, paddingBottom: insets.bottom },
+          {
+            paddingTop: insets.top,
+            paddingBottom: Math.max(insets.bottom, Platform.OS === 'android' ? RFValue(24) : RFValue(16)) + RFValue(16),
+          },
         ]}
       >
         {/* 닫기 버튼 */}
