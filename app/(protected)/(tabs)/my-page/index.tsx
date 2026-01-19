@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, View, Linking, Platform, AppState } from "react-native";
+import { Linking, Platform, AppState } from "react-native";
 import { useRouter } from "expo-router";
-import { backgroundColor } from "@/common/styles/color";
 
-import Top4Body10 from "@/common/components/layout/Top4Body10";
+import { Top4Body10Layout } from "@/common/components/layout";
 import ProfileSection from "../../my-page/index/_components/ProfileSection";
 import ListSection from "../../my-page/index/_components/ListSection";
 import path from "@/common/constants/path";
@@ -283,8 +282,10 @@ export default function MyPageScreen(props: MyPageScreenProps) {
   }
 
   return (
-    <View style={styles.container}>
-      <Top4Body10
+    <>
+      <Top4Body10Layout
+        showBackButton={false}
+        keyboardAvoiding={false}
         tops={[<ProfileSection />]}
         bodies={[
           <ListSection
@@ -309,13 +310,7 @@ export default function MyPageScreen(props: MyPageScreenProps) {
         cancelText="취소"
         iconColor="#FF4444"
       />
-    </View>
+    </>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: backgroundColor.default,
-  },
-});

@@ -14,7 +14,7 @@ export default function ProfileSection() {
   const { data: profile } = useProfileQuery();
 
   return (
-    <Surface style={[styles.profileSection, { backgroundColor: color.white }]}>
+    <Surface style={[styles.profileSection, { backgroundColor: color.white }]} elevation={0}>
       <View style={styles.profileContainer}>
         <Avatar.Text
           size={avatarSize}
@@ -50,6 +50,8 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     height: "95%",
     paddingTop: RFValue(12),
+    borderBottomWidth: 2,
+    borderBottomColor: "#DDDDDD",
   },
   profileContainer: {
     alignItems: "center",

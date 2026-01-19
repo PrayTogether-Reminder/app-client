@@ -1,12 +1,12 @@
 import React from 'react';
 import {
-  SafeAreaView,
   KeyboardAvoidingView,
   ScrollView,
   Platform,
   StyleSheet,
   View,
 } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BackButtonHeader } from '@/common/components/header';
 import { color } from '@/common/styles/color';
 import { RFValue } from 'react-native-responsive-fontsize';
@@ -19,7 +19,8 @@ export interface ScreenLayoutProps {
   keyboardAvoiding?: boolean; // PagerView를 감싸면 버그가 발생합니다. (IOS)
   scrollable?: boolean;
   contentPadding?: boolean;
-  backgroundColor?: string;
+  headerBackgroundColor?: string;
+  contentBackgroundColor?: string;
   justifyContent?: 'flex-start' | 'space-between' | 'center' | 'flex-end';
 }
 
@@ -31,14 +32,17 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
   keyboardAvoiding = true,
   scrollable = false,
   contentPadding = true,
-  backgroundColor = color.white,
+  headerBackgroundColor = color.third,
+  contentBackgroundColor = color.white,
   justifyContent = 'space-between',
 }) => {
+  const insets = useSafeAreaInsets();
+
   const content = (
     <View style={[
       styles.content,
       contentPadding && styles.contentPadding,
-      { justifyContent }
+      { justifyContent, paddingBottom: insets.bottom }
     ]}>
       {children}
     </View>
@@ -72,20 +76,36 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
   );
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor }]}>
-      {showBackButton && (
-        <BackButtonHeader
-          onPress={onBackPress}
-          disabled={backButtonDisabled}
-        />
-      )}
-      {keyboardAvoidingContent}
-    </SafeAreaView>
+    <View style={styles.rootContainer}>
+      {/* 상단 SafeArea - 항상 적용 */}
+      <SafeAreaView
+        style={[styles.topSafeArea, { backgroundColor: headerBackgroundColor }]}
+        edges={['top']}
+      >
+        {showBackButton && (
+          <BackButtonHeader
+            onPress={onBackPress}
+            disabled={backButtonDisabled}
+          />
+        )}
+      </SafeAreaView>
+
+      {/* 콘텐츠 영역 */}
+      <View style={[styles.contentContainer, { backgroundColor: contentBackgroundColor }]}>
+        {keyboardAvoidingContent}
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
+  rootContainer: {
+    flex: 1,
+  },
+  topSafeArea: {
+    // 상단 SafeArea만 처리
+  },
+  contentContainer: {
     flex: 1,
   },
   keyboardView: {

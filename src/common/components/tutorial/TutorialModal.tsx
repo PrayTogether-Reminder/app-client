@@ -25,7 +25,7 @@ import {
   PrayerCompletionSlide,
 } from "./slides";
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 // 슬라이드 타입에 따라 컴포넌트 렌더링
 const renderSlideContent = (
@@ -177,7 +177,8 @@ export const TutorialModal: React.FC = () => {
 
 const styles = StyleSheet.create({
   modalContainer: {
-    flex: 1,
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
     backgroundColor: "#fff",
     margin: 0,
   },

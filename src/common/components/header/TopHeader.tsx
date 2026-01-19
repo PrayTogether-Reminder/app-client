@@ -1,8 +1,8 @@
 import React from "react";
-import { Platform, StyleSheet } from "react-native";
-import { Appbar } from "react-native-paper";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { color } from "../../styles/color";
 
 export interface TopHeaderProps {
@@ -24,7 +24,7 @@ export interface TopHeaderProps {
 }
 
 /**
- * 공통 상단 헤더 컴포넌트
+ * 공통 상단 헤더 컴포넌트 (커스텀 구현)
  *
  * @example
  * // 뒤로가기 + 제목
@@ -60,53 +60,56 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
     }
   };
 
+  const leftIcon = leftActionType === "back" ? "arrow-left" : "close";
+
   return (
-    <Appbar.Header style={styles.header}>
+    <View style={styles.header}>
       {/* 왼쪽 액션 */}
-      {onBackPress !== undefined && leftActionType === "back" && (
-        <Appbar.BackAction
-          style={styles.headerBackAction}
-          onPress={handleBackPress}
-          color={color.primary}
-        />
-      )}
-      {onBackPress !== undefined && leftActionType === "close" && (
-        <Appbar.Action
-          style={styles.headerBackAction}
-          icon="close"
-          onPress={handleBackPress}
-          color={color.primary}
-        />
-      )}
+      <View style={styles.actionContainer}>
+        {onBackPress !== undefined && (
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={handleBackPress}
+            activeOpacity={0.7}
+          >
+            <MaterialCommunityIcons
+              name={leftIcon}
+              size={RFValue(24)}
+              color={color.primary}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
 
       {/* 제목 */}
-      <Appbar.Content
-        title={title}
-        titleStyle={styles.headerTitle}
-        style={styles.headerContent}
-      />
+      <View style={styles.titleContainer}>
+        <Text style={styles.headerTitle} numberOfLines={1}>
+          {title}
+        </Text>
+      </View>
 
       {/* 오른쪽 액션 */}
-      {rightAction ? (
-        <Appbar.Action
-          style={[
-            styles.headerAction,
-            rightAction.isActive && styles.headerActionActive,
-          ]}
-          icon={rightAction.icon}
-          color={rightAction.color || color.primary}
-          onPress={rightAction.onPress}
-          size={rightAction.size || RFValue(24)}
-        />
-      ) : (
-        <Appbar.Action
-          style={styles.headerAction}
-          icon=""
-          disabled
-          color="transparent"
-        />
-      )}
-    </Appbar.Header>
+      <View style={styles.actionContainer}>
+        {rightAction ? (
+          <TouchableOpacity
+            style={[
+              styles.actionButton,
+              rightAction.isActive && styles.actionButtonActive,
+            ]}
+            onPress={rightAction.onPress}
+            activeOpacity={0.7}
+          >
+            <MaterialCommunityIcons
+              name={rightAction.icon as any}
+              size={rightAction.size || RFValue(24)}
+              color={rightAction.color || color.primary}
+            />
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.actionButton} />
+        )}
+      </View>
+    </View>
   );
 };
 
@@ -114,39 +117,37 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: color.third,
     height: "100%",
-    alignItems: "center",
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "space-between",
-    paddingTop: 0,
-    paddingBottom: 0,
-    paddingVertical: 0,
-    elevation: 0,
-    minHeight: 0,
+    paddingHorizontal: RFValue(4),
   },
-  headerContent: {
-    marginTop: Platform.OS === "ios" ? -RFValue(40) : -RFValue(10),
+  actionContainer: {
+    width: RFValue(44),
+    height: RFValue(40),
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  actionButton: {
+    width: RFValue(40),
+    height: RFValue(40),
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: RFValue(20),
+  },
+  actionButtonActive: {
+    backgroundColor: color.primary + "20",
+  },
+  titleContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   headerTitle: {
     color: color.primary,
-    fontSize: RFValue(20),
+    fontSize: RFValue(18),
     fontWeight: "bold",
     textAlign: "center",
-    alignSelf: "center",
-    lineHeight: RFValue(22),
-  },
-  headerAction: {
-    alignSelf: "center",
-    marginRight: 0,
-    marginTop: Platform.OS === "ios" ? -RFValue(40) : -RFValue(0),
-  },
-  headerActionActive: {
-    backgroundColor: color.primary + "20",
-    borderRadius: RFValue(20),
-  },
-  headerBackAction: {
-    alignSelf: "center",
-    marginLeft: 0,
-    marginTop: Platform.OS === "ios" ? -RFValue(40) : -RFValue(0),
   },
 });
 

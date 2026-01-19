@@ -8,7 +8,7 @@ interface LayoutProps {
   bodies: ReactNode[];
 }
 
-export default function Top1Body10Bottom1({ tops, bodies }: LayoutProps) {
+export default function Top1Body10({ tops, bodies }: LayoutProps) {
   return (
     <View style={styles.container}>
       <View style={styles.topSection}>
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   topSection: {
-    height: RFValue(70),
+    height: RFValue(40),
     backgroundColor: color.third,
     width: "100%",
   },

@@ -36,7 +36,8 @@ export const Top1Body10Bottom1Layout: React.FC<
   keyboardAvoiding = true,
   scrollable = false,
   contentPadding = false, // Top/Body/Bottom 레이아웃은 자체 구조가 있으므로 기본 false
-  backgroundColor,
+  headerBackgroundColor,
+  contentBackgroundColor,
 }) => {
   return (
     <ScreenLayout
@@ -46,7 +47,8 @@ export const Top1Body10Bottom1Layout: React.FC<
       keyboardAvoiding={keyboardAvoiding}
       scrollable={scrollable}
       contentPadding={contentPadding}
-      backgroundColor={backgroundColor}
+      headerBackgroundColor={headerBackgroundColor}
+      contentBackgroundColor={contentBackgroundColor}
       justifyContent="flex-start"
     >
       <Top1Body10Bottom1 tops={tops} bodies={bodies} bottoms={bottoms} />

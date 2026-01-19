@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
-import { IconButton, Text } from 'react-native-paper';
+import { View, StyleSheet, StyleProp, ViewStyle, Text, TouchableOpacity } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { color } from '@/common/styles/color';
@@ -40,16 +40,20 @@ export const BackButtonHeader: React.FC<BackButtonHeaderProps> = ({
         style,
       ]}
     >
-      <IconButton
-        icon="arrow-left"
-        size={RFValue(30)}
+      <TouchableOpacity
         onPress={handlePress}
-        style={styles.backButton}
         disabled={disabled}
-        iconColor={iconColor}
-      />
+        style={[styles.backButton, disabled && styles.backButtonDisabled]}
+        activeOpacity={0.7}
+      >
+        <MaterialCommunityIcons
+          name="arrow-left"
+          size={RFValue(24)}
+          color={disabled ? color.gray : iconColor}
+        />
+      </TouchableOpacity>
       {title && (
-        <Text variant="titleLarge" style={styles.title}>
+        <Text style={styles.title}>
           {title}
         </Text>
       )}
@@ -62,19 +66,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    height: RFValue(40),
     paddingHorizontal: RFValue(4),
-    paddingTop: RFValue(8),
   },
   borderBottom: {
     borderBottomWidth: 1,
     borderBottomColor: '#EEEEEE',
   },
   backButton: {
-    marginLeft: 0,
-    paddingLeft: 0,
+    width: RFValue(40),
+    height: RFValue(40),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  backButtonDisabled: {
+    opacity: 0.5,
   },
   title: {
-    marginLeft: RFValue(8),
+    marginLeft: RFValue(4),
     fontSize: RFValue(18),
     fontWeight: 'bold',
     color: color.black,

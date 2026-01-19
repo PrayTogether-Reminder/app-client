@@ -6,7 +6,6 @@ import {
   TouchableWithoutFeedback,
   Text,
   Dimensions,
-  Platform,
 } from "react-native";
 import Animated, {
   useSharedValue,
@@ -72,11 +71,10 @@ export const TutorialSpotlight: React.FC = () => {
 
   if (!showSpotlight) return null;
 
-  // 헤더 높이 계산 (Top1Body10 레이아웃 기준: RFValue(70))
-  // TopHeader의 headerAction marginTop: iOS -RFValue(40), Android 0
-  const headerHeight = RFValue(70);
-  const buttonMarginTop = Platform.OS === "ios" ? -RFValue(40) : 0;
-  const spotlightTop = insets.top + headerHeight / 2 + buttonMarginTop / 2 - RFValue(22);
+  // 헤더 높이 계산 (Top1Body10 레이아웃 기준: RFValue(40))
+  // Top1Body10에 SafeAreaView가 항상 적용됨
+  const headerHeight = RFValue(40);
+  const spotlightTop = insets.top + headerHeight / 2 - RFValue(22);
   const spotlightRight = RFValue(8);
 
   return (
