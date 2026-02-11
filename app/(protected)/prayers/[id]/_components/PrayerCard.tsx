@@ -1,12 +1,14 @@
 // PrayerCard.tsx
-import React from "react";
-import { View, StyleSheet, Animated, ScrollView, TouchableOpacity, Platform } from "react-native";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { View, StyleSheet, Animated, ScrollView, TouchableOpacity, Platform, TextLayoutEvent } from "react-native";
 import { Card, Text } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../../../src/common/styles/color";
 import { PrayerContent } from "../../../../../src/domain/prayers/types/prayerContent";
 import { useCopyToClipboard } from "../../../../../src/hooks/useCopyToClipboard";
+
+type NameTextSizeVariant = "default" | "twoLines" | "threePlus";
 
 interface PrayerCardProps {
   item: PrayerContent;
@@ -25,6 +27,7 @@ export default function PrayerCard({
 }: PrayerCardProps) {
   const cardBorderStyle = { borderLeftColor: color.secondary };
   const { copyToClipboard } = useCopyToClipboard();
+  const [nameTextSizeVariant, setNameTextSizeVariant] = useState<NameTextSizeVariant>("default");
 
   const handleCopy = () => {
     const fullContent = `${item.memberName}\n${item.content}`;
@@ -33,6 +36,45 @@ export default function PrayerCard({
       successMessage: "기도문이 복사되었습니다",
     });
   };
+
+  useEffect(() => {
+    setNameTextSizeVariant("default");
+  }, [item.memberName]);
+
+  const handleNameTextLayout = useCallback(
+    (event: TextLayoutEvent) => {
+      const lines = event.nativeEvent.lines.length;
+      let nextVariant: NameTextSizeVariant = "default";
+
+      if (lines >= 3) {
+        nextVariant = "threePlus";
+      } else if (lines >= 2) {
+        nextVariant = "twoLines";
+      }
+
+      const variantPriority: Record<NameTextSizeVariant, number> = {
+        default: 0,
+        twoLines: 1,
+        threePlus: 2,
+      };
+
+      if (variantPriority[nextVariant] > variantPriority[nameTextSizeVariant]) {
+        // Shrink name text progressively as it spans more lines.
+        setNameTextSizeVariant(nextVariant);
+      }
+    },
+    [nameTextSizeVariant],
+  );
+
+  const nameTextStyle = useMemo(() => {
+    if (nameTextSizeVariant === "threePlus") {
+      return [styles.nameText, styles.nameTextThreeLines];
+    }
+    if (nameTextSizeVariant === "twoLines") {
+      return [styles.nameText, styles.nameTextTwoLines];
+    }
+    return styles.nameText;
+  }, [nameTextSizeVariant]);
 
   return (
     <Animated.View
@@ -54,7 +96,12 @@ export default function PrayerCard({
         <Card.Content style={styles.cardContentContainer}>
           <View style={styles.cardHeader}>
             <View style={styles.titleSection}>
-              <Text style={styles.nameText}>{item.memberName}</Text>
+              <Text
+                style={nameTextStyle}
+                onTextLayout={handleNameTextLayout}
+              >
+                {item.memberName}
+              </Text>
               <Text style={styles.writerText}>최근 작성자: {item.writerName}</Text>
             </View>
             {/* 편집 모드가 아닐 때는 복사 버튼, 편집 모드일 때는 수정/삭제 버튼 */}
@@ -152,9 +199,15 @@ const styles = StyleSheet.create({
     marginRight: RFValue(8),
   },
   nameText: {
-    fontSize: RFValue(22),
+    fontSize: RFValue(20),
     fontWeight: "bold",
     color: color.secondary,
+  },
+  nameTextTwoLines: {
+    fontSize: RFValue(14),
+  },
+  nameTextThreeLines: {
+    fontSize: RFValue(12),
   },
   writerText: {
     fontSize: RFValue(13),
