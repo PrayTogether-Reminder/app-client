@@ -1,19 +1,20 @@
 // PrayerList.tsx
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useMemo } from "react";
 import {
   FlatList,
-  Animated,
   Dimensions,
   StyleSheet,
   Platform,
 } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedScrollHandler,
+} from "react-native-reanimated";
 import { RFValue } from "react-native-responsive-fontsize";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { PrayerContent } from "../../../../../src/domain/prayers/types/prayerContent";
 import PrayerCard from "./PrayerCard";
 import type { Room } from "@/domain/rooms/types/room";
-
-const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const { height } = Dimensions.get("window");
 
@@ -29,7 +30,7 @@ export default function PrayerCardList({
   onDelete,
 }: PrayerCardListProps) {
   const flatListRef = useRef<FlatList>(null);
-  const scrollY = useRef(new Animated.Value(0)).current;
+  const scrollY = useSharedValue(0);
   const insets = useSafeAreaInsets();
 
   // 전체 화면 높이
@@ -57,8 +58,9 @@ export default function PrayerCardList({
     - (BODY_PADDING * 2)  // 상하 패딩
     - TITLE_CARD_HEIGHT;  // TitleCard 높이
 
-  // 카드 높이: 사용 가능한 공간의 80% (기존 65%에서 증가)
-  const ITEM_HEIGHT = Math.floor(CARDLIST_AVAILABLE_HEIGHT * 0.80);
+  // 카드 높이: Platform별로 다르게 설정 (Android는 스냅 동작 차이로 인해 살짝 작게)
+  const CARD_HEIGHT_RATIO = Platform.OS === "ios" ? 0.88 : 0.84;
+  const ITEM_HEIGHT = Math.floor(CARDLIST_AVAILABLE_HEIGHT * CARD_HEIGHT_RATIO);
 
   // TitleCard 바로 아래 최소 간격으로 배치
   const topPadding = MIN_TOP_GAP;
@@ -69,18 +71,42 @@ export default function PrayerCardList({
     MIN_BOTTOM_PADDING
   );
 
-  // 애니메이션 범위 계산
-  const getInputRange = (index: number) => [
-    (index - 1) * ITEM_HEIGHT,
-    index * ITEM_HEIGHT,
-    (index + 1) * ITEM_HEIGHT,
-  ];
+  // 스크롤 이벤트 핸들러 (UI 스레드에서 실행)
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scrollY.value = event.contentOffset.y;
+    },
+  });
 
-  // 스크롤 이벤트 핸들러
-  const handleScroll = Animated.event(
-    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-    { useNativeDriver: true }
-  );
+  // 각 카드가 중앙에 오도록 정확한 스냅 오프셋 계산
+  const snapToOffsets = useMemo(() => {
+    return prayerContents.map((_, index) => {
+      // FlatList의 중앙에 카드 중심이 오도록 offset 계산
+      const cardCenter = topPadding + (ITEM_HEIGHT * index) + (ITEM_HEIGHT / 2);
+      const listCenter = CARDLIST_AVAILABLE_HEIGHT / 2;
+      return cardCenter - listCenter;
+    });
+  }, [prayerContents.length, ITEM_HEIGHT, topPadding, CARDLIST_AVAILABLE_HEIGHT]);
+
+  // 초기 렌더링 후 첫 카드를 중앙에 정렬
+  useEffect(() => {
+    if (flatListRef.current && prayerContents.length > 0 && snapToOffsets.length > 0) {
+      // snapToOffsets 계산에 따라 첫 번째 offset으로 스크롤
+      const timer = setTimeout(() => {
+        try {
+          const firstOffset = snapToOffsets[0];
+          flatListRef.current?.scrollToOffset({
+            offset: Math.max(0, firstOffset),  // 음수 방지
+            animated: false,
+          });
+        } catch (error) {
+          console.log('초기 스크롤 위치 설정 실패:', error);
+        }
+      }, 150);  // 150ms 지연
+
+      return () => clearTimeout(timer);
+    }
+  }, [prayerContents.length, snapToOffsets]);  // 데이터 길이 및 offset 변경 시 재실행
 
   // 모든 카드에 대한 단일 렌더링 함수
   const renderItem: any = ({
@@ -90,20 +116,12 @@ export default function PrayerCardList({
     item: PrayerContent;
     index: number;
   }) => {
-    // 애니메이션 범위 계산
-    const inputRange = getInputRange(index);
-
-    // 모든 카드에 스케일 애니메이션 적용
-    const scale = scrollY.interpolate<number>({
-      inputRange,
-      outputRange: [0.85, 1, 0.85],
-      extrapolate: "clamp",
-    });
-
     return (
       <PrayerCard
         item={item}
-        scale={scale}
+        scrollY={scrollY}
+        index={index}
+        itemHeight={ITEM_HEIGHT}
         onEdit={onEdit}
         onDelete={onDelete}
         cardHeight={ITEM_HEIGHT}
@@ -114,12 +132,12 @@ export default function PrayerCardList({
   // 항목 레이아웃 계산 (모든 항목이 동일한 높이)
   const getItemLayout = (_data: any, index: number) => ({
     length: ITEM_HEIGHT,
-    offset: ITEM_HEIGHT * index,
+    offset: topPadding + (ITEM_HEIGHT * index),
     index,
   });
 
   return (
-    <AnimatedFlatList
+    <Animated.FlatList
       ref={flatListRef}
       data={prayerContents}
       keyExtractor={(item, index) => {
@@ -129,10 +147,9 @@ export default function PrayerCardList({
       renderItem={renderItem}
       showsVerticalScrollIndicator={true}
       decelerationRate={Platform.OS === "ios" ? 0.98 : 0.96}
-      snapToAlignment="center"
-      snapToInterval={ITEM_HEIGHT}
+      snapToOffsets={snapToOffsets}
       disableIntervalMomentum={true}
-      onScroll={handleScroll}
+      onScroll={scrollHandler}
       scrollEventThrottle={16}
       getItemLayout={getItemLayout}
       initialScrollIndex={0}

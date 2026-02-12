@@ -1,6 +1,12 @@
 // PrayerCard.tsx
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { View, StyleSheet, Animated, ScrollView, TouchableOpacity, Platform, NativeSyntheticEvent, TextLayoutEventData } from "react-native";
+import { View, StyleSheet, ScrollView, TouchableOpacity, Platform, NativeSyntheticEvent, TextLayoutEventData } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  interpolate,
+  Extrapolation,
+  SharedValue,
+} from "react-native-reanimated";
 import { Card, Text } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -12,7 +18,9 @@ type NameTextSizeVariant = "default" | "twoLines" | "threePlus";
 
 interface PrayerCardProps {
   item: PrayerContent;
-  scale: Animated.AnimatedInterpolation<number>;
+  scrollY: SharedValue<number>;
+  index: number;
+  itemHeight: number;
   onEdit?: (prayer: PrayerContent) => void;
   onDelete?: (prayer: PrayerContent) => void;
   cardHeight: number;
@@ -20,7 +28,9 @@ interface PrayerCardProps {
 
 export default function PrayerCard({
   item,
-  scale,
+  scrollY,
+  index,
+  itemHeight,
   onEdit,
   onDelete,
   cardHeight,
@@ -28,6 +38,26 @@ export default function PrayerCard({
   const cardBorderStyle = { borderLeftColor: color.secondary };
   const { copyToClipboard } = useCopyToClipboard();
   const [nameTextSizeVariant, setNameTextSizeVariant] = useState<NameTextSizeVariant>("default");
+
+  // Scale 애니메이션 계산 (UI 스레드에서 실행)
+  const animatedStyle = useAnimatedStyle(() => {
+    const inputRange = [
+      (index - 1) * itemHeight,
+      index * itemHeight,
+      (index + 1) * itemHeight,
+    ];
+
+    const scale = interpolate(
+      scrollY.value,
+      inputRange,
+      [0.85, 1, 0.85],
+      Extrapolation.CLAMP
+    );
+
+    return {
+      transform: [{ scale }],
+    };
+  });
 
   const handleCopy = () => {
     const fullContent = `${item.memberName}\n${item.content}`;
@@ -80,10 +110,8 @@ export default function PrayerCard({
     <Animated.View
       style={[
         styles.cardContainer,
-        {
-          height: cardHeight,
-          transform: [{ scale }],
-        },
+        { height: cardHeight },
+        animatedStyle,
       ]}
     >
       <Card
