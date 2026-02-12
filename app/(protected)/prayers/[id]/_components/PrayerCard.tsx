@@ -1,6 +1,6 @@
 // PrayerCard.tsx
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { View, StyleSheet, Animated, ScrollView, TouchableOpacity, Platform, TextLayoutEvent } from "react-native";
+import { View, StyleSheet, Animated, ScrollView, TouchableOpacity, Platform, NativeSyntheticEvent, TextLayoutEventData } from "react-native";
 import { Card, Text } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -42,7 +42,7 @@ export default function PrayerCard({
   }, [item.memberName]);
 
   const handleNameTextLayout = useCallback(
-    (event: TextLayoutEvent) => {
+    (event: NativeSyntheticEvent<TextLayoutEventData>) => {
       const lines = event.nativeEvent.lines.length;
       let nextVariant: NameTextSizeVariant = "default";
 
@@ -90,7 +90,7 @@ export default function PrayerCard({
         style={[
           styles.prayerCard,
           cardBorderStyle,
-          { height: cardHeight * 0.9, width: "95%" },
+          { height: cardHeight * 1, width: "95%" },
         ]}
       >
         <Card.Content style={styles.cardContentContainer}>

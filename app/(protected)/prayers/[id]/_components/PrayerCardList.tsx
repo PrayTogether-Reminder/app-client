@@ -8,6 +8,7 @@ import {
   Platform,
 } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { PrayerContent } from "../../../../../src/domain/prayers/types/prayerContent";
 import PrayerCard from "./PrayerCard";
 import type { Room } from "@/domain/rooms/types/room";
@@ -29,14 +30,44 @@ export default function PrayerCardList({
 }: PrayerCardListProps) {
   const flatListRef = useRef<FlatList>(null);
   const scrollY = useRef(new Animated.Value(0)).current;
+  const insets = useSafeAreaInsets();
 
-  // 화면 높이에 기반한 일관된 높이 계산
+  // 전체 화면 높이
   const SCREEN_HEIGHT = height;
-  const ITEM_HEIGHT = Math.floor(SCREEN_HEIGHT * 0.7);
 
-  // 상단/하단 패딩 계산
-  const topPadding = RFValue(20);
-  const bottomPadding = (SCREEN_HEIGHT - ITEM_HEIGHT) / 2 + RFValue(30);
+  // 레이아웃 구성 요소 높이
+  const TOP_SECTION_HEIGHT = RFValue(40);        // PrayerReadTop 헤더
+  const BOTTOM_SECTION_HEIGHT = RFValue(50);     // BottomActionButton
+  const BODY_PADDING = RFValue(16);              // PrayerReadBody 상하 패딩
+  const TITLE_CARD_HEIGHT = RFValue(50);         // TitleCard 높이
+  const MIN_TOP_GAP = RFValue(8);                // TitleCard와 카드 사이 최소 간격
+  const MIN_BOTTOM_PADDING = RFValue(20);        // 최소 하단 여백
+
+  // 실제 사용 가능한 body 영역 높이 계산
+  const AVAILABLE_BODY_HEIGHT =
+    SCREEN_HEIGHT
+    - insets.top
+    - insets.bottom
+    - TOP_SECTION_HEIGHT
+    - BOTTOM_SECTION_HEIGHT;
+
+  // PrayerReadBody 내부에서 카드 리스트가 실제로 사용 가능한 높이
+  const CARDLIST_AVAILABLE_HEIGHT =
+    AVAILABLE_BODY_HEIGHT
+    - (BODY_PADDING * 2)  // 상하 패딩
+    - TITLE_CARD_HEIGHT;  // TitleCard 높이
+
+  // 카드 높이: 사용 가능한 공간의 80% (기존 65%에서 증가)
+  const ITEM_HEIGHT = Math.floor(CARDLIST_AVAILABLE_HEIGHT * 0.80);
+
+  // TitleCard 바로 아래 최소 간격으로 배치
+  const topPadding = MIN_TOP_GAP;
+
+  // 하단 패딩: 남은 공간 활용하되 최소값 보장
+  const bottomPadding = Math.max(
+    CARDLIST_AVAILABLE_HEIGHT - ITEM_HEIGHT - topPadding,
+    MIN_BOTTOM_PADDING
+  );
 
   // 애니메이션 범위 계산
   const getInputRange = (index: number) => [
@@ -97,9 +128,10 @@ export default function PrayerCardList({
       }}
       renderItem={renderItem}
       showsVerticalScrollIndicator={true}
-      decelerationRate={Platform.OS === "ios" ? "normal" : 0.92}
+      decelerationRate={Platform.OS === "ios" ? 0.98 : 0.96}
       snapToAlignment="center"
       snapToInterval={ITEM_HEIGHT}
+      disableIntervalMomentum={true}
       onScroll={handleScroll}
       scrollEventThrottle={16}
       getItemLayout={getItemLayout}
