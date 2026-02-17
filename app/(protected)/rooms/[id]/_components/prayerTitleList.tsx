@@ -11,7 +11,7 @@ import { useRoomMembersQuery } from "../../../../../src/domain/rooms/hooks/queri
 import { useSelectedPrayerTitleStore } from "../../../../../src/domain/prayers/stores/useSelectedPrayerTitleStore";
 
 import Loading from "../../../../../src/common/components/loading/OverlayLoading";
-import path from "../../../../../src/common/constants/path";
+import { pathHref } from "../../../../../src/common/constants/path";
 import QUERY_KEYS from "../../../../../src/common/constants/queryKeys";
 import PrayerTitleItem from "./prayerTitleItem";
 import { backgroundColor } from "@/common/styles/color";
@@ -65,7 +65,13 @@ export default function PrayerTitleList({ roomId: propRoomId }: PrayerTitleListP
     if (!title) return;
     selectTitle(title);
     console.log("Selected prayerTitle:", title);
-    router.push(path.showPrayersContentById(title.id));
+
+    // href 객체 사용 (Expo Router best practice)
+    const prayerHref = roomId
+      ? pathHref.showPrayersContentByIdWithRoom(title.id, roomId)
+      : pathHref.showPrayersContentById(title.id);
+
+    router.push(prayerHref);
   };
 
   const handleLoadMore = () => {

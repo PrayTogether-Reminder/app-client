@@ -1,8 +1,11 @@
+import { useEffect } from "react";
 import {
   useQuery,
+  useQueryClient,
   useInfiniteQuery,
   UseQueryOptions,
   UseInfiniteQueryOptions,
+  InfiniteData,
 } from "@tanstack/react-query";
 import { OrderBy, Dir } from "../../../../common/constants/params";
 import { Room } from "../../types/room";
@@ -23,7 +26,9 @@ export const useInfiniteRoomsQuery = (
   dir: Dir = Dir.DEFAULT,
   options?: UseInfiniteQueryOptions<Room[], Error>
 ) => {
-  return useInfiniteQuery({
+  const queryClient = useQueryClient();
+
+  const query = useInfiniteQuery({
     queryKey: [QUERY_KEYS.rooms, QUERY_KEYS.infinite],
     queryFn: async ({ pageParam }) => {
       const param = pageParam as RoomPageParam;
@@ -53,6 +58,21 @@ export const useInfiniteRoomsQuery = (
     },
     ...options,
   });
+
+  // 무한스크롤 데이터를 개별 Room 캐시에 seed
+  const pages = (query.data as InfiniteData<Room[]> | undefined)?.pages;
+  useEffect(() => {
+    if (pages) {
+      pages.flat().forEach((room: Room) => {
+        queryClient.setQueryData(
+          [QUERY_KEYS.rooms, QUERY_KEYS.detail, room.id],
+          room
+        );
+      });
+    }
+  }, [pages, queryClient]);
+
+  return query;
 };
 
 function getNextAfter(orderBy: OrderBy, room: Room) {
@@ -63,6 +83,19 @@ function getNextAfter(orderBy: OrderBy, room: Room) {
   }
   return "0";
 }
+
+// 기도방 단건 조회
+export const useRoomQuery = (
+  roomId: number | null,
+  options?: Partial<UseQueryOptions<Room, Error>>
+) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.rooms, QUERY_KEYS.detail, roomId],
+    queryFn: () => roomService.fetchRoom(roomId!),
+    enabled: !!roomId,
+    ...options,
+  });
+};
 
 // 기도방 멤버 조회
 export const useRoomMembersQuery = (

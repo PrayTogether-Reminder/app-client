@@ -16,7 +16,6 @@ import { RFValue } from "react-native-responsive-fontsize";
 import Feather from "@expo/vector-icons/Feather";
 import { showAlert } from "@/common/components/modal/stores/useAlertStore";
 import { useRoomMembersQuery } from "@/domain/rooms/hooks/queries/useRoomQueries";
-import { useSelectedRoomStore } from "@/domain/rooms/stores/useSelectedRoomStore";
 import PrayerMemberSelectionModal from "../../../creation/_components/modal/PrayerMemberSelectionModal";
 import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
 import { dialogStyles } from "@/styles/dialogStyles";
@@ -30,6 +29,7 @@ interface PrayerContentAddDialogProps {
   onDismiss: () => void;
   onAdd: (memberName: string, content: string) => void;
   existingPrayerContents?: PrayerContent[];
+  roomId: number | null;
 }
 
 export default function PrayerContentAddDialog({
@@ -37,13 +37,13 @@ export default function PrayerContentAddDialog({
   onDismiss,
   onAdd,
   existingPrayerContents = [],
+  roomId,
 }: PrayerContentAddDialogProps) {
   const [memberName, setMemberName] = useState("");
   const [memberSelectionModal, setMemberSelectionModal] = useState(false);
   const [isDirectInput, setIsDirectInput] = useState(false);
-  
-  const room = useSelectedRoomStore().selectedRoom;
-  const { data: roomMembers } = useRoomMembersQuery(room?.id ?? null);
+
+  const { data: roomMembers } = useRoomMembersQuery(roomId);
 
   // 기도문용 훅
   const {

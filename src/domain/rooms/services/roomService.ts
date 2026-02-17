@@ -21,6 +21,12 @@ export const roomService = {
     return response.data.rooms;
   },
 
+  // 방 단건 조회
+  fetchRoom: async (roomId: number): Promise<Room> => {
+    const response = await apiService.get<Room>(`/v1/rooms/${roomId}`);
+    return response.data;
+  },
+
   // 알림 설정 토글
   toggleNotification: async (roomId: number): Promise<void> => {
     await apiService.post(`/v1/rooms/${roomId}/notification`);

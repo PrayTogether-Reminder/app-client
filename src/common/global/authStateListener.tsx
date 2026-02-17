@@ -17,6 +17,7 @@ export default function AuthStateListener({
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isLoading = useAuthStore((state) => state.isLoading);
   const initialCheckRef = useRef(false);
+  const lastRedirectRef = useRef<string | null>(null);
 
   // 초기 인증 체크
   useEffect(() => {
@@ -34,18 +35,35 @@ export default function AuthStateListener({
   useEffect(() => {
     if (isLoading || !initialCheckRef.current) return;
 
-    const isProtectedRoute = segments[0] === ("protected" as string);
-    const isPublicRoute = segments[0] === ("public" as string);
+    const isProtectedRoute = segments[0] === "(protected)";
+    const isPublicRoute = segments[0] === "(public)";
     const isRootRoute =
       segments.length === (0 as number) ||
       (segments.length === 1 && segments[0] === ("index" as string));
 
+    // 인증 안 됨 + protected 경로 → 로그인으로 (한 번만)
     if (!isAuthenticated && isProtectedRoute) {
-      console.log("Redirecting to welcome page - not authenticated");
-      router.replace(path.showWelcome());
-    } else if (isAuthenticated && (isPublicRoute || isRootRoute)) {
-      console.log("Redirecting to room list - authenticated");
-      router.replace(path.showRoomList());
+      if (lastRedirectRef.current !== 'welcome') {
+        console.log("Redirecting to welcome page - not authenticated");
+        router.replace(path.showWelcome());
+        lastRedirectRef.current = 'welcome';
+      }
+      return;
+    }
+
+    // 인증됨 + (public 경로 또는 root) → 기도방 목록으로 (한 번만)
+    if (isAuthenticated && (isPublicRoute || isRootRoute)) {
+      if (lastRedirectRef.current !== 'roomList') {
+        console.log("Redirecting to room list - authenticated");
+        router.replace(path.showRoomList());
+        lastRedirectRef.current = 'roomList';
+      }
+      return;
+    }
+
+    // 정상 네비게이션 시 lastRedirect 초기화
+    if (isProtectedRoute && isAuthenticated) {
+      lastRedirectRef.current = null;
     }
   }, [isAuthenticated, isLoading, segments, router]);
 

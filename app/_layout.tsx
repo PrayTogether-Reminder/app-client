@@ -4,11 +4,12 @@ import { color } from "@/common/styles/color";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useFonts } from "expo-font";
-import { Stack, router } from "expo-router";
+import { Stack, router, Route, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { InteractionManager } from "react-native";
 import { DefaultTheme, PaperProvider } from "react-native-paper";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import ErrorFallback from "../src/common/components/error/ErrorFallback";
@@ -23,6 +24,7 @@ import * as Notifications from "expo-notifications";
 import { useAuthStore } from "@/domain/auth/stores/useAuthStore";
 import { useScreenTracking } from "@/common/services/analytics";
 import { configureGoogleSignIn } from "@/domain/auth/config/googleSignIn";
+import path from "@/common/constants/path";
 
 // Google Sign-In 초기화
 configureGoogleSignIn();
@@ -33,112 +35,69 @@ SplashScreen.preventAutoHideAsync().catch(() => {});
 function useNotificationObserver() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isLoading = useAuthStore((state) => state.isLoading);
-  const pendingNotificationRef = useRef<Notifications.Notification | null>(null);
+  const segments = useSegments();
+  const [pendingNotification, setPendingNotification] =
+    useState<Notifications.Notification | null>(null);
 
-  useEffect(() => {
-    let isMounted = true;
+  function redirect(notification: Notifications.Notification) {
+    const data = notification.request.content.data;
 
-    function redirect(notification: Notifications.Notification) {
-      if (!isMounted) return;
+    if (data && data.roomId && data.prayerTitleId) {
+      const roomId = Number(data.roomId);
+      const prayerTitleId = Number(data.prayerTitleId);
+      const prayerTitle = data.prayerTitle as string | undefined;
 
-      const data = notification.request.content.data;
+      console.log(`📱 Notification redirect: room ${roomId} → prayer ${prayerTitleId}`);
 
-      console.log("========================================");
-      console.log("📱 Notification observer - redirect called");
-      console.log("Full data:", JSON.stringify(data, null, 2));
-      console.log("roomId:", data?.roomId);
-      console.log("prayerTitleId:", data?.prayerTitleId);
-      console.log("prayerTitle:", data?.prayerTitle);
-      console.log("========================================");
+      router.push(path.showRoomById(roomId));
 
-      if (data && data.roomId && data.prayerTitleId) {
-        // 기도방 -> 기도 제목 순서로 이동
-        const roomId = data.roomId as string;
-        const prayerTitleId = data.prayerTitleId as string;
-        const prayerTitle = data.prayerTitle as string | undefined;
+      InteractionManager.runAfterInteractions(() => {
+        const prayerPath = `/(protected)/prayers/${prayerTitleId}?roomId=${roomId}${prayerTitle ? `&title=${encodeURIComponent(prayerTitle)}` : ''}` as Route;
+        router.push(prayerPath);
+      });
+    } else if (data && data.prayerTitleId) {
+      const prayerTitleId = Number(data.prayerTitleId);
+      const prayerTitle = data.prayerTitle as string | undefined;
+      const prayerPath = `/(protected)/prayers/${prayerTitleId}${prayerTitle ? `?title=${encodeURIComponent(prayerTitle)}` : ''}` as Route;
 
-        console.log(`✅ Both IDs present - Navigating to room ${roomId} then prayer title ${prayerTitleId}`);
-        console.log(`Step 1: Navigating to /rooms/${roomId}`);
-
-        router.push(`/rooms/${roomId}`);
-
-        setTimeout(() => {
-          // prayerTitle이 있으면 URL에 포함
-          const titleParam = prayerTitle ? `&title=${encodeURIComponent(prayerTitle)}` : '';
-          console.log(`Step 2: Navigating to /prayers/${prayerTitleId}?roomId=${roomId}${titleParam}`);
-          router.push(`/prayers/${prayerTitleId}?roomId=${roomId}${titleParam}`);
-        }, 300);
-      } else if (data && data.prayerTitleId) {
-        // prayerTitleId만 있는 경우
-        const prayerTitleId = data.prayerTitleId as string;
-        const prayerTitle = data.prayerTitle as string | undefined;
-        const titleParam = prayerTitle ? `?title=${encodeURIComponent(prayerTitle)}` : '';
-        console.log(`⚠️ Only prayerTitleId present - Navigating directly to /prayers/${prayerTitleId}${titleParam}`);
-        router.push(`/prayers/${prayerTitleId}${titleParam}`);
-      } else {
-        console.log("❌ No valid navigation data found");
-      }
+      console.log(`📱 Notification redirect: prayer ${prayerTitleId}`);
+      router.push(prayerPath);
     }
+  }
 
-    // 초기 알림 처리 (앱이 종료 상태에서 알림으로 열린 경우)
+  // 1. 초기 알림 저장 (cold start)
+  useEffect(() => {
     Notifications.getLastNotificationResponseAsync().then((response) => {
       if (response?.notification) {
-        console.log("🔔 Initial notification detected - storing for later");
-        pendingNotificationRef.current = response.notification;
+        setPendingNotification(response.notification);
       }
     });
+  }, []);
 
-    // 런타임 알림 처리 (앱이 실행 중일 때 알림 탭)
-    const subscription = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log("🔔 Runtime notification tapped");
-
-      // 인증 확인 후 처리
-      if (isAuthenticated && !isLoading) {
+  // 2. 런타임 알림 리스너
+  useEffect(() => {
+    const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
+      const inProtectedRoute = segments[0] === "(protected)";
+      if (isAuthenticated && !isLoading && inProtectedRoute) {
         redirect(response.notification);
       } else {
-        console.log("⏳ Auth not ready - storing notification for later");
-        pendingNotificationRef.current = response.notification;
+        setPendingNotification(response.notification);
       }
     });
 
-    return () => {
-      isMounted = false;
-      subscription.remove();
-    };
-  }, [isAuthenticated, isLoading]);
+    return () => subscription.remove();
+  }, [isAuthenticated, isLoading, segments]);
 
-  // 인증 완료 후 대기 중인 알림 처리
+  // 3. (protected) navigator 마운트 후 대기 중인 알림 처리
   useEffect(() => {
-    if (isAuthenticated && !isLoading && pendingNotificationRef.current) {
-      console.log("✅ Auth ready - processing pending notification");
-      const notification = pendingNotificationRef.current;
-      pendingNotificationRef.current = null;
-
-      const data = notification.request.content.data;
-
-      if (data && data.roomId && data.prayerTitleId) {
-        const roomId = data.roomId as string;
-        const prayerTitleId = data.prayerTitleId as string;
-        const prayerTitle = data.prayerTitle as string | undefined;
-
-        console.log(`✅ Both IDs present - Navigating to room ${roomId} then prayer title ${prayerTitleId}`);
-        router.push(`/rooms/${roomId}`);
-
-        setTimeout(() => {
-          const titleParam = prayerTitle ? `&title=${encodeURIComponent(prayerTitle)}` : '';
-          router.push(`/prayers/${prayerTitleId}?roomId=${roomId}${titleParam}`);
-        }, 300);
-      } else if (data && data.prayerTitleId) {
-        const prayerTitleId = data.prayerTitleId as string;
-        const prayerTitle = data.prayerTitle as string | undefined;
-        const titleParam = prayerTitle ? `?title=${encodeURIComponent(prayerTitle)}` : '';
-        console.log(`⚠️ Only prayerTitleId present - Navigating directly to /prayers/${prayerTitleId}${titleParam}`);
-        router.push(`/prayers/${prayerTitleId}${titleParam}`);
-      } else {
-        console.log("❌ No valid navigation data found");
-      }
+    if (segments[0] === "(protected)" && pendingNotification) {
+      const notification = pendingNotification;
+      setPendingNotification(null);
+      InteractionManager.runAfterInteractions(() => {
+        redirect(notification);
+      });
     }
-  }, [isAuthenticated, isLoading]);
+  }, [segments, pendingNotification]);
 }
 
 export default function RootLayout() {

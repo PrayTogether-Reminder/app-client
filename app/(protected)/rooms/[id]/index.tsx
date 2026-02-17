@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Top1Body10Bottom1Layout } from "@/common/components/layout";
@@ -7,11 +7,26 @@ import PrayerRoomBody from "./_components/PrayerRoomBody";
 import PrayerRoomBottom from "./_components/PrayerRoomBottom";
 import RoomMembersModal from "./_components/RoomMembersModal";
 import path from "@/common/constants/path";
+import { useSelectedRoomStore } from "@/domain/rooms/stores/useSelectedRoomStore";
+import { useRoomQuery } from "@/domain/rooms/hooks/queries/useRoomQueries";
 
 export default function PrayerRoomScreen(): React.ReactElement {
   const router = useRouter();
   const params = useLocalSearchParams();
   const roomId = Number(params.id);
+
+  // 알림 등 deep link로 진입 시 store에 room이 없을 수 있으므로 API로 조회
+  const selectedRoom = useSelectedRoomStore((s) => s.selectedRoom);
+  const selectRoom = useSelectedRoomStore((s) => s.selectRoom);
+  const { data: fetchedRoom } = useRoomQuery(
+    selectedRoom?.id === roomId ? null : roomId
+  );
+
+  useEffect(() => {
+    if (fetchedRoom) {
+      selectRoom(fetchedRoom);
+    }
+  }, [fetchedRoom, selectRoom]);
 
   const [rightMenueVisible, setRightMenueVisible] = useState(false);
 
