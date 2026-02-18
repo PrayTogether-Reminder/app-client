@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Slot, useRouter, usePathname } from "expo-router";
+import { Stack, useRouter, usePathname } from "expo-router";
 import FcmInitializer from "@/common/services/fcm/fcmInitializer";
 import { useProfileQuery } from "@/domain/members/hooks/queries/memberQueries";
 
@@ -23,7 +23,17 @@ export default function ProtectedLayout() {
   return (
     <>
       <FcmInitializer />
-      <Slot />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          animation: "none",
+        }}
+      >
+        <Stack.Screen
+          name="prayers/[id]"
+          options={{ animation: "slide_from_right" }}
+        />
+      </Stack>
     </>
   );
 }

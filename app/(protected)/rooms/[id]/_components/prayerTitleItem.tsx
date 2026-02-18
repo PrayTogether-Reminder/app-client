@@ -14,6 +14,7 @@ import {
 import ConfirmationModal from "@/common/components/modal/ConfirmationModal";
 import { useDeletePrayerTitleMutation } from "@/domain/prayers/hooks/mutations/usePrayerMutations";
 import PrayerTitleOptionSheet from "./sheets/PrayerTitleOptionSheet";
+import Animated, { Layout, SlideInDown, SlideOutDown } from "react-native-reanimated";
 
 interface PrayerTitleItemProps {
   item: PrayerTitle;
@@ -25,7 +26,7 @@ export default function PrayerTitleItem({
   item,
   onPress,
   roomId,
-}: PrayerTitleItemProps): JSX.Element {
+}: PrayerTitleItemProps): React.JSX.Element {
   const [showSheet, setShowSheet] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const { mutate: deletePrayerTitle } = useDeletePrayerTitleMutation();
@@ -63,60 +64,66 @@ export default function PrayerTitleItem({
 
   return (
     <>
-      <AccentCard
-        onPress={() => onPress(item)}
-        onLongPress={handleLongPress}
-        style={styles.prayerItemContainer}
+      <Animated.View
+        layout={Layout.springify().damping(18).stiffness(160)}
+        entering={SlideInDown.duration(350)}
+        exiting={SlideOutDown.duration(250)}
       >
-        <View style={styles.contentContainer}>
-          <Text style={styles.prayerTitle} numberOfLines={2}>
-            {item.title}
-          </Text>
-
-          <View style={styles.participantRow}>
-            {hasParticipants ? (
-              <>
-                <AvatarStack
-                  names={prayers.map((prayer) => prayer.memberName ?? "익명")}
-                  maxDisplayed={3}
-                  size={26}
-                />
-                <Text style={styles.participantText} numberOfLines={1}>
-                  {prayers.length}명이 기도했어요
-                </Text>
-              </>
-            ) : (
-              <>
-                <View style={styles.emptyAvatarPlaceholder}>
-                  <MaterialCommunityIcons
-                    name="hand-heart"
-                    size={RFValue(18)}
-                    color={color.grayLight}
-                  />
-                </View>
-                <Text
-                  style={[styles.participantText, styles.emptyParticipantText]}
-                  numberOfLines={1}
-                >
-                  {noParticipantText}
-                </Text>
-              </>
-            )}
-          </View>
-
-          <View style={styles.metaContainer}>
-            <MaterialCommunityIcons
-              name="clock-outline"
-              size={RFValue(13)}
-              color={color.grayLight}
-              style={styles.clockIcon}
-            />
-            <Text style={styles.prayerDate}>
-              {formatDate(convertLocalToUTC(item.createdTime))}
+        <AccentCard
+          onPress={() => onPress(item)}
+          onLongPress={handleLongPress}
+          style={styles.prayerItemContainer}
+        >
+          <View style={styles.contentContainer}>
+            <Text style={styles.prayerTitle} numberOfLines={2}>
+              {item.title}
             </Text>
+
+            <View style={styles.participantRow}>
+              {hasParticipants ? (
+                <>
+                  <AvatarStack
+                    names={prayers.map((prayer) => prayer.memberName ?? "익명")}
+                    maxDisplayed={3}
+                    size={26}
+                  />
+                  <Text style={styles.participantText} numberOfLines={1}>
+                    {prayers.length}명이 기도했어요
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <View style={styles.emptyAvatarPlaceholder}>
+                    <MaterialCommunityIcons
+                      name="hand-heart"
+                      size={RFValue(18)}
+                      color={color.grayLight}
+                    />
+                  </View>
+                  <Text
+                    style={[styles.participantText, styles.emptyParticipantText]}
+                    numberOfLines={1}
+                  >
+                    {noParticipantText}
+                  </Text>
+                </>
+              )}
+            </View>
+
+            <View style={styles.metaContainer}>
+              <MaterialCommunityIcons
+                name="clock-outline"
+                size={RFValue(13)}
+                color={color.grayLight}
+                style={styles.clockIcon}
+              />
+              <Text style={styles.prayerDate}>
+                {formatDate(convertLocalToUTC(item.createdTime))}
+              </Text>
+            </View>
           </View>
-        </View>
-      </AccentCard>
+        </AccentCard>
+      </Animated.View>
 
       <PrayerTitleOptionSheet
         visible={showSheet}
