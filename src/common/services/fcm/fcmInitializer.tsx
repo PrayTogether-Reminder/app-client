@@ -68,15 +68,17 @@ const FcmInitializer: React.FC = () => {
 
           const hasPermission = await fcmManager.hasPermission();
           if (hasPermission) {
+            const storedToken = await fcmManager.getFCMTokenByStorage();
             const currentToken = await fcmManager.getFCMTokenByFB();
 
-            // 권한이 있고 토큰이 있으면 무조건 서버에 전송
-            // (네트워크 에러 등으로 이전에 서버 등록 실패했을 수 있음)
-            if (currentToken) {
-              console.log("Sending token to server:", currentToken.substring(0, 20) + "...");
+            if (currentToken && currentToken !== storedToken) {
+              // 토큰이 변경된 경우에만 서버에 전송
+              console.log("FCM token changed - sending to server:", currentToken.substring(0, 20) + "...");
               await fcmManager.saveFCMToken(currentToken);
               registerFcmTokenRequest({ fcmToken: currentToken });
               console.log("FCM Token sent to server");
+            } else {
+              console.log("FCM token unchanged - skipping server registration");
             }
           }
         }
