@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { StyleSheet, Dimensions, View, ScrollView } from "react-native";
 import { Portal, Modal, Button, Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "../../../../../src/common/styles/color";
-import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
+import { useLocalSearchParams } from "expo-router";
 import { useRoomMembersQuery } from "@/domain/rooms/hooks/queries/useRoomQueries";
 import LoadingScreen from "@/common/components/loading/LoadingScreen";
 import FetchError from "@/common/components/error/FetchError";
@@ -23,14 +23,14 @@ const RoomMembersModal: React.FC<RoomMembersModalProps> = ({
   openInvite,
 }) => {
   const drawerWidth = width * 0.5;
-  const room = useSelectedRoomStore().selectedRoom;
+  const roomId = Number(useLocalSearchParams().id);
   const {
     data: members = [],
     isError,
     error,
     isLoading,
     refetch,
-  } = useRoomMembersQuery(room?.id ?? null);
+  } = useRoomMembersQuery(roomId);
 
   // 모달 내용 렌더링 함수
   const renderModalContent = () => {

@@ -9,7 +9,6 @@ import {
   useToggleRoomNotificationMutation,
 } from "@/domain/rooms/hooks/mutations/useRoomMutations";
 import { useInfiniteRoomsQuery } from "@/domain/rooms/hooks/queries/useRoomQueries";
-import { useSelectedRoomStore } from "@/domain/rooms/stores/useSelectedRoomStore";
 import { Room } from "@/domain/rooms/types/room";
 import { useRouter } from "expo-router";
 import { Analytics } from "@/common/services/analytics";
@@ -43,7 +42,6 @@ const RoomList = () => {
   const { mutate: toggleRoomNotificationMutation } =
     useToggleRoomNotificationMutation();
 
-  const { selectRoom } = useSelectedRoomStore();
   const router = useRouter();
 
   const rooms = React.useMemo(() => {
@@ -64,7 +62,6 @@ const RoomList = () => {
 
   const handleRoomPress = (room: Room) => {
     console.log("Selected room:", room);
-    selectRoom(room);
     router.push(path.showRoomById(room.id as number));
   };
 

@@ -1,6 +1,6 @@
 import { showAlert } from "@/common/components/modal/stores/useAlertStore";
 import { useCreatePrayerTitleMutation } from "@/domain/prayers/hooks/mutations/usePrayerMutations";
-import { useSelectedRoomStore } from "@/domain/rooms/stores/useSelectedRoomStore";
+import { useLocalSearchParams } from "expo-router";
 import { Analytics } from "@/common/services/analytics";
 import Feather from "@expo/vector-icons/Feather";
 import React, { useEffect, useRef } from "react";
@@ -35,7 +35,7 @@ export default function PrayerTitleCreationDialog({
   });
 
   const titleInputRef = useRef(null);
-  const room = useSelectedRoomStore().selectedRoom;
+  const roomId = Number(useLocalSearchParams().id);
   const { mutate: createPrayerTitle } = useCreatePrayerTitleMutation();
 
   // 모달이 열릴 때 입력값 초기화
@@ -67,16 +67,8 @@ export default function PrayerTitleCreationDialog({
       return;
     }
 
-    if (!room?.id) {
-      showAlert({
-        title: "오류",
-        message: "기도방 정보를 찾을 수 없습니다.",
-      });
-      return;
-    }
-
     createPrayerTitle({
-      roomId: room.id,
+      roomId,
       title: title.trim(),
     });
     Analytics.logPrayerTitleCreated(); // 기도 제목 생성 이벤트

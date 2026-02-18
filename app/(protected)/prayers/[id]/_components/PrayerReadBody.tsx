@@ -8,7 +8,6 @@ import TitleCard from "./TitleCard";
 import PrayerCardList from "./PrayerCardList";
 import EmptyState from "./EmptyState";
 import { useSelectedPrayerTitleStore } from "../../../../../src/domain/prayers/stores/useSelectedPrayerTitleStore";
-import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
 import { usePrayerContentsQuery } from "@/domain/prayers/hooks/queries/usePrayerQueries";
 import FetchError from "@/common/components/error/FetchError";
 import OverlayLoading from "@/common/components/loading/OverlayLoading";
@@ -33,11 +32,9 @@ function PrayerReadBody({ prayerTitleId, isEditMode, onEditModeChange }: PrayerR
   const titleFromUrl = params.title ? decodeURIComponent(params.title as string) : null;
 
   const { selectedPrayerTitle } = useSelectedPrayerTitleStore();
-  const { selectedRoom } = useSelectedRoomStore();
   const { copyToClipboard } = useCopyToClipboard();
 
-  // URL 파라미터를 우선 사용하고, 없으면 store에서 가져옴
-  const roomId = roomIdFromUrl ?? selectedRoom?.id ?? null;
+  const roomId = roomIdFromUrl;
   const titleId = prayerTitleId ?? selectedPrayerTitle?.id ?? null;
   const titleText = titleFromUrl ?? selectedPrayerTitle?.title ?? "기도 제목을 알 수 없습니다.";
 

@@ -1,8 +1,8 @@
 import React from "react";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { RFValue } from "react-native-responsive-fontsize";
 import { TopHeader } from "../../../../../src/common/components/header/TopHeader";
-import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
+import { useRoomQuery } from "@/domain/rooms/hooks/queries/useRoomQueries";
 
 interface PrayerRoomTopProps {
   openRightMenu: () => void;
@@ -10,11 +10,12 @@ interface PrayerRoomTopProps {
 
 const PrayerRoomTop: React.FC<PrayerRoomTopProps> = ({ openRightMenu }) => {
   const router = useRouter();
-  const room = useSelectedRoomStore().selectedRoom;
+  const roomId = Number(useLocalSearchParams().id);
+  const { data: room } = useRoomQuery(roomId);
 
   return (
     <TopHeader
-      title={room?.name as string}
+      title={room?.name ?? ""}
       onBackPress={() => router.back()}
       rightAction={{
         icon: "menu",

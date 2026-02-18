@@ -4,7 +4,6 @@ import React, { type JSX } from "react";
 import { FlatList, StyleSheet, View, Platform } from "react-native";
 import { Text } from "react-native-paper";
 import { RFValue } from "react-native-responsive-fontsize";
-import { useSelectedRoomStore } from "../../../../../src/domain/rooms/stores/useSelectedRoomStore";
 import { useInfinitePrayerTitlesQuery } from "@/domain/prayers/hooks/queries/usePrayerQueries";
 import { PrayerTitle } from "../../../../../src/domain/prayers/types/prayerTitle";
 import { useRoomMembersQuery } from "../../../../../src/domain/rooms/hooks/queries/useRoomQueries";
@@ -29,13 +28,10 @@ const EmptyPrayerTitleList = () => {
 };
 
 interface PrayerTitleListProps {
-  roomId?: number;
+  roomId: number;
 }
 
-export default function PrayerTitleList({ roomId: propRoomId }: PrayerTitleListProps = {}): JSX.Element {
-  // props로 받은 roomId를 우선 사용하고, 없으면 store에서 가져옴
-  const storeRoomId = useSelectedRoomStore().selectedRoom?.id ?? null;
-  const roomId = propRoomId ?? storeRoomId;
+export default function PrayerTitleList({ roomId }: PrayerTitleListProps): JSX.Element {
   console.log("render room by id =", roomId);
   const router = useRouter();
   const { select: selectTitle } = useSelectedPrayerTitleStore();
@@ -67,11 +63,7 @@ export default function PrayerTitleList({ roomId: propRoomId }: PrayerTitleListP
     console.log("Selected prayerTitle:", title);
 
     // href 객체 사용 (Expo Router best practice)
-    const prayerHref = roomId
-      ? pathHref.showPrayersContentByIdWithRoom(title.id, roomId)
-      : pathHref.showPrayersContentById(title.id);
-
-    router.push(prayerHref);
+    router.push(pathHref.showPrayersContentByIdWithRoom(title.id, roomId));
   };
 
   const handleLoadMore = () => {
