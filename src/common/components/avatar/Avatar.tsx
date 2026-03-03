@@ -15,7 +15,8 @@ interface AvatarProps {
  */
 export default function Avatar({ name = "익명", size = 28 }: AvatarProps): JSX.Element {
   const getInitial = (text: string): string => {
-    return text.charAt(0).toUpperCase();
+    const chars = Array.from(text);
+    return chars.length > 0 ? chars[0].toUpperCase() : "";
   };
 
   const getColorFromName = (text: string): string => {
