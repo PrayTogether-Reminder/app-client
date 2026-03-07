@@ -3,12 +3,12 @@ import { StyleSheet, View, ScrollView, TouchableOpacity, Text as RNText } from "
 import {
   Title,
   Text,
-  Avatar,
   Button,
   Portal,
   IconButton,
   Modal,
 } from "react-native-paper";
+import { Avatar } from "../../../../../../src/common/components/avatar";
 import { RFValue } from "react-native-responsive-fontsize";
 import { color, flexMarker } from '../../../../../../src/common/styles/color';
 import { RoomMember } from "../../../../../../src/domain/rooms/types/roomMember";
@@ -59,12 +59,7 @@ const PrayerMemberSelectionModal = ({
                     style={styles.touchableArea}
                     onPress={() => onSelectMember(member)}
                   >
-                    <Avatar.Text
-                      size={RFValue(40)}
-                      label={member.name.charAt(0)}
-                      labelStyle={styles.avatarLabel}
-                      style={styles.avatarCricle}
-                    />
+                    <Avatar name={member.name} size={40} />
                     <Text style={styles.memberName}>{member.name}</Text>
                   </TouchableOpacity>
                 </View>
@@ -183,13 +178,7 @@ const styles = StyleSheet.create({
     marginLeft: RFValue(8), // 아이콘과 텍스트 사이 간격 조정
     lineHeight: RFValue(22),
   },
-  avatarCricle: {
-    backgroundColor: color.secondary,
-  },
-  avatarLabel: {
-    fontSize: RFValue(16),
-    lineHeight: RFValue(22),
-  },
+
 });
 
 export default PrayerMemberSelectionModal;

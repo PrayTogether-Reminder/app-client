@@ -1,24 +1,23 @@
 // ProfileSection.tsx
 import React from "react";
-import { StyleSheet, useWindowDimensions, View } from "react-native";
-import { Avatar, Title, Caption, Surface, IconButton } from "react-native-paper";
-import { RFValue } from "react-native-responsive-fontsize"; // RFValue 라이브러리 import 추가
+import { StyleSheet, View } from "react-native";
+import { Title, Caption, Surface, IconButton } from "react-native-paper";
+import { RFValue } from "react-native-responsive-fontsize";
 import { color } from "@/common/styles/color";
 import { useProfileQuery } from "@/domain/members/hooks/queries/memberQueries";
 import { useRouter } from "expo-router";
+import { Avatar } from "@/common/components/avatar";
 
 export default function ProfileSection() {
   const router = useRouter();
-  const { width } = useWindowDimensions();
-  const avatarSize = width * 0.1;
   const { data: profile } = useProfileQuery();
 
   return (
     <Surface style={[styles.profileSection, { backgroundColor: color.white }]} elevation={0}>
       <View style={styles.profileContainer}>
-        <Avatar.Text
-          size={avatarSize}
-          label={profile?.name?.charAt(0) ?? ""}
+        <Avatar
+          name={profile?.name ?? ""}
+          size={40}
           style={styles.avatar}
         />
         <View style={styles.nameRow}>
